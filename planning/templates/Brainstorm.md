@@ -29,7 +29,7 @@ tags:
 <!-- Only directions explicitly chosen by the human; not implementation approval. -->
 
 ## Outputs
-<!-- Links to staging ideas deliberately exported by human choice. -->
+<!-- Links to individual candidate notes created in Inbox; extraction does not equal acceptance. -->
 
 ## Resume Here
 <!-- A brief snapshot: where to pick up and the next useful question. -->

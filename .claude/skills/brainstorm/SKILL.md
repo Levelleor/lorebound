@@ -1,6 +1,6 @@
 ---
 name: brainstorm
-description: Explore, challenge, resume, and refine persistent Lorebound ideas using repository and Obsidian planning context. Use for generating ideas from scratch, revisiting a brainstorm, exploring an accepted idea, or considering changes to implemented features. Brainstorms do not change project decisions until the user explicitly selects an outcome.
+description: Explore, challenge, resume and refine persistent Lorebound brainstorms; split large sessions into separate unaccepted Inbox candidate ideas. Use for ideation, resumption, extracting alternatives, reviewing candidates and rethinking implemented features. Capturing a candidate is not approval.
 argument-hint: "[topic, note, path, or resume]"
 ---
 
