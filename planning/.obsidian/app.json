@@ -1,0 +1,8 @@
+{
+  "alwaysUpdateLinks": true,
+  "newLinkFormat": "shortest",
+  "userIgnoreFilters": [
+    "AGENTS.md",
+    "CLAUDE.md"
+  ]
+}
