@@ -2,9 +2,10 @@
 id: ""
 type: idea
 status: staging
+origin: ""
 created: "{{date:YYYY-MM-DD}}"
 updated: "{{date:YYYY-MM-DD}}"
-accepted_at: "{{date:YYYY-MM-DD}}"
+accepted_at: ""
 accepted_by: ""
 source_brainstorms: []
 related: []
