@@ -1,0 +1,87 @@
+---
+id: "IDEA-0052"
+type: idea
+status: staging
+origin: mixed
+created: "2026-10-16"
+updated: "2026-10-16"
+accepted_at: "2026-10-16"
+accepted_by: "requesting user (chat confirmation)"
+source_brainstorms: ["[[Local First Storage and Deployment Brainstorm]]"]
+related: []
+tags:
+  - planning/idea
+---
+# Backups Export and Storage Quotas
+
+## Idea
+Provide robust, **storage-independent** backup, restore, validated import/export, storage usage estimation and quota awareness for Lorebound adventures, whether persisted in browser-local storage, a SvelteKit backend database, or another selected architecture.
+
+## Why this idea matters
+Clearing browser site data, storage eviction, exceeding storage quotas, backend outages, failed migrations or losing a device/server could destroy long-running adventures. Players need durable, portable ways to preserve and restore **entire reconstructible stories**, not just their latest prose or a cached projection, without coupling the backup format to whichever database engine is eventually chosen.
+
+## Accepted direction
+- **Storage-independent backup and restore:** Offer user-accessible export, import and restore capabilities for a browser-local database, a suitably deployed SvelteKit backend or a future hybrid storage configuration. This requirement does not choose a particular database or deployment.
+- **Single-adventure portable export:** Allow a player to export a complete selected adventure with its story turns, applicable text revisions, baseline, all accepted incremental state/event changes, stable entity references and other durable data required to reconstruct it.
+- **Full-library portable export:** Allow exporting the whole adventure library with relevant portable metadata, settings and other included assets as appropriate. Precisely which non-adventure settings/assets belong in a full backup remains to be refined.
+- **Validated import and restore:** Check incoming backup schema/version, integrity, completeness, required dependencies and ability to reconstruct accepted state before making imported data authoritative. Exact import format, migrations and conflict resolution remain open.
+- **Preserve complete historical reconstructibility:** Exports and restores must retain the full persistent story and world-state history accepted in [[Snapshots and Incremental State Rebuild]] (IDEA-0042), not only the latest world snapshot. Historical restoration must not rerun AI-generated outcomes or external side effects.
+- **Safe restore boundary:** Restores and library imports must not silently corrupt or overwrite existing accepted adventures. Duplicate identities, naming collisions, interrupted restores, format incompatibilities and rollback options need explicit design.
+- **Storage usage and quota awareness:** Provide meaningful estimation of usage and relevant quota/retention constraints, including warnings and recoverable handling as storage becomes constrained. Do not assume browser quota APIs or server quota reporting always return exact available capacity.
+- **Optional browser persistence request:** Evaluate browsers' persistent-storage APIs as a mitigation against automatic eviction where supported and granted. A successful request is **not** an independent backup and cannot prevent user-cleared data or device loss.
+- **Optional automatic backups:** Evaluate filesystem-based automation when browser APIs and user permissions allow, or backend-managed backups where hosting supports them. This accepts evaluation of automatic backup mechanisms, **not** an unconditional ability to write local files silently or a prescribed schedule.
+- **Open policy and engineering choices:** Keep format, location, encryption/access-control design, backup cadence, retention, migrations, overwrite/conflict resolution, automatic backup policies, provider-specific tooling and precise quota UI open for staging refinement.
+
+## Proposed behaviour
+The player can request a portable backup of a single adventure or their full library and later import or restore it through a validation path. A complete backup must contain all canonical persistent story revisions, entities, initial baselines, accepted incremental changes and supporting references necessary for deterministic reconstruction. Lorebound reports available storage-usage estimates and applicable warnings for the selected storage backend, and handles exceeded quotas or interrupted writes without silently dropping committed data. Browser persistence requests and automatic local/backend backups can be offered where supported and approved; the selected database and hosting configuration determine feasible implementation details.
+
+## Alternatives and trade-offs
+Manual downloadable exports work across many deployments but depend on players remembering to save them. Automatic filesystem backups may reduce loss risks on supported browsers after explicit permissions, yet are limited by browser security and availability. SvelteKit server deployments may enable scheduled database snapshots or backups, but hosted storage persistence, cost, access control and retention vary by provider. A portable archive format may cost more engineering work than a raw database dump while improving restoration across browsers, versions and engines. Browser storage persistence requests mitigate certain evictions but are neither backups nor a guarantee against loss. The exact combination remains open.
+
+## Dependencies and constraints
+- [[Browser-Persistent Story Database]] (IDEA-0051) is accepted as **storage-options-first** for SvelteKit, not a selection of browser-only, SQLite, IndexedDB, hosted SQL or hybrid storage. Backup/export behaviour must be designed without assuming one of those choices.
+- [[Snapshots and Incremental State Rebuild]] (IDEA-0042) requires **complete incremental history** and deterministic world reconstruction at supported turn boundaries. Import/export must preserve all canonical persistent changes and story revision lineage.
+- Restores must not replay historical external side effects, regenerate earlier AI decisions or introduce a partial accepted story/world-state transaction; preserve compatibility with accepted event history and coordinator finalisation (IDEA-0039, IDEA-0044).
+- Browser persistence requests, origin storage quotas, browser permission surfaces and filesystem integration vary by browser/runtime. Automatic filesystem access cannot be assumed on every supported browser.
+- Backend backup tools and storage guarantees depend on the eventual SvelteKit deployment and persistent database. Hosted database backup may not produce the same portable format as a player-facing archive.
+- Imported data is untrusted until validated; required security/migration policies remain undecided.
+- This is an accepted staging direction requiring refinement, not production approval or an implemented capability.
+
+## Open questions
+- What backup location and cadence can work without a server?
+- Which adventure assets, settings, generated images or plugin-specific data belong in single-adventure versus full-library exports?
+- What portable archive manifest/schema/versioning and integrity checks are appropriate across different database engines?
+- How can restore validation verify completeness and reconstructibility without executing historical external commands or AI calls?
+- How should imports handle duplicate adventure IDs, existing library records, branching/revision conflicts and restoring only parts of an archive?
+- How can a crash, partial import, full disk or expired permission be handled without corrupting existing adventures?
+- Where should optional automatic backups live for browser-only and SvelteKit backend installations, and who grants access to their destination?
+- What defaults, backup frequency, retention rules, optional encryption or privacy protections should apply?
+- How should old backup formats and plugin-specific events migrate if an older adventure is imported years later?
+- What storage metrics and quota warnings can be trusted across IndexedDB, SQLite WASM + OPFS, server SQLite and hosted SQL?
+- Which messages and recovery paths should appear if quota is exhausted, the database becomes unavailable or an export fails?
+
+## Draft acceptance criteria
+- [ ] A single adventure can be exported in a portable form that preserves all canonical persistent state/history and relevant narrative revision data.
+- [ ] The entire library can be exported with required metadata and data relationships intact.
+- [ ] An imported backup is validated for format/version, completeness, integrity and safe reconstruction before it becomes authoritative.
+- [ ] Import failures, collisions or incomplete archives do not silently overwrite or corrupt existing accepted adventures.
+- [ ] A restored adventure can deterministically reconstruct its complete persisted canonical world/story state at applicable supported turns without new AI generation or replayed external side effects.
+- [ ] Backup/import/export functionality is designed for the selected browser or SvelteKit backend storage without presuming one engine or hosting provider has already been chosen.
+- [ ] Storage usage and relevant quota/retention risks are surfaced with appropriate warnings and recoverable failures.
+- [ ] Persistent-storage requests and automatic filesystem/backend backup strategies are **optional evaluated approaches**, subject to runtime support and permission; neither is presumed universal or enabled by default.
+- [ ] The exact archive format, destination, cadence, retention, version migrations, restore conflicts and quota UI remain for further refinement.
+
+## Refinement checklist
+- [ ] Behaviour and scope are clear
+- [ ] Dependencies, edge cases and failures considered
+- [ ] Open blocking questions resolved
+- [ ] Acceptance criteria are testable
+- [ ] Human approved promotion to production
+
+## Evaluation notes
+- Origin: **mixed**. Combines user intent with earlier suggested implementation details; explicitly accepted for staging with storage-independent backup, portability, validation and quota-awareness scope.
+- This is an **accepted but unrefined planning direction**, not approval of a particular backup mechanism or evidence of implementation.
+
+## Decisions and review history
+- 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
+- 2026-10-16 — **Explicitly accepted by the requesting user:** Storage-independent backup, import/export, restore validation and storage usage/quota awareness for browser-local or potential SvelteKit backend data; portable single-adventure and full-library exports including complete incremental world state and story history; evaluate optional browser persistence requests and automatic backups where permitted. Backup format, location, cadence, retention, migration, restore conflicts and precise quota UI remain open. Promoted to staging for refinement only, not production.
