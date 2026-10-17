@@ -33,3 +33,4 @@ Mature/NSFW/R labels; built-in or custom fields.
 
 ## Decision history
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
+- 2026-10-16 — **Skipped for now by the requesting user, not accepted or rejected:** The already accepted [[Configurable Anatomy and Transformations]] (IDEA-0031) allows players to optionally add free-form descriptions of genitals and other anatomy, which the user considers sufficient for now. Additional mature-specific toggles, separate fields or visibility settings remain undecided. Keep this candidate in Inbox for reconsideration if needed.
