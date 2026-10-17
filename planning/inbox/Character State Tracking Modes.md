@@ -6,7 +6,7 @@ origin: mixed
 created: "2026-10-16"
 updated: "2026-10-16"
 source_brainstorms: ["[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]", "[[Memory Lorebook and Context Brainstorm]]"]
-related: []
+related: ["[[Automatic Character Sheet Tracking]]"]
 tags:
   - planning/idea
 ---
@@ -33,3 +33,4 @@ An optional approve-each-change policy.
 
 ## Decision history
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
+- 2026-10-16 — **Deferred by the requesting user, not accepted or rejected.** The user requested leaving configurable disabled/manual/automatic tracking modes in Inbox for later and capturing a **separate, simpler idea** for automatically tracking every character-sheet field without tracking-mode configuration. Related candidate: [[Automatic Character Sheet Tracking]] (IDEA-0064).
