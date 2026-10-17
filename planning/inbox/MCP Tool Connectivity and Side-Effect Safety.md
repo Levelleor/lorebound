@@ -33,3 +33,4 @@ Browser HTTP MCP where permitted; local stdio MCP through optional bridge.
 
 ## Decision history
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
+- 2026-10-16 — **Skipped for now by the requesting user**, not accepted or rejected. Rationale: Native coordinator mods and MCP tools overlap in capabilities, so no separate MCP integration is needed at present. The user explicitly requested universal, protocol-neutral contracts and a future MCP adapter seam in **accepted** [[Native Gameplay Capability Registry]] (IDEA-0047), while actual MCP connectivity, transports, authentication and lifecycle remain deferred. Keep this original note in Inbox with `status: candidate` for possible later review.
