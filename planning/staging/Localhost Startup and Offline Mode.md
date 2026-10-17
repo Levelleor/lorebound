@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Local First Storage and Deployment Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -27,9 +27,11 @@ Most use is expected to be local, without TLS configuration, hosted-account mana
 - **Environment adapters instead of assuming one runtime:** Hide persistence, file access, local model discovery and OS integrations behind clear interfaces. A Tauri frontend does not automatically run SvelteKit server endpoints inside the desktop app, so avoid building shared gameplay logic that depends exclusively on SvelteKit server-only modules. Evaluate desktop-friendly storage/native handlers and SvelteKit server-backed storage independently, consistent with accepted IDEA-0051.
 - **Docker is a potential additional distribution:** Record versioned Docker image and optional Compose as self-hosting alternatives worth evaluating; they are **not mandated** by this acceptance. Any future Docker route should use persistent external volumes, clear port mappings and suitable access to local-model runtimes.
 - **Other convenience options remain exploratory:** Portable launcher builds, PWA, hosted deployment templates and other installers may be considered, but Tauri is the selected primary desktop direction, not just one equal alternative. Do not commit to Electron or redundant desktop shells.
-- **Local/offline-capable operation:** Support local gameplay with preinstalled application data and configured locally available model runtimes without mandatory hosted accounts, remote inference or live internet. Initial app installation, dependency installation and model download may need network access.
+- **Local/offline-capable operation and external inference (2026-10-17 refinement):** Lorebound is the app/game, **not a bundled AI model or inference engine**. Support multiple model-provider/API styles and integrations, including independently installed local model servers and optional remote/cloud APIs. Local gameplay must not require a Lorebound account, internet connectivity or cloud inference once application assets and a compatible local model server are available. Initial app installation and separately installed model/runtime setup may need network access. Built-in model downloading or hosting is **not required** by this idea.
 - **Save data must survive delivery changes:** Protect full incremental story history and backups across upgrades, restarts, reinstallations and changes in app packaging. Browser-origin/port changes must not silently orphan browser-local stories. Desktop and server storage layouts are still undecided.
-- **Keep release mechanics open:** Do not prematurely choose Tauri Rust command APIs, database engine, SvelteKit adapter, Windows/macOS/Linux rollout, port, model runtime integration, signing, autoupdate implementation or a Docker delivery commitment.
+- **Desktop OS scope:** The player-facing desktop experience targets **Windows, macOS and Linux**, as clarified in IDEA-0001 on 2026-10-17. Exact build targets, installer formats and release sequencing need refinement.
+- **Backend packaging under active evaluation:** Investigate bundling a SvelteKit/TypeScript server as a Tauri-managed sidecar, alongside the conventional static Tauri frontend/native adapter approach. Tauri does not natively embed an SSR/SvelteKit server, so such a design would require a separately packaged executable, process lifecycle management, localhost transport hardening and cross-platform build validation. **No sidecar architecture or SvelteKit adapter is yet approved.**
+- **Keep release mechanics open:** Do not prematurely choose Tauri Rust command APIs, database engine, SvelteKit adapter, port, model runtime integration, signing, autoupdate implementation or a Docker delivery commitment.
 
 ## Possible startup and distribution paths (original options, evaluated under selected priorities)
 - **Developer/source workflow:** Clone GitHub, install npm dependencies, run documented SvelteKit scripts and open a predictable HTTP localhost origin. Preserve this as a supported option for contributors and technical users.
@@ -58,7 +60,8 @@ The same SvelteKit user interface and shared Lorebound gameplay core are deliver
 - Must preserve complete incremental history and coherent persistence (IDEA-0042 and IDEA-0051) no matter which distribution/startup method is used.
 - Backups/export/restore and storage data safety are accepted for refinement in [[Backups Export and Storage Quotas]] (IDEA-0052). Docker volumes and desktop app data directories must not make losing data on updates likely.
 - The optional local bridge idea [[Optional Loopback Node Bridge]] (IDEA-0054) remains separately unaccepted; easier launch options do not implicitly approve a generic bridge or MCP tooling.
-- Preserve an offline-capable local-model experience without mandatory remote inference, hosted accounts or cloud services. Different packaging choices may need separate paths to discover/access installed local model runtimes.
+- Preserve an offline-capable local-model experience without mandatory remote inference, hosted accounts or cloud services. External AI servers/providers, not a bundled inference engine, provide model execution; allow different API styles and provider adapters. Different packaging choices may need separate paths to discover/access installed local model runtimes.
+- Investigate whether a bundled TypeScript/SvelteKit Node-compatible server running as a Tauri sidecar can reuse the npm/localhost backend without excessive native code. Keep this an **unresolved architectural option**, not a selected implementation. Compare it with a static SvelteKit frontend plus backend service/native adapter, considering HTTP security, application/server lifecycle, package size and cross-platform distribution.
 - This is **staging** approval of the above direction, not production readiness or an implemented Tauri build. Docker and other release channels have not received an implementation commitment.
 
 ## Open questions
@@ -67,6 +70,7 @@ The same SvelteKit user interface and shared Lorebound gameplay core are deliver
 - What is the minimal Tauri packaging and onboarding experience for players, and which OS targets must be supported initially?
 - Should Docker image/Compose become an additional formally supported self-hosting distribution after evaluation, or remain optional?
 - How can SvelteKit's browser/localhost server functions and Tauri's desktop runtime use **one shared UI/coordinator/gameplay core** without duplicate architectures?
+- Should the Tauri app bundle and manage a complete SvelteKit/Node-compatible backend sidecar (including the UI), or serve a static SvelteKit SPA and use an API-only sidecar/native adapter? What is the smallest workable cross-platform spike to validate the choice?
 - Which platform-agnostic APIs and desktop/server adapters are required for persistent storage, file access, local-model discovery and native capabilities?
 - How are persistent stories stored outside an ephemeral Docker container, and how are their paths, permissions, backup and upgrades managed?
 - Can a container access a locally installed model server securely and reliably, including CPU/GPU and cross-platform networking differences?
@@ -82,7 +86,8 @@ The same SvelteKit user interface and shared Lorebound gameplay core are deliver
 - [ ] A documented npm install/start workflow runs the SvelteKit application through a predictable localhost address independently of Tauri.
 - [ ] The two accepted modes share SvelteKit UI, coordinator, capability contracts, game rules and core state-history behaviour, with scoped environment-specific adapters where needed.
 - [ ] The Tauri app does not assume it can execute SvelteKit server endpoints without an explicitly designed server or adapter.
-- [ ] Both modes can use configured locally available models and saved adventures without mandatory cloud accounts or remote inference after required installation/download.
+- [ ] Both modes can use independently hosted/local-model APIs and saved adventures without mandatory cloud accounts or remote inference after required installation/download, and do not require the app to install or embed a model runtime.
+- [ ] Backend-hosting approaches, including a Tauri-managed SvelteKit/TypeScript sidecar, are evaluated before choosing the desktop packaging/runtime architecture.
 - [ ] Adventures and their full incremental state histories remain protected across app upgrades, installation changes and runtime-specific data directories.
 - [ ] Browser-origin/port changes are either avoided or accompanied by a safe data migration/recovery plan when browser-origin storage is involved.
 - [ ] Docker images/Compose remain documented for evaluation as a possible optional self-hosting distribution, not a present mandatory build target.
@@ -97,9 +102,10 @@ The same SvelteKit user interface and shared Lorebound gameplay core are deliver
 
 ## Evaluation notes
 - Origin: **user**. The original localhost/npm direction, subsequent ease-of-installation request and final preference for a **Tauri-primary plus npm install/start** architecture were specified and accepted by the requesting user.
-- Docker and Compose are retained as possible later distribution options, not selected implementation requirements. This is staging acceptance only, not production approval or an implemented application.
+- Docker and Compose are retained as possible later distribution options, not selected implementation requirements. The requesting user explicitly selected external AI runtimes/APIs over bundling or managing inference inside Lorebound. Full SvelteKit backend sidecar hosting is a **question under investigation**, not a committed design. This remains staging only, not production approval or implementation.
 
 ## Decisions and review history
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**, originally focused on GitHub clone/npm startup, a stable HTTP localhost origin and offline local-model use.
 - 2026-10-16 — **User-requested Inbox refinement (not acceptance at that time):** Ease of installation must consider ordinary, nontechnical players. In addition to source/npm installation, investigate a published Docker image and other low-friction startup routes such as Compose, downloadable prebuilt local releases or desktop installers. Preserve the SvelteKit/local-offline direction, avoid premature delivery-method selection, and account for safe persistent data and model access.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Support **Tauri as the primary installation/startup method for ordinary players** alongside a straightforward **SvelteKit npm install/start localhost route**, sharing one application UI/gameplay core with platform-specific data/OS/model adapters. Keep **Docker and similar packaging as potential additional options** for evaluation rather than automatically mandatory deliverables. Preserve local/offline play and safe persistent story data. Moved the same note from Inbox to staging for refinement, not production.
+- 2026-10-17 — **Refinement decision accepted by the requesting user:** Choose **external AI execution** rather than packaging/hosting an AI model as part of Lorebound; offer integration with multiple local/cloud API styles. Target a cohesive offline-capable application on Windows, macOS and Linux (consistent with IDEA-0001). The user additionally **proposed for evaluation**, but did not yet approve, a Tauri-managed complete SvelteKit frontend/backend server to minimise Rust backend development. Keep the sidecar/server packaging architecture open pending comparison and approval. This is **not** approval to move IDEA-0053 to production.
