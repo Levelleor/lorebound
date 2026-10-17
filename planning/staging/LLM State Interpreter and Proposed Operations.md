@@ -1,0 +1,91 @@
+---
+id: "IDEA-0045"
+type: idea
+status: staging
+origin: mixed
+created: "2026-10-16"
+updated: "2026-10-16"
+accepted_at: "2026-10-16"
+accepted_by: "requesting user (chat confirmation)"
+source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
+related: []
+tags:
+  - planning/idea
+---
+# LLM State Interpreter and Proposed Operations
+
+## Idea
+Use an LLM role to convert arbitrary player language or draft prose into proposed typed changes.
+
+## Why this idea matters
+Plain TypeScript cannot reliably infer meanings from unconstrained natural language.
+
+## Accepted direction
+- **LLM interpretation is a proposal role:** Use an LLM to interpret arbitrary player language and draft or generated prose into **proposed typed world-state operations**, rather than relying on plain TypeScript to understand unrestricted natural language.
+- **Schema-checked proposals:** Produce operations in typed, parseable structures subject to explicit schema checks and subsequent domain validation. A valid schema alone does **not** demonstrate that the model understood the action correctly.
+- **Stable entity references:** Resolve locations, characters, items and other targets to existing stable entity IDs when supported by context. Preserve unresolved, ambiguous, unknown or incomplete references instead of guessing, inventing an identity or silently creating a new entity.
+- **Action meaning and certainty:** Distinguish completed actions from attempts, intentions, plans, remembered/historical descriptions, hypothetical events and figurative language. A proposed attempt must not silently become a successful canonical action.
+- **Deterministic authority boundary:** Interpretation output remains provisional. The accepted [[Deterministic Adventure Coordinator]] (IDEA-0044) and domain validators alone decide whether an operation is possible and whether it becomes persistent world state. No model text or correctly shaped JSON can override authoritative rules.
+- **Works with all accepted pipeline strategies:** Allow interpretation as a logical stage of the single-pass prose-and-events, plan-validate-narrate, or draft-audit-repair workflows accepted in [[Configurable Generation Pipeline Strategies]] (IDEA-0018), without requiring one universal call sequence.
+- **Sequential single-model reuse:** The selected narrator model can also perform interpretation in a sequential pass. Different models may be routed by configuration, but an additional permanently loaded interpreter model is **not mandatory**.
+- **Provider-flexible output strategies:** Support consideration of native function/tool calling when available and constrained JSON or equivalent structured extraction where not. Neither is mandated as the universal implementation; schema validation still applies.
+- **Explicit uncertainty and failure:** Malformed outputs, omitted operations, unsupported targets, conflicting references and uncertain interpretations require safe handling. Do not turn an uncertain model guess into a committed fact.
+- **Refinement choices remain open:** Detailed operation schema and entity-resolution rules, extraction reliability across local role-playing models, confidence/ambiguity handling, fallback and repair strategy, parser/tool interface and benchmarks remain to be decided before production.
+- **Separate candidate boundary:** Typed error reasons and narrator repair on rejected operations belong to separate unaccepted [[Typed Tool Rejection and Narrative Repair]] (IDEA-0046); accepting interpretation alone does not promote that idea.
+
+## Proposed behaviour
+The coordinator invokes a configured LLM interpretation task on a player action, narrated event or draft. The interpreter proposes typed operations with arguments and any confidently resolvable stable entity references, while preserving when an event is only attempted, intended, historical or ambiguous. Schema validation catches malformed output and missing fields; deterministic domain validation then resolves whether the operation can occur given current authoritative state and adventure rules. Only the coordinator may commit accepted world changes and corresponding story events, coherently with narration. Interpretation can use the narrator model sequentially or an optionally configured task-specific model, with function-calling and constrained-JSON strategies as alternatives to evaluate. Any incomplete, contradictory or unsupported proposal remains provisional and triggers explicit safe handling rather than silent state mutation.
+
+## Alternatives and trade-offs
+Native function/tool calling may provide provider-supported structured arguments, but not all locally hosted or role-playing-oriented models reliably support it. Constrained JSON or schema-guided text extraction can work with more providers yet may fail parsing or omit semantic changes. Either approach must pass schema checks and domain validators; correctness of the extracted meaning is a separate quality concern. Reusing one narrator model in successive tasks avoids compulsory multiple simultaneous model loads but may add latency or suffer weaker tool adherence. Dedicated interpreter model routing may be optional when desired, not a mandatory architecture.
+
+## Dependencies and constraints
+- Works under accepted [[Deterministic Adventure Coordinator]] (IDEA-0044): model output is a provisional proposal and cannot mutate canonical state without deterministic validation and coherent finalisation.
+- Must support the configurable workflows of [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and the single- or multi-model routing accepted in [[One-Model Task Routing]] (IDEA-0017).
+- Entity reference resolution must use stable identities and established facts from accepted entity, inventory and location work. A mention is not evidence of physical presence, possession or successful movement.
+- Validated changes must remain compatible with the accepted event-sourced and fully reconstructible state history (IDEA-0039 and IDEA-0042).
+- The interpreter may suggest an operation requiring a new entity or world location, but validated creation is governed by the corresponding separately accepted rules, not by guessed identity resolution.
+- Distinguish attempts, intentions, memories, hypotheticals and completed changes during extraction to prevent model hallucinations from becoming persistent consequences.
+- Failure to produce meaningful or schema-valid operations is not permission to silently ignore necessary state changes and commit contradictory narration. Escalation/fallback needs refinement.
+- Typed rejection and narrative repair specifics remain a separate unaccepted candidate [[Typed Tool Rejection and Narrative Repair]] (IDEA-0046).
+- This is staging acceptance for refinement only, not approval for production or evidence of implementation.
+
+## Open questions
+- How reliable is extraction on RP models not trained for tool usage, especially weaker local models?
+- Which operation types and payload schemas are required across different tracked entity categories?
+- How should the interpreter distinguish action attempts from completions, memories or figurative prose?
+- How are entity aliases, competing references and unknown targets represented without fabricated IDs?
+- What happens when the model misses an important change, outputs duplicate operations or confuses operation order?
+- When does the coordinator ask for clarification versus retry or fallback to a different extraction strategy?
+- How should the system assess semantic correctness beyond JSON-schema validity?
+- What prompt/context information is needed to resolve references without leaking hidden locations or lore?
+- How should different pipeline strategies coordinate interpretation passes without requiring more than one loaded model?
+- Which provider capabilities determine function-call, structured-output or constrained-JSON selection?
+- How should quality, latency, tool adherence and cost be evaluated across local RP and cloud models?
+
+## Draft acceptance criteria
+- [ ] Arbitrary player or narrative prose can yield typed proposed changes with a defined and verifiable schema.
+- [ ] Entity references are resolved to stable IDs only when sufficiently grounded, with ambiguity preserved or surfaced otherwise.
+- [ ] Intentions, failed attempts, hypotheticals and historical recollections are not automatically committed as completed present-tense actions.
+- [ ] Well-formed interpreter output remains provisional until deterministic world-state validation accepts it.
+- [ ] Unsupported or impossible changes do not become authoritative merely because the model describes them.
+- [ ] Parsing/schema failures, uncertain references and missing required operation data are handled without inconsistent partial commits.
+- [ ] The interpretation role can execute sequentially through the selected narrator model without needing an always-loaded dedicated interpreter.
+- [ ] Native function calling and constrained JSON extraction can be evaluated as alternatives without choosing one mandatory provider-specific format.
+- [ ] Proposed events accepted by the coordinator remain traceable in the canonical incremental history.
+- [ ] Exact operation schemas, semantic extraction benchmarks, fallback and repair behaviours remain open for staging refinement.
+
+## Refinement checklist
+- [ ] Behaviour and scope are clear
+- [ ] Dependencies, edge cases and failures considered
+- [ ] Open blocking questions resolved
+- [ ] Acceptance criteria are testable
+- [ ] Human approved promotion to production
+
+## Evaluation notes
+- Origin: **mixed**. Combines user intent with earlier suggested implementation details; explicitly accepted into staging with the stated interpretation and validation boundaries.
+- This remains an **unrefined accepted planning direction**, not a production-ready specification or implemented feature.
+
+## Decisions and review history
+- 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
+- 2026-10-16 — **Explicitly accepted by the requesting user:** LLM interpretation of unconstrained player language and draft prose into schema-checked proposed typed operations; stable entity IDs where resolvable, explicit ambiguity, and distinctions among attempts, intentions, memories and completed acts; no authoritative state change without coordinator validation; sequential use of narrator model supported; native function calling and constrained JSON extraction both kept available for evaluation. Extraction reliability, schemas, fallback and repair details remain open. Moved to staging only, not production.
