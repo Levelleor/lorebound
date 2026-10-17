@@ -33,3 +33,4 @@ Embedded inference, managed Ollama or no model manager.
 
 ## Decision history
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
+- 2026-10-16 — **Skipped for now by the requesting user.** The optional local model download/launch manager is **not accepted or rejected** at this time. No additional rationale was supplied. Existing local-model endpoint connectivity remains a distinct planning direction; this skip neither mandates nor rules out a future guided installer or embedded inference. Preserve the note in Inbox as `status: candidate` with unchanged origin and brainstorm provenance, for potential later review; do not promote it to staging.
