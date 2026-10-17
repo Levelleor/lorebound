@@ -33,3 +33,4 @@ Declarative plugins only versus arbitrary JavaScript execution.
 
 ## Decision history
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
+- 2026-10-16 — **Skipped for now by the requesting user**, not accepted or rejected. The accepted [[Native Gameplay Capability Registry]] (IDEA-0047) already offers a universal, permissioned typed extension mechanism, and [[Optional RPG Mechanics Plugins]] (IDEA-0055) provides modular gameplay rules using that same coordinator/state pipeline. Avoid introducing a redundant layer of arbitrary user-authored script execution and input/context/output hooks before a concrete unmet need justifies the sandboxing, replay, migration and security complexity. Retain the possibility of limited **sandboxed hooks** for future consideration if actual creator requirements arise. Keep the original idea in Inbox with `status: candidate`, unchanged provenance, and no staging or production promotion.
