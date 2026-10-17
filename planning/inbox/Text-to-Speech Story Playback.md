@@ -33,3 +33,4 @@ Browser speech synthesis or local/cloud voice provider.
 
 ## Decision history
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
+- 2026-10-16 — **Skipped for now by the requesting user.** Optional text-to-speech narration, speech engines, selectable voices and playback controls are **not accepted at this time**. No additional rationale was given. Preserve the candidate and its origin in Inbox for potential future review; leave `status: candidate` unchanged and do not move it to staging or mark it rejected.
