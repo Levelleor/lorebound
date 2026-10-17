@@ -33,3 +33,4 @@ Browser-only mode for directly accessible endpoints.
 
 ## Decision history
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
+- 2026-10-16 — **Skipped for now by the requesting user**, neither accepted nor rejected. The accepted [[Localhost Startup and Offline Mode]] (IDEA-0053) already provides Tauri desktop native integration and SvelteKit npm/localhost server-side integration paths for operations outside ordinary browser capabilities. Avoid a redundant **standalone Node bridge** for CORS, credentials or local processes when those paths suffice. Keep future optional interoperability possible through the **universal, protocol-neutral capability contracts** in accepted [[Native Gameplay Capability Registry]] (IDEA-0047), without implementing or mandating a separate bridge or resurrecting skipped MCP connectivity (IDEA-0048). Keep this note in Inbox as `status: candidate` for possible later review if a distinct unmet deployment need arises.
