@@ -1,0 +1,79 @@
+---
+id: "IDEA-0026"
+type: idea
+status: staging
+origin: user
+created: "2026-10-16"
+updated: "2026-10-16"
+accepted_at: "2026-10-16"
+accepted_by: "requesting user (chat confirmation)"
+source_brainstorms: ["[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Lorebound Vision Brainstorm]]", "[[World Map and Location Rules Brainstorm]]"]
+related: []
+tags:
+  - planning/idea
+---
+# Shared PC and NPC Character Entities
+
+## Idea
+Use one character schema for protagonists and NPCs, with a pointer to the player-controlled character.
+
+## Why this idea matters
+All characters can move, own items and change state.
+
+## Accepted direction
+- **One shared character entity model:** Player characters (PCs) and non-player characters (NPCs) use the same fundamental character schema and data relationships. Being player-controlled is not a separate incompatible entity type.
+- **Stable character IDs:** Every character has a durable identifier used to connect profile, inventory, equipment, anatomy, relationships, current location and other records, even when its name or details change.
+- **Separate player-controlled character pointer:** Identify which character is controlled by the player via a distinct reference rather than storing player-specific identity in an incompatible schema. Changing control assignment does not create a duplicate character or discard existing character identity.
+- **Consistent shared mechanics:** PCs and NPCs can move, own or transfer items, wear equipment, form relationships and change persistent state through the same conceptual systems, subject to game rules.
+- **Optional and lazily populated character details:** Minor NPCs can initially be represented by a stable ID and a few known properties. Other records and fields may be populated later as they become necessary without requiring full RPG sheets, equipment inventories or anatomy for every incidental character.
+- **Unknown is not a default:** Missing or unrecorded character values must remain **unknown/not recorded** rather than silently treated as zero, empty, absent, healthy, unequipped or any other definite in-world state. Distinguish deliberately known empty values from unknown values.
+- **Separate feature boundaries:** The specific form and tracking policies for status sheets, inventory, equipment, anatomy and locations are separate candidates, not automatically accepted by this character-model decision.
+
+## Proposed behaviour
+Persist characters in a shared entity registry keyed by immutable IDs. Store the currently player-controlled character as a reference to an existing character entity, not as a second character record. Character detail can be progressively added in linked profile, inventory, equipment, anatomy, relationship, status and location records as known. Players and application/game events should be able to refer to any character consistently, even if initially little is known about an NPC. A missing value remains unknown, while an explicit empty/none value means the corresponding fact has actually been established. Avoid inferring unwritten details during context assembly.
+
+## Alternatives and trade-offs
+Separate PC and NPC schemas might simplify highly specialised UI but make interaction, inventory transfer and identity preservation more brittle. Requiring equally complete records for everyone would add unnecessary generation and storage work. The accepted solution combines a **uniform identity/data model** with **optional or lazily filled details**. The precise typed record relationships, defaults for UI display and lazy-population policy still require refinement.
+
+## Dependencies and constraints
+- Relates to accepted [[Entity-Based Lorebook]] (IDEA-0020), which should link durable character entities without confusing static lore with changing character state.
+- The next separate candidates include status sheet fields and tracking (IDEA-0027, IDEA-0028), items and equipment (IDEA-0029, IDEA-0030), anatomy (IDEA-0031, IDEA-0032) and locations/presence (IDEA-0033, IDEA-0034). This approval does not advance any of those candidates.
+- Character references must survive renames and subsequent enrichment. Deletions, merges, replacements or switching the controlled character require explicit integrity rules.
+- Character detail can be incomplete. Downstream rules and narration must not invent deterministic values merely because an optional property is missing.
+- A character can have a known-empty inventory/equipment/location value where genuinely established; this must not be conflated with missing information.
+- Any generation-driven updates to character state must still obey separately accepted authoritative validation boundaries.
+
+## Open questions
+- How much NPC detail should be populated lazily, and what prompts or events should cause a new field to be filled?
+- Which minimum fields are necessary to create a character entity, beyond stable ID and identification information?
+- How are missing/unknown versus explicitly none, zero or empty represented in storage, APIs and interface controls?
+- Can an adventure support more than one potential player-controlled character over time, and how is switching handled?
+- How should character merge, deletion, duplicate detection, identity changes and references be handled?
+- Where do profile text, appearance, relationships, inventory, anatomy, status and location records attach to the shared entity?
+- When should fields be explicitly authored by the player versus inferred as a proposed AI change requiring validation?
+
+## Draft acceptance criteria
+- [ ] Both player characters and NPCs can be stored and referenced through one common entity identity/schema with stable IDs.
+- [ ] The active player-controlled character is represented by a separate pointer to an existing character, not a duplicate or separate incompatible record type.
+- [ ] PCs and NPCs can link to the same kinds of profile, inventory, equipment, anatomy, relationships, status and location records when those features become available.
+- [ ] A minor NPC may have incomplete optional details without requiring a fully populated character sheet or unused attached records.
+- [ ] Adding details later preserves the same durable character ID and existing relationships/references.
+- [ ] Missing values remain unknown/not recorded and are not silently converted to asserted zero, empty or other in-world facts.
+- [ ] Explicitly established empty values can be distinguished from unrecorded/missing fields.
+- [ ] Switching the character-control pointer does not inherently duplicate, delete or rewrite the underlying character entity.
+- [ ] Authoritative validation prevents proposed character state changes from becoming canonical without the required checks.
+
+## Refinement checklist
+- [ ] Behaviour and scope are clear
+- [ ] Dependencies, edge cases and failures considered
+- [ ] Open blocking questions resolved
+- [ ] Acceptance criteria are testable
+- [ ] Human approved promotion to production
+
+## Evaluation notes
+- Origin: **user**. User-requested direction, expressly accepted for staging with stable character identities and optional lazily populated NPC details.
+- Staging means accepted for refinement, not production-approved or implemented.
+
+## Decisions and review history
+- 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
+- 2026-10-16 — **Explicitly accepted by the requesting user:** One shared character entity model for PCs and NPCs, stable character IDs, a separate pointer to the player-controlled character, common links to profile, inventory, equipment, anatomy, relationships and location, and optional/lazily populated NPC details. Preserve unknown values without inventing defaults. Moved to staging for refinement only, not production.
