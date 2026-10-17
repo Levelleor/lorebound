@@ -33,3 +33,4 @@ Full illustration studio is out of scope; basic slot drawings could ship earlier
 
 ## Decision history
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
+- 2026-10-16 — **Skipped for now by the requesting user.** Optional generated story-scene illustrations and equipment/anatomy visual assets have **not been accepted or rejected**; no additional rationale was given. Preserve the original candidate in Inbox with `status: candidate`, origin and source brainstorm links unchanged, for possible later review. Do not move it to staging or infer production approval.
