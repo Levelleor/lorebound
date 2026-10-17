@@ -33,3 +33,4 @@ Store inverse events versus replaying from a checkpoint.
 
 ## Decision history
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
+- 2026-10-16 — **Skipped for now by the requesting user** during the sequential idea review. This is a deferral of a decision, **not acceptance or rejection**. Retain in Inbox with `status: candidate` for possible future review; no staging promotion.
