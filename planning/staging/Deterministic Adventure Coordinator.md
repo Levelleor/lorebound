@@ -50,6 +50,11 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - On submit/confirmation the browser-side TypeScript coordinator validates the result and asks Go/SQLite to commit **the complete accepted story turn/revision with all associated validated state changes atomically**.
 - Failed/cancelled model requests, validation or commit must leave last accepted canon intact; preserve the player's last successfully saved draft for retry. Incomplete AI output is not automatically canonical.
 
+## Automatic Quick Start opening finalisation
+- **Quick Start (IDEA-0006) is an exception to any proposed manual review of a generated first scene:** once the configured AI generation pipeline completes successfully, the browser-side TypeScript coordinator validates the proposed initial world-state operations, then **automatically submits one coherent opening-turn commit** to Go/SQLite, without a separate user Accept/Review step.
+- **Failure means no first-turn commit:** incomplete generation, cancellation, invalid proposals, exhausted repair or failed persistence must leave the first scene and its proposed world state **noncanonical**. A retry can be offered. There must never be a committed opening without its accepted associated state/events, or vice versa.
+- **Unchanged:** Player edits to earlier committed prose still require the explicit historical-edit confirmation from IDEA-0041. Automatic Quick Start finalisation does not auto-confirm history edits or make provisional streamed tokens canonical.
+
 ## Dependencies and constraints
 - Works with accepted [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and [[One-Model Task Routing]] (IDEA-0017); avoid a mandatory stack of simultaneously loaded models.
 - All accepted persistent changes must be recorded compatibly with [[Event-Sourced World History]] (IDEA-0039) and the complete incremental reconstruction requirement in [[Snapshots and Incremental State Rebuild]] (IDEA-0042).
@@ -94,6 +99,7 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - This is an accepted **unrefined direction**, not approval for production or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0006 automatic opening dependency:** The first successfully completed, validated AI opening auto-commits as a coherent canonical turn with accepted initial state changes, **without user review**; failed/cancelled/invalid generations do not commit. This is distinct from historical-edit confirmation. Staging remains unchanged.
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
