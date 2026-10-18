@@ -27,7 +27,7 @@ A long-running interactive story may combine prose editing, travel maps, charact
 - **Adjustable presentation:** Permit appropriately configurable story/map/sheet panels and relevant layout preferences, while deferring deep window-management features such as unrestricted docking, many preset workspaces and exhaustive shortcut remapping for further prioritisation.
 - **Visibility follows enabled features:** Offer relevant panels and actions for the gameplay systems or modules actually enabled in an adventure. Do not clutter a story with irrelevant empty panels from disabled optional mechanics, and do not let UI visibility bypass capability permissions or validation.
 - **UI preferences are not canonical gameplay events:** Store layout, panel visibility and readability preferences separately from the authoritative narrative/event/state timeline. Changing font size or panel arrangement must never generate a gameplay mutation or affect historical reconstruction.
-- **Shared experience across distributions:** Preserve an accessible, keyboard-usable interface with suitable responsive behaviour for the Tauri-first desktop app and the SvelteKit npm/localhost route. Do not commit the project to a desktop-only layout.
+- **Shared experience across distributions:** Preserve an accessible, keyboard-usable, lightweight interface with responsive behaviour in both the Wails v3 desktop application and its headless localhost browser experience. Do not design for native-window controls alone.
 - **Refinement remains open:** Precise desktop/mobile compositions, shortcuts, focus and editor interaction requirements, panel resizing/docking details, preference storage/location, accessibility evaluation criteria and timing of advanced customisations require later design and verification. Acceptance to staging is not implementation approval.
 
 ## Proposed behaviour
@@ -39,7 +39,7 @@ Give players a primary readable story workspace and clear ways to open relevant 
 - **Fixed compact layout for MVP:** Could simplify initial delivery but must still be accessible, responsive and practical for the accepted major views. An inflexible layout that prevents useful navigation or readable story work does not meet the accepted baseline.
 
 ## Dependencies and constraints
-- [[Localhost Startup and Offline Mode]] (IDEA-0053) targets a shared SvelteKit UI in the primary Tauri desktop distribution and independent npm/localhost route. Keyboard navigation and responsiveness should work appropriately in both.
+- [[Localhost Startup and Offline Mode]] (IDEA-0053) targets one statically built SvelteKit UI in Wails v3 desktop and headless Go server/browser modes. Keyboard navigation and responsive rendering must work in both.
 - [[Native Gameplay Capability Registry]] (IDEA-0047) and [[Optional RPG Mechanics Plugins]] (IDEA-0055) provide optional enabled operations/systems. Panels and direct controls must reflect enabled applicable capabilities and their permissions.
 - [[Snapshots and Incremental State Rebuild]] (IDEA-0042) and [[Event-Sourced World History]] (IDEA-0039) require complete canonical adventure history. Purely presentational layout preferences must not be recorded as in-world state changes or affect replay.
 - The accepted direction does not make skipped [[Text-to-Speech Story Playback]] (IDEA-0056) a dependency. Baseline accessibility must be addressed without presuming TTS.
@@ -61,7 +61,7 @@ Give players a primary readable story workspace and clear ways to open relevant 
 - [ ] Players can reach story, map and relevant character/status views using responsive navigation appropriate to the available space.
 - [ ] Supported panel visibility or layout adjustments can be made without mutating canonical story/world state or generating gameplay events.
 - [ ] Only relevant panels and operations for enabled systems are offered, while disabled features do not clutter the interface or bypass permissions.
-- [ ] Keyboard accessibility and core responsive behaviour work in supported Tauri and SvelteKit/localhost workflows.
+- [ ] Keyboard accessibility, core responsive behaviour and a smooth story-editing experience work in Wails v3 desktop and headless localhost browser modes.
 - [ ] Advanced docking, extensive shortcut remapping and preset systems are optional follow-on features rather than mandatory first-release requirements.
 - [ ] Exact layout breakpoints, shortcuts, preferences persistence model and accessibility verification standards are resolved during refinement.
 
