@@ -41,6 +41,11 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - The **client-side TypeScript** reducer/coordinator can reconstruct state from saved events and revisions. Go supplies ordered, version-consistent records and atomically commits accepted changes; exact snapshot layouts and replay caching remain for refinement.
 - Multiple browser windows in headless mode must not silently publish stale projections or overwrite newly committed history. Versioning/revision checks and rebuild invalidation must be designed.
 
+## Duplicated adventure reconstruction
+- IDEA-0005's accepted **full-history duplication** copies the new adventure's complete committed baseline, ordered incremental event history, accepted prose revisions, relevant lore and persistent plugin data, sufficient to reconstruct the duplicate at every supported historical turn, not simply the newest materialised projection.
+- If derived snapshots, summaries and caches are copied, they must remain valid for the duplicate's independent identity and history; otherwise they can be recomputed. Their existence is not required for correctness.
+- Pending input and noncanonical editing drafts are **excluded** from duplication; copying must not invoke AI or reproduce external side effects.
+
 ## Dependencies and constraints
 - Accepted [[Event-Sourced World History]] (IDEA-0039) supplies ordered validated state-changing events; this clarification requires them and any accompanying versioned records to cover **all** canonical persistent changes, not a manually selected subset.
 - Accepted [[Versioned Text Blocks and Revision IDs]] (IDEA-0040) supplies story-text lineage and revision references needed for full adventure reconstruction.
@@ -86,6 +91,7 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - This remains a **staging direction requiring refinement**, not a production specification or an implemented capability.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
