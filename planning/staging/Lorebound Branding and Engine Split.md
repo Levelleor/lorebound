@@ -31,7 +31,7 @@ Lorebound's reusable coordinator, state persistence and native capability logic 
 ## Proposed behaviour
 - Use **Lorebound** for the overall application, repository and user-facing brand.
 - Use **Lorebound Backend** as a plain descriptive name for the shared backend/engine-related functionality where the distinction is useful. This naming preference does **not** mandate a separate repository, independently distributed package, network server or release process.
-- Preserve the accepted modular SvelteKit/TypeScript game architecture used within Wails v3 desktop and headless Go-hosted browser mode. The descriptive internal label does not require a separate engine process or package.
+- Preserve the accepted modular SvelteKit/TypeScript game architecture used within Wails v3 headless Go-hosted normal-browser mode. The descriptive internal label does not require a separate engine process or package.
 - Consider independently publishing/rebranding the engine only if an actual reuse case emerges and the user makes a separate decision.
 
 ## Alternatives and trade-offs
@@ -39,7 +39,7 @@ Lorebound's reusable coordinator, state persistence and native capability logic 
 - **Original assistant-proposed alternative (not selected):** A distinct reusable engine brand such as *Fablecore*, potentially with separate distribution if future reuse justifies it.
 
 ## Dependencies and constraints
-- [[Localhost Startup and Offline Mode]] (IDEA-0053) now selects **Wails v3 desktop and headless localhost Go server builds**, sharing a statically built SvelteKit/Svelte UI and **browser-side TypeScript coordinator/gameplay engine**. Go service bindings support native access and filesystem SQLite, not a second game-engine implementation.
+- [[Localhost Startup and Offline Mode]] (IDEA-0053) now selects **Wails v3 headless localhost Go server build**, sharing a statically built SvelteKit/Svelte UI and **browser-side TypeScript coordinator/gameplay engine**. Go service bindings support native access and filesystem SQLite, not a second game-engine implementation.
 - [[Native Gameplay Capability Registry]] (IDEA-0047), [[Deterministic Adventure Coordinator]] (IDEA-0044) and [[Snapshots and Incremental State Rebuild]] (IDEA-0042) establish modular shared engine responsibilities, independent of external branding.
 - The external runtime/storage decision now selects **Go/Wails v3 + filesystem SQLite** in IDEA-0053/0051. This branding note does not itself decide repo/package layout or create a separately hosted/published engine.
 - This note is **accepted for staging refinement**, not production-approved or implemented.
@@ -53,7 +53,7 @@ Lorebound's reusable coordinator, state persistence and native capability logic 
 ## Draft acceptance criteria
 - [ ] Official player-facing naming consistently identifies the application and overall project as **Lorebound**.
 - [ ] Internal architecture and planning may refer to shared engine/backend functionality as **Lorebound Backend**, without introducing *Fablecore* or a second public brand.
-- [ ] Wails desktop and headless/localhost browser workflows reuse frontend TypeScript game logic without a separately published engine package, duplicate Go game engine or Node SSR process simply because an internal component is named *backend*.
+- [ ] The headless Wails Go server and normal-browser workflow reuse frontend TypeScript game logic without a separately published engine package, duplicate Go game engine or Node SSR process simply because an internal component is named *backend*.
 - [ ] Shared coordinator, rules, capability contracts and persistent history can remain modular across supported runtime adapters.
 - [ ] Exact package names, module boundaries, folder layout and potential future distribution details stay open for refinement.
 
@@ -70,6 +70,7 @@ Lorebound's reusable coordinator, state persistence and native capability logic 
 - This staging acceptance does not approve or implement any second engine brand, repository split or separately distributed backend.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted runtime correction alignment:** Replaces the dual desktop/headless Wails direction with **Wails v3 headless localhost Go server only**, used through the normal browser, distributed as Windows/macOS/Linux server executables. No native WebView or separate npm player runtime. Docker is the separate unaccepted candidate [[Optional Docker Distribution]] (IDEA-0065). Remaining design specifics stay in staging.
 - 2026-10-17 — **Cross-reference alignment:** IDEA-0053 now selects Wails v3 desktop/headless and client-side TypeScript game logic; IDEA-0051 selects Go-managed filesystem SQLite. The descriptive internal label "Lorebound Backend" does not imply a standalone server, Go gameplay engine or externally released package. No change to this idea\'s accepted naming scope.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**, considering a separately branded engine such as Fablecore.
 - 2026-10-17 — **User clarification (not staging acceptance):** "We'll just call it lorebound backend." Record the internal descriptive name **Lorebound Backend**; do not establish a second public engine brand or imply a separate repository, service or package. The note remained in Inbox pending a final review decision.
