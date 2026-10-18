@@ -56,6 +56,11 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Continue existing provisional-generation policy: **failed, incomplete, interrupted or invalid AI response does not produce canonical story/events/world changes**. Preserve last accepted canon and recoverable input draft; show actionable API error details where available and avoid inventing diagnostics. Connection testing is optional rather than mandatory to launch or start any non-AI action.
 - A configured but offline local model or unreachable cloud provider can error; non-AI work remains available.
 
+## Latest-only player drafts do not imply AI-preview autosave
+- **Accepted IDEA-0005 Option B (2026-10-18):** All **player-authored noncanonical drafts** (unsent composer input and unconfirmed current/historical prose edits) may be stored as **a single latest saved value per logical editing target**, overwriting earlier draft content cleanly across browser tabs. No earlier-draft recovery, separate per-tab versions or draft conflict protection is required. This does **not** relax expected-version conflict checking for canonical turns, edited prose or validated world-state transactions.
+- **Terminology boundary:** Streamed/unfinished **AI-generated prose** is provisional and may also be called a *generation draft/preview*, but **it is not newly promised a shared SQLite autosave slot by Option B**. Its cancellation, failure and acceptance continue under this idea's existing provisional-output policy. A failed AI request cannot make its unfinished text canonical, and does not require preserving an older player draft that another tab already overwrote.
+- Diagnostics may indicate failures and the latest draft-save status without promising recovery of superseded player drafts or uncommitted AI previews. Exact draft autosave timing remains in IDEA-0005.
+
 ## Dependencies and constraints
 - Requires provider/local server streaming and abort behaviour through accepted [[Cloud LLM Provider Connectors]], [[Local LLM Server Connections]] and [[Provider Connection Profiles and Discovery]].
 - Pipelines may have multiple stages, retries, or different assigned models ([[Configurable Generation Pipeline Strategies]], [[One-Model Task Routing]]); a cancellation should stop or invalidate all remaining work belonging to that generation attempt.
@@ -75,6 +80,7 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - What interface distinguishes a user-cancelled request, connection failure and a validation-rejected result?
 
 ## Draft acceptance criteria
+- [ ] A player-authored draft may be overwritten by a later shared autosave on the same target without requiring a conflict popup; **AI streaming preview text** is not thereby automatically autosaved or committed.
 - [ ] A supported generation shows prose incrementally without representing interim text as committed story canon.
 - [ ] A user can cancel an in-progress generation, including one running a multi-stage pipeline.
 - [ ] The interface reports waiting, generation/streaming, validation/repair, completed, cancelled and failed states as applicable.
@@ -97,6 +103,7 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Accepted for **staging/refinement** only; not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0005 Option B cross-reference:** Player-written noncanonical drafts are latest-only shared records per logical editing target with clean overwrite across tabs. This does not include a new promise to autosave streamed AI previews and never relaxes canonical expected-version validation. Staging only.
 - 2026-10-18 — **Accepted IDEA-0001 dependency:** Only actual AI API operations can be blocked by missing model configuration or fail because of provider errors; non-AI play/editing/persistence works regardless. Guidance to model setup and clear stage-specific error feedback are required. Provisional generations never partially commit. Staging only.
 - 2026-10-17 — **Accepted IDEA-0006 Quick Start alignment:** Streamed opening is provisional during AI generation and validation; on completed validated success it is **automatically committed as canonical turn one**. Partial/cancelled/failed/invalid opening output cannot be committed. No additional Accept click is required for Quick Start; historical edit confirmation remains separate. Staging unchanged.
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
