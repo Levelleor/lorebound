@@ -46,6 +46,11 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - **Streaming AI output** is likewise provisional but is **not automatically guaranteed to be autosaved** under that decision. A cancelled or failed generation cannot commit partial text/state.
 - After failure/cancellation, retain the player's last successfully autosaved input for retry; any optional retention of AI previews needs its own refinement.
 
+## Quick Start opening provisional status
+- For AI-generated Quick Start openings (IDEA-0006), streamed text remains visibly **provisional** until all generation stages and deterministic validation succeed. At that point, the engine **automatically commits the opening as the first story turn** with validated initial events, without a separate player confirmation.
+- Cancellation, connection failure, incomplete streams and validation failures must not partially persist the opening or world state. Show an appropriate retry/failure state; do not represent incomplete preview tokens as an accepted first turn.
+- This rule does not change the **noncanonical autosave of player-written drafts**, nor does it remove explicit confirmation of later historical prose edits.
+
 ## Dependencies and constraints
 - Requires provider/local server streaming and abort behaviour through accepted [[Cloud LLM Provider Connectors]], [[Local LLM Server Connections]] and [[Provider Connection Profiles and Discovery]].
 - Pipelines may have multiple stages, retries, or different assigned models ([[Configurable Generation Pipeline Strategies]], [[One-Model Task Routing]]); a cancellation should stop or invalidate all remaining work belonging to that generation attempt.
@@ -87,6 +92,7 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Accepted for **staging/refinement** only; not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0006 Quick Start alignment:** Streamed opening is provisional during AI generation and validation; on completed validated success it is **automatically committed as canonical turn one**. Partial/cancelled/failed/invalid opening output cannot be committed. No additional Accept click is required for Quick Start; historical edit confirmation remains separate. Staging unchanged.
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
