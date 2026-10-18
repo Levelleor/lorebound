@@ -38,7 +38,7 @@ A combination of entry types and editable freeform lore supports both structured
 
 ## No invented lore during initial extraction
 - **IDEA-0006 explicitly accepted:** A successful Quick Start opening can populate/link **minimal typed Lorebook/character/location/item facts supported by its actual words**, when the applicable systems are enabled and the source passes validation.
-- The interpreter must **not enrich a referenced entity with lore that has not been stated**. A named village is not a populated settlement history; a named NPC is not an automatically invented biography. Missing fields stay unknown. Explicit rumours or character beliefs remain labelled as such rather than rewritten as established world facts.
+- The interpreter must **not enrich a referenced entity with lore that has not been stated**. A named village is not a populated settlement history; a named character is not an automatically invented biography. Missing fields stay unknown. Explicit rumours or character beliefs remain labelled as such rather than rewritten as established world facts.
 - Each automatically created or updated fact should retain a source/story-revision reference and follow the normal distinction between stable Lorebook knowledge and mutable live character/location/item state. A later explicit narrative addition or player edit can establish additional facts normally.
 
 ## Optional generated world before Turn 1 versus strict extraction
