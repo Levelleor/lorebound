@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Local First Storage and Deployment Brainstorm]]"]
@@ -35,6 +35,11 @@ Store the initial canonical baseline and each accepted incremental change (inclu
 
 ## Alternatives and trade-offs
 A complete per-turn stored state may allow fast random access but duplicates unchanged data; complete incremental deltas preserve reconstructibility more compactly. Structural-sharing versions, recent-state caches, and optional periodic or adaptive checkpoints can accelerate arbitrary-time access and reconstruction. Every 25–100 turns was merely an experimental snapshot suggestion and is **not a required interval**. Select storage and replay optimisations only after correctness and total persistent-state coverage are established.
+
+## Architecture integration (2026-10-17)
+- All canonical incremental history and revision records are persisted in **filesystem SQLite through Wails/Go services**. Browser-memory projections and caches are derived; they are not durable authoritative saves.
+- The **client-side TypeScript** reducer/coordinator can reconstruct state from saved events and revisions. Go supplies ordered, version-consistent records and atomically commits accepted changes; exact snapshot layouts and replay caching remain for refinement.
+- Multiple browser windows in headless mode must not silently publish stale projections or overwrite newly committed history. Versioning/revision checks and rebuild invalidation must be designed.
 
 ## Dependencies and constraints
 - Accepted [[Event-Sourced World History]] (IDEA-0039) supplies ordered validated state-changing events; this clarification requires them and any accompanying versioned records to cover **all** canonical persistent changes, not a manually selected subset.
@@ -81,6 +86,7 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - This remains a **staging direction requiring refinement**, not a production specification or an implemented capability.
 
 ## Decisions and review history
+- 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **User clarification during review (not acceptance):** Incremental saving must record all canonical persistent state changes, enabling full reconstruction of the adventure/world at any point; the goal is not partial event replay plus mandatory older checkpoints. The candidate now puts complete incremental coverage and rebuilding from the affected edit boundary first, with snapshots only as optional speed-ups. At that point the note remained unaccepted in Inbox.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Complete incremental recording of **all** persistent adventure and world-state changes; deterministic reconstruction of **full canonical state at any turn**; efficient rebuilding from the earliest affected point after confirmed historical edits, with reuse of valid preceding state; checkpoints permitted only as optional performance accelerators. Storage structures, dependency algorithms, checkpoint cadence and detailed invalidation rules remain open. Promoted to staging for refinement, not production.
