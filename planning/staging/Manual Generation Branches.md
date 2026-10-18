@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Story Editing and Event Timeline Brainstorm]]"]
@@ -36,6 +36,14 @@ From an explicit story-level action, a player chooses to fork the adventure (pot
 ## Alternatives and trade-offs
 **Rejected from the original assistant proposal:** A branch/tree picker inside one story, multiple story heads attached to one UI entry, and branch-specific switching mechanics within the chat. The accepted alternative is to fork into a new full adventure object. Simple whole-save duplication (IDEA-0005) is related but may not supply a chosen historical fork point. Implementation may use independent copies or safe immutable sharing internally; that is not a player-visible branching feature.
 
+## Fork from any committed story turn
+- **Explicit user choice (2026-10-18):** A player may fork an adventure at **any committed story-turn boundary**, not only named saves, manually created checkpoints, or turns with materialised snapshots. Choose an actual accepted turn in the source adventure's authoritative active history; **drafts, provisional AI output, uncommitted historical edits and rejected or invalid turns are never valid fork points**.
+- **Exact committed prefix and state:** The new fork is a **separate saved adventure** with its own identity, containing the **complete accepted narrative and reconstructible canonical history from the source's beginning through and including the selected turn**. This includes applicable initial baseline/Lorebook, accepted text-revision lineage, ordered events and world state, valid relationships/entity records, context/memory and supported durable plugin data **as they stood at that boundary**. All following source turns/revisions/events/state changes belong only to the original and must **not** be copied to the fork or influence the fork's starting current state. No unsent composer text, unconfirmed prose-edit drafts, pending generations, credentials or incomplete operations cross over.
+- **Independent future:** Subsequent turns, renames, edits, world/lore updates and deletions in either adventure cannot mutate the other. Internal references/provenance must be coherent in the new adventure; copying committed source data or safely sharing strictly immutable infrastructure are implementation options, but **no mutable canonical records are shared**. The source's later history remains intact, even though the fork omits it.
+- **Reconstruction over mandatory snapshots:** Obtain the chosen boundary's authoritative world state by replay of committed incremental history, optionally accelerated by valid stored snapshots. **Every committed turn must remain forkable even with no snapshot at that exact point**; this selects no checkpoint cadence, special named-save feature or algorithm.
+- **Safe fork creation:** Validate the chosen committed turn and source version; create the complete independent fork coherently within Go/SQLite or fail without leaving a partially copied adventure. Concurrent source changes must not produce a mixed-version copied prefix; exact transaction, version-pinning and ID remapping schemes remain implementation details.
+- **Separate feature boundaries:** This is an **in-library fork**, not per-adventure file export/import, an in-story branch-tree UI, the 'Keep Later Turns/Delete All After Point' historical-edit workflow, or a retry/alternate-generation branch within the same story. How the player chooses a source turn in the interface and whether to show source-story attribution metadata remain open.
+
 ## Dependencies and constraints
 - Depends on independent adventure persistence, duplication, save/export (IDEA-0005), stable narrative revision IDs (IDEA-0003/IDEA-0040), and event/state reconstruction concepts (IDEA-0039/IDEA-0042).
 - A new story must never share mutable world-state objects, active turn lists, or in-progress generation state with its source story.
@@ -45,14 +53,19 @@ From an explicit story-level action, a player chooses to fork the adventure (pot
 - The rule against silently rewriting later prose still applies.
 
 ## Open questions
-- Should the player be able to fork from any committed turn or only named save/revision points?
+- **Resolved:** Fork from **any committed story turn**, not only named save points or materialised checkpoints. Exact turn selection/navigation in the UI remains for later refinement.
 - How should a point-in-history be selected without adding an in-chat branch-tree mechanic?
-- Does the new adventure include earlier text and events as a self-contained copy, or can immutable internal data be safely shared?
+- **Resolved user-visible requirement:** The fork independently owns all accepted history, text, provenance and state **through the selected turn** with no later source turns and no shared mutable data. Whether immutable internal infrastructure may be safely shared remains a technical implementation detail.
 - How are provenance and source-story attribution represented without forcing branch-specific UI?
 - How should a fork behave if a chosen historical revision contains pending edits or invalid world-state changes?
 - Is a separate "Fork Story" library action sufficient alongside the already accepted Duplicate feature?
 
 ## Draft acceptance criteria
+- [ ] A player can select **any committed source turn** (including one without a stored snapshot or named checkpoint) as the fork boundary; an uncommitted draft or provisional output cannot be selected.
+- [ ] A fork at Turn N contains the source's **complete accepted prefix through N**, including validated baseline, prose/revision lineage, events/world state, Lorebook, relationships, memory and relevant persistent plugin history necessary to reconstruct the selected state; it excludes all source turns and effects after N.
+- [ ] An independently addressable adventure appears in the library and its later edits, gameplay and deletion do not mutate the original or any other fork; the original's later turns remain unchanged.
+- [ ] Replay from valid incremental history can reconstruct the state at a chosen fork point when no materialised checkpoint exists, and Go/SQLite never exposes a partial or mixed-version fork on a failed/concurrent copy.
+- [ ] Noncanonical drafts, incomplete generations and provider credentials are excluded; forking never creates an in-story branching/timeline UI or an individual-adventure file export.
 - [ ] A player can explicitly fork an existing story into a newly created, independently stored adventure.
 - [ ] The fork appears as its **own entry** in the adventure library and opens like any other story.
 - [ ] The original story and its later turns/state remain unchanged after forking.
@@ -74,5 +87,6 @@ From an explicit story-level action, a player chooses to fork the adventure (pot
 - Accepted for staging/refinement only; not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **User explicitly selected fork-point Option A:** A **new independent adventure can fork from any committed story turn**, with the full authoritative text/history and reconstructible state through and including that turn, but none of the original's subsequent turns/effects. No mandatory named checkpoint or snapshot, drafts or provisional output; source remains intact. Correct transaction/version/ID safety and UI turn selection still need implementation refinement. This remains staging only, not code or production approval.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate** proposing manual generation branches sharing earlier history.
 - 2026-10-16 — **User accepted with a major modification:** "I don't like this actually being a mechanic like that in-chat. Lets just create a new story when we branch out, which is a separate object on the storage and UI." The accepted scope is **fork to a separate story/adventure object**, not the originally suggested in-chat timeline tree. Moved to staging for refinement; no production approval.
