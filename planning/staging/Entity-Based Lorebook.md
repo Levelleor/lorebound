@@ -15,13 +15,13 @@ tags:
 # Entity-Based Lorebook
 
 ## Idea
-Store lore about PCs, NPCs, settlements, world regions, factions, species, objects and abilities.
+Store lore about all characters, settlements, world regions, factions, species, objects and abilities.
 
 ## Why this idea matters
 World knowledge must outlive any individual prose passage.
 
 ## Accepted direction
-- **Entity-based Lorebook:** Store and edit persistent lore entries for player characters, NPCs, settlements, world regions, factions, species, objects, abilities and other relevant concepts.
+- **Entity-based Lorebook:** Store and edit persistent lore entries for all characters, settlements, world regions, factions, species, objects, abilities and other relevant concepts.
 - **Typed entries and flexible lore text:** Distinguish entry/entity types while allowing player-authored freeform descriptions and structured fields where useful.
 - **Stable links between entities:** Lore entries may refer to related characters, locations, items and concepts through durable entity identifiers, not just copied prose.
 - **Separate stable knowledge from mutable state:** Link to live character/location/item world-state records instead of duplicating changeable facts as permanently authoritative Lorebook text. A change in the game world's current state should not cause stale Lorebook text to override it.
@@ -42,7 +42,7 @@ A combination of entry types and editable freeform lore supports both structured
 - Each automatically created or updated fact should retain a source/story-revision reference and follow the normal distinction between stable Lorebook knowledge and mutable live character/location/item state. A later explicit narrative addition or player edit can establish additional facts normally.
 
 ## Optional generated world before Turn 1 versus strict extraction
-- **Accepted IDEA-0006 refinement:** Once a player-written **Custom Opening** is committed, enabled interpreter/Lorebook integrations should register/link **only source-supported facts** from that prose, just as for an AI-generated Quick Start opening. A draft or blank opening does not establish new world facts. Never fill in NPC backstories, locations, relationships or other unwritten lore under the guise of extraction.
+- **Accepted IDEA-0006 refinement:** Once a player-written **Custom Opening** is committed, enabled interpreter/Lorebook integrations should register/link **only source-supported facts** from that prose, just as for an AI-generated Quick Start opening. A draft or blank opening does not establish new world facts. Never fill in character backstories, locations, relationships or other unwritten lore under the guise of extraction.
 - **New separate accepted staging idea IDEA-0066:** On explicit player request, an AI **may author a substantial initial Lorebook/world before Turn 1**, so a new adventure can start already populated. This is an **intentional worldbuilding task**, not a change to the source-grounded interpreter's semantics. Generated lore must still distinguish established facts, rumours and dynamic present-time state; exact workflow, breadth, player review and commit policy remain for later refinement.
 - The worldbuilder is **optional** and does not make world generation mandatory for blank Custom Opening, normal Quick Start or guided creation. Its output belongs to that adventure's persistent Lorebook inside the existing database; it is not a new import/export feature.
 
