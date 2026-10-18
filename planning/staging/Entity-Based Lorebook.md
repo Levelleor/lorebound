@@ -74,6 +74,12 @@ A combination of entry types and editable freeform lore supports both structured
 - **Every character selectable:** `Playing As` lists **all** character entities, named or unnamed, using readable display labels keyed by IDs. Selecting an unnamed character is allowed and does not add a name, select a permanent protagonist or create story/world mutations.
 
 
+## Manual lore descriptions do not require semantic matching to structured fields
+- **Accepted IDEA-0007 clarification (2026-10-18):** When a player manually authors a **character's freeform Lorebook description/background** alongside structured attributes, **do not require the application to parse the prose and cross-check that it semantically agrees with the structured fields**. A human/elf disagreement between description and Species can be retained without blocking character save, inventing a precedence rule, or automatically rewriting either representation.
+- **Preserve other boundaries:** This is not a general exemption from canonical integrity or deterministic gameplay validation. Typed field schemas and entity references remain valid; actual committed world-state actions still obey coordinator/Go transaction safeguards. Separately accepted *source-grounded extraction from narrative openings* continues to validate proposed facts rather than treating manually typed prose as a mandatory structured-field synchronisation protocol.
+- **No implied facts:** Do not use a display label, unknown name or freeform phrasing to silently fill structured fields, promote rumours or manufacture lore. Any later manual correction is deliberate; no compulsory AI contradiction detector or resolution interface is required.
+
+
 ## Dependencies and constraints
 - Lorebook entries should refer to authoritative entities in the future character, location and inventory systems; this idea does not approve those separate features by itself.
 - Dynamic state such as current location, ownership, inventory, alive/dead state and relationships must not be treated as immutable Lorebook fact.
@@ -91,6 +97,8 @@ A combination of entry types and editable freeform lore supports both structured
 - What precedence should manual inclusion and exclusion take if optional automatic Lorebook activation or RAG is accepted later?
 
 ## Draft acceptance criteria
+- [ ] Players can save a character's freeform description alongside individually valid but semantically inconsistent structured attributes **without a semantic conflict popup or automatic field/prose rewriting**.
+- [ ] Structural references and authoritative world-state/commit checks remain enforced; this exception does not weaken AI-generated operation validation or erase known-versus-unknown distinctions.
 - [ ] Lorebook supports a character with no recorded canonical name, identified by stable ID and a descriptive/neutral display label that does not assert unestablished facts.
 - [ ] Rumoured or claimed names remain distinct from established canonical names, while later verified names update the same stable character entity.
 - [ ] Unnamed characters remain accessible and individually selectable in the Lorebook-backed `Playing As` list.
@@ -120,6 +128,7 @@ A combination of entry types and editable freeform lore supports both structured
 - Accepted into **staging for refinement only**. Automatic embeddings-based RAG retrieval is intentionally recorded separately as a fresh unaccepted Inbox candidate.
 
 ## Decisions and review history
+- 2026-10-18 — **IDEA-0007 user decision dependency:** Manual freeform character descriptions do not require automated semantic comparison with typed Lorebook fields; neither representation silently overrides or corrects the other. Existing stable IDs, schema checks, source-grounded narrative extraction and canonical gameplay validation remain in force. Staging only.
 - 2026-10-18 — **Accepted IDEA-0007 Option B:** Lorebook characters can have unknown proper names and only a stable identity; descriptive or generic UI labels are noncanonical name substitutes for display, not invented facts. Later grounded name revelation updates the same entity, unverified names stay uncertain, and all entries remain selectable as `Playing As`. Staging only.
 - 2026-10-18 — **Explicit user acceptance of Lorebook drawer:** From the icon left of the story input, open the Lorebook in a **resizable LEFT-side drawer** (expandable for detailed editing). Opening animation is **two-stage: leading sidebar first, full drawer from behind it second**. Closing uses **simple fade-out**, not reversed opening. Preserve reduced-motion accessibility, editable Lorebook semantics and the separate Info/Settings panel. Staging only; exact timing and dimensions remain open.
 - 2026-10-18 — **User-accepted Lorebook navigation placement:** Place a direct Lorebook icon **to the left of the story input field** because lore changes frequently. The nearby information panel has **Info/Settings tabs**, with `Playing As` under Settings, not Lorebook as a required tab. Staging only.
