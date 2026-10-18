@@ -43,6 +43,12 @@ Native function/tool calling may provide provider-supported structured arguments
 - Interpretation and structured operation proposal logic run in the shared client-side TypeScript game runtime, not a mandatory Go inference service or Node backend. Model APIs are external and accessed from the frontend when permitted.
 - Proposals remain provisional until TypeScript domain validation and coordinator agreement; Go/Wails writes only complete, revision-consistent transactions into filesystem SQLite and must protect database integrity when used by multiple browser clients.
 
+## Source-grounded initial fact extraction
+- **IDEA-0006 accepted:** After a Quick Start opening is fully generated, the interpreter may propose supported entity/world records for characters, locations, items and relationships **explicitly established in the accepted scene, player-supplied setup, or already established canonical context**. Proposals remain provisional until deterministic validation and the first-turn atomic commit.
+- **Extract, do not author additional lore:** The interpretation pass is **not an independent worldbuilding request**. It must not invent background, physical descriptions, personalities, motivations, geography, item ownership, character relationships, events or numeric stats that the source never established. Assigning a necessary stable ID is technical bookkeeping, not a license to fabricate in-world details.
+- **Unknown remains unknown:** Minimal entities are valid. Unstated fields remain unknown/not recorded; rumours, hypotheticals, figurative language and ambiguous reference resolution cannot be promoted to established canon. Include source turn/text-revision references so every accepted structured fact can be traced to actual narrative evidence.
+- Example: "Marcus approaches, carrying a bloodstained sword" supports Marcus, an item and the **carrying** relationship; it does **not** prove Marcus owns the sword, where blood came from, or why it is stained. The same restriction applies to lore/location creation through this interpretation pathway.
+
 ## Dependencies and constraints
 - Works under accepted [[Deterministic Adventure Coordinator]] (IDEA-0044): model output is a provisional proposal and cannot mutate canonical state without deterministic validation and coherent finalisation.
 - Must support the configurable workflows of [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and the single- or multi-model routing accepted in [[One-Model Task Routing]] (IDEA-0017).
@@ -91,6 +97,7 @@ Native function/tool calling may provide provider-supported structured arguments
 - This remains an **unrefined accepted planning direction**, not a production-ready specification or implemented feature.
 
 ## Decisions and review history
+- 2026-10-17 — **Explicit user-approved IDEA-0006 constraint:** Automatic structured initial-world extraction is approved when supported systems are enabled, but the interpreter must **only extract source-established facts** and must **never create additional unspoken lore** while constructing location, character, item or relationship records. Preserve uncertainty and source provenance; validate proposals and atomically commit with the first opening turn. Staging only.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
