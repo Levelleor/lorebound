@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[LLM Providers and Generation Brainstorm]]", "[[Local First Storage and Deployment Brainstorm]]"]
@@ -28,7 +28,7 @@ One locally served model must be sufficient for play.
 - **Optional model discovery:** List available models when an endpoint supports discovery; always allow manual model ID entry when discovery is absent or unreliable.
 - **Text generation and supported streaming:** Use the same internal generation interface as cloud providers, adapting differences between local server protocols and available model features.
 - **Clear connection feedback:** Detect/report unreachable servers, invalid endpoints, unavailable models, unsupported parameters, timeouts and streaming errors without falsely accepting partial turns or state changes.
-- **Local-first and safe defaults:** A browser-local adventure using a reachable local inference server should not require external cloud requests. Lorebound should not configure or expose servers to the public Internet automatically.
+- **Local-first and safe defaults:** A filesystem-SQLite-backed adventure using an independently running local inference server should not require cloud requests. Lorebound must not automatically expose model servers to the public Internet.
 - **No built-in downloader required:** Integration with already-running external inference servers is accepted. Automatic model download/installation is a separate optional idea, not a prerequisite here.
 
 **llama.cpp compatibility reference:** The official [llama.cpp `llama-server` documentation](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md) documents OpenAI-compatible `/v1/chat/completions`, `/v1/models`, and streaming; default listening address is `127.0.0.1:8080`. Compatibility must be validated in practice, including its own chat-template/model-dependent features, rather than assumed universally identical to OpenAI.
@@ -38,6 +38,10 @@ Expose a local-server profile selector including **Ollama, LM Studio, vLLM, llam
 
 ## Alternatives and trade-offs
 Accept connecting to externally hosted local models now; an integrated model manager or downloader may be considered separately later. Generic compatible-endpoint mode complements, but does **not** replace the explicit support requirement for llama.cpp and the other named servers. The exact adapter reuse and UI defaults remain for refinement.
+
+## Architecture integration (2026-10-17)
+- AI provider APIs are invoked by the shared client-side TypeScript frontend in both Wails v3 desktop and headless browser modes. Standard browser fetch works only when server CORS/origin and network policies permit it; any native Go transport workaround would be designed separately, without bundling the model runtime.
+- Go/SQLite is used for adventure persistence, not model inference. Local model servers remain separately installed and configured.
 
 ## Dependencies and constraints
 - Local server transport and browser security may require CORS configuration or an optional localhost bridge; this is a separate deployment/design concern.
@@ -77,5 +81,6 @@ Accept connecting to externally hosted local models now; an integrated model man
 - Accepted for **staging/refinement**; compatibility tests, implementation and production approval remain outstanding.
 
 ## Decisions and review history
+- 2026-10-17 — Cross-reference alignment with accepted Wails v3 desktop/headless server + client TypeScript game logic + Go/SQLite persistence (IDEA-0053/0051). This note remains staging and has not received independent production approval.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicit acceptance with clarification from the requesting user:** "yes, note that we want to make sure that llamacpp is supported". Accepted local server support including **Ollama, LM Studio, vLLM, llama.cpp (`llama-server`)**, configurable compatible endpoints, one-model sufficiency, connection profiles, optional discovery/streaming and clear errors; integrated model download is not required. Advanced details remain to be refined before separate production approval.
