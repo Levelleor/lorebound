@@ -15,13 +15,13 @@ tags:
 # Backups Export and Storage Quotas
 
 ## Idea
-Provide robust, **storage-independent** backup, restore, validated import/export, storage usage estimation and quota awareness for Lorebound adventures, whether persisted in browser-local storage, a SvelteKit backend database, or another selected architecture.
+Provide robust SQLite-backed backup, restore, validated import/export, disk-space estimation and storage integrity for Lorebound adventures using Go-managed filesystem persistence in Wails v3 desktop and headless localhost modes.
 
 ## Why this idea matters
 Clearing browser site data, storage eviction, exceeding storage quotas, backend outages, failed migrations or losing a device/server could destroy long-running adventures. Players need durable, portable ways to preserve and restore **entire reconstructible stories**, not just their latest prose or a cached projection, without coupling the backup format to whichever database engine is eventually chosen.
 
 ## Accepted direction
-- **Storage-independent backup and restore:** Offer user-accessible export, import and restore capabilities for a browser-local database, a suitably deployed SvelteKit backend or a future hybrid storage configuration. This requirement does not choose a particular database or deployment.
+- **Go/SQLite-backed backup and restore:** Provide user-accessible export, import and restore for the selected filesystem SQLite persistence, through the same Go/Wails service surface in both desktop and headless browser modes.
 - **Single-adventure portable export:** Allow a player to export a complete selected adventure with its story turns, applicable text revisions, baseline, all accepted incremental state/event changes, stable entity references and other durable data required to reconstruct it.
 - **Full-library portable export:** Allow exporting the whole adventure library with relevant portable metadata, settings and other included assets as appropriate. Precisely which non-adventure settings/assets belong in a full backup remains to be refined.
 - **Validated import and restore:** Check incoming backup schema/version, integrity, completeness, required dependencies and ability to reconstruct accepted state before making imported data authoritative. Exact import format, migrations and conflict resolution remain open.
@@ -62,7 +62,7 @@ Manual downloadable exports work across many deployments but depend on players r
 - Where should optional automatic backups live for browser-only and SvelteKit backend installations, and who grants access to their destination?
 - What defaults, backup frequency, retention rules, optional encryption or privacy protections should apply?
 - How should old backup formats and plugin-specific events migrate if an older adventure is imported years later?
-- What storage metrics and quota warnings can be trusted across IndexedDB, SQLite WASM + OPFS, server SQLite and hosted SQL?
+- Which filesystem capacity, SQLite page count, WAL size and backup-space estimates are reliable enough for actionable warnings in desktop and headless modes?
 - Which messages and recovery paths should appear if quota is exhausted, the database becomes unavailable or an export fails?
 
 ## Draft acceptance criteria
