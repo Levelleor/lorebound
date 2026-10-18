@@ -47,6 +47,11 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - Only confirmation creates a canonical text revision, atomically with accepted related state changes. Draft IDs/cleanup rules remain implementation details.
 - On return to the browser/editor, restore the last successfully autosaved draft; exact debounce interval and conflict handling remain open.
 
+## Full-history duplication and revision provenance
+- Duplicating an adventure under IDEA-0005 retains the **whole accepted story and text-revision lineage**, not just the latest rendered prose. All event-to-turn, block-to-revision and related provenance links remain coherent in the new adventure so both copies can be edited and reconstructed independently.
+- The new adventure identity is distinct; precise block/revision ID copying versus remapping depends on their chosen scope. Avoid pointers from the duplicate to mutable records owned by the source adventure.
+- **Do not duplicate unconfirmed editing drafts** or unsent player input; those are noncanonical and stay with the original adventure.
+
 ## Dependencies and constraints
 - Works with accepted [[Event-Sourced World History]] (IDEA-0039), whose event records need stable source turn and revision references.
 - Historical editing confirmation and deletion UX belong to separate unaccepted [[Historical Edit Confirmation and Bulk Truncation]] (IDEA-0041). Checkpoint design and undo safety are independently unaccepted (IDEA-0042, IDEA-0043).
@@ -87,6 +92,7 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - Design remains unrefined, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
