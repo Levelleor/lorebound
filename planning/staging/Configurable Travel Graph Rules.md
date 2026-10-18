@@ -39,6 +39,11 @@ Maintain travel connections between durable location IDs separately from parent/
 ## Alternatives and trade-offs
 All three travel policy directions are **accepted as configurable alternatives**, with no chosen universal default. Freeform movement permits lightweight storytelling but provides weaker spatial constraints. Strict adjacent-only mode gives tight turn-by-turn geography at the cost of potentially cumbersome traversal. Valid multi-hop routing makes longer journeys convenient while preserving known connections, but demands more pathfinding, conditional-edge validation and explicit rules for the time or consequences between intermediate locations. One-hop restrictions, access rules and path narration are optional refinements rather than mandatory simulation mechanics.
 
+## Narrative character cuts are not travel
+- **Latest accepted IDEA-0026/0034 integration:** Switching Settings `Playing As` among Lorebook characters who occupy different places is **not a character movement operation**. The next Do/Say simply follows the selected actor **where they already are**. **Do not require a travel edge, route, elapsed journey or travel-policy check** merely to switch whose actions the player supplies.
+- Existing freeform/strict travel rules **still apply** if that actor's subsequent Do/Say action attempts real movement; this is **not an exception permitting in-world teleportation**. Switching cannot create secret connections, relocate characters or merge their scenes. Characterless Story/Continue still work.
+
+
 ## Dependencies and constraints
 - Requires stable location IDs and a containment hierarchy from accepted [[Hierarchical World Locations]] (IDEA-0033), while preserving the distinction between hierarchy and route edges.
 - Validated travel should update accepted [[Character Presence and Current Scene]] (IDEA-0034) state and avoid automatically relocating remote or absent NPCs.
@@ -63,7 +68,7 @@ All three travel policy directions are **accepted as configurable alternatives**
 - What prevents allowed multi-hop movement from implicitly moving unaccompanied NPCs or duplicated world items?
 
 ## Draft acceptance criteria
-- [ ] An adventure can use freeform, strict adjacent-only or valid multi-hop travel policy without requiring one universal default.
+- [ ] Under any configured travel policy, switching `Playing As` between distant characters never fails for lack of a route, triggers movement events or changes locations. Any **real movement** in a subsequent action is checked under the selected travel policy.- [ ] An adventure can use freeform, strict adjacent-only or valid multi-hop travel policy without requiring one universal default.
 - [ ] Travel graph connections use stable location identities and remain distinct from containment parent/child links.
 - [ ] In adjacent-only mode, a move to a location without a valid directly traversable edge is rejected or handled as blocked without moving the character.
 - [ ] In valid multi-hop mode, a route succeeds only when the required edge sequence is connected and each applicable restriction is satisfied.
@@ -86,5 +91,6 @@ All three travel policy directions are **accepted as configurable alternatives**
 - **Staging means accepted for refinement, not production-approved or implemented.** The default policy, route solver, conditional-edge schema and user experience need review.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted scene-cut dependency:** `Playing As` switching is a narrative cut and not travel, so no route or movement validation is triggered by switching between far-apart characters. Actual travel still follows normal selected policy. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Configurable travel graph separately from the location hierarchy, supporting freeform movement, strict adjacent-only movement and valid multi-hop routes; validated location changes and optional conditional edges such as locked doors, permissions and one-hop limits; no invalid travel under strict rules. Default policy, route resolution and precise restrictions remain open. Moved to staging for refinement only.
