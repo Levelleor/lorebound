@@ -65,7 +65,7 @@ The user **selected free-form text as the baseline** rather than a required hier
 - Which optional machine-readable relationships improve complex anatomy handling without becoming a required hierarchy?
 
 ## Draft acceptance criteria
-- [ ] PCs and NPCs can have persistent, editable **free-form text-based** anatomy records with arbitrary player-defined feature names and descriptions.
+- [ ] All characters can have persistent, editable **free-form text-based** anatomy records with arbitrary player-defined feature names and descriptions.
 - [ ] A new story/character can start with a basic editable anatomy template or with no predefined feature list; all starter entries may be removed or changed at setup.
 - [ ] Users can add, edit, rename and remove custom features including cosmetic and intimate anatomy, without requiring a fixed list of allowed body parts or generated art.
 - [ ] Removing a form field/unused template entry is distinguishable from an in-world event that removes a body part.
