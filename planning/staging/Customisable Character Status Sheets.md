@@ -37,7 +37,7 @@ Provide per-character editable fields and optional typed definitions for current
 A universal predefined RPG sheet can make validation and UI simpler but forces genre-specific assumptions on stories where the metrics don't fit. A flexible key/value sheet works across genres but may sacrifice type safety and user experience unless typed values and optional templates are provided. The accepted approach favours flexible player-defined fields with optional typing and validation; exact type catalogues, presets, reusable schemas and field inheritance remain refinement choices.
 
 ## Status belongs to actual characters, not narrative focus
-- **Accepted IDEA-0007/0026 flexible character control:** Character status sheets are attached only to **real, established character IDs**, irrespective of whether the character is currently focused, one of several acted-through characters, or an NPC. No player-global character status sheet or invented default protagonist is required.
+- **Accepted IDEA-0007/0026 flexible character control:** Character status sheets are attached only to **real, established character IDs**, irrespective of whether the character is currently focused, one of several acted-through characters, or another character. No player-global character status sheet or invented default protagonist is required.
 - Stories with **zero characters** can exist and track non-character world state without generating a placeholder sheet. A focus switch changes which existing record the interface may show; it must not mutate status values, inventories or other canonical character details.
 - Sparse character information stays unknown until explicitly established and validated, consistent with existing no-invented-lore rules.
 
@@ -46,7 +46,7 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - The selected actor may change without altering any status field, inventory or historical event. Sparse characters and characterless adventures remain valid; no default protagonist sheet is required.
 
 ## Dependencies and constraints
-- Depends on accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) for stable identity and shared PC/NPC support.
+- Depends on accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) for stable identity and one unclassified character type.
 - Coordinates with accepted [[Entity-Based Lorebook]] (IDEA-0020) to avoid conflicting copies of current status in persistent lore.
 - For model-context inclusion, honour player selection and size/priority rules in accepted [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024).
 - This decision does **not** accept or implement IDEA-0028's automatic character-state tracking modes, nor any specific RPG mechanics, equipment or anatomy schema.
@@ -65,11 +65,11 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - Which updates are manual, disabled or automatically proposed and validated? This is expressly for separately evaluated IDEA-0028.
 
 ## Draft acceptance criteria
-- [ ] Both PCs and NPCs can have editable status sheets linked to their durable shared character identity.
+- [ ] Every character can have editable status sheets linked to their durable universal character identity.
 - [ ] A player can create and modify arbitrary character fields for stats, conditions, identity, goals and current state.
 - [ ] An adventure can use its own fields rather than being forced to use one fixed RPG character sheet.
 - [ ] Where chosen, typed fields validate values according to defined types and constraints, without inventing defaults for unspecified fields.
-- [ ] Sparse NPCs can omit optional status fields without requiring false or empty data values.
+- [ ] Sparse characters can omit optional status fields without requiring false or empty data values.
 - [ ] Missing or unrecorded values remain distinguishable from explicitly known empty, zero or false values.
 - [ ] The player can select current status fields to include or exclude from model context, and inspect what was actually transmitted.
 - [ ] Live status values do not silently become duplicated authoritative facts in Lorebook text.
