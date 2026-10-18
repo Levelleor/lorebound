@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
