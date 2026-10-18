@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -39,12 +39,18 @@ A deterministic TypeScript coordinator receives a proposed player action or narr
 ## Alternatives and trade-offs
 An AI agent directing arbitrary tool calls offers flexibility but introduces unpredictable control flow, side effects and difficult-to-audit authority. The accepted **programmatic TypeScript coordinator** provides an explicit central control and testability at the expense of designing routing, validators and repair policy. Distinct pipeline strategies can trade model-call cost, latency and reliability, and can share a single model sequentially or use task-specific models. This direction does not mandate one pipeline ordering or fixed tool orchestration framework.
 
+## Architecture integration (2026-10-17)
+- The accepted coordinator and gameplay rules execute as **TypeScript in the shared SvelteKit/Svelte client** in both Wails v3 desktop and headless browser modes, without a parallel Go gameplay engine.
+- The coordinator submits **prepared, validated turn commits** through Go/Wails services to filesystem SQLite. Go must enforce transactional write integrity, expected-revision concurrency and input safety; client-side validation alone is not a security boundary when a local HTTP server serves multiple browser clients.
+- Enabled gameplay plugins/capabilities run in the same client TypeScript runtime where possible, with Go reserved for privileged persistence/OS operations. Scheduling expensive model/rebuild work must not freeze the story interface.
+- External AI models are accessed through frontend TypeScript providers; CORS, credentials and any necessary alternate network transport are separate provider questions.
+
 ## Dependencies and constraints
 - Works with accepted [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and [[One-Model Task Routing]] (IDEA-0017); avoid a mandatory stack of simultaneously loaded models.
 - All accepted persistent changes must be recorded compatibly with [[Event-Sourced World History]] (IDEA-0039) and the complete incremental reconstruction requirement in [[Snapshots and Incremental State Rebuild]] (IDEA-0042).
 - Validate item transfers, character location and travel, environmental changes, and other canonical state according to their separately accepted feature rules (e.g. IDEA-0029, IDEA-0034, IDEA-0035 and IDEA-0038).
-- Structured LLM interpretation of arbitrary prose is a **separate unaccepted candidate** [[LLM State Interpreter and Proposed Operations]] (IDEA-0045); the exact implementation is not approved by this decision.
-- Typed tool rejections/repair and other tool-safety ideas remain separate Inbox review gates; accepting this coordinator does not automatically accept IDEA-0046 or subsequent proposals.
+- Structured LLM interpretation of arbitrary prose is a **separately accepted staging idea** [[LLM State Interpreter and Proposed Operations]] (IDEA-0045); its concrete schemas and implementation still need refinement.
+- Typed tool rejection/repair (IDEA-0046) is now also an accepted staging direction; optional external MCP connectivity (IDEA-0048) remains unaccepted. Their design/production gates remain separate.
 - In-flight or failed model/tool calls must not partially commit world-state changes or misleadingly finalise a narrative turn.
 - Tool actions that cause real-world side effects need independent permissions and safe handling; the coordinator cannot assume those side effects are automatically reversible.
 - Staging direction, not production approval or implemented behaviour.
@@ -83,5 +89,6 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - This is an accepted **unrefined direction**, not approval for production or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Deterministic, non-LLM TypeScript coordinator for AI interpretation, proposed operations, validators, tools, errors/repair, generation and coherent atomic turn finalisation; AI may propose but may not override canonical state; no mandatory multiple simultaneously loaded models. Exact call ordering, implicit-state detection, retries, repair and transaction mechanics are open. Promoted to staging for refinement only, not production.
