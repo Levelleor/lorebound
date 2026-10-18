@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Lorebound Vision Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -38,11 +38,16 @@ After the generation pipeline has validated a world-state operation, persist its
 ## Alternatives and trade-offs
 Full world snapshots each turn can be simpler for point-in-time reads but duplicate unchanged data and weaken per-change provenance. Event sourcing gives ordered, explainable world changes and revision reconstruction at the cost of deterministic reducers, migration discipline and complex historical invalidation. A **hybrid event log plus periodic derived snapshots** is allowed as a performance optimisation, but its checkpoint cadence and replay algorithm are deliberately undecided.
 
+## Architecture integration (2026-10-17)
+- The authoritative event journal and necessary associated story revisions now persist through **Go-managed filesystem SQLite** (IDEA-0051). The **TypeScript client-side** coordinator and rule validators (IDEA-0044) still determine which provisional actions are accepted.
+- Go is responsible for **atomic writes, expected-revision/concurrency checks and durable data consistency** when applying a prepared accepted turn, including from multiple headless browser tabs. This does not create an independent Go narrative/gameplay rule engine.
+- Events should carry stable IDs and schema/provenance metadata sufficient for full replay and safe SQLite-backed export/import.
+
 ## Dependencies and constraints
 - Integrates with accepted persistent character entities (IDEA-0026), inventory and items (IDEA-0029), locations, travel and presence (IDEA-0033 through IDEA-0036), and mutable environmental state ([[Persistent Location State and Travel Interactions]], IDEA-0038).
 - Uses accepted generation/validation boundaries (IDEA-0018): an AI-produced description or proposed operation must not become an authoritative event before validation.
-- Depends on stable story-turn and revision relationships, which the separate candidate [[Versioned Text Blocks and Revision IDs]] (IDEA-0040) proposes to refine.
-- Subsequent separate candidates address historical edits (IDEA-0041), snapshots and incremental rebuild (IDEA-0042), rollback (IDEA-0043) and other specifics; this acceptance does not advance those Inbox ideas.
+- Depends on the **accepted staging direction** [[Versioned Text Blocks and Revision IDs]] (IDEA-0040) for stable story-turn and revision relationships.
+- Historical edits (IDEA-0041) and snapshots/incremental rebuild (IDEA-0042) have since entered staging; rollback candidate IDEA-0043 remains unaccepted. Their original separate acceptance decisions remain distinct.
 - Event provenance, ordering and versioning must permit deterministic reconstruction. Unknown facts cannot become asserted values simply because a reducer needs a default.
 - A snapshot is a derived cache or checkpoint, never an independent source of truth that contradicts its underlying accepted event sequence.
 - Preserve historical audit records while ensuring invalidated events do not keep mutating the currently selected canon.
@@ -79,5 +84,6 @@ Full world snapshots each turn can be simpler for point-in-time reads but duplic
 - This is **accepted for refinement**, not approved for production or implemented; event invalidation, branching and migration remain open.
 
 ## Decisions and review history
+- 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Append-only event-sourced history for validated world-state changes, with source turns, stable entity IDs, event types, ordering, validation, story revisions, deterministic reconstruction and provenance compatible with undo and historical edits. Periodic snapshots allowed as an optimisation. Event invalidation, branching, schema evolution, dependencies and checkpoint policy remain open for refinement. Moved to staging, not production.
