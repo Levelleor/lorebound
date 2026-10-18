@@ -53,6 +53,14 @@ A fully freeform description and optional guided fields are complementary, not m
 - The Lorebook drawer opens with **two sequential phases**: the narrow leading sidebar/rail appears first from the left, then the main content comes out from behind it. **Closing fades out simply**; do not replay the opening in reverse. Exact dimensions/timings remain under UI refinement; support reduced motion and keyboard navigation.
 - Players may add **multiple characters** without being forced out of the drawer or automatically assigned a `Playing As` identity. The existing selected actor, if any, remains unchanged until explicitly set in Settings. The Info/Settings two-tab panel remains a separate surface.
 
+## Unnamed characters with stable identity and uncertain names
+- **Explicit accepted Option B (2026-10-18):** **No character name is required** to create a normal Lorebook character. Even a character whose name and other properties are wholly unknown may have a persistent character entity when the player intentionally creates one or accepted story evidence establishes that someone exists. Assign an immutable stable character ID as its identity; do not force a canonical name, invented personal details, dummy protagonist or required description.
+- **Canonical name versus display label:** Keep the character's **known canonical name optional** and represent a missing name as **unknown/unrecorded**, not the literal name "Unknown". The Lorebook may show a known descriptive identifier such as **The Hooded Stranger** or a user-provided convenient label, but that label is **not automatically the character's proper name or other newly established world fact**. If no useful label exists, show a neutral **UI-only fallback** such as *Unnamed Character 3* so distinct entries can still be found. Exact fallback numbering/disambiguation is not a canonical property.
+- **Identity survives discovery:** If established story evidence later identifies the hooded stranger as **Elian**, update the **same stable ID's** name field, preserving all associated provenance, relationships, items, status, location, history and the selected `Playing As` reference. Do not duplicate or merge characters merely because names/labels match; resolving whether two unknown figures are one person still needs evidence and separate identity-refinement rules.
+- **Preserve uncertainty:** Claims, rumours and unverified aliases such as "someone calls the stranger Elian" remain explicitly attributed/uncertain, not silently promoted into an established canonical name. An actual confirmed revelation can update the same entity without changing its identity.
+- **Usable in Settings:** **Every character entity**, named or unnamed, appears in the `Playing As` list using its meaningful display label or fallback; the selection uses the **stable ID**, never the potentially changing label/name. Explicit selection enables Do/Say as normal, while adding/renaming characters never auto-selects one. Manual creation still uses the same Lorebook drawer.
+
+
 ## Dependencies and constraints
 - Depends on the shared character model, character sheet, lorebook and optional world/inventory modules that are covered by other individual idea notes.
 - A character created without numerical stats or a fully defined species must remain valid.
@@ -68,6 +76,10 @@ A fully freeform description and optional guided fields are complementary, not m
 - How should starting equipment and a starting location be handled when their tracking modules are disabled?
 
 ## Draft acceptance criteria
+- [ ] A player can explicitly create a Lorebook character with **no supplied name, description, species or other filled-in profile field**; its stable ID exists and its canonical name remains unknown, without fabricated facts.
+- [ ] A character with unknown name can show a descriptive label or a neutral disambiguated unnamed-character UI fallback, which is **never treated as the canonical personal name**.
+- [ ] Establishing a name later changes the existing character record while preserving stable ID, relationships, state, provenance and any `Playing As` reference; merely claimed names remain uncertain.
+- [ ] Unnamed characters appear in Settings `Playing As` and are selectable by stable ID, with no special PC/NPC eligibility restriction or automatic selection.
 - [ ] Newly created characters are available in the Settings tab's `Playing As` list but are **never selected automatically**; the Info tab follows the actual saved selection.
 - [ ] Lorebook can be opened from the icon left of the input field as well as via Add Character navigation.
 - [ ] A new adventure can start with **zero character entities, no designated player character and no completed character-creation fields**, while retaining valid narrative and non-character world tracking.
@@ -94,6 +106,7 @@ A fully freeform description and optional guided fields are complementary, not m
 - This direction has been explicitly accepted for **staging/refinement**, not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **User explicitly accepted refined Option B:** Character names are **optional and can remain unknown**. Retain each character's immutable stable ID; display a description/user-facing label or neutral *Unnamed Character N* fallback separately from the established canonical name. Newly established names update the same entity; rumours/claimed names remain uncertain. Unnamed characters remain eligible for explicit `Playing As`. No invented facts, mandatory name or character creation; staging only, no implementation/promotion.
 - 2026-10-18 — **Accepted IDEA-0062 Lorebook drawer integration:** Settings Add Character opens the same left-side editable Lorebook drawer as the composer-left icon, with rail-first/content-second entrance and simple fade-out exit. Manual creation may continue for multiple characters with no automatic Playing As selection or forced redirect. Staging only.
 - 2026-10-18 — **Accepted IDEA-0062 two-tab interface:** Info shows data about the explicitly selected character; Settings contains `Playing As`, while a Lorebook icon beside the input offers direct access to manual entry. Creating several characters still never selects one automatically. Staging only.
 - 2026-10-18 — **Explicit user-confirmed change:** Lorebound recognises **one character kind**, no PC/NPC or Playable status; every Lorebook character can be chosen for Do/Say via explicit Settings `Playing As` selection. Creating characters does not mark/select any of them automatically. Zero-character adventures remain valid. Staging only.
