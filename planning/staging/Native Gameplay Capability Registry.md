@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -42,6 +42,11 @@ A gameplay module registers an operation with a stable ID, typed input/output co
 
 ## Alternatives and trade-offs
 Hard-coding every gameplay operation in the core may simplify the first implementation but makes modular mechanics and mod integration brittle. Making MCP itself the engine boundary might reuse a standard external tool protocol, but would couple basic in-world rules to tool connectivity and external side-effect concerns. The accepted choice is a **native registry** that can optionally coexist with MCP adapters. A native contract/lifecycle adds design work and compatibility obligations, especially around schemas and historical event replay.
+
+## Architecture integration (2026-10-17)
+- The capability registry and enabled native/gameplay plugin operations run in the **same client-side TypeScript application** as the Svelte UI and coordinator in both Wails v3 desktop and headless browser modes. This means 'native gameplay capabilities' are **engine-level TypeScript operations**, not automatically Go binaries.
+- Go/Wails provides the privileged **SQLite/filesystem boundary**; plugin-produced durable changes must be submitted through the coordinator and saved atomically, not written directly to arbitrary database files.
+- Loading third-party client-side plugin code and requesting elevated Go privileges are separate trust/permission problems, especially when headless mode is browser-accessible. The selected runtime does not itself approve an unrestricted script execution system or external MCP connector.
 
 ## Dependencies and constraints
 - Extends accepted [[Deterministic Adventure Coordinator]] (IDEA-0044), which owns authoritative validation/dispatch/finalisation, and [[LLM State Interpreter and Proposed Operations]] (IDEA-0045), which may suggest registered operations but cannot commit them directly.
@@ -93,6 +98,7 @@ Hard-coding every gameplay operation in the core may simplify the first implemen
 - This is **accepted for refinement**, not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Native discoverable registry for built-in and mod-provided gameplay operations, with stable IDs, typed input/output schemas, declared permissions, validation/preparation and event-producing execution against shared canonical entity/world state. Modules remain under deterministic coordinator authority, are compatible with complete incremental reconstruction, and do **not** depend on MCP for core gameplay. Schema versioning, permissions, isolation, unloading and replay with updated/removed mods are open. Moved to staging, not production.
 - 2026-10-16 — **Additional requesting-user clarification after IDEA-0048 skip:** Preserve universal, protocol-neutral capability contracts and an adapter boundary in this already-accepted registry so MCP could be integrated *later* without a second gameplay system. Do not implement/accept MCP connectivity now. Keep coordinator validation, shared permissions, external-side-effect boundaries and complete incremental replay consistent across any future connector. This is a refinement of IDEA-0047's accepted scope, not a promotion of IDEA-0048.
