@@ -15,7 +15,7 @@ tags:
 # Adventure Save and Export Management
 
 ## Idea
-Create, autosave, resume, rename, duplicate, import and export separate adventures.
+Create, autosave, resume, rename, duplicate and delete individual adventures **within one SQLite library**; provide **Backup Database** and **Restore Database** as the only file-based data transfer operations, covering all adventures together.
 
 ## Why this idea matters
 Long stories need recoverable and portable saves.
@@ -27,20 +27,20 @@ Long stories need recoverable and portable saves.
 - **Rename:** Change an adventure's display name without altering its contents.
 - **Duplicate:** Create an independent copy of an adventure, including the information needed to continue it separately.
 - **Database import/restore (revised accepted workflow):** Importing a **whole-library SQLite snapshot** intentionally **replaces the currently active SQLite database**. It does **not** merge an adventure into the existing library. Earlier single-adventure import language has been superseded by IDEA-0051/0052.
-- **Full-library backup:** Backup creates a **consistent snapshot of the complete shared SQLite database**, including every adventure, editable narrative and revisions, event history, world state, lore, memories and persistent plugin state. This is a replacement-restorable **whole-library file**. A separate previously accepted **single-adventure export** feature remains a **scope question**, not the selected database snapshot flow.
+- **Full-library backup only:** Backup creates a **consistent SQLite snapshot of the complete shared database**, including every adventure, editable narrative and revisions, event history, world state, lore, memories and persistent plugin state. **Individual-adventure file exports are explicitly excluded**, superseding the earlier scope.
 - **Confirmed deletion:** Require clear confirmation before permanently removing an adventure.
 - **Credential exclusion:** Never include provider API keys, passwords, authentication tokens or similar secrets in exports.
 
 ## Proposed behaviour
-Provide an adventure library with Create, Resume, Rename, Duplicate, Delete and **Backup/Restore Database** actions. Autosave narrative progress and corresponding world state consistently. **Backup** downloads a consistent SQLite snapshot of **all** adventures; **Restore/Import** deliberately **overwrites the current library DB**, rather than adding adventures from the file. Keep provider API credentials **outside the snapshotted database** so the full file can be distributed without leaking secrets. Standalone one-adventure exports, if retained, are not imported through the replacement-only backup restore path.
+Provide an adventure library with Create, Resume, Rename, Duplicate and Delete actions for individual adventures. Autosave narrative progress and corresponding state consistently. **Backup Database** downloads a consistent SQLite snapshot of **all** adventures; **Restore Database** deliberately **replaces the entire current SQLite database**. These are the **only file export/import operations**: no individual-adventure export/import and no standalone Markdown/JSON save-package export. Keep API credentials outside the snapshotted database.
 
 ## Alternatives and trade-offs
-**Whole-library SQLite snapshot is selected** as the full-fidelity backup file. Plain-text/Markdown story exports and the earlier standalone single-adventure export proposal are different capabilities whose continued scope is not resolved by the replacement-only restore decision. No additional merging/migration/advanced corruption-repair system is required.
+**Whole-library SQLite snapshot is the only accepted data-export format.** The earlier proposed single-adventure archive export and standalone plain-text/Markdown export are **outside this approved backup/export workflow**; supporting any new export format would need a separate future decision. No merging, automatic library migration or advanced corruption-repair system is required.
 
 ## Architecture integration (2026-10-17)
 - All adventures are durably stored in **one Go-managed SQLite database** for **Wails v3 headless localhost Go server delivery only**, with play through the normal browser. The SQLite library defaults to the **OS's per-user app-data directory**, with an **optional custom directory** (IDEA-0051). Browser-owned storage is not the source of truth.
 - Save, resume, duplicate, **whole-database backup** and **whole-database replacement restore** operate through Wails Go persistence services. Go creates a consistent SQLite snapshot, closes or quiesces database handles for replacement, then reopens the selected DB. The frontend sends typed requests and renders outcomes; Go applies atomic save operations.
-- **One active database and simple directory selection:** Under IDEA-0051, Go opens an existing library database in the chosen app-data/custom directory or creates an empty one if absent. It does **not migrate or merge** the old database on directory change. Backup snapshots the **whole active database**, and restoring that file overwrites **the whole active database**. The earlier one-adventure portable export remains subject to separate clarification; it is not a compatible import-to-library path. Credential exclusion must hold for raw database snapshots.
+- **One active database and simple directory selection:** Under IDEA-0051, Go opens an existing library database in the chosen app-data/custom directory or creates an empty one if absent. It does **not migrate or merge** the old database on directory change. Backup snapshots the **whole active database**, and Restore Database replaces **the whole active database**. **Per-adventure export/import is explicitly out of scope.** Credential exclusion must hold for SQLite snapshots.
 
 ## Dependencies and constraints
 - Depends on the **shared filesystem-backed SQLite database** via Go, with per-user OS app-data default and optional custom directory (IDEA-0051), transaction-safe storage, stable IDs and event/document revision history.
@@ -52,7 +52,7 @@ Provide an adventure library with Create, Resume, Rename, Duplicate, Delete and 
 
 ## Open questions
 - What minimal compatible-SQLite-file checks and Go connection close/reopen behaviour should govern **whole-database replacement**, with no ID-collision merge workflow?
-- Should the previously accepted **single-adventure export** remain as an independent export-only feature, given that the only accepted import/restore is whole-database replacement?
+- How prominently should the UI explain that **Restore Database replaces every adventure** currently saved, without introducing a merge or selective restore feature?
 - How should autosave recover unsaved draft edits if the browser closes or storage is exhausted?
 - Should deletion be immediately permanent after confirmation, or provide an optional recovery period?
 - What happens when a whole-library restore references providers or plugins unavailable in the current installation? No automatic model/plugin installation is implied.
@@ -63,7 +63,7 @@ Provide an adventure library with Create, Resume, Rename, Duplicate, Delete and 
 - [ ] Pending edits have an explicit safe-recovery policy; interruptions do not corrupt the last committed save.
 - [ ] Renaming an adventure preserves its story and world-state data.
 - [ ] Duplicating an adventure creates an independently editable/playable copy.
-- [ ] A full-fidelity **whole-library SQLite snapshot** includes all adventures and canonical history and can be restored as **complete database replacement**. Standalone single-adventure export remains a separate older proposal pending explicit retention/removal.
+- [ ] **Backup Database** captures the **whole SQLite library**, with every adventure and canonical history; **Restore Database** replaces the complete active library. **No individual-adventure export/import** is offered.
 - [ ] Importing a compatible whole-library snapshot **replaces the active SQLite database**, with no per-adventure merge, optional automatic backup or separate library-management UI.
 - [ ] The library SQLite database contains no provider API keys, passwords or tokens that would be disclosed by copying the **whole database snapshot**.
 - [ ] Permanent deletion requires an unambiguous player confirmation.
@@ -78,9 +78,10 @@ Provide an adventure library with Create, Resume, Rename, Duplicate, Delete and 
 ## Evaluation notes
 - Origin: **mixed**. Combines user intent with suggested implementation details.
 - **Accepted for staging/refinement**: adventure management, autosave, full-fidelity backup/restore, confirmed deletion and credential exclusion.
-- Technical export format, import compatibility and recovery details remain open; no implementation or production approval is claimed.
+- The export file format is **a consistent full SQLite snapshot**; precise Go snapshot API, basic restore compatibility and minimal file safety are unrefined. No implementation or production approval is claimed.
 
 ## Decisions and review history
+- 2026-10-17 — **Explicit user removal of previously accepted individual-adventure exports:** The only player-facing file data-transfer actions are **Backup Database** and **Restore Database**, both involving **the complete shared SQLite database**. No adventure-scoped export/import, merge or alternate story save-file format is accepted in the current scope. Earlier historical single-adventure export acceptance is superseded, while in-library create/rename/duplicate/delete/autosave remain intact. This is staging refinement, not approval to implement.
 - 2026-10-17 — **Explicit user-approved backup/import revision (dependent on IDEA-0051):** The one shared SQLite library is opened if present, created if absent; no automatic relocation, migration or multi-library management. A backup is a **whole-library SQLite snapshot**. Import/restore **overwrites the entire active database**, never merges individual adventures or resolves duplicate IDs. Advanced corruption-recovery UX is not required. Prior accepted **single-adventure export** now needs a separate retention/scope decision, while its old add-an-adventure import flow is superseded. This is staging only.
 - 2026-10-17 — **Accepted IDEA-0051 storage-location dependency:** The shared library's default is the OS per-user app-data directory; a custom data directory is optional. Save/resume/import/export operate on the actively selected SQLite library without assuming it lives beside the executable. This does not approve a particular import/export file format.
 - 2026-10-17 — **Accepted IDEA-0051 layout dependency:** The user chose **Option A: one SQLite database for all adventures**. This idea's separate-adventure save/duplicate/export requirements now apply to **logically isolated adventures inside that shared database**; individual exports must filter to the selected adventure. No file format, restore-collision policy or production status change is approved here.
