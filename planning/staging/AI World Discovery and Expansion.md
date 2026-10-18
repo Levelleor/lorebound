@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -38,6 +38,11 @@ On a gameplay turn involving exploration or newly established geography, interpr
 
 ## Alternatives and trade-offs
 One approach is to allow AI-created locations on discovery; another is to predefine hidden locations that the AI can reveal when validated. Either may be useful, including hybrid worlds. Separate controls for **automatic expansion** and **travel-rule strictness** could support authored fixed settings as well as freeform exploration, but the exact settings and defaults are not decided. Automatically revealing every created place risks spoilers; tracking discovery visibility separately adds complexity but preserves exploration. Duplicate detection based on names alone can wrongly merge distinct locations or create copies of one place; alias resolution may sometimes require user clarification or an unresolved proposed event. Strict route validation and atomic changes may lead to explicit blocked expansions, but protect coherent world state.
+
+## Grounded first-scene world discovery
+- **Accepted IDEA-0006 Quick Start behaviour:** A successful generated opening may propose and atomically commit **explicitly narrated** locations, characters, objects and supported world facts. A place's stable ID and minimally known type/name may be recorded when its corresponding module is enabled.
+- **No undocumented lore expansion by the extractor:** Merely naming the village **Ashford** may create a location named Ashford (and its stated village type), but must **not** invent streets, surrounding settlements, political rulers, routes, shops, population, hidden regions or a history. A mentioned place is not proof of a route, reachable edge, containment hierarchy or completed movement unless the scene explicitly establishes it and validation permits it.
+- **Keep missing relations unknown:** If hierarchy, coordinates, graph edges or extra fields cannot be grounded and validated, leave them unresolved/unknown rather than authoring facts to satisfy a schema. The narrator can explicitly describe new world facts in future accepted prose; extraction must not secretly add them behind the story.
 
 ## Dependencies and constraints
 - Depends on accepted [[Hierarchical World Locations]] (IDEA-0033) for persistent location IDs, flexible nesting and cycle prevention.
@@ -86,5 +91,6 @@ One approach is to allow AI-created locations on discovery; another is to predef
 - Staging is **not** production approval or evidence of implemented world expansion. Implementation details for alias resolution, hidden locations, atomicity and settings still require refinement.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0006 source-grounding dependency:** Quick Start initial entity/location extraction automatically records supported **explicitly established** facts but may not fabricate unstated geographical connections, hidden lore, history or settlement details. Unspecified world properties remain unknown; source/revision provenance, domain validation and an atomic opening-turn commit still apply. This does not enable a separate lore-generating expansion pass. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by requesting user:** AI-assisted discovery/expansion of persistent locations and travel links; validated proposals for location creation, parent placement, graph connections and character arrival; duplicate/alias safeguards, hidden-location awareness and coherent commits consistent with accepted travel rules. Automatic expansion controls and discovery-versus-creation details deliberately left open. Promoted the existing Inbox idea to staging for refinement only.
