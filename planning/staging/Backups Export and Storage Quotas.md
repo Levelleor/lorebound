@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Local First Storage and Deployment Brainstorm]]"]
@@ -38,12 +38,17 @@ The player can request a portable backup of a single adventure or their full lib
 ## Alternatives and trade-offs
 Manual downloadable exports work across many deployments but depend on players remembering to save them. Automatic filesystem backups may reduce loss risks on supported browsers after explicit permissions, yet are limited by browser security and availability. SvelteKit server deployments may enable scheduled database snapshots or backups, but hosted storage persistence, cost, access control and retention vary by provider. A portable archive format may cost more engineering work than a raw database dump while improving restoration across browsers, versions and engines. Browser storage persistence requests mitigate certain evictions but are neither backups nor a guarantee against loss. The exact combination remains open.
 
+## Architecture integration (2026-10-17)
+- The accepted runtime/storage architecture is **Wails v3 desktop and headless Go server + filesystem SQLite**. Backups, quota/space warnings, exports and restores must work with persistent local files and managed database connections, not browser-origin quotas or IndexedDB.
+- Go should coordinate consistent snapshots/exports and validated restoration of full canonical history, revisions and module-owned fields without copying a live SQLite database unsafely. Whether the portable output is a SQLite backup, archive or both remains under review.
+- Headless mode's writable data location must survive restart and packaging changes; browser uploads/downloads are only a transport for moving export/import files, never canonical storage.
+
 ## Dependencies and constraints
-- [[Browser-Persistent Story Database]] (IDEA-0051) is accepted as **storage-options-first** for SvelteKit, not a selection of browser-only, SQLite, IndexedDB, hosted SQL or hybrid storage. Backup/export behaviour must be designed without assuming one of those choices.
+- [[Browser-Persistent Story Database]] (IDEA-0051) now selects **Go-managed filesystem SQLite** as canonical storage. Export/backup design must support this explicitly rather than treating browser/hosted alternatives as equally selected.
 - [[Snapshots and Incremental State Rebuild]] (IDEA-0042) requires **complete incremental history** and deterministic world reconstruction at supported turn boundaries. Import/export must preserve all canonical persistent changes and story revision lineage.
 - Restores must not replay historical external side effects, regenerate earlier AI decisions or introduce a partial accepted story/world-state transaction; preserve compatibility with accepted event history and coordinator finalisation (IDEA-0039, IDEA-0044).
-- Browser persistence requests, origin storage quotas, browser permission surfaces and filesystem integration vary by browser/runtime. Automatic filesystem access cannot be assumed on every supported browser.
-- Backend backup tools and storage guarantees depend on the eventual SvelteKit deployment and persistent database. Hosted database backup may not produce the same portable format as a player-facing archive.
+- Browser-origin quotas and browser filesystem permissions do not govern canonical saves; headless browser clients reach Go's filesystem/database service. Browser upload/download permissions still matter for importing or exporting a file interactively.
+- Go/SQLite backup tools and durability guarantees depend on correctly configured host data directories and safe database snapshot/transaction procedures. A raw database file copy does not automatically constitute a consistent portable archive.
 - Imported data is untrusted until validated; required security/migration policies remain undecided.
 - This is an accepted staging direction requiring refinement, not production approval or an implemented capability.
 
@@ -83,5 +88,6 @@ Manual downloadable exports work across many deployments but depend on players r
 - This is an **accepted but unrefined planning direction**, not approval of a particular backup mechanism or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Storage-independent backup, import/export, restore validation and storage usage/quota awareness for browser-local or potential SvelteKit backend data; portable single-adventure and full-library exports including complete incremental world state and story history; evaluate optional browser persistence requests and automatic backups where permitted. Backup format, location, cadence, retention, migration, restore conflicts and precise quota UI remain open. Promoted to staging for refinement only, not production.
