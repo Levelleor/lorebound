@@ -31,7 +31,7 @@ Lorebound should feel like a simple local application without requiring players 
 - **No player npm runtime:** npm/Node can be used as **development/build tooling for SvelteKit**, but a separate `npm start`/Node-hosted localhost product is **not** a supported delivery path. Players need only the packaged Go server, a browser and any separately configured local model runtime.
 - **Docker separated:** Docker/Compose distribution is **not included in IDEA-0053's accepted scope**. The separate Inbox candidate [[Optional Docker Distribution]] (IDEA-0065) is **unaccepted**. It must not complicate or become necessary for the native executable route.
 - **Fast, local and safe:** The server binds to loopback only by default. Restrict browser-to-Go privileges and protect against DNS rebinding, CSRF and unexpected local clients. Handle multiple browser tabs with expected-revision checks/transaction integrity; keep long model generation and replay from freezing the UI.
-- **Planning status:** This is accepted **staging architecture only**, not an implementation or production approval. Wails v3 stability, the server binding/session scheme, binary distribution/browser launching, Go SQLite details and recovery/performance tests remain to be validated.
+- **Planning status:** This is accepted **staging architecture only**, not implementation or production approval. Wails v3 stability, server binding/security, browser launching, ordinary SQLite transaction/snapshot correctness and performance remain to be validated; **advanced corruption-recovery workflows are not required**.
 
 ## Possible startup and distribution paths (original options, evaluated under selected priorities)
 This records the **current accepted choice**, superseding earlier Tauri/npm and dual Wails desktop/headless comparisons:
@@ -56,7 +56,7 @@ A player launches the packaged Lorebound Go executable. It starts a **loopback-b
 
 ## Dependencies and constraints
 - IDEA-0001 requires single-player, account-free offline-capable operation on Windows/macOS/Linux with an independently available compatible local AI runtime. "One simple app" now means a **headless Go server + normal browser**, not a native GUI window.
-- IDEA-0051 selects **one shared filesystem SQLite database holding all adventures** via Go for the one supported Wails v3 headless runtime; IDEA-0005/0052 address individual adventure export and full-library backup procedures.
+- IDEA-0051 selects **one active filesystem SQLite database** with open-if-present/create-if-missing behaviour, whole-library snapshot backup and complete replacement import; IDEA-0005/0052 retain a **separate unresolved historical proposal** for optional individual-adventure export, but not merging imported adventures into a library.
 - IDEA-0044/0047/0055 retain browser-side TypeScript coordinator and gameplay plugins; Go provides transactional safety and privilege boundaries, **not** duplicate game logic. Untrusted/local browser clients must not write arbitrary canonical records.
 - IDEA-0039/0040/0042 require exact revision/event provenance and full replayable history, with consistent atomic durable commits across potentially multiple browser tabs.
 - IDEA-0012/0013 maintain external local/cloud model API support; CORS, secrets, streaming and provider adapters remain for their own refinement. Neither Wails nor SQLite bundles inference.
