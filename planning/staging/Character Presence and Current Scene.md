@@ -21,9 +21,9 @@ Attach all characters to actual places and distinguish present NPCs from distant
 A character may be mentioned in lore without materialising into the current scene.
 
 ## Accepted direction
-- **Persistent per-character location:** Track each PC and NPC's actual current place as a reference to a stable location ID from [[Hierarchical World Locations]] (IDEA-0033), with stable character IDs from [[Shared PC and NPC Character Entities]] (IDEA-0026). Character location is authoritative mutable state, not inferred solely from a name appearing in prose.
+- **Persistent per-character location:** Track each character's actual current place as a reference to a stable location ID from [[Hierarchical World Locations]] (IDEA-0033), with stable character IDs from [[Shared PC and NPC Character Entities]] (IDEA-0026). Character location is authoritative mutable state, not inferred solely from a name appearing in prose.
 - **Distinct presence categories:** Distinguish characters **physically present in the active scene**, known to be **elsewhere**, **in transit**, of **unknown location**, and **remotely participating** without being physically co-located. The exact storage representation for categories and movement-in-progress requires refinement.
-- **Scene participation follows real presence:** Use established co-location as the basis for determining which NPCs are eligible to interact in person in the current scene. A Lorebook entry, recalled incident, narration reference, character mention or conversation about an NPC does **not** make that NPC physically present.
+- **Scene participation follows real presence:** Use established co-location as the basis for determining which characters are eligible to interact in person in the current scene. A Lorebook entry, recalled incident, narration reference, character mention or conversation about an NPC does **not** make that NPC physically present.
 - **Remote participation does not imply travel:** A remote character may participate in communication when a suitable method is established (e.g., telephone, radio, magic or other setting-appropriate means). They remain at their actual location or in an unknown/in-transit state; remote speech does not silently move them into the scene. Exact communication permissions and media are not yet specified.
 - **No silent teleportation:** A change in canonical physical character location must arise from an accepted, validated movement or equivalent location-changing event, not incidental narration, a context entry or a character being named.
 - **Unknown stays unknown:** If a character's whereabouts are not recorded, do not default to the player's current room, assume absence from the story/world, or invent a location. A character known to be elsewhere should not be treated as present simply because the exact place isn't displayed.
@@ -33,7 +33,7 @@ A character may be mentioned in lore without materialising into the current scen
 - **Travel rules remain independent:** Exact graph adjacency, traversal limitations and route permission rules belong to separately unaccepted [[Configurable Travel Graph Rules]] (IDEA-0035), not to this acceptance.
 
 ## Proposed behaviour
-Maintain location and presence information for each durable character, linked to the current scene's actual location. When a validated event moves a character, update their canonical location or in-transit status without losing character identity. Derive a proposed in-person participant list from currently known co-located characters; retain separately known distant, transit and unknown characters, and permit an explicit remote-participant role only when the setting permits a remote communication channel. A named NPC in Lorebook or a spoken reference remains absent unless their presence or travel is actually established. Make these distinctions clear to the player and narration pipeline. Preserve unknown whereabouts rather than making default assumptions, and do not commit generated location changes before validation.
+Maintain location and presence information for each durable character, linked to the current scene's actual location. When a validated event moves a character, update their canonical location or in-transit status without losing character identity. Derive a proposed in-person participant list from currently known co-located characters; retain separately known distant, transit and unknown characters, and permit an explicit remote-participant role only when the setting permits a remote communication channel. A named character in Lorebook or a spoken reference remains absent unless their presence or travel is actually established. Make these distinctions clear to the player and narration pipeline. Preserve unknown whereabouts rather than making default assumptions, and do not commit generated location changes before validation.
 
 ## Alternatives and trade-offs
 Scene membership could be inferred solely from exact shared location IDs, or refined using spatial subdivisions, visibility, proximity and active interaction flags. Exact co-location is a simple starting point, but large venues and moving multi-room vehicles may require additional nuance. The accepted direction distinguishes **remote communication** from **physical presence**; whether magical or technological links exist and how their permissions work depends on later setting rules. Pure narrative mention-based appearance is not accepted, because it can accidentally teleport important NPCs. Maintaining separate location and active conversation/presence views may add bookkeeping but protects continuity.
@@ -48,9 +48,13 @@ Scene membership could be inferred solely from exact shared location IDs, or ref
 - A narrative **focus** (if selected) is distinct from physical presence and the **acting character(s) for a turn**. Switching focus between multiple characters must not teleport them, imply co-location or change their possessions; events with zero actors can still update locations, environment or other validated world facts.
 - Where actor/presence is unknown, preserve uncertainty rather than assuming the focused character was present or performed the action. Exact multiperspective UI remains open.
 
+## Player control is unrelated to physical presence
+- **Accepted IDEA-0026:** All characters are one kind, any of them may be selected in Settings `Playing As`, and there is no PC/NPC or Playable distinction. Selection changes who speaks/acts in subsequent Do/Say input, **not** where that character is located or who physically participates in the current scene.
+- Characterless scenes remain valid; co-location, travel and interaction restrictions still follow validated world state and not temporary selection.
+
 ## Dependencies and constraints
 - Depends on accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) and [[Hierarchical World Locations]] (IDEA-0033) for persistent entity/location IDs.
-- Related accepted [[Entity-Based Lorebook]] (IDEA-0020) supplies descriptive information but does not itself establish where a character is physically located now. Recalling a known NPC must not imply presence.
+- Related accepted [[Entity-Based Lorebook]] (IDEA-0020) supplies descriptive information but does not itself establish where a character is physically located now. Recalling a known character must not imply presence.
 - Current scene and physical-location state should be consistent with accepted authoritative event validation and pipeline rules ([[Configurable Generation Pipeline Strategies]], IDEA-0018).
 - The accepted location hierarchy represents **containment**, not proof that two spaces are directly traversable. Strict adjacency and route rules are independently proposed in [[Configurable Travel Graph Rules]] (IDEA-0035), still unaccepted.
 - Presence cannot be invented due to named references in narrative, summaries, memories, Lorebook retrieval or model prompt context. In-person participation requires a physically consistent location/event basis.
@@ -72,7 +76,7 @@ Scene membership could be inferred solely from exact shared location IDs, or ref
 - How can scene-change and travel events update multiple party members without inadvertently moving absent NPCs?
 
 ## Draft acceptance criteria
-- [ ] Each PC/NPC can reference its current known location by stable location ID, or represent a suitable transit/unknown state.
+- [ ] Each character can reference their current known location by stable location ID or represent transit/unknown state, with no PC/NPC category.
 - [ ] The scene distinguishes characters physically present, known elsewhere, in transit, of unknown location and remotely participating.
 - [ ] Characters described in lore, named in a conversation or retrieved as memories do not thereby enter the scene or change canonical location.
 - [ ] In-person scene participation derives from known compatible physical presence rather than an arbitrary mention of the character.
@@ -95,6 +99,7 @@ Scene membership could be inferred solely from exact shared location IDs, or ref
 - This note represents an **accepted but unrefined staging direction**, not production approval or implemented feature evidence.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted character-unification dependency:** All Lorebook characters are eligible for `Playing As`, without PC/NPC or Playable distinction. Changing selection does not teleport characters or alter scene presence. Staging only.
 - 2026-10-18 — **Accepted IDEA-0007/0026 multi-protagonist/characterless rule:** Scene and character-presence systems work with zero characters and no default protagonist. Narrative focus, per-turn actors and actual physical presence remain separate; changing focus never teleports characters or moves their items. Staging only.
 - 2026-10-17 — **Accepted IDEA-0006 source-grounding dependency:** Initial presence/location extraction may store only **explicitly stated, validated** facts in the generated opening; do not invent an unstated room, route, character arrival or physical co-location. Unspecified whereabouts remain unknown and source provenance is retained. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
