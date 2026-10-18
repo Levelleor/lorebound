@@ -52,6 +52,9 @@ Scene membership could be inferred solely from exact shared location IDs, or ref
 - **Accepted IDEA-0026:** All characters are one kind, any of them may be selected in Settings `Playing As`, and there is no PC/NPC or Playable distinction. Selection changes who speaks/acts in subsequent Do/Say input, **not** where that character is located or who physically participates in the current scene.
 - Characterless scenes remain valid; co-location, travel and interaction restrictions still follow validated world state and not temporary selection.
 
+## Selected-character scene cuts do not change presence
+The **next Do/Say after a `Playing As` switch** follows the selected character **at their existing canonical location**, even when the former actor is elsewhere. This is a scene/viewpoint cut, not travel or teleportation: **no movement event, new route, elapsed journey/time, change of physical presence or co-location** is caused merely by changing selection. A real move on a later Do/Say still requires standard validation. Unknown whereabouts remain unknown, not silently copied from the previously followed actor. `Story` and `Continue` can follow another subject or world events.
+
 ## Dependencies and constraints
 - Depends on accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) and [[Hierarchical World Locations]] (IDEA-0033) for persistent entity/location IDs.
 - Related accepted [[Entity-Based Lorebook]] (IDEA-0020) supplies descriptive information but does not itself establish where a character is physically located now. Recalling a known character must not imply presence.
@@ -76,6 +79,7 @@ Scene membership could be inferred solely from exact shared location IDs, or ref
 - How can scene-change and travel events update multiple party members without inadvertently moving absent characters?
 
 ## Draft acceptance criteria
+- [ ] A switch between characters at distant locations cuts the next Do/Say to the newly selected actor's established scene, without mutating any character's location or presence.
 - [ ] Each character can reference their current known location by stable location ID or represent transit/unknown state, with no PC/NPC category.
 - [ ] The scene distinguishes characters physically present, known elsewhere, in transit, of unknown location and remotely participating.
 - [ ] Characters described in lore, named in a conversation or retrieved as memories do not thereby enter the scene or change canonical location.
@@ -99,6 +103,7 @@ Scene membership could be inferred solely from exact shared location IDs, or ref
 - This note represents an **accepted but unrefined staging direction**, not production approval or implemented feature evidence.
 
 ## Decisions and review history
+- 2026-10-18 — **User explicitly accepted:** Switching `Playing As` between distant characters is a **narrative cut**. The next Do/Say uses the newly chosen character's established scene/location, with no travel, teleportation, time passage, inventory/state transfer or extra confirmation. Story/Continue remain independent. Staging only.
 - 2026-10-18 — **Accepted character-unification dependency:** All Lorebook characters are eligible for `Playing As`, without PC/NPC or Playable distinction. Changing selection does not teleport characters or alter scene presence. Staging only.
 - 2026-10-18 — **Accepted IDEA-0007/0026 multi-protagonist/characterless rule:** Scene and character-presence systems work with zero characters and no default protagonist. Narrative focus, per-turn actors and actual physical presence remain separate; changing focus never teleports characters or moves their items. Staging only.
 - 2026-10-17 — **Accepted IDEA-0006 source-grounding dependency:** Initial presence/location extraction may store only **explicitly stated, validated** facts in the generated opening; do not invent an unstated room, route, character arrival or physical co-location. Unspecified whereabouts remain unknown and source provenance is retained. Staging only.
