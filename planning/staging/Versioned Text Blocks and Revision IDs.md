@@ -45,7 +45,7 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 ## Draft autosave and accepted revisions
 - Player-authored, unfinished prose is autosaved after a brief idle pause into the **same SQLite library**, but is **noncanonical**. A saved draft is not an accepted revision, source of event provenance, or reason to rebuild world state.
 - Only confirmation creates a canonical text revision, atomically with accepted related state changes. Draft IDs/cleanup rules remain implementation details.
-- On return to the browser/editor, restore the last successfully autosaved draft; exact debounce interval and conflict handling remain open.
+- On return to the browser/editor, restore **only the last successfully saved shared draft for that logical editing target**; drafts overwritten by another tab are not retained. The exact debounce interval and draft-target key design remain open.
 
 ## Full-history duplication and revision provenance
 - Duplicating an adventure under IDEA-0005 retains the **whole accepted story and text-revision lineage**, not just the latest rendered prose. All event-to-turn, block-to-revision and related provenance links remain coherent in the new adventure so both copies can be edited and reconstructed independently.
@@ -54,8 +54,13 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 
 ## Concurrent edits cannot overwrite accepted revisions
 - **Accepted IDEA-0005 user decision (2026-10-18):** Multiple tabs can propose edits to the same adventure. A confirmed text revision and its state/event provenance must commit against the **expected authoritative adventure version** checked by Go/SQLite. If Tab A commits first, a conflicting Tab B revision prepared from earlier state is **rejected**, not used to overwrite, reassign or silently rebase A's recorded revision lineage and event sources.
-- Local unconfirmed text edits remain **noncanonical drafts** even when a concurrent committed revision supersedes their starting version. Preserve the losing tab's unfinished work and make the conflict visible for intentional reconciliation. Draft autosaves must not silently overwrite other tabs' drafts; precise session IDs, draft versioning, merge controls and handling of independent blocks remain implementation refinements.
+- Local unconfirmed text edits remain **noncanonical drafts** even when another tab commits a revision. A stale **canonical edit commit** is rejected visibly, protecting accepted lineage and state. For the **same draft target**, however, the user's later explicit Option B permits a successful autosave from another tab to **replace the saved draft without conflict checking**. Only the last saved shared draft is recoverable, though an open tab may still have text in memory. Draft keying, debounce and conflict-display details for actual canonical commits remain open.
 - This does not require exclusive editing locks, automatic prose merging, per-keystroke canonical revisions, or a particular block-granularity conflict algorithm. Earlier accepted historical-edit confirmation and downstream reconstruction rules continue to apply.
+
+## Last-saved draft text is replaceable, accepted revisions are not
+- **User-approved IDEA-0005 Option B (2026-10-18):** An unconfirmed prose edit, whether current or historical, is a **noncanonical draft** with **one latest saved content value per logical editing target** in SQLite. Successful autosaves from any browser tab can replace the saved draft for that target. No draft-specific lock, version-conflict rejection, independent per-tab draft history or earlier-draft recovery is required. **Different prose blocks/targets** do not clobber each other, and composer drafts remain separate.
+- This relaxed policy **must not** overwrite a **canonical versioned text block**, its accepted revision ID or event provenance. A **confirmed** prose edit is a distinct expected-version checked atomic operation and rejects if another tab advanced the authoritative adventure. Canonical lineage must remain reconstructible regardless of which provisional draft autosave happened most recently.
+- A stale committing tab may still offer any text present in its live editor or latest shared saved draft for user-led reconciliation, but cannot promise retrieval of drafts already overwritten by other tabs.
 
 ## Dependencies and constraints
 - Works with accepted [[Event-Sourced World History]] (IDEA-0039), whose event records need stable source turn and revision references.
@@ -76,8 +81,9 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - How can old source references remain resolvable after truncation, undo or branch selection?
 
 ## Draft acceptance criteria
+- [ ] A prose edit's noncanonical saved draft can be replaced by a newer successful save from another tab for the **same editing target**, without overwriting accepted revisions, authoritatively changing event provenance or retaining older draft copies.
 - [ ] Concurrent edits that originate from stale adventure versions cannot overwrite accepted block revisions or misattribute event provenance; rejected edits retain their uncommitted text for reconciliation.
-- [ ] Noncanonical drafts from different tabs cannot silently replace one another; canonical revision IDs are created only after successful validation and accepted commit.
+- [ ] A later successful autosave from another tab **may replace the stored noncanonical draft** for the same narrative editing target without a draft conflict or preserved prior draft version; different targets remain distinct. Canonical revision IDs are created only after successful validation and accepted commit.
 - [ ] Editable story text retains stable block identities through ordinary revisions and non-destructive reordering.
 - [ ] Different versions of the same continuing block have distinct revision IDs and retrievable lineage.
 - [ ] Generated story turns and accepted world-state events can identify the exact source text revision(s) from which they derive.
@@ -99,6 +105,7 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - Design remains unrefined, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **IDEA-0005 Option B explicitly accepted:** Provisional composer and narrative-edit drafts are **latest-only shared per logical target**, and newer autosaves can replace earlier stored drafts across tabs without draft version checks or history. This supersedes the prior draft nonclobber wording; **accepted text revisions, provenance and world state remain protected by canonical expected-version conflict checks**. Staging only.
 - 2026-10-18 — **Accepted IDEA-0005 conflict dependency:** Concurrent tabs may edit the same adventure, but stale expected-version canonical text commits are rejected atomically. Preserve accepted revision lineage/provenance and the other tab's uncommitted work; draft save conflict policy remains open, with no silent cross-tab overwrite. Staging only.
 - 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
