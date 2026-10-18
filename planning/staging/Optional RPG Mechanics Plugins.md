@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]", "[[Characters Inventory Equipment and Anatomy Brainstorm]]"]
@@ -36,6 +36,11 @@ Each optionally enabled rules module declares its domain state schema and typed 
 
 ## Alternatives and trade-offs
 Hard-wiring combat, dice, experience, magic or survival into the core would make casual freeform adventures subject to unwanted rules and complicate independent configuration. Optional modules improve flexibility but introduce lifecycle, dependencies, version compatibility, cross-module validation and historical-replay challenges. A prose-only approach needs less deterministic configuration but cannot consistently enforce a rules-heavy campaign. The accepted direction uses common lightweight infrastructure with selectively enabled mechanics, not a separate RPG engine or whole-game strictness mode.
+
+## Architecture integration (2026-10-17)
+- Optional RPG modules use the **client-side TypeScript capability registry** alongside the Svelte UI and coordinator. Core gameplay effects are not replicated in a Go plugin engine.
+- Module-specific persistent records/events are saved into **Go-managed SQLite** through the same atomic history and persistence contracts as built-in mechanics, ensuring complete replay after module upgrades or disablement.
+- Client-loadable code must not acquire unrestricted Go/database/filesystem permissions simply by being installed; executable plugin packaging, sandboxing and version migrations remain separate refinement decisions.
 
 ## Dependencies and constraints
 - [[Native Gameplay Capability Registry]] (IDEA-0047) defines the accepted universal protocol-neutral operations, permissions, stable IDs and state-effects framework. RPG modules extend this registry rather than creating a new executor.
@@ -79,5 +84,6 @@ Hard-wiring combat, dice, experience, magic or survival into the core would make
 - This is an accepted **unrefined staging** idea, not a production implementation specification or evidence any plugins are built.
 
 ## Decisions and review history
+- 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Optional, independently enabled RPG mechanics modules for categories such as combat, dice, magic, economy, survival, quests, reputation and progression. Use the universal native capability registry and deterministic coordinator rather than a separate RPG engine or global strictness modes. Disabled modules impose no optional rules; enabled ones enforce their validations and persist every accepted effect through complete incremental history. Historical reconstruction must remain valid if plugins are disabled or removed. Module catalogue, concrete rules, core-versus-plugin boundaries, configuration and plugin lifecycle remain open. Moved to staging, not production.
