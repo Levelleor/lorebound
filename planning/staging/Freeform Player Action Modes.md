@@ -51,6 +51,9 @@ The same composer UI may be reused across Do, Say and Story; whether modes use s
 - All other characters retain their canonical location, possessions and history. A switch **does not move** either character or bypass ordinary validation if the subsequent Do/Say action itself proposes movement or another state change.
 - **Story and Continue** are not automatically forced to use the `Playing As` viewpoint and remain available when none is selected. If the actor's exact location is unknown, keep it unknown instead of placing them at the last viewed character's location.
 
+## Do and Say follow the selected character's established scene
+After selecting any Lorebook character in `Playing As`, **the next Do/Say takes place from that character's own established scene**, not the previously selected actor's location. Switching is a narrative cut, **not an in-world move**, and needs neither actor confirmation nor travel narration. Subsequent narrated movement is validated normally. `Story` and `Continue` remain independent and usable without a selected character; unknown whereabouts are not invented.
+
 ## Dependencies and constraints
 - Depends on the eventual narrative coordinator, model prompting and optional game-state modules.
 - Interpret mode intent carefully: *attempted* action, spoken words, authored narrative and autonomous continuation may all lead to different consequences.
@@ -64,6 +67,7 @@ The same composer UI may be reused across Do, Say and Story; whether modes use s
 - How do validation errors appear without interrupting prose writing?
 
 ## Draft acceptance criteria
+- [ ] With Mara in the capital and Theo in a forest, changing `Playing As` to Theo makes the next Do/Say follow Theo **in the forest** without relocating anyone or moving items.
 - [ ] If Mara is at the capital and Theo in a forest, choosing Theo in `Playing As` makes the next Do/Say **Theo's action or speech from his forest scene**, without modifying Mara's or Theo's established location/state.
 - [ ] A switch needs no user confirmation or narrated travel; subsequent world-affecting actions still receive their normal validation.
 - [ ] Story/Continue are not constrained to the chosen Do/Say actor, and a new actor with unknown whereabouts is not teleported to the previous scene.- [ ] Story and Continue can always be used, including in an entirely characterless adventure. Do and Say appear unavailable/disabled unless an actual character has been selected in the adventure Settings sidebar's `Playing As` control.
@@ -88,6 +92,7 @@ The same composer UI may be reused across Do, Say and Story; whether modes use s
 - No implementation is claimed; this is not production approval.
 
 ## Decisions and review history
+- 2026-10-18 — **User explicitly accepted:** Switching `Playing As` between distant characters is a **narrative cut**. The next Do/Say uses the newly chosen character's established scene/location, with no travel, teleportation, time passage, inventory/state transfer or extra confirmation. Story/Continue remain independent. Staging only.
 - 2026-10-18 — **Explicit user acceptance of narrative-cut switching:** Changing Settings `Playing As` between characters, even distant ones, causes the **next Do/Say to follow the newly chosen character at their already established scene/location**. No travel, teleportation, time passage or transfer of world state is caused by selection; Story/Continue remain actor-independent. Staging only.
 - 2026-10-18 — **User explicitly accepted universal character eligibility:** Every Lorebook character appears in `Playing As`; there is **no PC/NPC type** and no Playable designation. The player simply takes Do/Say turns as whichever existing character they explicitly select. Unselected Do/Say stay disabled; Story/Continue and manual multiple-character creation stay unchanged. Staging only.
 - 2026-10-18 — **User rejected proposed automatic actor selection/return after creating characters:** Players may add multiple Lorebook characters. Creating/saving one does not automatically set/replace `Playing As` or return to story; explicit Settings selection alone chooses the actor/speaker for Do/Say. If no character is selected those modes stay disabled. Staging unchanged.
