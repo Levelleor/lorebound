@@ -64,6 +64,11 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 - This is a **navigation/editor affordance**, not another action mode. Opening or closing the drawer does not submit the composer text or alter the selected `Playing As` actor. The **Info/Settings** tabs stay distinct and Do/Say remain gated on an explicitly selected character; Story/Continue stay available in characterless adventures.
 - The drawer exposes normal Lorebook editing, including multiple manual character creations. It must not imply automatic selection of the latest created character. Restore sensible input focus when closing where appropriate; opening/closing is noncanonical.
 
+## Unnamed characters can be selected as Do/Say actors
+- **Accepted IDEA-0007 Option B (2026-10-18):** The `Playing As` control lists **all Lorebook character entities**, including those whose proper name is **unknown**, identified by stable IDs. Show their known descriptive label (e.g. *The Hooded Stranger*) or a neutral disambiguated *Unnamed Character N* fallback when no meaningful label exists; no required name, PC/NPC kind or playable status.
+- **Actor identity is not display text:** Do/Say actions reference the explicitly selected character **ID**, so revealing the person's canonical name or changing their display label does not switch actors, reattribute earlier dialogue or alter the person's inventory/location/history. A label is not a claimed proper name, and an unverified alias remains uncertain. The player still explicitly selects an actor; character creation itself does not auto-select.
+
+
 ## Dependencies and constraints
 - Depends on the eventual narrative coordinator, model prompting and optional game-state modules.
 - Interpret mode intent carefully: *attempted* action, spoken words, authored narrative and autonomous continuation may all lead to different consequences.
@@ -77,6 +82,8 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 - How do validation errors appear without interrupting prose writing?
 
 ## Draft acceptance criteria
+- [ ] An unnamed/unknown-name Lorebook character appears in `Playing As` with a non-invented descriptive or neutral fallback label; selecting it enables Do/Say bound to the immutable character ID.
+- [ ] Renaming/revealing the character's name does not change selection, history, location, possessions or action attribution; labels are not treated as canonical character names.
 - [ ] The story input has a Lorebook icon immediately to its left that opens a **LEFT-side drawer**; **sidebar/rail first, main content from behind it second** on entrance, with simple **fade-out** on close and reduced-motion support.
 - [ ] Opening/closing the Lorebook drawer does not submit Do/Say/Story text, change action modes, or change `Playing As` automatically.
 - [ ] A dedicated, keyboard-accessible Lorebook icon sits immediately left of the input field and opens Lorebook directly.
@@ -86,7 +93,7 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 - [ ] A switch needs no user confirmation or narrated travel; subsequent world-affecting actions still receive their normal validation.
 - [ ] Story/Continue are not constrained to the chosen Do/Say actor, and a new actor with unknown whereabouts is not teleported to the previous scene.
 - [ ] Story and Continue can always be used, including in an entirely characterless adventure. Do and Say appear unavailable/disabled unless an actual character has been selected in the adventure Settings sidebar's `Playing As` control.
-- [ ] The `Playing As` selector lists **every existing character in the adventure's Lorebook** by name and stable ID, **without PC/NPC or Playable filtering**, with an **Add Character** route to Lorebook **manual character entry**; explicitly choosing any character enables Do/Say without per-turn actor confirmation.
+- [ ] The `Playing As` selector lists **every existing character in the adventure's Lorebook** with a descriptive/neutral **display label backed by stable ID**, even when canonical name is unknown, **without PC/NPC or Playable filtering**, with an **Add Character** route to Lorebook manual entry; choosing a character explicitly enables Do/Say without per-turn actor confirmation.
 - [ ] **Creating or saving characters does not enable Do/Say by itself, automatically assign the newly created character to `Playing As`, or return to the story.** Several Lorebook characters may be added before the user explicitly makes a choice. An existing selection is not replaced by later creation.
 - [ ] Do input is attributed to the currently selected `Playing As` character as an attempted action, not automatically a successful state mutation; Say is attributed to that same character as their dialogue. Changing the selection does not move inventory or mutate character facts.
 - [ ] Say input is conveyed as in-character dialogue, and Story input as authorial narrative instruction or text.
@@ -107,6 +114,7 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 - No implementation is claimed; this is not production approval.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0007 integration:** Character names may be unknown while stable-ID Lorebook entities remain selectable as `Playing As`; use a description or neutral *Unnamed Character N* display fallback rather than manufacturing a canonical name. Do/Say attribution stays ID-based. Staging only.
 - 2026-10-18 — **Accepted IDEA-0062 composer refinement:** The composer-left Lorebook icon opens a resizable drawer from the **left edge**, animated **sidebar first, main body from behind second**; closing is a **simple fade-out**. Lorebook remains an editor rather than action mode and does not auto-select a character. Accessible reduced-motion support. Staging only.
 - 2026-10-18 — **Explicit user acceptance (IDEA-0062):** Use **Info** and **Settings** tabs together in the information panel, place the `Playing As` selector under Settings, and provide a **Lorebook icon immediately left of the story input** for frequent access. Nothing auto-selects a character or commits world state. Staging only.
 - 2026-10-18 — **User explicitly accepted:** Switching `Playing As` between distant characters is a **narrative cut**. The next Do/Say uses the newly chosen character's established scene/location, with no travel, teleportation, time passage, inventory/state transfer or extra confirmation. Story/Continue remain independent. Staging only.
