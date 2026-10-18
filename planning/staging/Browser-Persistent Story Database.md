@@ -18,7 +18,7 @@ tags:
 Choose and refine **filesystem-backed SQLite**, accessed exclusively through Wails v3/Go services, as Lorebound's canonical adventure database for the single packaged headless Go localhost server and normal-browser play. The earlier browser-only/server/hybrid comparison has been superseded by the user's 2026-10-17 explicit runtime/storage decision. Exact database schema, file locations, migration, import/export format and performance policies remain for refinement.
 
 ## Why this idea matters
-The product should reliably store substantial adventures with many story turns, revisions, entities and complete incremental changes. Browser-based storage offers device-local independence; a persistent SvelteKit backend can offer straightforward SQL databases and different backup/deployment options. Actual hosting simplicity and persistence guarantees depend on the chosen SvelteKit adapter, platform and database service. The goal is an informed storage choice, not an assumption that browser storage must be primary.
+The product must reliably store substantial adventures with many story turns, revisions, entities and complete incremental changes. The selected Wails v3 headless Go localhost service provides one filesystem-backed SQLite database boundary for the normal-browser frontend. The remaining challenge is durable transactions, consistent history, migration, recovery and export/import, not deciding whether the browser or a Node/SvelteKit server owns canonical saves.
 
 ## Accepted direction
 - **SQLite selected:** Canonical saves, story text/revisions, world-state events, entity records and durable plugin data use SQLite database files persisted on the computer's filesystem. Go/Wails owns reads, writes, migrations and transactions.
