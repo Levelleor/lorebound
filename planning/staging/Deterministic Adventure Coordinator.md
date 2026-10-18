@@ -45,6 +45,11 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - Enabled gameplay plugins/capabilities run in the same client TypeScript runtime where possible, with Go reserved for privileged persistence/OS operations. Scheduling expensive model/rebuild work must not freeze the story interface.
 - External AI models are accessed through frontend TypeScript providers; CORS, credentials and any necessary alternate network transport are separate provider questions.
 
+## Draft and committed turn separation
+- Player-authored input is autosaved as a **noncanonical SQLite draft** after typing pauses, through Go. Draft saving is not a gameplay turn and invokes no world-state validator or irreversible side effect.
+- On submit/confirmation the browser-side TypeScript coordinator validates the result and asks Go/SQLite to commit **the complete accepted story turn/revision with all associated validated state changes atomically**.
+- Failed/cancelled model requests, validation or commit must leave last accepted canon intact; preserve the player's last successfully saved draft for retry. Incomplete AI output is not automatically canonical.
+
 ## Dependencies and constraints
 - Works with accepted [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and [[One-Model Task Routing]] (IDEA-0017); avoid a mandatory stack of simultaneously loaded models.
 - All accepted persistent changes must be recorded compatibly with [[Event-Sourced World History]] (IDEA-0039) and the complete incremental reconstruction requirement in [[Snapshots and Incremental State Rebuild]] (IDEA-0042).
@@ -89,6 +94,7 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - This is an accepted **unrefined direction**, not approval for production or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
