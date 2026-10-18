@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -47,6 +47,11 @@ All three travel policy directions are **accepted as configurable alternatives**
 ## Playing As scene cut is not travel
 - **Accepted:** Changing `Playing As` between characters at different established locations is a narrative cut, not a movement event. The next Do/Say follows the selected character where they already are. No travel graph edge, journey time, route validation or teleportation is needed for the switch itself, including under strict travel rules. A subsequent actual movement action still undergoes the normal configured travel-policy validation.
 
+## Player-authored Story can establish travel exceptions under strict policies
+- **Explicit accepted IDEA-0002 Option B (2026-10-18):** Even when the adventure enables **strict adjacent-only** or **multi-hop permitted-path** travel, a player can use **Story mode** to directly assert an extraordinary outcome, e.g. that a character **instantaneously appears on the far side of the kingdom**. Treat this as the player's **authorial location-change event**, not a graph-traversal *attempt*, so no invented connection, path, key, permission, elapsed travel time or spell is required merely to satisfy normal path restrictions.
+- **Existing gameplay restrictions preserved:** Actual attempted travel in **Do/Say** and unsolicited narration in **Continue/AI** are still constrained by the selected policy; choosing Story is the explicit authorial permission, not a setting change to make all future travel freeform. Subsequent ordinary movement uses the updated character location and still follows strict routing rules.
+- **Location/history safety:** Resolve correct existing character and destination identities or create genuinely stated entities only through accepted validated entity-creation rules. Update relevant character presence/location coherently with stable IDs, event provenance and atomic revisions; do not teleport companions or duplicate items just to reconcile the story. Unknown destinations or ambiguous subjects remain unresolved until safely clarified, rather than guessed. This does not change the configured graph or its edges without explicit player-authored facts.
+
 ## Dependencies and constraints
 - Requires stable location IDs and a containment hierarchy from accepted [[Hierarchical World Locations]] (IDEA-0033), while preserving the distinction between hierarchy and route edges.
 - Validated travel should update accepted [[Character Presence and Current Scene]] (IDEA-0034) state and avoid automatically relocating remote or absent NPCs.
@@ -71,6 +76,8 @@ All three travel policy directions are **accepted as configurable alternatives**
 - What prevents allowed multi-hop movement from implicitly moving unaccompanied NPCs or duplicated world items?
 
 ## Draft acceptance criteria
+- [ ] Under strict adjacent-only travel, an unambiguous Story-authored instant relocation updates the correct character's actual location without requiring/creating a traversable route; the exact same movement attempted via Do remains subject to path validation.
+- [ ] Story exceptions are sourced to the player's declared prose and do not change graph mode, move unmentioned companions or bypass atomic/entity-reference integrity.
 - [ ] Under any configured travel policy, switching `Playing As` between distant characters never fails for lack of a route, triggers movement events or changes locations. Any **real movement** in a subsequent action is checked under the selected travel policy.- [ ] An adventure can use freeform, strict adjacent-only or valid multi-hop travel policy without requiring one universal default.
 - [ ] Travel graph connections use stable location identities and remain distinct from containment parent/child links.
 - [ ] In adjacent-only mode, a move to a location without a valid directly traversable edge is rejected or handled as blocked without moving the character.
@@ -94,6 +101,7 @@ All three travel policy directions are **accepted as configurable alternatives**
 - **Staging means accepted for refinement, not production-approved or implemented.** The default policy, route solver, conditional-edge schema and user experience need review.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0002 travel exception:** Explicit player Story events may establish an otherwise disallowed relocation without pretending a route/travel ability exists. Strict routing still governs ordinary Do/Say actions and AI/Continue outcomes; source-grounded references and canonical safety remain required. Staging only.
 - 2026-10-18 — **Explicit user acceptance:** Switching to a distant character is not travel. Next Do/Say follows their established scene, and actual later movement still validates as normal. Staging only.
 - 2026-10-18 — **Accepted scene-cut dependency:** `Playing As` switching is a narrative cut and not travel, so no route or movement validation is triggered by switching between far-apart characters. Actual travel still follows normal selected policy. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
