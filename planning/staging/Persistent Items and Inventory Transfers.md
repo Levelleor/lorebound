@@ -58,6 +58,11 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - Changing selection changes **which character's real inventory is displayed**, not the holder/owner of an item. A missing inventory record is **unknown**, not proof of empty pockets; a known-empty inventory is only shown as empty when established. Nothing is auto-created for characterless adventures.
 - Showing inventory in Info does not grant new transfer/ownership rights or commit any event; actual item changes remain separately validated and persisted.
 
+## Story author can declare inventory outcomes without violating unique-item state
+- **Accepted IDEA-0002 Option B (2026-10-18):** A player writing a **definite Story-mode outcome** may author an exceptional creation, possession or transfer event even if the ordinary **in-fiction availability or access prerequisites** for a Do/Say pickup/transfer would fail. The Lore Engine should record the actual player-authored outcome rather than block imagination solely on simulation restrictions, and subsequent world/inventory behaviour uses the resulting canonical state.
+- **Never duplicate state by accident:** Authorial freedom does **not** allow a single uniquely identified item to be simultaneously located in incompatible holders/places, break stable entity IDs, fail referential integrity or leave half-committed inventory. If Story says an item appears in someone's hand, update the **correct item's holder** coherently or, only where explicitly warranted by the text, create a **new distinct item identity** using established creation rules. Do not invent an unmentioned theft, travel path or explanatory spell.
+- **Normal action rules unchanged:** Do/Say attempts and autonomous AI/Continue claims still use ordinary rules for possession, accessibility and transfers. A Story-authored world fact still requires safe typed event validation and atomic SQLite storage.
+
 ## Dependencies and constraints
 - Uses accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) for durable character ownership/custody references; integrates with future world-location data without presuming that separate candidate is approved.
 - Item create/move/delete actions must be validated against committed canonical state and must not follow uncommitted, rejected or failed narrative generation as if authoritative.
@@ -80,6 +85,8 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - How do item location/holder references work when character or location entities are deleted, merged or renamed?
 
 ## Draft acceptance criteria
+- [ ] Story-authored exceptional transfer/creation may bypass fictional accessibility rules while preserving unique item placement and correct source/provenance.
+- [ ] Equivalent Do/Say attempts remain constrained by possession/access rules; Story cannot cause duplicated canonical unique-item IDs or partial storage commits.
 - [ ] The Info tab displays the selected `Playing As` character's real known inventory when enabled, updates on selection, and never shows the previous actor's items as the new actor's possessions.
 - [ ] Missing inventory data is not presented as a definite empty inventory; the Info tab does not change item state.
 - [ ] Changing `Playing As` between characters in distant locations never duplicates, teleports, swaps or transfers their items; Do/Say inventory actions still target and validate the selected character's actual accessible items.- [ ] Tracked unique item instances have durable IDs that survive renames and transfers.
@@ -106,6 +113,7 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - Accepted into **staging for refinement only**, not production. The precise model for stacking, capacity, item categories and ownership rules remains undecided; no implementation is claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0002 authorial inventory distinction:** A player-written Story declaration can establish an extraordinary possession/transfer while keeping unique item identity and placement coherent; normal Do/Say/Continue actions still obey fictional restrictions. No unvalidated partial state. Staging only.
 - 2026-10-18 — **Explicitly accepted selected-character Info display:** The Info tab in a two-tab Info/Settings panel presents the selected character's **existing inventory**, while Settings holds `Playing As` and Lorebook is available at the composer-left icon. Switching only changes presentation, not custody. Staging only.
 - 2026-10-18 — **Explicit user acceptance:** `Playing As` switching is a narrative cut; the next Do/Say follows the chosen character in their existing circumstances. Switching causes no physical travel, time passage or item movement. Staging only.
 - 2026-10-18 — **Accepted scene-cut/inventory independence:** Next Do/Say follows the new `Playing As` actor's established whereabouts, not the previous actor's location or possessions. Selection itself performs no travel or item transfer; staging unchanged.
