@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Local First Storage and Deployment Brainstorm]]"]
@@ -46,6 +46,11 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - If derived snapshots, summaries and caches are copied, they must remain valid for the duplicate's independent identity and history; otherwise they can be recomputed. Their existence is not required for correctness.
 - Pending input and noncanonical editing drafts are **excluded** from duplication; copying must not invoke AI or reproduce external side effects.
 
+## Reconstruct any committed turn as an independent fork baseline
+- **Accepted IDEA-0011 Option A (2026-10-18):** Every **committed story-turn boundary** can be selected for a new independently saved adventure fork. Reconstruct the **authoritative world state and related canonical history through the chosen turn**, using the saved baseline plus complete accepted incremental events/revisions. A snapshot at that exact turn is **not necessary**: valid older checkpoints may accelerate replay but cannot restrict eligibility.
+- **All-history prefix fidelity:** Preserve the complete committed narrative, revision ancestry, canonical entity/Lorebook records, validated event provenance and relevant persistent module context up to the chosen turn, excluding source turns and derived effects after it. Do not reconstruct the fork at the source's current latest state when an earlier turn was selected, and do not treat pending drafts, provisional AI output or invalid proposed state as accepted fork material.
+- **Source version and isolation:** Read a consistent revision/version of source data while reconstructing and creating the fork. New adventure has independent mutable canonical state; the original's following turns/world remain untouched. Invalid/outdated snapshots cannot override the canonical incremental history, and a partial rebuild/copy must not be persisted as a complete fork. Exact replay/cache/snapshot algorithm stays open.
+
 ## Dependencies and constraints
 - Accepted [[Event-Sourced World History]] (IDEA-0039) supplies ordered validated state-changing events; this clarification requires them and any accompanying versioned records to cover **all** canonical persistent changes, not a manually selected subset.
 - Accepted [[Versioned Text Blocks and Revision IDs]] (IDEA-0040) supplies story-text lineage and revision references needed for full adventure reconstruction.
@@ -65,6 +70,8 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - How should snapshot frequency, storage format and dependency tracking be optimised without making correctness rely on checkpoints?
 
 ## Draft acceptance criteria
+- [ ] All committed turns remain eligible fork points, including turns with no materialised snapshot; replay produces the same authoritative state at the boundary.
+- [ ] The fork's accepted prefix reconstructs through the selected turn only and remains independently mutable; no later source event, stale checkpoint or provisional draft influences the fork.
 - [ ] Replaying canonical incremental records from a known baseline reconstructs every persisted world-state category and applicable story revision at an arbitrary supported point.
 - [ ] No accepted persistent mutation is stored only in an unreplayable materialised projection or an unlogged mutable field.
 - [ ] A confirmed edit at Turn 47 can reuse valid state through Turn 46 and recompute only what is necessary afterward, with older replay/checkpoints only if the prior state is unavailable.
@@ -91,6 +98,7 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - This remains a **staging direction requiring refinement**, not a production specification or an implemented capability.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0011 dependency:** Players can fork from any committed turn, so full accepted incremental state/history must reconstruct that turn without requiring a named checkpoint or snapshot. Save an independent fork with complete prefix and no subsequent source effects; correct revision/version handling remains required. Staging only.
 - 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
