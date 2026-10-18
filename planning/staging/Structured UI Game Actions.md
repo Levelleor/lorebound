@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[World Map and Location Rules Brainstorm]]", "[[Characters Inventory Equipment and Anatomy Brainstorm]]"]
@@ -35,6 +35,10 @@ A player selects an available UI control backed by an enabled registered capabil
 
 ## Alternatives and trade-offs
 A prose-only interface is simpler and preserves flexibility but may spend extra model calls to infer actions or resolve destinations already known from selection, sometimes ambiguously. Structured controls improve precision and can reduce inference calls, but add UI complexity and may tempt an excessive number of buttons. The accepted direction uses **both** natural language and optional contextual UI commands, with the same deterministic validators beneath them. Direct actions versus confirm/prepare actions remains undecided; different capabilities may eventually require different interaction policies.
+
+## Architecture integration (2026-10-17)
+- Svelte UI controls invoke the same browser-side TypeScript coordinator and capability registry as freeform model interpretation. Wails/Go remains an adapter for transactional SQLite persistence and necessary filesystem functions, not a parallel rules dispatcher.
+- Go must reject stale/conflicting writes from desktop windows or browser tabs and protect privileged service calls; typed UI operations do not grant direct unchecked access to canonical database tables.
 
 ## Dependencies and constraints
 - Routes to [[Deterministic Adventure Coordinator]] (IDEA-0044), whose validators and atomic finalisation remain authoritative; UI selection does not bypass them.
@@ -79,5 +83,6 @@ A prose-only interface is simpler and preserves flexibility but may spend extra 
 - This is an accepted **unrefined** idea, not production approval or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Optional structured UI gameplay commands (such as map selection and Equip/Drop) using stable entity IDs and typed operations, bypassing unnecessary LLM interpretation while remaining under deterministic validation and coherent narration/state finalisation. Show controls only for enabled, applicable capabilities; preserve freeform language input. Leave immediate action versus confirmation, narration timing and specific controls open for refinement. Moved to staging, not production.
