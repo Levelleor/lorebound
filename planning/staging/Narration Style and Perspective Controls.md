@@ -52,6 +52,11 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - **Accepted IDEA-0026:** All characters in the Lorebook are equally eligible for Settings `Playing As`; there is no permanent PC/NPC kind or Playable designation. Temporary choice of Do/Say actor is **separate from prose tense/viewpoint/style**, and does not reclassify, teleport or alter any character's inventory/status.
 - Story and Continue remain actor-independent; narrative perspective can still be story-wide with no character. Exact narrator focus UI remains a future refinement.
 
+## Cut to Playing As character on next Do or Say
+- **Accepted 2026-10-18 character-cut decision:** Changing Settings `Playing As` can switch the focus of the **next Do/Say scene** across distant locations to the chosen character's **own established circumstances**. This is a storytelling camera cut, not an in-world move. The narrator should not invent a journey, teleport the character, advance time automatically, or merge different actors' surroundings to connect scenes.
+- `Playing As` determines whose Do/Say actions and speech are being provided, **not** an automatic mutation of their location/inventory or a requirement that all narration always follows that person. Independent first/second/third-person prose-style preferences still apply, with Story/Continue free to follow other subjects.
+- What visual indicator or transition prose (if any) denotes a cut remains a separate UI/stylistic refinement; **no mandatory switching confirmation** is required.
+
 ## Dependencies and constraints
 - Depends on the narrator/context builder and generation model integration; the UI and prompt format remain to be refined.
 - Model adherence is best-effort; a selected perspective, tone or tense cannot be guaranteed by arbitrary LLMs.
@@ -67,7 +72,8 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - Should preset sharing/import-export be included in this feature or handled elsewhere?
 
 ## Draft acceptance criteria
-- [ ] A player can configure narration perspective, tense, genre, tone, pacing and desired response length for upcoming generation.
+- [ ] After changing `Playing As`, the next Do/Say adopts the chosen character's established scene even if elsewhere; no invented travel, teleportation, time advancement or movement event appears solely from changing viewpoints.
+- [ ] Story/Continue remain independently steerable and narration style preferences are not rewritten by actor selection.- [ ] A player can configure narration perspective, tense, genre, tone, pacing and desired response length for upcoming generation.
 - [ ] A player can provide custom freeform narrative style instructions.
 - [ ] A player can save a named narration preset and reuse it in an adventure.
 - [ ] Changes to narration settings affect future generation prompts, not previously saved narrative passages.
@@ -86,6 +92,7 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - Accepted for staging and refinement only; this does not mean that controls have been implemented or approved for production.
 
 ## Decisions and review history
+- 2026-10-18 — **User-approved viewpoint cut:** Changing `Playing As` makes next Do/Say follow that character where they already are, even across distant scenes. No travel/teleportation/time lapse, actor confirmation, or world-state transfer results from selection. Story/Continue and narration-style settings remain independent. Staging only.
 - 2026-10-18 — **Accepted character-unification dependency:** No PC/NPC or Playable category; any Lorebook character may be used as Do/Say actor, without changing narration-style settings or canonical world state. Staging unchanged.
 - 2026-10-18 — **Accepted Do/Say identity selector dependency:** Settings `Playing As` is an explicit Lorebook-backed actor/speaker control for Do and Say (disabled if unset), separate from prose perspective/tense/style options. Story/Continue remain available characterless. Staging unchanged.
 - 2026-10-18 — **Accepted flexible-character integration:** Narrative perspective/focus may be unset or change among existing characters while zero-character and ensemble-cast adventures remain supported. Focus is a presentation/context choice and not a canonical action, location or inventory transfer. Staging unchanged.
