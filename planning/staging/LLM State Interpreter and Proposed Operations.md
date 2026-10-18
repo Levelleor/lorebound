@@ -73,6 +73,9 @@ Native function/tool calling may provide provider-supported structured arguments
 - Do **not** interpret the player changing `Playing As` as a story event, travel request, teleporter use, elapsed time, automatic co-location or inventory/ownership transfer. An actual action described in the subsequent Do/Say is interpreted separately and remains subject to the usual deterministic checks.
 - Preserve unresolved/unknown location and actor-relevant details without pulling in the previous actor's location or fabricating lore to make the new viewpoint work. Story/Continue still have their normal actor-optional semantics.
 
+## Playing As switching is context, not movement
+For Do/Say, interpret the selected character's identity and **already established scene location** as input context, including on the first turn after changing `Playing As`. A switch between distant characters is a **scene cut** and must **not be inferred as travel, teleportation, elapsed time, co-location or inventory transfer**. The next actual action can separately propose world-state operations under ordinary validation. If location is unknown, do not borrow the previous actor's scene or invent it; Story/Continue remain actor-optional.
+
 ## Dependencies and constraints
 - Works under accepted [[Deterministic Adventure Coordinator]] (IDEA-0044): model output is a provisional proposal and cannot mutate canonical state without deterministic validation and coherent finalisation.
 - Must support the configurable workflows of [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and the single- or multi-model routing accepted in [[One-Model Task Routing]] (IDEA-0017).
@@ -98,6 +101,7 @@ Native function/tool calling may provide provider-supported structured arguments
 - How should quality, latency, tool adherence and cost be evaluated across local RP and cloud models?
 
 ## Draft acceptance criteria
+- [ ] Merely changing `Playing As` proposes no world-state operations; the next Do/Say is grounded in that actor's established location and state.
 - [ ] A change of `Playing As` alone proposes **no gameplay operations**. The next Do/Say uses the selected actor's established location/context, and any separately narrated movement must pass normal validation.- [ ] Arbitrary player or narrative prose can yield typed proposed changes with a defined and verifiable schema.
 - [ ] Entity references are resolved to stable IDs only when sufficiently grounded, with ambiguity preserved or surfaced otherwise.
 - [ ] Intentions, failed attempts, hypotheticals and historical recollections are not automatically committed as completed present-tense actions.
@@ -121,6 +125,7 @@ Native function/tool calling may provide provider-supported structured arguments
 - This remains an **unrefined accepted planning direction**, not a production-ready specification or implemented feature.
 
 ## Decisions and review history
+- 2026-10-18 — **User explicitly accepted:** A `Playing As` switch is an editorial scene cut; next Do/Say follows the new character in their established place, no automatic travel/time/state effects, and Story/Continue remain independent. Staging only.
 - 2026-10-18 — **User-accepted switch-as-cut semantics:** Changing `Playing As` between distant characters is a narrative cut; the next Do/Say uses the selected character's existing scene/location. The interpreter must not propose movement or invent a transition from selection alone. Staging only.
 - 2026-10-18 — **Explicit user-approved universal characters:** No PC/NPC or Playable role; all Lorebook characters are available for the Settings `Playing As` actor used by Do/Say. World-state proposals remain validated. Staging unchanged.
 - 2026-10-18 — **User explicitly replaced Do/Say actor clarification with selector gate:** Do and Say are unavailable until an existing Lorebook character is chosen in Settings sidebar `Playing As`; the interpreter uses that stable ID as actor/speaker, not per-turn "who is I?" prompts. Story/Continue remain characterless-capable. No global Player Inventory and no automatic avatar. Staging only.
