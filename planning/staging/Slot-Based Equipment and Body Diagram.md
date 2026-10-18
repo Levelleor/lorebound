@@ -38,6 +38,9 @@ For each character, expose a labelled schematic and equipment-slot list whose sl
 ## Alternatives and trade-offs
 A text-labelled, static diagram is inexpensive, understandable and does not require an image model. A responsive anatomy-aware interactive diagram would support unusual character bodies but adds UI and state complexity, so the exact rendering approach remains open. Fixed common slots can simplify the first interface but must remain extensible for custom/nonstandard anatomy. Dedicated equipment images are optional future scope, not a prerequisite. Layering allows flexible outfits but requires deterministic handling of slot occupancy and conflicts after the rules are defined.
 
+## All characters share the same optional equipment model
+- **Explicit IDEA-0026 refinement:** There is **one character kind** without PC/NPC or Playable role distinctions. Every character can have the same optional equipment/body-slot records. Choosing them via `Playing As` does not move items, change equipment or give any special mechanical rights.
+
 ## Dependencies and constraints
 - Stable item instance IDs and validated possession transfers derive from accepted [[Persistent Items and Inventory Transfers]] (IDEA-0029); shared character references from [[Shared PC and NPC Character Entities]] (IDEA-0026).
 - The diagram must remain useful without accepting or implementing the separate detailed anatomy-and-transformation feature [[Configurable Anatomy and Transformations]] (IDEA-0031).
@@ -59,7 +62,7 @@ A text-labelled, static diagram is inexpensive, understandable and does not requ
 - Which equipment fields/slot states are important enough to include in AI generation context?
 
 ## Draft acceptance criteria
-- [ ] Each relevant PC or NPC can have an equipment view with body-slot names and a simple legible diagram or labelled schematic.
+- [ ] Each relevant character can have an equipment view with body-slot names and a simple legible diagram or labelled schematic, with no PC/NPC or Playable filtering.
 - [ ] The model supports left/right hands, head, torso, feet, accessories, clothing layers and custom slots without forcing a universal fixed human-only topology.
 - [ ] Equipped and held item records reference the same durable unique item instances as the inventory/possession system, without duplicated objects.
 - [ ] The UI clearly distinguishes worn/held/equipped items from items only carried in inventory.
@@ -82,5 +85,6 @@ A text-labelled, static diagram is inexpensive, understandable and does not requ
 - Staging is **not** approval for production or proof of implementation; the slot schema and compatibility algorithm still need refinement.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted character-unification dependency:** Equipment applies to all characters equally, with no PC/NPC/Playable split and no change merely from `Playing As` selection. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Slot-based equipment with a simple body-slot diagram; left/right hands, head, torso, feet, accessories, clothing layers and custom slots; separation of equipped from carried inventory; coherent validated equip/unequip/transfer linked to unique item IDs; and flexibility for nonstandard anatomy. Exact slots, two-handed/incompatibility mechanics, artwork and full anatomy transformations deliberately deferred to refinement or separate decisions. Moved to staging only.
