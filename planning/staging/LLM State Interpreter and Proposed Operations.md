@@ -76,6 +76,9 @@ Native function/tool calling may provide provider-supported structured arguments
 ## Playing As switching is context, not movement
 For Do/Say, interpret the selected character's identity and **already established scene location** as input context, including on the first turn after changing `Playing As`. A switch between distant characters is a **scene cut** and must **not be inferred as travel, teleportation, elapsed time, co-location or inventory transfer**. The next actual action can separately propose world-state operations under ordinary validation. If location is unknown, do not borrow the previous actor's scene or invent it; Story/Continue remain actor-optional.
 
+## Playing As switching is context, not a movement proposal
+- **Accepted:** On the next Do/Say after switching `Playing As`, use the selected character's stable ID and **their own established location/context**. Choosing another character never proposes travel, teleportation, time passage or inventory transfer. Actual actions in the next turn still require normal validation. Do not substitute the former actor's location when the new actor's whereabouts are unknown. `Story` and `Continue` remain actor-optional.
+
 ## Dependencies and constraints
 - Works under accepted [[Deterministic Adventure Coordinator]] (IDEA-0044): model output is a provisional proposal and cannot mutate canonical state without deterministic validation and coherent finalisation.
 - Must support the configurable workflows of [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and the single- or multi-model routing accepted in [[One-Model Task Routing]] (IDEA-0017).
@@ -125,6 +128,7 @@ For Do/Say, interpret the selected character's identity and **already establishe
 - This remains an **unrefined accepted planning direction**, not a production-ready specification or implemented feature.
 
 ## Decisions and review history
+- 2026-10-18 — **Explicit user acceptance:** `Playing As` switching is a narrative cut; the next Do/Say follows the chosen character in their existing circumstances. Switching causes no physical travel, time passage or item movement. Staging only.
 - 2026-10-18 — **User explicitly accepted:** A `Playing As` switch is an editorial scene cut; next Do/Say follows the new character in their established place, no automatic travel/time/state effects, and Story/Continue remain independent. Staging only.
 - 2026-10-18 — **User-accepted switch-as-cut semantics:** Changing `Playing As` between distant characters is a narrative cut; the next Do/Say uses the selected character's existing scene/location. The interpreter must not propose movement or invent a transition from selection alone. Staging only.
 - 2026-10-18 — **Explicit user-approved universal characters:** No PC/NPC or Playable role; all Lorebook characters are available for the Settings `Playing As` actor used by Do/Say. World-state proposals remain validated. Staging unchanged.
