@@ -62,6 +62,11 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - This relaxed policy **must not** overwrite a **canonical versioned text block**, its accepted revision ID or event provenance. A **confirmed** prose edit is a distinct expected-version checked atomic operation and rejects if another tab advanced the authoritative adventure. Canonical lineage must remain reconstructible regardless of which provisional draft autosave happened most recently.
 - A stale committing tab may still offer any text present in its live editor or latest shared saved draft for user-led reconciliation, but cannot promise retrieval of drafts already overwritten by other tabs.
 
+## Fork preserves accepted text revisions through any chosen turn
+- **Accepted IDEA-0011 Option A (2026-10-18):** A player may fork at **any accepted/committed story-turn boundary**. The new adventure receives a coherent, reconstructible copy of **the accepted narrative/text-revision lineage through that boundary**, linked correctly to its own accepted event/state provenance. Later source turns, later-only revisions and their derived effects are **not part of the new fork**.
+- **No transient material:** Pending prose-edit drafts, unsent composer messages, model streaming previews, validation-rejected results and any other uncommitted changes are not eligible fork points or copied canonical revisions. A named checkpoint or special snapshot is not needed; accepted versioned turn history identifies boundaries.
+- **Independent revision identity:** Maintain proper in-fork block/revision/event links with no mutable reference back to the original adventure. Changes to future text in either story cannot rewrite the other's history. Exact ID remapping versus safe immutable storage is an implementation choice, not an in-story branch UI requirement.
+
 ## Dependencies and constraints
 - Works with accepted [[Event-Sourced World History]] (IDEA-0039), whose event records need stable source turn and revision references.
 - Historical editing confirmation and deletion UX belong to separate unaccepted [[Historical Edit Confirmation and Bulk Truncation]] (IDEA-0041). Checkpoint design and undo safety are independently unaccepted (IDEA-0042, IDEA-0043).
@@ -81,6 +86,8 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - How can old source references remain resolvable after truncation, undo or branch selection?
 
 ## Draft acceptance criteria
+- [ ] Forking at any committed Turn N preserves accepted block/revision/source-event links and history through N only; later turns and unconfirmed drafts are excluded.
+- [ ] Text edits to the new adventure remain independent of the source and work without a required named checkpoint or snapshot.
 - [ ] A prose edit's noncanonical saved draft can be replaced by a newer successful save from another tab for the **same editing target**, without overwriting accepted revisions, authoritatively changing event provenance or retaining older draft copies.
 - [ ] Concurrent edits that originate from stale adventure versions cannot overwrite accepted block revisions or misattribute event provenance; rejected edits retain their uncommitted text for reconciliation.
 - [ ] A later successful autosave from another tab **may replace the stored noncanonical draft** for the same narrative editing target without a draft conflict or preserved prior draft version; different targets remain distinct. Canonical revision IDs are created only after successful validation and accepted commit.
@@ -105,6 +112,7 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - Design remains unrefined, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0011 revision dependency:** A manually created separate adventure fork may start at any committed turn and must retain the complete accepted text-revision lineage/provenance through that point, while excluding later and uncommitted revisions. No shared mutable source links or in-chat branch UI. Staging only.
 - 2026-10-18 — **IDEA-0005 Option B explicitly accepted:** Provisional composer and narrative-edit drafts are **latest-only shared per logical target**, and newer autosaves can replace earlier stored drafts across tabs without draft version checks or history. This supersedes the prior draft nonclobber wording; **accepted text revisions, provenance and world state remain protected by canonical expected-version conflict checks**. Staging only.
 - 2026-10-18 — **Accepted IDEA-0005 conflict dependency:** Concurrent tabs may edit the same adventure, but stale expected-version canonical text commits are rejected atomically. Preserve accepted revision lineage/provenance and the other tab's uncommitted work; draft save conflict policy remains open, with no silent cross-tab overwrite. Staging only.
 - 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
