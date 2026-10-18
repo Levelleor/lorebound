@@ -73,6 +73,11 @@ Represent editable prose using stable **story turn/passage identities** and vers
 - **Cross-passage work remains a refinement:** A new whole passage needs a stable ID; moving text between passages, splitting a passage into multiple passages or joining passages must retain coherent source/revision provenance. Exact ID allocation, event attribution and editor data structures remain undecided.
 - **No change to commit gates:** Autosaved in-progress prose is noncanonical and latest-only per editing target. Confirmed historical edits use the accepted Keep Later Turns / Delete All After Point choices, expected-version checks and atomic Go/SQLite writes. Full-history duplication and arbitrary-turn forking preserve the passage revision lineage.
 
+## Committed Undo retires active passage provenance without variants
+- **Accepted IDEA-0004 committed Undo Option B (2026-10-18):** Undo of the active committed Turn N makes that turn/passage revision and its event dependencies **inactive in the current adventure timeline** and moves the active head to N-1, while keeping the exact surviving source passage IDs/revisions and their provenance reconstructible. Repeatable Undo can traverse to the available committed baseline; this is separate from the short temporary editor undo stack.
+- **New continuation, same adventure:** Committing a new turn after rollback creates the next active passage/event lineage in **the same adventure**. Old undone passages must **not appear as selectable response alternatives, parallel heads or automatic canonical Redo candidates**. Any internal inactive audit/source records are strictly non-playable bookkeeping, not a hidden version gallery.
+- **Existing historical-edit rule remains:** An earlier passage edited **while later turns stay active** still uses the IDEA-0041 Keep Later Turns/Delete All After Point confirmation and re-evaluation. Undo of the **current active head** is a rollback operation, not a freeform historical prose revision. All canonical changes remain expected-version guarded and atomic. Provisional Retry replaces AI candidate text and never creates a canonical passage revision until that candidate is actually accepted.
+
 ## Dependencies and constraints
 - Works with accepted [[Event-Sourced World History]] (IDEA-0039), whose event records need stable source turn and revision references.
 - Historical editing confirmation and deletion UX belong to separate unaccepted [[Historical Edit Confirmation and Bulk Truncation]] (IDEA-0041). Checkpoint design and undo safety are independently unaccepted (IDEA-0042, IDEA-0043).
@@ -92,6 +97,8 @@ Represent editable prose using stable **story turn/passage identities** and vers
 - How can old source references remain resolvable after truncation, undo or branch selection?
 
 ## Draft acceptance criteria
+- [ ] Undo of the current committed turn deactivates that turn's active text/event lineage and deterministically returns to the previous committed passage/state without losing source provenance of the remaining prefix.
+- [ ] A new accepted passage after Undo extends the same adventure with no selectable old response variants; historical text editing still uses explicit confirmation and version checks.
 - [ ] Each story turn/passage body has a stable canonical ID and accepted revision lineage; edits inside its paragraphs create a new passage revision only on confirmation, never individual paragraph revisions.
 - [ ] World events identify the originating turn/passage and exact committed revision, enabling downstream reconstruction without paragraph-level IDs.
 - [ ] Forking at any committed Turn N preserves accepted block/revision/source-event links and history through N only; later turns and unconfirmed drafts are excluded.
@@ -120,6 +127,7 @@ Represent editable prose using stable **story turn/passage identities** and vers
 - Design remains unrefined, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0004 turn/revision dependency:** Committed Undo moves the active narrative head backward and deactivates the undone turn's canonical effects while retaining sound provenance and expected-version atomic consistency. The same adventure may continue with a new active turn, without a response-alternative stack. Staging only.
 - 2026-10-18 — **User explicitly chose Option A:** Canonical narrative revision identity is at **turn/passage** level rather than per paragraph. Paragraphs remain freely editable; events retain turn/passage revision provenance. Whole-passage split/merge rules remain open, and existing historical confirmation and atomic write safety apply. Staging only.
 - 2026-10-18 — **Accepted IDEA-0011 revision dependency:** A manually created separate adventure fork may start at any committed turn and must retain the complete accepted text-revision lineage/provenance through that point, while excluding later and uncommitted revisions. No shared mutable source links or in-chat branch UI. Staging only.
 - 2026-10-18 — **IDEA-0005 Option B explicitly accepted:** Provisional composer and narrative-edit drafts are **latest-only shared per logical target**, and newer autosaves can replace earlier stored drafts across tabs without draft version checks or history. This supersedes the prior draft nonclobber wording; **accepted text revisions, provenance and world state remain protected by canonical expected-version conflict checks**. Staging only.
