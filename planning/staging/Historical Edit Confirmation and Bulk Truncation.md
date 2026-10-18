@@ -63,6 +63,12 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - Historical state reconciliation uses **source turn/passage ID and accepted revision** to identify potentially affected world events. A changed paragraph can require reconsidering all dependent events from that passage; no paragraph-specific stable IDs are needed.
 - Existing latest-only draft autosaving, expected-version conflict checks, coherent all-or-nothing SQLite writes, and no automatic downstream prose rewriting remain unchanged. Identity rules for moving/splitting/merging **whole passages** remain open.
 
+## Undo of the active head differs from editing historical prose
+- **Accepted IDEA-0004 committed Undo Option B (2026-10-18):** A user may issue repeatable **committed Undo of the current active story head**: from Turn N to N-1, invalidating the undone turn's active world/event effects and reconstructing the canonical state at that earlier committed boundary. The player may continue with a different next turn **in the same adventure**. The old undone future is not a selectable alternative version.
+- **Do not conflate operations:** Undo of the latest active turn is **not** the same as editing an earlier passage while keeping existing later turns. The four-step **Keep Later Turns / Delete All After Point / Continue Editing / Discard** confirmation remains required when changing **older** prose with later committed turns. Repeated latest-head Undo is a distinct canonical rollback, not a hidden prose edit requiring automatic downstream AI rewriting.
+- **Safe rollback:** A committed Undo must be version-checked and atomic in Go/SQLite, keep stable source IDs and accepted history coherent, and invalidate/rebuild dependent state. Failed/conflicting Undo preserves the prior head. The natural limit is the first committed story boundary/initial baseline, not the finite temporary editor undo stack. Accidental bulk truncation recovery and any additional multi-turn Undo confirmation remain open, rather than a promised variant selector or redo archive.
+- **Fork if preserving future:** Explicitly fork before divergence when the player wants the current full story and an alternative continuation to remain playable as **two separate adventures** (IDEA-0011). Undo alone intentionally replaces the active future of one adventure.
+
 ## Dependencies and constraints
 - Source passages have stable IDs and versions through accepted [[Versioned Text Blocks and Revision IDs]] (IDEA-0040), so historical edits can identify affected state-changing source revisions.
 - World-state projections and events follow accepted [[Event-Sourced World History]] (IDEA-0039), with active versus obsolete historical effects kept distinct.
@@ -83,6 +89,8 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - How should selected history branches and snapshots affect recovery without preapproving those separate features?
 
 ## Draft acceptance criteria
+- [ ] Repeated Undo can roll back the latest committed turn and state to earlier boundaries in the **same adventure** without the historical-text-edit confirmation gate being automatically applied to every individual head rollback.
+- [ ] Editing an old passage while later turns remain active still requires explicit Keep/Delete/Continue Editing/Discard confirmation; Undo cannot bypass version/atomicity safety or preserve removed turns as selectable variants.
 - [ ] Confirming a paragraph edit to an earlier passage creates a **new canonical passage revision** after Keep/Delete selection and reconciles dependent events; no paragraph ID or revision history is required.
 - [ ] Editing one paragraph of an earlier committed passage does not create paragraph-specific canonical IDs. Confirmed edits create a **new passage revision** after the chosen Keep/Delete gate, with consistent corresponding state replay.
 - [ ] Rejecting or discarding a draft leaves the accepted passage revision and all dependent canonical events unchanged; passage edits cannot bypass stale-version atomicity.
@@ -113,6 +121,7 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - Staging is not production approval or evidence of any implementation. Truncation recovery, reconciliation and detailed UX require refinement.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0004 relationship:** Canonical Undo rolls back an adventure's latest head turn and reconstructs state; it can be repeated independent of bounded transient editor undo. Historical edits with later turns still use the explicit Keep/Delete confirmation. A rolled-back future is not selectable within the same adventure; Fork preserves another future in a separate saved adventure when desired. Staging only.
 - 2026-10-18 — **IDEA-0003 Option A accepted:** Historical prose revisions use **logical turn/passage-level identities**, not per-paragraph canonical IDs. Continue to confirm and reconcile state for a revised passage; whole-passage split/move/merge details remain open. Staging only.
 - 2026-10-18 — **Accepted IDEA-0003 granular-edit dependency:** Story text and provenance are versioned by **turn/passage**, not paragraph. Historical paragraph edits remain noncanonical until confirmation, then update a passage revision with appropriate event/state reconciliation. Whole-passage split/merge policy remains open. Staging only.
 - 2026-10-18 — **User accepted draft Option B for all player-authored drafts:** Historical prose-edit drafts use **one latest saved value per editing target**, freely overwritten by a later successful autosave even across tabs, with no retained older drafts or conflict notification required. This supersedes the older draft nonclobber condition; **historical edit confirmation and expected-version checked canonical/truncation transactions are unchanged**. Staging only.
