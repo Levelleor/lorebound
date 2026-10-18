@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Gameplay Feature Catalogue Brainstorm]]"]
@@ -33,6 +33,11 @@ The player edits narrative text inline, including earlier story passages, withou
 ## Alternatives and trade-offs
 A ProseMirror/Tiptap-style document editor and individually editable turn bodies are viable implementation options. The library, editing granularity and exact revision representation remain open; neither alternative is accepted by this decision.
 
+## Noncanonical prose-edit drafts use the latest shared saved value
+- **Explicit accepted IDEA-0005 Option B (2026-10-18):** While the player edits present or historical story prose, the pending text is a **noncanonical editing draft**, autosaved after a typing pause in the shared SQLite library. For **each logical prose-edit target**, keep **one latest successfully saved version** available across browser tabs. A new successful autosave from either tab **overwrites the previous stored draft** for the same target, without preserving previous draft histories or requiring draft conflict/merge resolution. Composer drafts and edits to other passage targets remain distinct.
+- These freely replaceable drafts **do not alter accepted prose, block revision lineage, event provenance, canonical world state or history**. A confirmed edit still requires the established explicit historical-edit choice (where applicable) and **expected-version guarded atomic commit**. If another tab has advanced canon, a stale edit commit rejects with a conflict; overwritten drafts are not guaranteed to be recoverable. Any text still accessible in an open editor or latest stored draft may be used for the player's reconciliation.
+- This policy concerns **player-authored draft text**, not AI-generated streaming output (IDEA-0019). Exact target identifiers and debounce intervals remain implementation details.
+
 ## Dependencies and constraints
 - Depends on durable narrative storage, event provenance, save revisions and the historical-edit reconciliation pipeline.
 - User-approved text edits must not silently mutate authoritative world state mid-typing.
@@ -47,6 +52,8 @@ A ProseMirror/Tiptap-style document editor and individually editable turn bodies
 - How should the editor communicate pending changes and when a state rebuild is needed?
 
 ## Draft acceptance criteria
+- [ ] A prose editor autosaves only **one latest noncanonical draft per editing target**, which a second tab can overwrite cleanly; drafts for other targets are unaffected and earlier draft versions need not be retained.
+- [ ] A successful draft autosave does not create accepted text versions, alter canonical world state or bypass expected-version conflict checking on confirmed prose edits.
 - [ ] A user can place the cursor in previously generated story prose and directly edit, insert or delete narrative text.
 - [ ] Changes to a surviving logical text block preserve traceable stable identity and revision/origin information.
 - [ ] Editing older text does not trigger expensive AI extraction or world reconstruction on each keystroke.
@@ -66,5 +73,6 @@ A ProseMirror/Tiptap-style document editor and individually editable turn bodies
 - This is **accepted for staging/refinement**, not approved for production and not implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0005 Option B:** All player-authored provisional prose edits use latest-only shared draft slots per editing target; later autosaves may overwrite across tabs without draft history or merging. Canonical revisions and source provenance still require validated version-checked commits. Staging only.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Direct inline editing, stable text-block identities, and deferred world-state reconciliation. Moved to staging to refine the implementation details. No production approval.
