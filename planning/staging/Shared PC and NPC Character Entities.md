@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Lorebound Vision Brainstorm]]", "[[World Map and Location Rules Brainstorm]]"]
@@ -34,6 +34,11 @@ Persist characters in a shared entity registry keyed by immutable IDs. Store the
 
 ## Alternatives and trade-offs
 Separate PC and NPC schemas might simplify highly specialised UI but make interaction, inventory transfer and identity preservation more brittle. Requiring equally complete records for everyone would add unnecessary generation and storage work. The accepted solution combines a **uniform identity/data model** with **optional or lazily filled details**. The precise typed record relationships, defaults for UI display and lazy-population policy still require refinement.
+
+## No invented NPC details on initial extraction
+- **Accepted IDEA-0006:** A successfully validated Quick Start opening can automatically register an explicitly named or otherwise clearly established NPC with a stable ID and **only details stated in the scene or already established in canon**. Do not manufacture an age, species, personality, appearance, motive, past experiences, statistics or private relationship just to fill a profile.
+- A minimal character is sufficient. For example, "your old friend Marcus approaches" establishes a character and the stated old-friend relationship, **not** a detailed shared childhood history. "Marcus carries a bloodstained sword" does **not** establish Marcus as its owner or reveal whose blood it is.
+- Interpreter-proposed initial character facts retain source provenance and must pass deterministic validation before the opening and world records commit atomically. Unknown properties stay unknown, not made-up defaults.
 
 ## Dependencies and constraints
 - Relates to accepted [[Entity-Based Lorebook]] (IDEA-0020), which should link durable character entities without confusing static lore with changing character state.
@@ -75,5 +80,6 @@ Separate PC and NPC schemas might simplify highly specialised UI but make intera
 - Staging means accepted for refinement, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0006 minimal fact extraction dependency:** In supported Quick Start openings, register characters and relationships only where **explicitly grounded in accepted narration or player setup**. Preserve missing fields as unknown; don't populate invented biographies, traits, motives, equipment ownership or other unspoken lore. Atomic validated first-turn commit; staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** One shared character entity model for PCs and NPCs, stable character IDs, a separate pointer to the player-controlled character, common links to profile, inventory, equipment, anatomy, relationships and location, and optional/lazily populated NPC details. Preserve unknown values without inventing defaults. Moved to staging for refinement only, not production.
