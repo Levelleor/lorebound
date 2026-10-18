@@ -44,6 +44,14 @@ A plain-text/template-data editor would be simpler and allow technical users to 
 - **IDEA-0066 is separately accepted for later refinement:** A player may explicitly request a rich AI-generated starting Lorebook **before Turn 1**, independently of the reusable-scenario-template concept. Whether a generated world can later be saved as a reusable template or used with a template is **not approved or specified** yet.
 - Existing scenario instantiation remains an optional alternative starting route. It must not become mandatory merely because optional pre-play world generation now exists, and templates should not implicitly auto-generate undocumented lore via the source-facts-only Custom Opening/Quick Start extractor (IDEA-0006).
 
+## Template instantiation copies independent starting lore and world records
+- **Explicitly accepted Option A (2026-10-18):** Each time a reusable scenario template is instantiated, the new adventure receives its **own independent copies of the template-owned Lorebook entities and applicable initial world-state records**. This includes starting characters, locations, relationships, inventory and other compatible structured data where their systems are enabled, as well as selected premise/placeholder values. **Never retain live mutable references** from the new adventure back to the source template or to any adventure previously created from it.
+- **Stable identity inside each copy, independent identity across copies:** Assign a new adventure identity and appropriate adventure-scoped entity/state identifiers to instantiated content. Rewrite/remap internal links coherently so starting characters, items, locations, relationships, and other validated references point **within the new adventure**, not at mutable shared-template records or sibling-adventure records. Exact identifier-generation/remapping mechanics remain an implementation detail.
+- **No retrospective template propagation:** Changing, renaming or deleting the reusable **template after an adventure has been created** must **not automatically alter, erase or 'update'** that adventure's accepted Lorebook, world state or history. Conversely, changes made during one adventure must not mutate the template or any other adventure derived from it. Future instantiations may use the then-current template definition; existing adventure copies remain independent.
+- **Not a saved-adventure duplicate:** A fresh template instance contains the selected **starting scenario**, not another adventure's already played narrative turns, accepted story history, event log or noncanonical input drafts. A template-owned source description is not necessarily a narrated or played Turn 1; do not fabricate game events solely to simulate cloning old play history. Validated starting facts may be established before story turns according to the accepted world-model/creation rules.
+- **Consistency and compatibility:** Any initial state must pass the same applicable schema, relationship and gameplay validation rules as elsewhere. Creation should not expose a partially populated independent adventure if validation or transactional persistence fails. When a template references unavailable optional modules, the existing open question about omission/error handling remains for later refinement; **do not silently create inconsistent canonical starting facts**.
+- **No added distribution feature:** Independence of instantiated content is a logical-copy policy **within the single Go-managed SQLite library**, not approval for separate per-adventure export/import, template publication, external shared-lore services or a multiple-database manager.
+
 ## Dependencies and constraints
 - Adventure creation and isolation should follow the accepted [[Adventure Save and Export Management]] (IDEA-0005).
 - Starting a scenario must remain optional, consistent with [[Quick Start and Custom Story Openings]] (IDEA-0006).
@@ -55,11 +63,15 @@ A plain-text/template-data editor would be simpler and allow technical users to 
 - Should structured starting state be encoded as initial events, declarative entity snapshots, or another validated format?
 - What data types, defaults, escaping, and validation rules apply to variable placeholders?
 - How do template authors define optional choices and dependencies among chosen parameters?
-- Can templates reference shared libraries or external Lorebook entries, or should each adventure receive private copies?
+- **Resolved for template-owned Lorebook and starting state:** Every instantiated adventure gets **independent private copies**, not live shared mutable references to the template or sibling adventures. Whether templates may *author* references to external content before instantiation remains open only as a future separately evaluated input capability; it must not compromise private copies once an adventure is created.
 - How should missing plugins or incompatible template versions be reported?
 - Which editor, import/export format and publishing/sharing workflows (if any) should exist?
 
 ## Draft acceptance criteria
+- [ ] Instantiate the same template twice and obtain **two distinct adventure identities**, each with its **own Lorebook character/location/item/relationship records and applicable validated starting state**, with internal references resolved to that adventure's own records.
+- [ ] Editing or deleting the source template afterward **does not update or remove** previously instantiated adventures' lore, state or history. Editing either new adventure does not change the other adventure or the template.
+- [ ] Instantiation does **not copy the played turns/history or unconfirmed drafts** from an existing adventure; it starts fresh with template-defined premise and optional validated initial content.
+- [ ] Broken/unsupported template starting references cannot leave an accepted half-created set of records, and no template instance holds mutable links to another adventure's canonical records.
 - [ ] A user can save a reusable scenario definition and use it more than once.
 - [ ] A template can contain a prompt/opening and placeholders that are resolved when creating an adventure.
 - [ ] Simple prose-only templates work without configuring optional state modules.
@@ -80,6 +92,7 @@ A plain-text/template-data editor would be simpler and allow technical users to 
 - Accepted for **staging/refinement**. Implementation and production approval are not claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **User explicitly accepted IDEA-0008 Option A:** Template-instantiated adventures receive **independent private copies** of the template-owned Lorebook characters, places, relationships, world information and compatible starting state, with coherent adventure-scoped IDs and references. Neither template edits nor sibling-adventure changes retroactively propagate. No live shared lore references, no copied played history or new file export/import. Implementation particulars and unsupported-module handling remain open; staging only.
 - 2026-10-18 — **Dependency to accepted IDEA-0066:** A separate optional AI-built starting Lorebook/world may be created before Turn 1. Integration with reusable scenario templates is **unresolved** rather than silently included. Normal authored prose extraction remains source-grounded (IDEA-0006). Staging unchanged.
 - 2026-10-17 — **Accepted IDEA-0006 minimal-start dependency:** Quick Start, blank Custom Opening and fully optional Guided Setup remain possible **without applying a scenario template**. Untitled adventures use the `Untitled Adventure` display fallback and still receive independent IDs. The reusable-template idea remains staging; the decision is not approval to require templates.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
