@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]"]
@@ -36,6 +36,11 @@ Represent editable story prose through stable source identifiers and versioned t
 
 ## Alternatives and trade-offs
 Paragraph-level IDs can make specific event provenance precise, but require careful handling of splits, merges and reordering. Stable turn identities with ranges may simplify editing structures but ranges can drift after substantial changes. Either approach should support durable links and revisions; neither is preselected. Storing lineage adds bookkeeping but supports accurate world-state invalidation. Future optimisation can avoid revisiting unaffected text or events, provided correctness is preserved.
+
+## Architecture integration (2026-10-17)
+- Accepted story text blocks and revisions persist in host-filesystem SQLite via Wails/Go services. Browser editing drafts/memory are not canonical saved history.
+- In both desktop and headless browser modes, the shared client-side TypeScript engine tracks block/revision provenance; Go atomically commits validated revisions and related accepted events, rejecting stale revisions.
+- Export/import must preserve precise revision ancestry and identifiers; choosing the archive format remains a separate storage/backup refinement.
 
 ## Dependencies and constraints
 - Works with accepted [[Event-Sourced World History]] (IDEA-0039), whose event records need stable source turn and revision references.
@@ -77,5 +82,6 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - Design remains unrefined, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Stable IDs and revision IDs for editable story blocks; provenance connecting source text revisions, generated turns and derived validated world-state events; preservation of edit lineage. Paragraph versus turn-range granularity and split/merge provenance rules deliberately left for refinement. Promoted from Inbox to staging, not production.
