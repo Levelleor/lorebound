@@ -59,6 +59,11 @@ Give players a primary readable story workspace and clear ways to open relevant 
 - **Reachability after closing all tabs:** Because closing tabs doesn't quit the server, relaunching Lorebound reopens the app and makes Settings → Quit accessible when the player later wants to terminate the server. Quit is a lifecycle request, not a canonical story/world-state edit.
 
 
+## Reopen Lorebound via application shortcut without a tray
+- **Accepted IDEA-0053 user-facing lifecycle refinement:** The installed Lorebound executable/application shortcut is the always-available **Open Lorebound** affordance. Clicking it while the existing headless server is running reopens/focuses the correct browser URL, even if no browser tab remains. The shortcut handles the actual active address when the server used an available fallback port instead of its preferred stable port.
+- The preferred port makes ordinary direct URLs/bookmarks more predictable, but **a browser bookmark is not guaranteed to work during fallback**. The player should not need to discover, copy or remember a changing number to reopen Lorebound. **Settings → Quit Lorebound** stays accessible after reopening via shortcut; no system tray or macOS menu-bar icon is mandatory.
+- Launcher and browser reopening do not change the selected adventure, canonical story/world state or character identity; the precise focus/open-new-tab policy and fallback UX are implementation details covered by IDEA-0053.
+
 ## Dependencies and constraints
 - [[Localhost Startup and Offline Mode]] (IDEA-0053) targets one statically built SvelteKit UI in Wails v3 headless Go server/normal-browser mode. Keyboard navigation and responsive rendering must work in both.
 - [[Native Gameplay Capability Registry]] (IDEA-0047) and [[Optional RPG Mechanics Plugins]] (IDEA-0055) provide optional enabled operations/systems. Panels and direct controls must reflect enabled applicable capabilities and their permissions.
@@ -76,6 +81,8 @@ Give players a primary readable story workspace and clear ways to open relevant 
 - Which accessibility standards or practical test matrix should be used, including keyboard-only and assistive-technology checks?
 
 ## Draft acceptance criteria
+- [ ] A user who closed every Lorebound tab can invoke the application shortcut to reach the currently running headless server at its correct URL, including when it is on a fallback port, and navigate to Settings → Quit.
+- [ ] The initial experience requires no native tray/menu-bar icon and does not make users memorize the server port; port changes must not strand the UI.
 - [ ] **Quit Lorebound** is discoverable and keyboard-accessible in the information panel's **Settings tab**, with a meaningful label that distinguishes quitting the server from closing tabs or switching adventures.
 - [ ] Quit stops the headless server through an authorised action without requiring macOS/Linux/Windows tray integrations; any future native tray is a separate approval.
 - [ ] With the browser closed but the server still active, relaunch returns to the app and its Settings Quit command; quitting does not itself create story events or mutate canonical lore.
@@ -111,6 +118,7 @@ Give players a primary readable story workspace and clear ways to open relevant 
 - This note is an **accepted staging direction requiring refinement**. It is neither production-approved nor an implemented accessibility claim.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0053 shortcut UX:** A preferred localhost port normally gives a stable address, with available-port fallback on conflict. The Lorebound executable/shortcut opens or focuses the actual running server page even when no tab is open or the server uses fallback, keeping Settings → Quit reachable without native tray. Staging only.
 - 2026-10-18 — **User selected initial Quit UX (IDEA-0053):** Add **Quit Lorebound** to the browser application's **Settings tab** of the Info/Settings panel; do not build or depend upon any native tray/menu bar for the initial headless-only design. Quit ends the persistent server, not merely a browser tab. Precise unsaved-work warnings, confirmation and post-quit browser behaviour remain open. Staging only.
 - 2026-10-18 — **Explicit user approval and animation refinement:** The Lorebook opens as an **editable, resizable LEFT-side drawer** from the icon left of the story input, with an option for an expanded editing workspace. **Opening has two distinct phases:** a narrow sidebar/rail comes out first, then the main drawer body emerges from behind it. **Closing is a simple fade-out**, not the same steps reversed. Exact timing/easing, rail dimensions, responsive treatment and detailed focus mechanics remain for refinement; support reduced motion and preserve accessible navigation. Staging only, no code or production approval.
 - 2026-10-18 — **Explicitly user-accepted interface refinement:** The character information panel has **two primary tabs, Info and Settings**. Info follows the chosen `Playing As` character's real **inventory/status/known location**, while Settings contains `Playing As` and other applicable configuration. A dedicated **Lorebook icon immediately left of the story input field** provides frequent direct access to the editable Lorebook (not a third mandatory panel tab). Only explicit player selection changes the actor; no lore/world changes result from switching tabs or characters. Exact visual component, responsive arrangement and empty-state content remain open. Accepted for staging only.
