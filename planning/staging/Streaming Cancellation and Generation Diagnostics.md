@@ -61,6 +61,11 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - **Terminology boundary:** Streamed/unfinished **AI-generated prose** is provisional and may also be called a *generation draft/preview*, but **it is not newly promised a shared SQLite autosave slot by Option B**. Its cancellation, failure and acceptance continue under this idea's existing provisional-output policy. A failed AI request cannot make its unfinished text canonical, and does not require preserving an older player draft that another tab already overwrote.
 - Diagnostics may indicate failures and the latest draft-save status without promising recovery of superseded player drafts or uncommitted AI previews. Exact draft autosave timing remains in IDEA-0005.
 
+## Quick Start failed generation returns to premise setup
+- **Accepted IDEA-0006 Option A (2026-10-18):** If an AI-generated **Quick Start opening** fails at API connection, generation, stream, pipeline validation or cancellation, report the failure at its relevant stage while **keeping the Quick Start setup screen open and the supplied premise editable/intact**. Provide a **Retry** path and an explicit route to **Custom Opening**, and point to provider/model configuration when missing or invalid.
+- **No failure-created empty adventure:** Unsuccessful first-opening attempts may display **provisional** generated text but do **not automatically create or save a blank adventure**, canonical first turn or world-state/events. Fully valid completed Quick Start output retains the accepted automatic canonical first-turn commit, without a review/accept gate.
+- The failure handling preserves any other adventure or pre-Turn-1 Lorebook data intentionally created through a different workflow; exact draft saving of setup fields and retry/cancellation presentation remain open.
+
 ## Dependencies and constraints
 - Requires provider/local server streaming and abort behaviour through accepted [[Cloud LLM Provider Connectors]], [[Local LLM Server Connections]] and [[Provider Connection Profiles and Discovery]].
 - Pipelines may have multiple stages, retries, or different assigned models ([[Configurable Generation Pipeline Strategies]], [[One-Model Task Routing]]); a cancellation should stop or invalidate all remaining work belonging to that generation attempt.
@@ -80,6 +85,8 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - What interface distinguishes a user-cancelled request, connection failure and a validation-rejected result?
 
 ## Draft acceptance criteria
+- [ ] A Quick Start failure/cancel/invalid output retains the user's premise on the setup screen and offers Retry or explicit Custom Opening, with actionable error feedback.
+- [ ] A failed Quick Start request does not create a blank fallback adventure or commit partial narrative/state; a valid successful opening still commits automatically.
 - [ ] A player-authored draft may be overwritten by a later shared autosave on the same target without requiring a conflict popup; **AI streaming preview text** is not thereby automatically autosaved or committed.
 - [ ] A supported generation shows prose incrementally without representing interim text as committed story canon.
 - [ ] A user can cancel an in-progress generation, including one running a multi-stage pipeline.
@@ -103,6 +110,7 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Accepted for **staging/refinement** only; not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0006 failure UX:** When Quick Start generation fails, is cancelled or invalid, stay in setup, retain the premise, offer Retry or deliberate Custom Opening and make errors understandable. Do not generate an automatic blank saved adventure or partial canon as fallback. Successful validated generation remains automatically committed. Staging only.
 - 2026-10-18 — **Accepted IDEA-0005 Option B cross-reference:** Player-written noncanonical drafts are latest-only shared records per logical editing target with clean overwrite across tabs. This does not include a new promise to autosave streamed AI previews and never relaxes canonical expected-version validation. Staging only.
 - 2026-10-18 — **Accepted IDEA-0001 dependency:** Only actual AI API operations can be blocked by missing model configuration or fail because of provider errors; non-AI play/editing/persistence works regardless. Guidance to model setup and clear stage-specific error feedback are required. Provisional generations never partially commit. Staging only.
 - 2026-10-17 — **Accepted IDEA-0006 Quick Start alignment:** Streamed opening is provisional during AI generation and validation; on completed validated success it is **automatically committed as canonical turn one**. Partial/cancelled/failed/invalid opening output cannot be committed. No additional Accept click is required for Quick Start; historical edit confirmation remains separate. Staging unchanged.
