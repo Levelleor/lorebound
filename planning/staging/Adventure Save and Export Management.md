@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Local First Storage and Deployment Brainstorm]]"]
@@ -51,6 +51,11 @@ Provide an adventure library with Create, Resume, Rename, **full-history Duplica
 - When a player chooses **Quick Start**, a **fully generated and validated AI opening is automatically committed as the adventure's first canonical story turn**, along with any accepted initial world-state/events in **one SQLite transaction** (IDEA-0006). **No separate review/Accept click** is required for a successful opening.
 - Incomplete, streamed, cancelled, rejected or failed AI output remains provisional and is **not** stored as a canonical turn/state. The player can retry. This **does not** bypass the explicit confirmation gate for subsequent **historical prose editing** (IDEA-0041), nor does it turn ordinary autosaved player input into canon.
 - Creating a blank Custom Opening remains valid with no AI call; full-library Backup Database / Restore Database rules remain unchanged.
+
+## Custom Opening and optional pre-turn Lorebook generation
+- **Accepted IDEA-0006:** A player-authored Custom Opening may be blank or contain prose. **Only once prose is committed** may enabled structured-world systems extract and save **explicitly supported facts**, coherently with the accepted passage. Unfinished drafts never affect canon or trigger unseen lore creation.
+- **Accepted IDEA-0066:** At adventure creation, the player may **optionally request AI to generate the starting Lorebook before any narrative turn exists**. When the content is accepted under its future-refined workflow, store its adventure-scoped persistent lore/entities in the **same shared SQLite library** without fabricating a played Turn 1. This does not change ordinary autosave, full-history duplication, adventure deletion or **whole-database-only** Backup/Restore.
+- The world-generation review/commit flow, size, interruption handling and exact schema need a **separate future refinement**, not a presumed implementation.
 
 ## Dependencies and constraints
 - Depends on the **shared filesystem-backed SQLite database** via Go, with per-user OS app-data default and optional custom directory (IDEA-0051), transaction-safe storage, stable IDs and event/document revision history.
@@ -99,6 +104,7 @@ Provide an adventure library with Create, Resume, Rename, **full-history Duplica
 - The export file format is **a consistent full SQLite snapshot**; precise Go snapshot API, basic restore compatibility and minimal file safety are unrefined. No implementation or production approval is claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted idea alignment:** Canonical player-authored Custom Openings get the same **source-only structured fact extraction** as Quick Start (IDEA-0006); drafts and blank stories do not invent world state. New IDEA-0066 accepts an optional AI-generated starting Lorebook **before Turn 1** as a distinct creative task, to be refined later, persisted in the ordinary adventure library. Existing Backup/Restore-only and autosave policies remain. Staging unchanged.
 - 2026-10-17 — **Accepted IDEA-0006 generated-opening dependency:** A successful, fully validated Quick Start AI opening is committed **automatically as turn one**, together with any accepted initial state events in an atomic Go/SQLite transaction. No mandatory first-scene review step. Failed, cancelled and partial output cannot become canonical. Historical prose edit confirmation remains a separate accepted rule. Staging status unchanged.
 - 2026-10-17 — **Accepted IDEA-0006 minimal-start dependency:** New adventures may be completely blank, with no required user-provided title, character or world setup. Without a title the display name is `Untitled Adventure`, independently identified by an immutable adventure ID and renameable later. Quick Start alone asks for its optional AI generation premise. This update does not add new export/import mechanisms or promote staging.
 - 2026-10-17 — **Explicit user-accepted full-history duplication (staging refinement):** Duplicate Adventure creates a **separate adventure** with the **complete committed canonical history**, including all turns, accepted text revisions, events/world state, entities, lore/memory and durable plugin state. Both adventures are independently playable/editable from the copied point. **Unsubmitted player-input drafts and unconfirmed prose edits are excluded**, as are secrets. Copying uses the same shared SQLite library with a fresh adventure identity, coherent internal references and no unintended mutable links; exact SQL/ID handling remains to be refined. This is not an individual-adventure file export, and does not change the whole-database Backup/Restore-only policy. Staging only, not production.
