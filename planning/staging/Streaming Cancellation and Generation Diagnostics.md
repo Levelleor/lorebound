@@ -41,6 +41,11 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Long generations, context retrieval and replay should not block the Svelte interface. Go/SQLite commits only complete accepted outcomes atomically after validation; streamed or cancelled drafts are not automatically authoritative.
 - Browser fetch/CORS and optional native transports can differ by provider; preserve truthful cancellation and timing diagnostics across both runtime modes.
 
+## Difference between player drafts and model preview
+- IDEA-0005 now accepts debounced SQLite autosaving of **player-authored** pending input/prose edits as noncanonical drafts.
+- **Streaming AI output** is likewise provisional but is **not automatically guaranteed to be autosaved** under that decision. A cancelled or failed generation cannot commit partial text/state.
+- After failure/cancellation, retain the player's last successfully autosaved input for retry; any optional retention of AI previews needs its own refinement.
+
 ## Dependencies and constraints
 - Requires provider/local server streaming and abort behaviour through accepted [[Cloud LLM Provider Connectors]], [[Local LLM Server Connections]] and [[Provider Connection Profiles and Discovery]].
 - Pipelines may have multiple stages, retries, or different assigned models ([[Configurable Generation Pipeline Strategies]], [[One-Model Task Routing]]); a cancellation should stop or invalidate all remaining work belonging to that generation attempt.
@@ -82,6 +87,7 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Accepted for **staging/refinement** only; not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
