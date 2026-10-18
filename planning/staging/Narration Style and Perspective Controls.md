@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
@@ -37,6 +37,11 @@ Expose optional narration preferences and a freeform instruction field for each 
 
 ## Alternatives and trade-offs
 A single author-note text field is flexible but harder to reuse and discover; dedicated controls are more approachable but can be overly prescriptive. The accepted direction supports both custom writing instructions and configurable options. Their exact UI layout, and whether controls are global defaults, per-adventure defaults, or temporary overrides, remain open.
+
+## Perspective without a mandatory protagonist
+- **Accepted IDEA-0007/0026 flexibility:** First-, second- or third-person narration settings and optional character focus must **not require a permanently defined player-character entity**. Lorebound supports stories with **no characters**, no single protagonist or an ensemble cast.
+- Focusing on a different established character changes the narrator's viewpoint/context **without changing their persistent location, inventory, status or identity**. A turn can feature a different actor or multiple actors regardless of narrative focus. Perspective preferences must not fabricate an unstated character or turn an ambiguous first-person sentence into a fact.
+- Specific viewpoint/focus controls and persistence are implementation details for later refinement.
 
 ## Dependencies and constraints
 - Depends on the narrator/context builder and generation model integration; the UI and prompt format remain to be refined.
@@ -72,5 +77,6 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - Accepted for staging and refinement only; this does not mean that controls have been implemented or approved for production.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted flexible-character integration:** Narrative perspective/focus may be unset or change among existing characters while zero-character and ensemble-cast adventures remain supported. Focus is a presentation/context choice and not a canonical action, location or inventory transfer. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Configurable perspective, tense, genre, tone, pacing, response length, custom writing instructions and reusable narration presets. These changes affect future narration without rewriting existing prose. Moved to staging for refinement, not production.
