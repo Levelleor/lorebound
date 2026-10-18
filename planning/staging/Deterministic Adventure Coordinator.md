@@ -104,6 +104,11 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - By contrast, every **committed story turn, historical prose revision, gameplay event or world-state change** must still include and match the authoritative expected adventure version in the atomic Go/SQLite commit. When another tab has committed first, reject the stale operation with a clear conflict; never use shared-draft overwrite to bypass this validation.
 - Provisional streamed/generated **AI output** is separate from the accepted player-authored draft-autosave policy (IDEA-0019).
 
+## Quick Start failure preserves premise without committing a blank adventure
+- **Accepted IDEA-0006 Option A (2026-10-18):** Treat a new **Quick Start** attempt as provisional until the generated opening and its directly supported world facts have fully passed the selected pipeline and deterministic validation. When the requested AI call fails, is cancelled, produces partial output or cannot validate, **do not request creation of a fallback empty adventure**, turn, event or initial world-state record. Return an explicit recoverable failure so the **UI remains on Quick Start setup with its short premise**, Retry and deliberate Custom Opening available.
+- When generation and validation succeed, use the existing **atomic first-turn commit** path without a second user Accept gate. A failed attempt must leave any previously accepted canon unchanged; independently and explicitly created pre-Turn-1 lore/adventure state cannot be deleted by the failure handler. Missing model configuration directs the player to settings; it is not a reason to create an empty adventure.
+- This does not require a new persistent premise draft schema or automatic switching modes; exact staging of an uncommitted adventure identity and setup-field lifetime remains to be refined.
+
 ## Dependencies and constraints
 - Works with accepted [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and [[One-Model Task Routing]] (IDEA-0017); avoid a mandatory stack of simultaneously loaded models.
 - All accepted persistent changes must be recorded compatibly with [[Event-Sourced World History]] (IDEA-0039) and the complete incremental reconstruction requirement in [[Snapshots and Incremental State Rebuild]] (IDEA-0042).
@@ -126,6 +131,8 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - How should cancellations, timeouts, network/provider failures and recovery preserve exactly-once or idempotent outcomes?
 
 ## Draft acceptance criteria
+- [ ] If the initial AI pipeline fails, cancels, returns incomplete output or is validation-rejected, the coordinator issues **no fallback blank adventure/Turn 1/world mutation** and returns a failure the UI can show with premise retained.
+- [ ] A validated success still commits opening text and supported world-state facts coherently as the first turn, without an extra review click.
 - [ ] User-authored noncanonical composer/prose-edit drafts can be overwritten by a newer successfully stored save from another tab for the same logical target, without being treated as a stale canonical revision or triggering a draft conflict.
 - [ ] Any attempt to turn such a draft into canonical prose, events or state must independently pass the expected-version validation, rejecting a stale commit even if the draft autosave itself succeeded.
 - [ ] Two browser coordinators using the same expected adventure version cannot both commit incompatible changes: the stale commit is rejected by the Go/SQLite transaction boundary, without a partially committed narrative or state.
@@ -155,6 +162,7 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - This is an accepted **unrefined direction**, not approval for production or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0006 failure integration:** Failed Quick Start generations remain provisional and must not automatically persist a blank adventure or partial first turn. The browser UI retains the initial premise/setup and offers retry or explicit Custom Opening; successful validated openings still commit automatically. Prior intentional saved world setup is not discarded. Staging only.
 - 2026-10-18 — **Accepted IDEA-0005 draft Option B overrides prior draft nonclobber guarantees:** All noncanonical player drafts use one latest shared value per logical editing target; subsequent autosaves may replace earlier values across tabs and overwritten drafts need not be recovered. Keep strict expected-version and atomic rejection for canonical turns/revisions/world changes. AI streamed output is not automatically included. Staging only.
 - 2026-10-18 — **Accepted IDEA-0005 multi-tab dependency:** Client-side TypeScript coordinator commits include their authoritative expected adventure version; Go/SQLite atomically rejects stale commits when another tab has advanced the history. No exclusive edit lock, automatic merge or loss of local drafts. Staging only.
 - 2026-10-18 — **Accepted IDEA-0061 terminology alignment:** Browser-side TypeScript deterministic coordination belongs to the **Lore Engine**, which collectively names Lorebound's non-UI gameplay and supporting Go/platform/persistence functions. User replaced Lorebound Backend with Lore Engine. No separate process or change in coordinator authority. Staging only.
