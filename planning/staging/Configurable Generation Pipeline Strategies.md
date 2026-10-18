@@ -46,6 +46,11 @@ Single-pass typically has fewer inference requests and lower latency, but its co
 - There is **no mandatory player review** of a successfully generated first scene. A pipeline failure, cancellation or exhaustion of bounded repair preserves the uncommitted initial state and allows a retry instead of saving a partial opening.
 - This decision does **not** select a default generation strategy, alter one-model/multi-model routing, or override explicit user confirmation for later historical edits.
 
+## Grounded extraction in any opening pipeline
+- **IDEA-0006 Option A with explicit user constraint:** Whichever accepted pipeline strategy generates a Quick Start opening, it must gather and validate supported structured initial-world facts from **what the opening text actually says, explicitly provided setup, and established canonical context**, then commit those facts together with the first turn.
+- An interpretation/audit/repair stage must **not add unwritten biographies, locations, routes, item provenance, relationships or hidden lore** merely to populate required fields. Missing details remain unknown; source grounding is required beyond a well-formed JSON schema.
+- There is no new mandatory second model or worldbuilding pass. Reconcile any contradiction using the normal bounded validation/repair/failure workflow, not an invented unspoken fact. Automatic first-turn finalisation and provisional streaming rules remain unchanged.
+
 ## Dependencies and constraints
 - Task routing and selected model(s) come from [[One-Model Task Routing]] (IDEA-0017); a strategy cannot force users to load more than one model.
 - State proposals and validation must eventually integrate with the coordinator, structured operations, typed rejection and event/state provenance (see IDEA-0044, IDEA-0045, IDEA-0046 and IDEA-0039 candidates). Those ideas are separate and not implicitly approved here.
@@ -86,6 +91,7 @@ Single-pass typically has fewer inference requests and lower latency, but its co
 - Accepted for **staging/refinement** only. Deterministic validators, pipeline implementations and production approval have not been claimed.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0006 source-grounding dependency:** Regardless of configured generation strategy, first-turn structured extraction may persist only **source-supported** initial facts, never additional unwritten worldbuilding lore. Commit accepted text/events atomically after validation; unknowns remain unknown. Staging unchanged.
 - 2026-10-17 — **Accepted IDEA-0006 opening dependency:** Every selected generation strategy must support automatic **first-scene finalisation after successful full validation** for Quick Start, with atomic Go/SQLite commit and no manual scene-review gate. Failed/partial/invalid output is not canonical. No strategy default is selected; staging unchanged.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
