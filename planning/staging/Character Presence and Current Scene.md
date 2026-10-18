@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]", "[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Memory Lorebook and Context Brainstorm]]"]
@@ -42,6 +42,11 @@ Scene membership could be inferred solely from exact shared location IDs, or ref
 - **Accepted IDEA-0006 initial tracking:** A generated Quick Start opening can establish character presence and current place **only when the scene explicitly states physical context or arrival and the event passes domain validation**. A character being named in dialogue, lore or rumours never implies current physical presence.
 - Keep any unstated exact room, distance, travel path and character whereabouts **unknown**, rather than inferring co-location, teleportation or a route to complete a structured record. "Outside the village of Ashford" does not establish the character as inside Ashford, nor any specific street/building or travel edge.
 - Link accepted presence facts to their opening text/revision and commit only with the corresponding canonical narrative turn. Unconfirmed/generated previews do not mutate presence.
+
+## Protagonist-optional scene and actor separation
+- **Accepted IDEA-0007/0026 refinement:** A scene may contain **no characters**, and an adventure may have **no character designated as the player's protagonist**. Existing presence/location tracking applies to whatever characters are actually established; it must not create a dummy participant or assume someone is physically present just because the player can narrate the scene.
+- A narrative **focus** (if selected) is distinct from physical presence and the **acting character(s) for a turn**. Switching focus between multiple characters must not teleport them, imply co-location or change their possessions; events with zero actors can still update locations, environment or other validated world facts.
+- Where actor/presence is unknown, preserve uncertainty rather than assuming the focused character was present or performed the action. Exact multiperspective UI remains open.
 
 ## Dependencies and constraints
 - Depends on accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) and [[Hierarchical World Locations]] (IDEA-0033) for persistent entity/location IDs.
@@ -90,6 +95,7 @@ Scene membership could be inferred solely from exact shared location IDs, or ref
 - This note represents an **accepted but unrefined staging direction**, not production approval or implemented feature evidence.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0007/0026 multi-protagonist/characterless rule:** Scene and character-presence systems work with zero characters and no default protagonist. Narrative focus, per-turn actors and actual physical presence remain separate; changing focus never teleports characters or moves their items. Staging only.
 - 2026-10-17 — **Accepted IDEA-0006 source-grounding dependency:** Initial presence/location extraction may store only **explicitly stated, validated** facts in the generated opening; do not invent an unstated room, route, character arrival or physical co-location. Unspecified whereabouts remain unknown and source provenance is retained. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Persistent character location and current-scene presence linked to stable character and location IDs; distinct physical presence, elsewhere, in-transit, unknown and remote participation; in-person participation grounded in actual location rather than mere mentions; no silent teleportation. Large-space proximity, communication mechanics and detailed presence rules remain for refinement. Moved to staging, not production.
