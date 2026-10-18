@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Local First Storage and Deployment Brainstorm]]", "[[Story Editing and Event Timeline Brainstorm]]"]
@@ -15,77 +15,60 @@ tags:
 # Browser-Persistent Story Database
 
 ## Idea
-Evaluate **multiple persistent storage architectures** for many large Lorebound adventures, instead of prematurely committing to a browser-only database. The user has clarified that Lorebound will use **SvelteKit**, so server-side storage is also a viable option if it is straightforward to develop and host. Compare browser-local and SvelteKit backend databases, with possible hybrid approaches, while maintaining reliable complete incremental story/world-state history. **No storage engine or mandatory deployment topology has yet been selected.**
+Choose and refine **filesystem-backed SQLite**, accessed exclusively through Wails v3/Go services, as Lorebound's canonical adventure database for both packaged desktop and headless Go localhost/browser play. The earlier browser-only/server/hybrid comparison has been superseded by the user's 2026-10-17 explicit runtime/storage decision. Exact database schema, file locations, migration, import/export format and performance policies remain for refinement.
 
 ## Why this idea matters
 The product should reliably store substantial adventures with many story turns, revisions, entities and complete incremental changes. Browser-based storage offers device-local independence; a persistent SvelteKit backend can offer straightforward SQL databases and different backup/deployment options. Actual hosting simplicity and persistence guarantees depend on the chosen SvelteKit adapter, platform and database service. The goal is an informed storage choice, not an assumption that browser storage must be primary.
 
 ## Accepted direction
-- **Storage-options-first architecture review:** Evaluate multiple persistent data stores for many large adventures using the intended **SvelteKit** application framework. Do not select browser-only, backend-only or hybrid storage as the primary architecture merely by accepting this note.
-- **Browser/device-local candidates:** Compare `localStorage` for small settings/lightweight data, **IndexedDB**, **SQLite WASM + OPFS**, and browser persistent-storage permissions. Persistent browser storage is a retention request, **not** a fourth database engine and not a guaranteed backup.
-- **Server-side candidates:** Compare **SQLite in a suitable SvelteKit server deployment** with persistent writable storage, **managed/hosted SQL** such as PostgreSQL, and alternatives where they may make deployment and persistence practical.
-- **Hybrid as an option, not an obligation:** Consider local-first/browser storage plus optional backend persistence or synchronisation only if the product requirements justify the extra complexity. Do not decide synchronisation semantics or a source-of-truth model now.
-- **Complete persistent coverage:** Whichever storage approach is eventually chosen must preserve all accepted state changes and applicable story text revisions needed for **deterministic reconstruction of the entire adventure at any supported turn**, consistent with accepted IDEA-0042.
-- **Transactional consistency:** An accepted turn, its text revisions and associated authoritative world-state/event changes must commit coherently; partial writes or failures cannot silently leave impossible or unreplayable persistent history. Specific storage transactions and recovery mechanisms remain open.
-- **No premature hosting constraint:** SvelteKit creates backend options but does not by itself establish a continuously running server or durable disk. Compare the developer/user operating burden, deployment portability and data-retention guarantees before choosing any database or hosting approach.
-- **Alternatives only, not runtime support commitments:** Logging these technologies does not mean implementing every engine, synchronisation, a mandatory cloud service or an account system. Storage engine, primary location, backend deployment, sync authority, migration path and hosting provider remain open for refinement.
-- **Separate backup decision:** Backup/export, restore workflows and quota UX are covered by separate unaccepted IDEA-0052; this IDEA-0051 acceptance does not automatically accept a backup implementation.
+- **SQLite selected:** Canonical saves, story text/revisions, world-state events, entity records and durable plugin data use SQLite database files persisted on the computer's filesystem. Go/Wails owns reads, writes, migrations and transactions.
+- **One persistent backend for both Wails modes:** Wails desktop and Wails v3 headless localhost server present the same frontend and Go persistence service; the headless build runs a Go server rather than Node/SvelteKit SSR.
+- **No browser-owned canonical saves:** Browser localStorage, IndexedDB, SQLite WASM/OPFS and browser quotas are not authoritative adventure storage. UI preferences or disposable caches may be browser-scoped without violating this decision.
+- **Atomic history:** A committed turn, versioned prose and accompanying canonical events/state must be durably committed together or not at all. Concurrency control must prevent stale browser tabs or simultaneous clients from overwriting one another.
+- **SQLite-backed import/export:** Saves and portable import/export derive from SQLite-backed authoritative records; final archive/database snapshot format, schema versioning, migrations, data integrity, file locking and backup consistency remain separate review questions (IDEA-0005 and IDEA-0052).
+- **Filesystem durability:** Store data in a user-appropriate persistent directory independent of app binaries, working directories or ephemeral packaging locations. Desktop and headless configuration and upgrade/migration handling must be refined.
+- **Go is a persistence boundary, not a parallel game engine:** The coordinator, validators and gameplay plugins remain frontend TypeScript (IDEA-0044/0047/0055). Go validates data/service requests for safety, expected versions and transaction integrity; it must not blindly permit conflicting durable writes.
+- **Selected architecture is staging direction only:** This does not assert SQLite tables, a driver, an export file layout or an implemented database already exists.
 
 ## Storage options to evaluate (accepted for comparison; no engine selected)
-### Browser/device-local approaches
-- **Web Storage `localStorage`:** Small synchronous string key/value store, useful for UI preferences or lightweight configuration. Compare it, but **do not presume it suitable as the main database for large adventures** because of size limits, blocking access, primitive queries and lack of cross-record transactions.
-- **IndexedDB:** Browser-native asynchronous persistent structured storage with indexes and transactions. Candidate for substantial local adventures, event histories and entities, optionally accessed through a Web Worker.
-- **SQLite compiled to WebAssembly + OPFS:** A browser-side SQL/SQLite database persisted in the Origin Private File System. Compare SQL queries and transactional history against WASM/worker/OPFS configuration, platform support, locking and deployment constraints.
-- **Browser persistent-storage permission:** Evaluate `navigator.storage.persist()` and `persisted()` to reduce eviction risk for supported browsers. This is a **storage retention policy** affecting browser-origin storage, **not a separate database engine**, not automatic, and not a substitute for independent backups. Quotas, site-data clearing and device loss still matter.
-- **Local JSON or downloadable file-based storage:** Retain as a simpler alternative for smaller/offline use cases, portability or export. Consider drawbacks for frequent incremental updates, concurrent changes and atomic multi-record writes.
-
-### SvelteKit server-side approaches
-- **Server-side SQLite:** Evaluate a SQLite database opened from SvelteKit server-only code or endpoints in an appropriate deployment. Potentially straightforward for local/self-hosted or single-instance deployments with a **persistent writable disk**; consider safe concurrency, migrations and backup, and avoid assuming ephemeral deployment filesystems are durable.
-- **Server-side PostgreSQL or similar managed SQL:** Evaluate when a hosted service, concurrency, multi-user access or easier deployment-compatible persistence makes sense. Compare connection/hosting complexity, cost, administration and portability.
-- **Other hosted backend databases:** Leave open if deployment convenience warrants them, but avoid adding cloud account/server dependence by assumption.
-- **SvelteKit runtime caveat:** SvelteKit can implement server-side database access when deployed with a server-capable adapter/runtime. The framework **by itself does not guarantee a persistent server process or writable disk**; fully static deployment and some serverless hosts impose different constraints. Confirm target hosting before selecting server-side SQLite or any on-disk database.
-
-### Hybrid possibility
-A hybrid arrangement (for example a browser cache/local-first adventure database with optional server persistence/sync) is a candidate, **not a requirement**. Clarify authoritative source-of-truth, offline edits, conflicts, multi-device usage, synchronisation and migration before approving it.
+**Historical alternatives, superseded by explicit user choice on 2026-10-17:** Browser localStorage, IndexedDB, SQLite WASM/OPFS, SvelteKit server SQLite, hosted PostgreSQL and hybrid sync were considered while the storage direction was undecided. None are now selected as alternate canonical stores for initial Lorebound. They may be reconsidered only through a later explicit decision; the current architecture is **Go/Wails + filesystem SQLite**.
 
 ## Proposed behaviour
-Whichever storage backend is eventually selected, persist coherent story turns, text revisions, accepted state changes, stable entity IDs and metadata so the entire adventure can be deterministically reconstructed from incremental history. Use atomic/transactional commit boundaries and recovery for interrupted saves; evaluate worker-based browser access for responsiveness. Provide an abstraction only to the extent justified by actual deployment requirements; do not precommit to supporting every option at runtime.
+The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request durable records through Go/Wails service bindings. Go stores adventures and all canonical state/history in a persistent local SQLite database and returns typed data to the frontend. Atomic commit operations verify the expected adventure revision, then persist accepted text revisions/events/state records in one SQLite transaction, with a recoverable failure on conflict or disk errors. Both native desktop and headless localhost server use this architecture. Export/import operate over complete, validated persisted adventures via Go; their exact portable encoding remains to be decided.
 
 ## Alternatives and trade-offs
-- **Browser-only:** Low operational/hosting burden; data remains on the player's device but is subject to origin quota, eviction, clearing, and device loss.
-- **Server-backed SvelteKit:** A simpler central database may be viable on a suitably hosted backend, but requires clear deployment and data-ownership expectations and introduces service availability or operating cost considerations.
-- **Optional or hybrid storage:** Potential offline/multi-device flexibility at the cost of sync, conflict resolution, migrations, security and debugging complexity.
-- **Engine alternatives:** Browser IndexedDB versus SQLite WASM + OPFS; SvelteKit server SQLite versus hosted PostgreSQL or equivalent; local JSON/files as a limited simpler option.
-- Avoid committing to browser-local primary storage, mandatory cloud storage, any SQL vendor, or local Node bridge until requirements and hosting constraints are established.
+- **Selected SQLite/Go:** Small embedded SQL engine, no separate SQL server or runtime, strong transactional support and native local disk storage. Requires careful multi-tab concurrency, schema evolution, migrations, WAL/backups and native service boundaries.
+- **Browser IndexedDB/OPFS and hybrid sync:** Not selected for canonical saves. Avoids a headless Go server in browser-only hosting but conflicts with the accepted single filesystem persistence model.
+- **Node/SvelteKit server SQL:** Not selected because the headless web entry point is Wails v3's Go HTTP server.
+- **Hosted SQL/remote multiplayer:** Not selected; app stays single-user/local-first. Remote server deployment and authentication are separate, unapproved concerns.
+- **Export design:** A raw live SQLite file copy may be inconsistent (e.g., with WAL) and must not be assumed to equal a validated portable backup. Compare safe snapshot/backup APIs with logical export archive strategies under IDEA-0052.
 
 ## Dependencies and constraints
-- The **user has specified SvelteKit** as the intended application framework. This informs possible backend architecture but does not prove a server deployment or particular database has already been built.
-- Compatible with [[Snapshots and Incremental State Rebuild]] (IDEA-0042): every persistent canonical mutation, accepted event and story revision must remain durably recorded and reconstructible at supported historical boundaries, independent of chosen storage engine.
-- Compatible with [[Deterministic Adventure Coordinator]] (IDEA-0044): finalisation of a turn and its world-state effects requires coherent transactions rather than partially committed narrative/state.
-- [[Backups Export and Storage Quotas]] (IDEA-0052) remains a **separate unaccepted candidate**; consider its implications, but do not silently approve its export or backup design here.
-- Browser persistence grants are not permanent backup guarantees; server SQLite durability depends on actual persistent storage mounts; hosted SQL has its own security, operational and cost trade-offs.
-- This note is an **accepted staging direction for evaluating alternatives**, not acceptance of any particular database technology, hosting arrangement, production design or implementation.
+- User selected Wails v3 desktop and headless localhost builds in [[Localhost Startup and Offline Mode]] (IDEA-0053). The headless mode requires a running Go process but not Node SSR.
+- [[Snapshots and Incremental State Rebuild]] (IDEA-0042), [[Event-Sourced World History]] (IDEA-0039) and [[Versioned Text Blocks and Revision IDs]] (IDEA-0040) require full durable reconstructibility at supported history points.
+- [[Deterministic Adventure Coordinator]] (IDEA-0044) prepares validated results in browser-side TypeScript, but the Go/SQLite boundary must guarantee transactional, version-consistent writes and reject stale commits; server mode may have multiple tabs/clients.
+- [[Adventure Save and Export Management]] (IDEA-0005) and [[Backups Export and Storage Quotas]] (IDEA-0052) are **already accepted staging ideas** and define the later full-fidelity portability/backup requirements. Neither an export container nor the schema is selected here.
+- No browser-origin storage, external cloud database or inference process is mandatory. Sensitive model API credentials must not enter adventure saves or exports.
+- This is staging refinement, not final schema implementation or production approval.
 
 ## Open questions
-- Which deployments are required: browser-only/static, locally run SvelteKit server, simple self-hosted server, managed hosting, or some combination?
-- Is it important that adventures work fully offline and remain portable without accounts?
-- What are quota, performance and compatibility limits on target browsers?
-- Can SvelteKit server-side SQLite be hosted with persistent storage and simple enough backup/migration for the intended users?
-- Would managed PostgreSQL or another hosted SQL service be simpler or more appropriate than a filesystem database?
-- If browser and server storage coexist, which is authoritative and how are concurrent edits and sync conflicts resolved?
-- How are story text, world-state events, snapshots and revisions committed atomically, including across server failures?
-- Which localStorage data, if any, should be limited to settings rather than canonical adventures?
-- What happens when browsers refuse persistent storage or evict site data?
-- How can a long adventure be moved between engines/deployments without breaking stable IDs or complete replay?
+- Where should persistent SQLite files live in desktop and headless modes, and how is the location configured safely?
+- What SQLite driver, connection pool, WAL, busy timeout, transaction and durability settings suit large single-player adventures and multiple browser windows?
+- What concurrency model or expected-revision token lets Go reject stale writes from multiple tabs/clients without duplicating TypeScript gameplay rules?
+- How are schema migrations, app downgrades, corruption detection, crash recovery, backups and user-visible failures handled?
+- Should portable export be a SQLite snapshot, a logical archive or both, and what validation protects imports from incompatible or malicious data?
+- How do database records cover every persistent gameplay plugin field, including disabled/removed plugins, without unreplayable state?
+- What benchmarks ensure history replay/queries and large write batches keep the UI responsive?
 
 ## Draft acceptance criteria
-- [ ] The design compares localStorage, IndexedDB, SQLite WASM + OPFS, browser persistence requests, server SQLite and hosted/managed SQL options against actual SvelteKit deployment needs.
-- [ ] A chosen database can persist many substantial adventures, canonical entity state, versioned narrative and complete incremental history without hidden unreplayable state.
-- [ ] An accepted turn and related state/events are persisted coherently or not committed, with recovery from interrupted writes.
-- [ ] Target-browser quotas/retention and target-host persistent database durability are explicitly evaluated where relevant.
-- [ ] Server-backed persistence is considered on its merits rather than excluded by a browser-only premise.
-- [ ] A hybrid/sync solution is adopted only after its authority/conflict/cost requirements are established.
-- [ ] No particular engine, automatic cloud account requirement, hosted database or additional service is assumed accepted merely from this options review.
+- [ ] Both Wails v3 desktop and headless localhost builds open the same filesystem-backed SQLite persistence through Go services.
+- [ ] No canonical adventure, text revision or world event requires browser localStorage/IndexedDB to survive closing, restarting or switching views.
+- [ ] All accepted state mutations and story revisions are persisted durably and are fully reconstructible at supported history boundaries.
+- [ ] Go commits a complete accepted turn atomically and rejects stale/conflicting writes; failed writes leave prior canonical state unchanged.
+- [ ] Independent saved adventures remain isolated within the chosen database layout.
+- [ ] SQLite data survives normal app upgrades and headless restarts; migration and interrupted-write recovery are tested.
+- [ ] Export/import and backups preserve validated complete history, including plugin data, without secrets or accidental side-effect replay.
+- [ ] File location, schema, SQLite driver, snapshot/backup method and relevant performance thresholds are resolved before promotion.
 
 ## Refinement checklist
 - [ ] Behaviour and scope are clear
@@ -99,6 +82,7 @@ Whichever storage backend is eventually selected, persist coherent story turns, 
 - Staging acceptance does **not** choose an engine, database location, synchronisation approach, hosting provider or implemented design.
 
 ## Decisions and review history
+- 2026-10-17 — **Explicit architecture refinement accepted by the requesting user:** Use Wails v3 both as desktop app and headless localhost Go browser server, with **SQLite on the host filesystem** accessed through Go services for all canonical saves and import/export. Do **not** use browser-owned storage for durable adventures; game rules and plugins remain client TypeScript. This overrides the previously undecided storage-options comparison without selecting export file format, specific SQLite driver or database schema. Staging only, not production approval.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate** initially oriented toward browser-local databases.
 - 2026-10-16 — **User clarification during Inbox review, not acceptance:** Record localStorage, persistent browser storage, IndexedDB, SQLite WASM + OPFS and SvelteKit server-backed database possibilities, including an easy-to-host backend database if appropriate. The user specified **SvelteKit** as the application framework and does not want browser-only storage prematurely locked in. Expanded the candidate to compare browser-local, backend and optional hybrid models, keeping storage engine, primary source-of-truth and deployment open. **At that time**, the note remained a candidate in Inbox.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Stage IDEA-0051 as a **storage-options-first** design direction using SvelteKit, comparing browser `localStorage`, IndexedDB, SQLite WASM + OPFS, browser persistence permissions, SvelteKit server-side SQLite, hosted SQL and optionally hybrid persistence. Require deterministic **complete incremental reconstruction** and coherent transactional storage regardless of engine. **No** primary database, backend deployment, synchronisation model or hosting provider is selected. Moved to staging for further refinement; not production approval or implementation.
