@@ -38,12 +38,12 @@ Provide an adventure library with Create, Resume, Rename, Duplicate, Import, Exp
 Portable JSON archives and SQLite-based export are possibilities for full-fidelity saves; neither is chosen yet. A plain-text or Markdown story export may be offered additionally for reading/sharing, but cannot replace the full playable-state export. Autosave frequency, backup retention and recovery design remain open.
 
 ## Architecture integration (2026-10-17)
-- All adventures are durably stored in **Go-managed SQLite on the computer's filesystem** for **Wails v3 headless localhost Go server delivery only**, with play through the normal browser. Browser-owned storage is not the source of truth.
+- All adventures are durably stored in **one Go-managed SQLite database** for **Wails v3 headless localhost Go server delivery only**, with play through the normal browser. The SQLite library defaults to the **OS's per-user app-data directory**, with an **optional custom directory** (IDEA-0051). Browser-owned storage is not the source of truth.
 - Save, resume, duplicate, import and export must operate through Wails Go persistence services. The TypeScript frontend sends typed requests and renders outcomes; Go applies atomic database operations.
 - **One shared SQLite library database is selected** (IDEA-0051). Exporting one adventure must extract just that adventure's complete history, relevant relationships and durable plugin state, rather than exporting all other adventures. The precise portable archive format is **not yet decided**; preserve revisions/event history, stable IDs, migrations, import validation and credential exclusion.
 
 ## Dependencies and constraints
-- Depends on filesystem-backed SQLite via Go, transaction-safe storage, stable IDs and event/document revision history.
+- Depends on the **shared filesystem-backed SQLite database** via Go, with per-user OS app-data default and optional custom directory (IDEA-0051), transaction-safe storage, stable IDs and event/document revision history.
 - Duplication within the shared library database must assign a distinct adventure identity, preserve necessary internal references and avoid sharing unintended mutable canonical state with the source adventure.
 - Saving a narrative turn and its accepted state events must have consistent recovery semantics after interruptions.
 - Export/import must not leak provider credentials, local authentication details or secrets stored in provider profiles.
@@ -81,6 +81,7 @@ Portable JSON archives and SQLite-based export are possibilities for full-fideli
 - Technical export format, import compatibility and recovery details remain open; no implementation or production approval is claimed.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0051 storage-location dependency:** The shared library's default is the OS per-user app-data directory; a custom data directory is optional. Save/resume/import/export operate on the actively selected SQLite library without assuming it lives beside the executable. This does not approve a particular import/export file format.
 - 2026-10-17 — **Accepted IDEA-0051 layout dependency:** The user chose **Option A: one SQLite database for all adventures**. This idea's separate-adventure save/duplicate/export requirements now apply to **logically isolated adventures inside that shared database**; individual exports must filter to the selected adventure. No file format, restore-collision policy or production status change is approved here.
 - 2026-10-17 — **Accepted runtime correction alignment:** Replaces the dual desktop/headless Wails direction with **Wails v3 headless localhost Go server only**, used through the normal browser, distributed as Windows/macOS/Linux server executables. No native WebView or separate npm player runtime. Docker is the separate unaccepted candidate [[Optional Docker Distribution]] (IDEA-0065). Remaining design specifics stay in staging.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
