@@ -54,6 +54,11 @@ Native function/tool calling may provide provider-supported structured arguments
 - **Intentional generation is a separate task (accepted IDEA-0066):** A player may explicitly request AI to **author new starting Lorebook/world content before Turn 1**. That task is **worldbuilding generation**, not factual extraction. It may propose genuinely new lore under validation and eventual acceptance rules, but must not be invoked implicitly whenever normal narrative prose mentions something.
 - The exact generation/review/commit process for IDEA-0066 remains a **future refinement**. It should not weaken fact provenance, unknown-state handling, deterministic checks or the separation of provisional model text from canonical facts.
 
+## Protagonist-optional actor extraction
+- **Accepted IDEA-0007/0026/0029:** The interpreting model must not assume that the player is a character, that an adventure has one permanent protagonist, or that a story turn always has a character actor. Proposed actions/events may involve **zero, one or several grounded actors**, with stable references where known.
+- Keep **narrative focus separate from per-turn actor attribution**. A changed focused character is not an item transfer or location movement; any world-state operation must name the actual established target/holder. Do not use a fabricated global Player Inventory.
+- With ambiguous first-person expressions such as "I draw my sword" and no grounded speaker/actor in context, do not invent a player avatar or assumed sword possession. Preserve unresolved references/ask clarification under the eventual UI policy instead of committing unsupported changes.
+
 ## Dependencies and constraints
 - Works under accepted [[Deterministic Adventure Coordinator]] (IDEA-0044): model output is a provisional proposal and cannot mutate canonical state without deterministic validation and coherent finalisation.
 - Must support the configurable workflows of [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and the single- or multi-model routing accepted in [[One-Model Task Routing]] (IDEA-0017).
@@ -102,6 +107,7 @@ Native function/tool calling may provide provider-supported structured arguments
 - This remains an **unrefined accepted planning direction**, not a production-ready specification or implemented feature.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0007/0026 actor-boundary refinement:** Fact interpretation supports zero or many actors independently of optional narrator focus and real character identities. No default player avatar, global Player Inventory or inferred actor/possession without evidence. Ambiguous referents remain unresolved. Staging only.
 - 2026-10-18 — **User-confirmed expansion and separate new idea:** Strict source-only structured extraction applies to **accepted Custom Opening** as well as generated Quick Start (IDEA-0006). The new **accepted IDEA-0066** permits **explicitly requested pre-first-turn AI Lorebook worldbuilding**, which is a different generation role and must not cause hidden lore creation during ordinary extraction. Exact workflow deferred. Staging unchanged.
 - 2026-10-17 — **Explicit user-approved IDEA-0006 constraint:** Automatic structured initial-world extraction is approved when supported systems are enabled, but the interpreter must **only extract source-established facts** and must **never create additional unspoken lore** while constructing location, character, item or relationship records. Preserve uncertainty and source provenance; validate proposals and atomically commit with the first opening turn. Staging only.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
