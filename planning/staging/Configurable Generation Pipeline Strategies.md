@@ -38,7 +38,7 @@ The coordinator builds a generation plan from the selected pipeline strategy and
 Single-pass typically has fewer inference requests and lower latency, but its combined prose/state result may need more careful validation and correction. Plan-validate-narrate improves ordering of authoritative state checks at the cost of extra calls and potentially constrained prose. Draft-audit-repair preserves a creative first draft but has uncertain quality gains and repair latency/cost. All three are accepted alternatives; none is guaranteed best, and LLM self-auditing does not supersede deterministic validation. The exact stage schemas, retry policy, default choice and instrumentation need refinement.
 
 ## Architecture integration (2026-10-17)
-- The TypeScript browser-side coordinator executes selectable pipelines inside the shared SvelteKit frontend in both Wails v3 desktop and headless localhost browser modes; no mandatory Go narration engine or Node SSR process.
+- The TypeScript browser-side coordinator executes selectable pipelines inside the shared SvelteKit frontend in the Wails v3 headless localhost server runtime, played through the normal browser; no mandatory Go narration engine or Node SSR process.
 - Pipeline stages produce provisional text/state until a single transaction is committed by the Go SQLite service. Long-running model calls and repair attempts should not freeze UI updates.
 
 ## Dependencies and constraints
@@ -81,6 +81,7 @@ Single-pass typically has fewer inference requests and lower latency, but its co
 - Accepted for **staging/refinement** only. Deterministic validators, pipeline implementations and production approval have not been claimed.
 
 ## Decisions and review history
+- 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Configurable single-pass prose/events, plan-validate-narrate and draft-audit-repair strategies; authoritative deterministic state validation; bounded repair attempts; and compatibility with equally first-class single-model and multi-model routing. Accepted for staging refinement only, not production or implementation.
