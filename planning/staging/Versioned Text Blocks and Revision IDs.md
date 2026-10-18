@@ -39,7 +39,7 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 
 ## Architecture integration (2026-10-17)
 - Accepted story text blocks and revisions persist in host-filesystem SQLite via Wails/Go services. Browser editing drafts/memory are not canonical saved history.
-- In both desktop and headless browser modes, the shared client-side TypeScript engine tracks block/revision provenance; Go atomically commits validated revisions and related accepted events, rejecting stale revisions.
+- In both headless localhost/normal-browser mode, the shared client-side TypeScript engine tracks block/revision provenance; Go atomically commits validated revisions and related accepted events, rejecting stale revisions.
 - Export/import must preserve precise revision ancestry and identifiers; choosing the archive format remains a separate storage/backup refinement.
 
 ## Dependencies and constraints
@@ -82,6 +82,7 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - Design remains unrefined, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Stable IDs and revision IDs for editable story blocks; provenance connecting source text revisions, generated turns and derived validated world-state events; preservation of edit lineage. Paragraph versus turn-range granularity and split/merge provenance rules deliberately left for refinement. Promoted from Inbox to staging, not production.
