@@ -22,8 +22,8 @@ Running out of disk space, database corruption, interrupted Go server writes, fa
 
 ## Accepted direction
 - **Go/SQLite-backed backup and restore:** Provide user-accessible export, import and restore for the selected filesystem SQLite persistence, through the same Go/Wails service surface in headless localhost browser mode.
-- **Single-adventure portable export:** Allow a player to export a complete selected adventure with its story turns, applicable text revisions, baseline, all accepted incremental state/event changes, stable entity references and other durable data required to reconstruct it.
-- **Full-library portable export:** Allow exporting the whole adventure library with relevant portable metadata, settings and other included assets as appropriate. Precisely which non-adventure settings/assets belong in a full backup remains to be refined.
+- **Single-adventure portable export:** Extract a selected adventure's complete story turns, text revisions, baseline, accepted event/state changes, stable references and durable plugin data **from the shared SQLite library**, without including unrelated adventures. Its portable container format remains open.
+- **Full-library portable export/backup:** Export **all adventures from the single shared SQLite database** with portable metadata/settings/assets as appropriate. A SQLite snapshot/backup API may suit a full-library backup but must be consistent with active WAL/transactions; exact format and included non-adventure settings remain open.
 - **Validated import and restore:** Check incoming backup schema/version, integrity, completeness, required dependencies and ability to reconstruct accepted state before making imported data authoritative. Exact import format, migrations and conflict resolution remain open.
 - **Preserve complete historical reconstructibility:** Exports and restores must retain the full persistent story and world-state history accepted in [[Snapshots and Incremental State Rebuild]] (IDEA-0042), not only the latest world snapshot. Historical restoration must not rerun AI-generated outcomes or external side effects.
 - **Safe restore boundary:** Restores and library imports must not silently corrupt or overwrite existing accepted adventures. Duplicate identities, naming collisions, interrupted restores, format incompatibilities and rollback options need explicit design.
@@ -40,7 +40,7 @@ Manual downloadable exports let a browser user move complete SQLite-backed adven
 
 ## Architecture integration (2026-10-17)
 - The accepted runtime/storage architecture is **Wails v3 headless localhost Go server + filesystem SQLite**. Backups, quota/space warnings, exports and restores must work with persistent local files and managed database connections, not browser-origin quotas or IndexedDB.
-- Go should coordinate consistent snapshots/exports and validated restoration of full canonical history, revisions and module-owned fields without copying a live SQLite database unsafely. Whether the portable output is a SQLite backup, archive or both remains under review.
+- Go must safely back up the **one shared SQLite library database** and validate complete history, revisions and module-owned state. A **single-adventure export cannot simply copy the entire database**; it must select one adventure and required dependencies. Whether whole-library portable output is a safe SQLite snapshot, logical archive or both remains under review.
 - Headless mode's writable data location must survive restart and packaging changes; browser uploads/downloads are only a transport for moving export/import files, never canonical storage.
 
 ## Dependencies and constraints
@@ -57,7 +57,7 @@ Manual downloadable exports let a browser user move complete SQLite-backed adven
 - Which adventure assets, settings, generated images or plugin-specific data belong in single-adventure versus full-library exports?
 - What portable archive manifest/schema/versioning and integrity checks are appropriate across different database engines?
 - How can restore validation verify completeness and reconstructibility without executing historical external commands or AI calls?
-- How should imports handle duplicate adventure IDs, existing library records, branching/revision conflicts and restoring only parts of an archive?
+- How should imports into the **shared SQLite database** handle duplicate adventure IDs, existing library records, branching/revision conflicts and restores without clobbering other adventures?
 - How can a crash, partial import, full disk or expired permission be handled without corrupting existing adventures?
 - Where should optional automatic backups live on the host filesystem, and how should Go manage permissions and disk use?
 - What defaults, backup frequency, retention rules, optional encryption or privacy protections should apply?
@@ -67,7 +67,7 @@ Manual downloadable exports let a browser user move complete SQLite-backed adven
 
 ## Draft acceptance criteria
 - [ ] A single adventure can be exported in a portable form that preserves all canonical persistent state/history and relevant narrative revision data.
-- [ ] The entire library can be exported with required metadata and data relationships intact.
+- [ ] The **one shared SQLite library database** can be backed up/exported consistently, including required metadata and all adventures' relationships.
 - [ ] An imported backup is validated for format/version, completeness, integrity and safe reconstruction before it becomes authoritative.
 - [ ] Import failures, collisions or incomplete archives do not silently overwrite or corrupt existing accepted adventures.
 - [ ] A restored adventure can deterministically reconstruct its complete persisted canonical world/story state at applicable supported turns without new AI generation or replayed external side effects.
@@ -88,6 +88,7 @@ Manual downloadable exports let a browser user move complete SQLite-backed adven
 - This is an **accepted but unrefined planning direction**, not approval of a particular backup mechanism or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0051 layout dependency:** The user explicitly selected **one SQLite database containing all adventures (Option A)**. Full-library backup must cover that database consistently; single-adventure export must extract complete filtered records without including unrelated adventures. Exact export format, backup APIs, migration and restore semantics remain open.
 - 2026-10-17 — **Accepted runtime correction alignment:** Replaces the dual desktop/headless Wails direction with **Wails v3 headless localhost Go server only**, used through the normal browser, distributed as Windows/macOS/Linux server executables. No native WebView or separate npm player runtime. Docker is the separate unaccepted candidate [[Optional Docker Distribution]] (IDEA-0065). Remaining design specifics stay in staging.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
