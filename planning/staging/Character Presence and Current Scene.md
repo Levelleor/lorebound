@@ -55,6 +55,11 @@ Scene membership could be inferred solely from exact shared location IDs, or ref
 ## Selected-character scene cuts do not change presence
 The **next Do/Say after a `Playing As` switch** follows the selected character **at their existing canonical location**, even when the former actor is elsewhere. This is a scene/viewpoint cut, not travel or teleportation: **no movement event, new route, elapsed journey/time, change of physical presence or co-location** is caused merely by changing selection. A real move on a later Do/Say still requires standard validation. Unknown whereabouts remain unknown, not silently copied from the previously followed actor. `Story` and `Continue` can follow another subject or world events.
 
+## Selected character location in the Info tab
+- **Explicit IDEA-0062 presentation acceptance:** The shared information panel has **Info/Settings tabs**. **Info** displays the selected `Playing As` character's **established current location and known relevant state** where tracking is enabled, alongside their inventory and status from related systems. **Settings** holds the selector; Lorebook is reached directly through the icon left of the input field.
+- As the player switches `Playing As`, Info follows **the newly chosen character's known location**, consistent with the accepted scene-cut rule. It does not relocate either character or reinterpret the current scene. Unknown/in-transit/elsewhere statuses remain truthful instead of inheriting the previous actor's location. With no selected character, no protagonist or location is fabricated.
+- Presenting a location is not a navigation/travel command and cannot bypass normal movement validation.
+
 ## Dependencies and constraints
 - Depends on accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) and [[Hierarchical World Locations]] (IDEA-0033) for persistent entity/location IDs.
 - Related accepted [[Entity-Based Lorebook]] (IDEA-0020) supplies descriptive information but does not itself establish where a character is physically located now. Recalling a known character must not imply presence.
@@ -79,6 +84,8 @@ The **next Do/Say after a `Playing As` switch** follows the selected character *
 - How can scene-change and travel events update multiple party members without inadvertently moving absent characters?
 
 ## Draft acceptance criteria
+- [ ] Info reflects the currently selected character's known current location (including unknown/in-transit distinctions), rather than the prior character's location.
+- [ ] Changing Info/Settings tabs or `Playing As` does not move a character or create an event.
 - [ ] A switch between characters at distant locations cuts the next Do/Say to the newly selected actor's established scene, without mutating any character's location or presence.
 - [ ] Each character can reference their current known location by stable location ID or represent transit/unknown state, with no PC/NPC category.
 - [ ] The scene distinguishes characters physically present, known elsewhere, in transit, of unknown location and remotely participating.
@@ -103,6 +110,7 @@ The **next Do/Say after a `Playing As` switch** follows the selected character *
 - This note represents an **accepted but unrefined staging direction**, not production approval or implemented feature evidence.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted Info/Settings panel dependency:** Info shows the explicit `Playing As` character's established current location, while Settings contains the actor selector. Lorebook opens from the icon left of the input field. Changing selection is only a viewpoint/display cut, not travel. Staging only.
 - 2026-10-18 — **User explicitly accepted:** Switching `Playing As` between distant characters is a **narrative cut**. The next Do/Say uses the newly chosen character's established scene/location, with no travel, teleportation, time passage, inventory/state transfer or extra confirmation. Story/Continue remain independent. Staging only.
 - 2026-10-18 — **Accepted character-unification dependency:** All Lorebook characters are eligible for `Playing As`, without PC/NPC or Playable distinction. Changing selection does not teleport characters or alter scene presence. Staging only.
 - 2026-10-18 — **Accepted IDEA-0007/0026 multi-protagonist/characterless rule:** Scene and character-presence systems work with zero characters and no default protagonist. Narrative focus, per-turn actors and actual physical presence remain separate; changing focus never teleports characters or moves their items. Staging only.
