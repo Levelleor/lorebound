@@ -71,6 +71,9 @@ Provide an adventure library with Create, Resume, Rename, **full-history Duplica
 - The **next Do/Say** retrieves the newly selected actor's actual established location and circumstances. Story/Continue remain independent. The world-state and story revision history of every character are unchanged until an **actual separately validated and committed narrative/action event** occurs.
 - Existing setting persistence, backup/restore, character deletion/reference integrity and manual-selection rules stay in place.
 
+## Playing As selection does not create a turn
+- **Accepted:** Changing `Playing As` is an adventure setting update, not a canonical story turn, travel event, inventory transfer, movement, time advancement or history edit. The next Do/Say follows the newly selected character at their established location, even when far from the previously selected one. Real events still validate normally, and Story/Continue stay independent.
+
 ## Dependencies and constraints
 - Depends on the **shared filesystem-backed SQLite database** via Go, with per-user OS app-data default and optional custom directory (IDEA-0051), transaction-safe storage, stable IDs and event/document revision history.
 - Duplication **within the same shared SQLite database** must create a **distinct adventure identity**, copy complete accepted canonical story/revision/event/state and relevant lore/plugin history, and preserve coherent **internal source/event/entity/revision references** in the copy. The exact ID-remapping strategy (new identifiers versus correctly scoped existing identifiers) is an implementation choice; never allow copied records to point to mutable source-adventure data inadvertently. **Do not carry over pending noncanonical drafts**. Use a coherent atomic copy operation so a failure does not leave a partially populated duplicate.
@@ -118,6 +121,7 @@ Provide an adventure library with Create, Resume, Rename, **full-history Duplica
 - The export file format is **a consistent full SQLite snapshot**; precise Go snapshot API, basic restore compatibility and minimal file safety are unrefined. No implementation or production approval is claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Explicitly accepted:** Switching the played character changes the next Do/Say scene, not canonical history, location, time or inventory. Staging only.
 - 2026-10-18 — **Accepted `Playing As` scene-cut persistence:** Selection persists as a lightweight setting without creating any canonical travel, time, inventory, location or turn event. Next Do/Say uses the new actor's established scene; Story/Continue remain unconstrained. Staging only.
 - 2026-10-18 — **Accepted selection persistence simplification:** `Playing As` may reference any existing Lorebook character with no PC/NPC or Playable filter; it remains a per-adventure optional setting, never an inventory/character role change. Staging unchanged.
 - 2026-10-18 — **Explicit manual-selection policy:** Saving a newly created Lorebook character does not automatically update persistent `Playing As`, even when it is empty, and must not force a story return. Users may create several characters before explicitly choosing an actor via Settings. Existing valid selected IDs remain unchanged. Staging unchanged.
