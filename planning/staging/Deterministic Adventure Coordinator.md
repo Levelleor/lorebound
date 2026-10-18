@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -60,6 +60,11 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - Treat the accepted prose/player setup and previously established canonical records as the **evidence boundary**. The interpreter must not create unspoken lore, unexplained graph routes, hidden NPC backgrounds, item ownership, numeric fields or invented relations to flesh out records. Unknown/ambiguous facts remain unknown; where an essential unsupported or contradictory operation cannot validate, follow normal rejection/repair/failure behaviour rather than silently accepting hallucinated state.
 - This is **not a separate AI worldbuilding pass**. Source text/revision references should support traceability, and no extraction-side effect may become canonical before first-turn finalisation. A future narrator may establish *new* facts explicitly in later committed prose.
 
+## Custom Opening fact extraction versus explicit lore authoring
+- **Accepted IDEA-0006:** When the player **commits their own Custom Opening**, supported world facts explicitly established in that prose (or setup/prior canon) are validated and persisted coherently with the opening, just as for AI Quick Start. An unsaved or unconfirmed draft cannot change world state. Strict extraction **must not invent backstories, lore or facts absent from the source**.
+- **Separately accepted IDEA-0066:** On **explicit request at adventure creation**, the coordinator may orchestrate AI worldbuilding that creates a rich starting Lorebook **before a first narrative turn**. This operation is **creative generation of new lore**, deliberately separate from story fact interpretation, and is **not itself a played turn**. Validate supported records and persist via the existing Go/SQLite boundary; precise orchestration, consistency/failure and approval/commit semantics remain undecided.
+- No new compulsory model, Go gameplay engine, separate persistence store or unwanted manual scene-review gate is implied by this staged idea.
+
 ## Dependencies and constraints
 - Works with accepted [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and [[One-Model Task Routing]] (IDEA-0017); avoid a mandatory stack of simultaneously loaded models.
 - All accepted persistent changes must be recorded compatibly with [[Event-Sourced World History]] (IDEA-0039) and the complete incremental reconstruction requirement in [[Snapshots and Incremental State Rebuild]] (IDEA-0042).
@@ -104,6 +109,7 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - This is an accepted **unrefined direction**, not approval for production or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted staging refinements from requesting user:** Strict fact-only extraction applies to player-authored committed Custom Openings as well as Quick Start. A separate, **optional pre-Turn-1 AI Lorebook generation request** is accepted as IDEA-0066; unlike extraction, it intentionally authors lore but must still follow normal validation/persistence boundaries. Its execution/approval details are not yet selected. Staging unchanged.
 - 2026-10-17 — **Explicitly approved IDEA-0006 grounding refinement:** Automatically track supported first-scene structured facts as part of validated first-turn commit, but **never generate unstated lore** about introduced entities. Only source-supported facts are eligible; unknowns/rumours remain marked appropriately; preserve provenance and atomicity. This adds no separate model/server or mandatory confirmation step. Staging unchanged.
 - 2026-10-17 — **Accepted IDEA-0006 automatic opening dependency:** The first successfully completed, validated AI opening auto-commits as a coherent canonical turn with accepted initial state changes, **without user review**; failed/cancelled/invalid generations do not commit. This is distinct from historical-edit confirmation. Staging remains unchanged.
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
