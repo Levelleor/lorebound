@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Local First Storage and Deployment Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -53,6 +53,11 @@ A player launches the packaged Lorebound Go executable. It starts a **loopback-b
 - **Docker/Compose:** A separate, unaccepted distribution idea. It may reuse the headless binary later but is out of scope for this refinement.
 - **Browser model networking:** CORS, API-key custody and local-model origins impose constraints on ordinary `fetch()`, and may eventually justify a selective native transport. No blanket Go AI proxy is yet approved.
 - **Headless-only constraints:** Requires the server process to remain running; startup/shutdown, loopback port, browser opening, permissions, filesystem access and safe multi-tab concurrency are now core product concerns.
+
+## No-AI startup and isolated provider failures
+- **Explicit IDEA-0001 user acceptance (2026-10-18):** Launching the packaged Wails headless localhost Go server and normal-browser UI does **not require any configured AI provider/model, working local inference server, Internet access, or successful model connection test**. The adventure library, manual story/Lorebook editing, local SQLite persistence and other non-AI features remain accessible. Do not treat missing or unreachable AI as a startup error.
+- The **browser-side TypeScript adapter** attempts an AI API call when the player requests an AI-dependent operation and has a suitable configured model/profile. If no suitable provider/model is configured, give an actionable link/route to provider/model setup; if the request fails, display the actual API/transport/auth/model error without disabling the application or corrupting canonical state.
+- Existing optional offline inference still works with a separately configured local model; unavailability of cloud models is not an app-level failure. Do not add mandatory packaged inference or automatic download as a workaround.
 
 ## Dependencies and constraints
 - IDEA-0001 requires single-player, account-free offline-capable operation on Windows/macOS/Linux with an independently available compatible local AI runtime. "One simple app" now means a **headless Go server + normal browser**, not a native GUI window.
@@ -103,6 +108,7 @@ A player launches the packaged Lorebound Go executable. It starts a **loopback-b
 - 2026-10-17: Current direction is one Wails v3 Go headless server serving a static SvelteKit UI to the ordinary browser, with frontend TypeScript gameplay/plugins/AI clients, Go-managed SQLite and no native GUI or separately supported npm player process. Docker is deferred to a distinct unaccepted idea.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0001 dependency:** Lorebound must start and support manual adventures/Lorebook/storage without any AI setup or connection. Model API calls are attempted when configured and requested, with actionable missing-config guidance or isolated API error handling. No global app lockout, no mandatory connection test. Staging unchanged.
 - 2026-10-17 — **Confirmed IDEA-0051/0052/0005 export scope:** The user chose to remove previously accepted individual-adventure export entirely. Lorebound offers only **Backup Database** (consistent complete SQLite snapshot) and **Restore Database** (complete database replacement), never individual-adventure file transfer or merge. The earlier per-adventure export proposals are superseded and retained only in decision history. No change to Wails headless-only runtime.
 - 2026-10-17 — **Accepted IDEA-0051 simplification dependency:** Go opens an existing library DB at the selected directory or creates it if missing; selecting another directory does **not** auto-migrate/copy/merge data or expose a library manager. A backup is a consistent SQLite snapshot of the **whole DB**, and importing it **overwrites the active DB**, with minimal SQLite connection safety. Advanced corruption-repair tooling is not an accepted requirement. Older per-adventure portable export scope is a separate unresolved refinement.
 - 2026-10-17 — **Accepted IDEA-0051 location dependency:** The single SQLite library defaults to the per-user OS app-data directory; a custom persistent directory is optionally selectable. Paths, safe relocation and failure recovery remain IDEA-0051 refinement concerns. This does not change the selected headless-only runtime.
