@@ -79,6 +79,11 @@ For Do/Say, interpret the selected character's identity and **already establishe
 ## Playing As switching is context, not a movement proposal
 - **Accepted:** On the next Do/Say after switching `Playing As`, use the selected character's stable ID and **their own established location/context**. Choosing another character never proposes travel, teleportation, time passage or inventory transfer. Actual actions in the next turn still require normal validation. Do not substitute the former actor's location when the new actor's whereabouts are unknown. `Story` and `Continue` remain actor-optional.
 
+## Interpret direct Story declarations as player-authorised exceptions
+- **Explicit accepted IDEA-0002 Option B (2026-10-18):** When a player directly writes a definite event/outcome in **Story mode**, interpretation may propose a **player-authorised authorial state change** even if ordinary fictional eligibility, travel adjacency, capability or possession prerequisites would block that same attempted action in Do/Say. The interpreter must distinguish **asserted fact** from mere attempt, hypothetical, quotation, rumour and model-invented suggestion; do not turn every mention into a world mutation.
+- **No invented rationale or independent AI privilege:** Extract only consequences established by the **player's authored words**. E.g., teleporting a character across a kingdom is a location update, **not evidence of a new route, learned teleportation ability, elapsed journey or travel companions** unless those are stated. The model itself cannot claim authorial permission in Continue or invent extra exceptional operations in a Story response. Explicit player authorship must be reflected in proposed operation provenance/authority metadata, exact shape TBD.
+- **Validation still matters:** The coordinator and domain validators can waive **fictional game-rule prerequisites specifically for that authorial Story operation**, but never typed schemas, resolvable IDs, cross-entity consistency, source grounding, history/revision provenance or atomic Go/SQLite storage rules. Unresolvable/unsupported changes must not silently pass as committed typed state.
+
 ## Dependencies and constraints
 - Works under accepted [[Deterministic Adventure Coordinator]] (IDEA-0044): model output is a provisional proposal and cannot mutate canonical state without deterministic validation and coherent finalisation.
 - Must support the configurable workflows of [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and the single- or multi-model routing accepted in [[One-Model Task Routing]] (IDEA-0017).
@@ -104,6 +109,8 @@ For Do/Say, interpret the selected character's identity and **already establishe
 - How should quality, latency, tool adherence and cost be evaluated across local RP and cloud models?
 
 ## Draft acceptance criteria
+- [ ] A clearly established authored Story teleport may yield a properly sourced authorial location change despite strict ordinary movement rules, without an invented route/spell.
+- [ ] Equivalent Do attempts and unsupported AI/Continue inventions remain subject to gameplay rules; model proposals never directly commit or bypass referential/schema integrity.
 - [ ] Merely changing `Playing As` proposes no world-state operations; the next Do/Say is grounded in that actor's established location and state.
 - [ ] A change of `Playing As` alone proposes **no gameplay operations**. The next Do/Say uses the selected actor's established location/context, and any separately narrated movement must pass normal validation.- [ ] Arbitrary player or narrative prose can yield typed proposed changes with a defined and verifiable schema.
 - [ ] Entity references are resolved to stable IDs only when sufficiently grounded, with ambiguity preserved or surfaced otherwise.
@@ -128,6 +135,7 @@ For Do/Say, interpret the selected character's identity and **already establishe
 - This remains an **unrefined accepted planning direction**, not a production-ready specification or implemented feature.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0002 interpretation distinction:** Explicit Story-authored assertions can bypass fictional gameplay prerequisites as player-directed world facts, with source-grounded minimal typed effects and coordinator/governed safe commits. Hypotheticals, rumours, Do/Say attempts and autonomous AI claims do not receive that authority. Staging only.
 - 2026-10-18 — **Explicit user acceptance:** `Playing As` switching is a narrative cut; the next Do/Say follows the chosen character in their existing circumstances. Switching causes no physical travel, time passage or item movement. Staging only.
 - 2026-10-18 — **User explicitly accepted:** A `Playing As` switch is an editorial scene cut; next Do/Say follows the new character in their established place, no automatic travel/time/state effects, and Story/Continue remain independent. Staging only.
 - 2026-10-18 — **User-accepted switch-as-cut semantics:** Changing `Playing As` between distant characters is a narrative cut; the next Do/Say uses the selected character's existing scene/location. The interpreter must not propose movement or invent a transition from selection alone. Staging only.
