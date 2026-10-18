@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Memory Lorebook and Context Brainstorm]]"]
@@ -35,6 +35,11 @@ Provide per-character editable fields and optional typed definitions for current
 
 ## Alternatives and trade-offs
 A universal predefined RPG sheet can make validation and UI simpler but forces genre-specific assumptions on stories where the metrics don't fit. A flexible key/value sheet works across genres but may sacrifice type safety and user experience unless typed values and optional templates are provided. The accepted approach favours flexible player-defined fields with optional typing and validation; exact type catalogues, presets, reusable schemas and field inheritance remain refinement choices.
+
+## Status belongs to actual characters, not narrative focus
+- **Accepted IDEA-0007/0026 flexible character control:** Character status sheets are attached only to **real, established character IDs**, irrespective of whether the character is currently focused, one of several acted-through characters, or an NPC. No player-global character status sheet or invented default protagonist is required.
+- Stories with **zero characters** can exist and track non-character world state without generating a placeholder sheet. A focus switch changes which existing record the interface may show; it must not mutate status values, inventories or other canonical character details.
+- Sparse character information stays unknown until explicitly established and validated, consistent with existing no-invented-lore rules.
 
 ## Dependencies and constraints
 - Depends on accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) for stable identity and shared PC/NPC support.
@@ -78,5 +83,6 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - Accepted direction remains unrefined and is neither production-approved nor implemented. Exact schema and automatic-update behaviour remain open.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted character-control dependency:** An adventure may have no characters or no main character, while status and inventory remain anchored to actual character entity IDs. Multi-character focus/actor switches do not modify status records or create dummy player sheets. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Editable, customisable status sheets for PCs and NPCs; arbitrary fields for stats, conditions, identity, goals and current state; optional inclusion of current values in generation context; optional typed fields and validation; preservation of unknown values versus explicitly empty ones. Exact schema and automatic state-update rules remain for refinement and IDEA-0028. Moved to staging, not production.
