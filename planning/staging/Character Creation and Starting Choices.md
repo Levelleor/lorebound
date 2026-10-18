@@ -61,6 +61,13 @@ A fully freeform description and optional guided fields are complementary, not m
 - **Usable in Settings:** **Every character entity**, named or unnamed, appears in the `Playing As` list using its meaningful display label or fallback; the selection uses the **stable ID**, never the potentially changing label/name. Explicit selection enables Do/Say as normal, while adding/renaming characters never auto-selects one. Manual creation still uses the same Lorebook drawer.
 
 
+## No semantic cross-check between freeform descriptions and structured fields
+- **Explicit user decision (2026-10-18):** **Do not build an automatic semantic conflict checker** comparing a manually entered character's **freeform background/description** with their separately authored **structured character fields**. Natural-language equivalence, negation and implied facts cannot be compared reliably with simple deterministic field validation; detecting that prose says *human merchant* while a Species field says *Elf* is **not** a mandatory validation or blocking-save workflow.
+- **Save the user's input as supplied:** Allow the freeform text and individually valid structured fields to coexist **without requiring the player to reconcile apparent semantic contradictions, automatically rewriting one to match the other, or making structured fields silently override the freeform text**. The player may revise either later. Neither a blanket precedence rule nor an automatic semantic-reconciliation/AI call is accepted.
+- **Keep ordinary integrity checks:** This only removes **cross-representation natural-language consistency enforcement** during manual character authoring. It does **not** waive structured field typing/required reference integrity when a field is used, stable character IDs, safe SQLite writes, canonical expected-version protection, or validation of actual gameplay operations. Preserve the established explicit source-grounded extraction rules for narrative-generated world facts; this decision does not instruct the AI interpreter to fabricate unsupported lore.
+- **Uncertainty remains first-class:** Optional/unknown values stay unknown; an unverified alias stays a claim. Descriptive labels are still not proper canonical names. A deliberately conflicting user-authored entry is not automatically 'repaired' or treated as proof of additional facts.
+
+
 ## Dependencies and constraints
 - Depends on the shared character model, character sheet, lorebook and optional world/inventory modules that are covered by other individual idea notes.
 - A character created without numerical stats or a fully defined species must remain valid.
@@ -71,11 +78,14 @@ A fully freeform description and optional guided fields are complementary, not m
 ## Open questions
 - Which fields are available by default and which belong to optional modules?
 - **Resolved:** When character creation is skipped, **do not create a default player character**. The adventure may have no current focus and no character entities until the story establishes them.
-- How should a freeform background be reconciled with structured choices if they conflict?
+- **Resolved:** No automated semantic reconciliation or mandatory comparison between a manually authored freeform background and structured character choices. Save independently valid inputs as entered; do not impose precedence or a blocking confirmation.
 - **Resolved:** Players can create/edit multiple characters through Lorebook manual entry, and **character creation does not auto-select the new character or force navigation back to the story**. The player chooses the wanted character explicitly through Settings sidebar `Playing As`, regardless of creation order. Do/Say require a valid selection and then use it without per-turn confirmation; Story/Continue need none. Exact navigation for voluntarily leaving the Lorebook remains a UI detail.
 - How should starting equipment and a starting location be handled when their tracking modules are disabled?
 
 ## Draft acceptance criteria
+- [ ] A manually authored background saying 'human merchant' and a separately entered Species value 'Elf' **can be saved without automatic semantic comparison, a forced correction dialog or an AI arbitration step**, provided each field passes its own applicable structural validation.
+- [ ] Saving that combination does not automatically rewrite the prose or the structured field, establish additional facts, or invent an unstated precedence rule.
+- [ ] Ordinary typed reference/field integrity, expected-version canonical writes and gameplay-operation checks still apply independently of this no-cross-check policy.
 - [ ] A player can explicitly create a Lorebook character with **no supplied name, description, species or other filled-in profile field**; its stable ID exists and its canonical name remains unknown, without fabricated facts.
 - [ ] A character with unknown name can show a descriptive label or a neutral disambiguated unnamed-character UI fallback, which is **never treated as the canonical personal name**.
 - [ ] Establishing a name later changes the existing character record while preserving stable ID, relationships, state, provenance and any `Playing As` reference; merely claimed names remain uncertain.
@@ -106,6 +116,7 @@ A fully freeform description and optional guided fields are complementary, not m
 - This direction has been explicitly accepted for **staging/refinement**, not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **User explicitly declined the proposed A/B conflict-resolution workflow:** Skip semantic consistency validation between **manual freeform character background/description** and separately entered structured character fields; such comparisons are not easy to validate reliably. Do not force a reconciliation, make structured fields silently win, or auto-rewrite prose; store user-authored entries as written subject to ordinary independent field and storage-integrity checks. Existing gameplay/world-state validation and grounded extraction are unaffected. Staging only; no implementation/promotion.
 - 2026-10-18 — **User explicitly accepted refined Option B:** Character names are **optional and can remain unknown**. Retain each character's immutable stable ID; display a description/user-facing label or neutral *Unnamed Character N* fallback separately from the established canonical name. Newly established names update the same entity; rumours/claimed names remain uncertain. Unnamed characters remain eligible for explicit `Playing As`. No invented facts, mandatory name or character creation; staging only, no implementation/promotion.
 - 2026-10-18 — **Accepted IDEA-0062 Lorebook drawer integration:** Settings Add Character opens the same left-side editable Lorebook drawer as the composer-left icon, with rail-first/content-second entrance and simple fade-out exit. Manual creation may continue for multiple characters with no automatic Playing As selection or forced redirect. Staging only.
 - 2026-10-18 — **Accepted IDEA-0062 two-tab interface:** Info shows data about the explicitly selected character; Settings contains `Playing As`, while a Lorebook icon beside the input offers direct access to manual entry. Creating several characters still never selects one automatically. Staging only.
