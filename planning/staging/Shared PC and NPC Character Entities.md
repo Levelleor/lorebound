@@ -67,7 +67,7 @@ Separate permanent PC/NPC or Playable categories are now **explicitly out of sco
 ## Draft acceptance criteria
 - [ ] **Every character** uses one common identity/schema with stable IDs, and **no PC/NPC kind, playable designation or permanent-control category** is required or used to filter selection.
 - [ ] An adventure with **no characters and no `Playing As` selection** is valid and can use Story/Continue but **not Do/Say**. `Playing As` references only a valid existing Lorebook character ID for that adventure and can be changed/unset without modifying inventory/world state.
-- [ ] PCs and NPCs can link to the same kinds of profile, inventory, equipment, anatomy, relationships, status and location records when those features become available.
+- [ ] All characters link to the same types of profile, inventory, equipment, anatomy, relationships, status and location records when those features become available, with no category-specific rules.
 - [ ] A minor character may have incomplete optional details without requiring a fully populated sheet or attached unused records.
 - [ ] Adding details later preserves the same durable character ID and existing relationships/references.
 - [ ] Missing values remain unknown/not recorded and are not silently converted to asserted zero, empty or other in-world facts.
