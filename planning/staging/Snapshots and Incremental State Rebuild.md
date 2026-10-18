@@ -61,6 +61,13 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - Reconstruct from the appropriate accepted state boundary using complete incremental history and valid optional checkpoints. Paragraph-specific IDs, revisions or snapshots are **not prerequisites for correctness**. Optimising away work when a change cannot affect particular events is optional, not a reason to retain invalid effects.
 - Drafts are noncanonical and don't trigger replay before confirmation; stale-version checks, atomic writes, full-history duplication and arbitrary-turn forks remain as accepted. Exact whole-passage split/merge/move lineage stays open.
 
+## Reconstruct committed Undo to the immediately previous active turn
+- **Accepted IDEA-0004 Option B (2026-10-18):** A **committed Undo** moves the active story head from Turn N to **Turn N-1** and reconstructs **all authoritative state and derived context at that boundary** using the accepted baseline plus surviving active incremental history, optionally with a valid checkpoint. No AI generation or alternate-text switching is required for state replay.
+- **Repeatability:** The player may undo the committed head repeatedly to older active turns, limited by the available committed history and initial baseline, **not** by the finite temporary editor undo stack. Once a new turn is committed from that earlier head, it becomes the sole active future within that adventure. The old future cannot remain a selectable narrative variant.
+- **State coverage:** Invalidate snapshots, summaries, memory retrieval projections, state caches and any other derived records that depended on undone events. An older snapshot is usable only if its source prefix is still active/valid. A rollback fails atomically if reconstruction/version validation cannot complete, leaving prior canon intact rather than half-reverting the story.
+- **Source/version consistency:** Go/SQLite rejects stale committed Undo requests using the existing optimistic expected-version check. The coordinator and reducers use an authoritative consistent event/text-revision prefix. Inactive records retained for append-only audit do not contribute to reconstructed reality and are not a redo/branch mechanism.
+- **Other operations unchanged:** Arbitrary-turn Fork remains a distinct independent-adventure copy. Confirmed historical prose edits retaining later turns use the separate Keep Later Turns/Delete All After Point gate. Transient editing undo has its own bounded memory and is not authoritative state reconstruction.
+
 ## Dependencies and constraints
 - Accepted [[Event-Sourced World History]] (IDEA-0039) supplies ordered validated state-changing events; this clarification requires them and any accompanying versioned records to cover **all** canonical persistent changes, not a manually selected subset.
 - Accepted [[Versioned Text Blocks and Revision IDs]] (IDEA-0040) supplies story-text lineage and revision references needed for full adventure reconstruction.
@@ -80,6 +87,9 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - How should snapshot frequency, storage format and dependency tracking be optimised without making correctness rely on checkpoints?
 
 ## Draft acceptance criteria
+- [ ] After Undo of committed Turn N the active story, events, lore/inventory/location and derived state match deterministic replay of the surviving prefix through N-1.
+- [ ] Repeated Undo traverses committed turns down to baseline independently of finite temporary editor history, and no stale checkpoint/summary from removed turns survives as active truth.
+- [ ] A new continuation from the rolled-back head remains the single active timeline of that adventure, with no inactive response selectable as an alternative.
 - [ ] A confirmed paragraph edit creates a new **passage revision**, and dependent state can be reconstructed correctly through passage-level provenance without stable paragraph IDs or paragraph-specific snapshots.
 - [ ] A confirmed modification of one paragraph produces a new accepted **passage revision** and correct dependent state replay without requiring paragraph-level IDs or snapshots.
 - [ ] Derived state remains consistent with accepted passage/event provenance following historical edits, forks and duplication even when finer span-level tracking is absent.
@@ -111,6 +121,7 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - This remains a **staging direction requiring refinement**, not a production specification or an implemented capability.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0004 reconstruction dependency:** Committed Undo atomically changes the canonical head and rebuilds world state at the preceding committed turn, repeatedly as needed, without a small editor undo-depth limit. Derived caches are invalidated. No old-future variant stack or new adventure is implied. Staging only.
 - 2026-10-18 — **Accepted IDEA-0003 revision granularity dependency:** Source IDs and revisions for reconstruction attach to story turn/passage bodies rather than paragraphs. Event invalidation follows accepted passage provenance; drafts remain noncanonical. Staging only.
 - 2026-10-18 — **Accepted IDEA-0003 dependency:** Reconstruction and invalidation use stable **turn/passage revision provenance**, not per-paragraph canonical revisions; editing prose within a passage is still fully allowed, with confirmed passage-level reconciliation. Staging only.
 - 2026-10-18 — **Accepted IDEA-0011 dependency:** Players can fork from any committed turn, so full accepted incremental state/history must reconstruct that turn without requiring a named checkpoint or snapshot. Save an independent fork with complete prefix and no subsequent source effects; correct revision/version handling remains required. Staging only.
