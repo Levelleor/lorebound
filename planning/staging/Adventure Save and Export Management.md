@@ -66,6 +66,11 @@ Provide an adventure library with Create, Resume, Rename, **full-history Duplica
 - **Accepted IDEA-0026 refinement:** Persist `Playing As` as a nullable reference to **any valid character ID in this adventure's Lorebook**, with **no PC/NPC, Playable or protagonist classification**. Selecting a character is a setting change for upcoming Do/Say input; it does not modify the entity, story, item ownership or existing event history.
 - Every newly created Lorebook character becomes an available option but is never auto-selected. Invalid/deleted references leave Do/Say disabled, while Story/Continue stay enabled. Existing backup/restore/duplication policies remain unchanged.
 
+## Playing As changes are not gameplay turns
+- **Accepted scene-cut selection (IDEA-0002/0026/0034):** `Playing As` is a per-adventure, nullable **selection setting**. Switching from a character in one location to another elsewhere saves the new selected stable character ID but **creates no canonical turn, world event, movement, inventory transfer or elapsed-time event**. No confirmation or travel narration is required merely to switch.
+- The **next Do/Say** retrieves the newly selected actor's actual established location and circumstances. Story/Continue remain independent. The world-state and story revision history of every character are unchanged until an **actual separately validated and committed narrative/action event** occurs.
+- Existing setting persistence, backup/restore, character deletion/reference integrity and manual-selection rules stay in place.
+
 ## Dependencies and constraints
 - Depends on the **shared filesystem-backed SQLite database** via Go, with per-user OS app-data default and optional custom directory (IDEA-0051), transaction-safe storage, stable IDs and event/document revision history.
 - Duplication **within the same shared SQLite database** must create a **distinct adventure identity**, copy complete accepted canonical story/revision/event/state and relevant lore/plugin history, and preserve coherent **internal source/event/entity/revision references** in the copy. The exact ID-remapping strategy (new identifiers versus correctly scoped existing identifiers) is an implementation choice; never allow copied records to point to mutable source-adventure data inadvertently. **Do not carry over pending noncanonical drafts**. Use a coherent atomic copy operation so a failure does not leave a partially populated duplicate.
@@ -83,7 +88,7 @@ Provide an adventure library with Create, Resume, Rename, **full-history Duplica
 - What happens when a whole-library restore references providers or plugins unavailable in the current installation? No automatic model/plugin installation is implied.
 
 ## Draft acceptance criteria
-- [ ] A player can create, name, reopen and resume multiple distinct adventures.
+- [ ] A `Playing As` switch persists the selected character identity but does not create a story turn, relocate any character, alter inventory/status or rewrite established history. The subsequent Do/Say uses that actor's saved location context.- [ ] A player can create, name, reopen and resume multiple distinct adventures.
 - [ ] A completed turn or explicitly confirmed revision is **atomically committed** with every validated canonical event/state effect; partially generated, invalid or failed turns do not change authoritative story/world state.
 - [ ] While typing an input or editing prose, Lorebound writes a **noncanonical draft to the shared SQLite database after a short pause**, without creating a story revision, event, tool side effect or historical state rebuild.
 - [ ] Closing and reopening the browser/editor **restores the last successfully autosaved draft** independently of the last committed narrative/world state.
@@ -113,6 +118,7 @@ Provide an adventure library with Create, Resume, Rename, **full-history Duplica
 - The export file format is **a consistent full SQLite snapshot**; precise Go snapshot API, basic restore compatibility and minimal file safety are unrefined. No implementation or production approval is claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted `Playing As` scene-cut persistence:** Selection persists as a lightweight setting without creating any canonical travel, time, inventory, location or turn event. Next Do/Say uses the new actor's established scene; Story/Continue remain unconstrained. Staging only.
 - 2026-10-18 — **Accepted selection persistence simplification:** `Playing As` may reference any existing Lorebook character with no PC/NPC or Playable filter; it remains a per-adventure optional setting, never an inventory/character role change. Staging unchanged.
 - 2026-10-18 — **Explicit manual-selection policy:** Saving a newly created Lorebook character does not automatically update persistent `Playing As`, even when it is empty, and must not force a story return. Users may create several characters before explicitly choosing an actor via Settings. Existing valid selected IDs remain unchanged. Staging unchanged.
 - 2026-10-18 — **Accepted nullable `Playing As` per-adventure setting dependency:** Settings sidebar selection references one of the adventure's Lorebook character IDs, enables Do/Say and survives normal resume while valid; unset/invalid means those modes are disabled. Story/Continue work characterless. `Add Character` routes to manual Lorebook creation. No per-action actor prompt, default avatar or item transfer. Staging unchanged.
