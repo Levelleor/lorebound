@@ -21,7 +21,7 @@ Create, autosave, resume, rename, duplicate, import and export separate adventur
 Long stories need recoverable and portable saves.
 
 ## Accepted direction
-- **Multiple independent adventures:** A player can create and manage more than one separate saved story. Adventures do not share active story state by default.
+- **Multiple independent adventures:** A player can create and manage multiple separate saved stories **inside one shared SQLite library database** (IDEA-0051). Adventures have stable separate identities and do not share canonical narrative/world state by default.
 - **Autosave:** Preserve committed turns, narrative edits and corresponding validated world-state changes without requiring manual saves. Safely retain pending edits or otherwise protect them from accidental loss.
 - **Resume:** Reopen an adventure at its last reliably saved state.
 - **Rename:** Change an adventure's display name without altering its contents.
@@ -40,11 +40,11 @@ Portable JSON archives and SQLite-based export are possibilities for full-fideli
 ## Architecture integration (2026-10-17)
 - All adventures are durably stored in **Go-managed SQLite on the computer's filesystem** for **Wails v3 headless localhost Go server delivery only**, with play through the normal browser. Browser-owned storage is not the source of truth.
 - Save, resume, duplicate, import and export must operate through Wails Go persistence services. The TypeScript frontend sends typed requests and renders outcomes; Go applies atomic database operations.
-- SQLite is the canonical data store and basis for export/import; the precise portable archive or SQLite snapshot format is **not yet decided**. Complete revision/event history, stable IDs, migrations, import validation and credential exclusion remain essential.
+- **One shared SQLite library database is selected** (IDEA-0051). Exporting one adventure must extract just that adventure's complete history, relevant relationships and durable plugin state, rather than exporting all other adventures. The precise portable archive format is **not yet decided**; preserve revisions/event history, stable IDs, migrations, import validation and credential exclusion.
 
 ## Dependencies and constraints
 - Depends on filesystem-backed SQLite via Go, transaction-safe storage, stable IDs and event/document revision history.
-- Duplication must not cause the original and duplicate adventures to share mutable state inadvertently.
+- Duplication within the shared library database must assign a distinct adventure identity, preserve necessary internal references and avoid sharing unintended mutable canonical state with the source adventure.
 - Saving a narrative turn and its accepted state events must have consistent recovery semantics after interruptions.
 - Export/import must not leak provider credentials, local authentication details or secrets stored in provider profiles.
 - Full-fidelity restoration may depend on optional plugins being installed and on compatible schema versions; missing extensions should be handled explicitly.
@@ -63,7 +63,7 @@ Portable JSON archives and SQLite-based export are possibilities for full-fideli
 - [ ] Pending edits have an explicit safe-recovery policy; interruptions do not corrupt the last committed save.
 - [ ] Renaming an adventure preserves its story and world-state data.
 - [ ] Duplicating an adventure creates an independently editable/playable copy.
-- [ ] A full-fidelity export contains the data needed to restore that adventure's supported narrative, state and history.
+- [ ] A full-fidelity **single-adventure export** extracts only the target adventure's supported narrative, state, history and dependencies from the **shared SQLite library database**, without exporting unrelated adventures.
 - [ ] Importing a valid compatible export restores an independently resumable adventure.
 - [ ] Exports never contain provider API keys, passwords, tokens or other stored credentials.
 - [ ] Permanent deletion requires an unambiguous player confirmation.
@@ -81,6 +81,7 @@ Portable JSON archives and SQLite-based export are possibilities for full-fideli
 - Technical export format, import compatibility and recovery details remain open; no implementation or production approval is claimed.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0051 layout dependency:** The user chose **Option A: one SQLite database for all adventures**. This idea's separate-adventure save/duplicate/export requirements now apply to **logically isolated adventures inside that shared database**; individual exports must filter to the selected adventure. No file format, restore-collision policy or production status change is approved here.
 - 2026-10-17 — **Accepted runtime correction alignment:** Replaces the dual desktop/headless Wails direction with **Wails v3 headless localhost Go server only**, used through the normal browser, distributed as Windows/macOS/Linux server executables. No native WebView or separate npm player runtime. Docker is the separate unaccepted candidate [[Optional Docker Distribution]] (IDEA-0065). Remaining design specifics stay in staging.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
