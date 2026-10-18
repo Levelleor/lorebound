@@ -83,6 +83,7 @@ A prose-only interface is simpler and preserves flexibility but may spend extra 
 - This is an accepted **unrefined** idea, not production approval or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Optional structured UI gameplay commands (such as map selection and Equip/Drop) using stable entity IDs and typed operations, bypassing unnecessary LLM interpretation while remaining under deterministic validation and coherent narration/state finalisation. Show controls only for enabled, applicable capabilities; preserve freeform language input. Leave immediate action versus confirmation, narration timing and specific controls open for refinement. Moved to staging, not production.
