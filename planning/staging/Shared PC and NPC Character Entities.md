@@ -56,6 +56,11 @@ Separate permanent PC/NPC or Playable categories are now **explicitly out of sco
 ## Switching Playing As cuts to the selected character's scene
 When `Playing As` changes, the **next Do/Say follows the new character at their already established location and circumstances**, even if the previously played character is far away. Example: switching from Mara in the capital to Theo in the forest cuts to Theo **in the forest**, without transporting either character. Selection creates **no movement, travel route, elapsed journey/time, inventory transfer, world-state event or altered past**. The chosen character's own location, equipment, status and existing context are used; an unknown location remains unknown, never inherited from the previous character. Story/Continue stay independent; no switching confirmation or narrated journey is needed.
 
+## Selected-character Info and Settings tabs
+- **Accepted IDEA-0062 panel layout:** The character information panel has **Info** and **Settings** tabs. **Settings** includes the explicit adventure `Playing As` selector listing all Lorebook characters; **Info** presents the **currently selected character's existing inventory, tracked status and known current location**, using references to authoritative records. Switching the selected actor updates Info without moving characters, transferring items, modifying statuses or changing history.
+- A new character added in Lorebook is not auto-selected and therefore must **not silently replace** the character displayed in Info. In a characterless story or when `Playing As` is unset, no phantom protagonist, inventory or fabricated status/location may be displayed. The exact Info empty-state UI is still for later refinement.
+- All other Lorebook characters remain individually inspectable by opening the Lorebook via the **icon to the left of the story input field**. The selected actor's scene-cut behaviour and Do/Say gating are unchanged.
+
 ## Dependencies and constraints
 - Relates to accepted [[Entity-Based Lorebook]] (IDEA-0020), which should link durable character entities without confusing static lore with changing character state.
 - The next separate candidates include status sheet fields and tracking (IDEA-0027, IDEA-0028), items and equipment (IDEA-0029, IDEA-0030), anatomy (IDEA-0031, IDEA-0032) and locations/presence (IDEA-0033, IDEA-0034). This approval does not advance any of those candidates.
@@ -74,6 +79,8 @@ When `Playing As` changes, the **next Do/Say follows the new character at their 
 - When should fields be explicitly authored by the player versus inferred as a proposed AI change requiring validation?
 
 ## Draft acceptance criteria
+- [ ] **Info** tab displays the selected character's known inventory, tracked status and location, where applicable; **Settings** tab contains `Playing As` selection from all Lorebook characters.
+- [ ] Switching `Playing As` updates the information display but does not mutate any character record, item placement, location, event or past turn.
 - [ ] Switching `Playing As` between two distant characters makes the next Do/Say follow the selected character at their **existing location**, without travel, teleportation, time passage, inventory transfer or a world-state event.
 - [ ] After switching `Playing As` from Mara (capital) to Theo (forest), the next Do/Say follows Theo at his **established forest location**; neither character's location, possessions, status or event history changes merely due to selection.
 - [ ] Switching `Playing As` produces **no travel event, elapsed travel time, new graph edge or automatic time passage**, and does not require actor/transition confirmation; real narrated movement remains subject to ordinary validation.
@@ -102,6 +109,7 @@ When `Playing As` changes, the **next Do/Say follows the new character at their 
 - Staging means accepted for refinement, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **User-accepted info/settings UI refinement:** Two-tab information panel, with **Info reflecting selected character's real inventory/status/location** and **Settings containing `Playing As`**. Lorebook has a direct icon at the left of the input field. Characterless stories and unselected actors do not receive invented display data. Staging only.
 - 2026-10-18 — **User explicitly accepted:** Switching `Playing As` between distant characters is a **narrative cut**. The next Do/Say uses the newly chosen character's established scene/location, with no travel, teleportation, time passage, inventory/state transfer or extra confirmation. Story/Continue remain independent. Staging only.
 - 2026-10-18 — **Explicit user acceptance of cross-character scene-cut semantics:** Changing `Playing As` is **only a narrative viewpoint/actor cut**; the **next Do/Say follows the selected character at their existing location and circumstances**, even when other characters are far away. No travel, teleportation, time passage, inventory/status transfer, special confirmation or history rewrite occurs by selecting a different character. Story/Continue remain freeform. Staging only.
 - 2026-10-18 — **Explicit user-confirmed supersession of PC/NPC distinction:** There are **no PC or NPC categories and no Playable flag**. Every character is identical in kind and **selectable in `Playing As`**, because the player may temporarily take turns acting/speaking for any character. `Playing As` remains optional and selection is explicit, never automatic upon creation. Characterless stories continue with Story/Continue and no invented character. File name preserved for stable wiki references. Staging only, no implementation/promotion.
