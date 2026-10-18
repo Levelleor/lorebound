@@ -80,6 +80,11 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - **Explicit latest IDEA-0026 acceptance:** All Lorebook characters are the **same kind** and all are eligible for temporary `Playing As` selection; there is no permanent PC, NPC or Playable designation. The selected stable character ID supplies the Do/Say actor/speaker, not an entity-type change or elevated permission.
 - Story/Continue may describe world and character events involving any real characters or none, independently of `Playing As`. Choosing a different actor does not alter inventory, location, status or prior-turn attribution. No extra player identity is created in the game world.
 
+## Character switch does not issue world-state operations
+- **Explicit IDEA-0002/0026/0034 refinement:** Selecting a different valid Lorebook character via Settings `Playing As` supplies the **actor/speaker** and their **current established scene context** to the **next Do/Say**. The coordinator must construct that request from the newly chosen character's canonical identity, location and relevant circumstances, **not reuse the previous actor's scene/inventory** as if they travelled together.
+- The selection itself is a non-world-state **narrative cut** and **must not produce movement, travel-validation, inventory-transfer, presence, elapsed-time or other world events**, nor mutate history. No extra confirmation/transition narration is needed. An actual new Do/Say action can still propose events and must pass the configured validators.
+- If the selected character's location is uncertain, preserve uncertainty rather than fabricating geography. Story and Continue remain able to narrate other grounded actors or world events without being bound to the chosen Do/Say character. Respect generation cancellation/atomic commit rules as before.
+
 ## Dependencies and constraints
 - Works with accepted [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and [[One-Model Task Routing]] (IDEA-0017); avoid a mandatory stack of simultaneously loaded models.
 - All accepted persistent changes must be recorded compatibly with [[Event-Sourced World History]] (IDEA-0039) and the complete incremental reconstruction requirement in [[Snapshots and Incremental State Rebuild]] (IDEA-0042).
@@ -102,7 +107,8 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - How should cancellations, timeouts, network/provider failures and recovery preserve exactly-once or idempotent outcomes?
 
 ## Draft acceptance criteria
-- [ ] A deterministic non-LLM TypeScript coordinator drives turn orchestration rather than delegating authoritative workflow control to an agent.
+- [ ] The coordinator binds the selected character and their established location as context for the next Do/Say, even if the previous actor is elsewhere; changing selection alone produces **no canonical events or history changes**.
+- [ ] A subsequent Do/Say movement/action passes normal validation independently; a viewpoint switch itself is never treated as travel or character teleportation.- [ ] A deterministic non-LLM TypeScript coordinator drives turn orchestration rather than delegating authoritative workflow control to an agent.
 - [ ] Model output and drafted prose may propose state changes but cannot directly commit or override persisted canonical records.
 - [ ] Proposed operations are evaluated by deterministic world/domain validators using established state.
 - [ ] The coordinator supports the accepted configurable pipeline strategies while allowing a single model to run sequential tasks without multiple simultaneously loaded models.
@@ -124,6 +130,7 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - This is an accepted **unrefined direction**, not approval for production or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-18 — **Explicit user acceptance of character cuts:** A `Playing As` change is not a gameplay action. The next Do/Say follows the selected character at their known location/context; no auto travel, teleportation, elapsed time or transfer occurs, while actual subsequent actions still validate. Story/Continue stay independent. Staging only.
 - 2026-10-18 — **User accepted one universal character kind:** The coordinator has no PC/NPC or Playable entity eligibility restrictions. Any Lorebook character may be selected for Do/Say. Historical ambiguous Do/Say clarification proposal superseded by the explicit selector gate; staging only.
 - 2026-10-18 — **Explicit user correction to prior ambiguity proposal:** Use a persistent per-adventure Settings sidebar `Playing As` reference to a Lorebook character for every Do/Say actor/speaker, not recurring per-action identity confirmation. Disable those modes with no valid selection. Story and Continue still work without characters. `Add Character` opens Lorebook manual entry; item custody remains entity-based. Staging unchanged.
 - 2026-10-18 — **Explicitly accepted character-control refinement:** Coordinator handles characterless world events and multi-actor turns; the player need not be a character. Narrative focus is optional and distinct from acting-character attribution. Item and character changes target actual stable entities; missing actors cannot be invented to justify an action. Unchanged atomic validated-turn boundary; staging only.
