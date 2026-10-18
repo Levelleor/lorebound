@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[LLM Providers and Generation Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -35,6 +35,11 @@ Expose configurable provider connections. A shared generation interface accepts 
 
 ## Alternatives and trade-offs
 Use compatible endpoints for providers where this meets requirements, and native adapters where request/streaming/tool/capability differences demand them. Implementation may ship providers incrementally; priority and fallbacks are refinement decisions, not grounds to remove accepted providers. Provider names and current model availability should be read from each provider's live documentation.
+
+## Architecture integration (2026-10-17)
+- Keep provider-specific API clients and response handling in frontend TypeScript, shared by Wails desktop and headless localhost browser runtime.
+- Browser network transport must account for provider CORS, streaming, failures and credential exposure; a selective Go transport or credential service is an optional future refinement, not a mandatory Node/backend pipeline.
+- Wails/Go SQLite stores canonical adventures; cloud credentials must be kept out of game saves and imports/exports.
 
 ## Dependencies and constraints
 - Dependent on persistent connection profiles, secure secret handling, provider/model discovery and generation-pipeline integration, covered in separate candidate ideas.
@@ -74,5 +79,6 @@ Use compatible endpoints for providers where this meets requirements, and native
 - **Accepted for staging/refinement**, not approved for production and not implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user**, with a correction: "glm is z.ai I think". Verified with Z.ai's official site and recorded the connector as **Z.ai (GLM)**. Accepted Gemini, OpenAI, Anthropic, OpenRouter, Mistral, DeepSeek, Z.ai/GLM and Kimi, with shared adapters, user-provided credentials, generation, model selection, supported streaming, error handling and no credential export. Moved to staging for refinement only.
