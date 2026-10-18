@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[LLM Providers and Generation Brainstorm]]"]
@@ -40,6 +40,11 @@ Automatic model discovery makes well-supported APIs easier to use but may be una
 ## Architecture integration (2026-10-17)
 - Provider profiles are consumed by client-side TypeScript AI adapters in the Wails v3 headless localhost server runtime, played through the normal browser. Provider credentials and custom headers require explicit secure storage/handling design distinct from SQLite adventure-save data.
 - A Go service should be considered for privileged credential storage/transport where necessary; browser storage must not become the canonical adventure database. Headless localhost access and multi-tab credential visibility need careful attention.
+
+## On-demand AI setup and gracefully failed requests
+- **Accepted IDEA-0001 refinement:** A usable Lorebound app and adventure library never depend on a saved provider connection. When a user attempts an AI-only operation without a suitable configured profile/model, display a clear reason and route them into these connection/model settings. Manual story editing, Lorebook maintenance, saving and other non-model features continue normally.
+- A saved/selected connection profile is **not proof of availability**, but is sufficient to **attempt the requested AI API call**. Do not require a successful Test Connection check or assume a periodically checked health status before every request. Handle actual reachability, authentication, model selection, quota and transport failures as **per-request recoverable errors**; leave the saved profile editable and preserve uncommitted input/last accepted story.
+- Explicit Test Connection and optional model discovery remain useful diagnostics, not an application startup gate. No implicit provider choice or model auto-installation is approved.
 
 ## Dependencies and constraints
 - Builds on accepted [[Cloud LLM Provider Connectors]] (IDEA-0012) and [[Local LLM Server Connections]] (IDEA-0013), including explicit llama.cpp support.
@@ -79,6 +84,7 @@ Automatic model discovery makes well-supported APIs easier to use but may be una
 - Accepted for staging and refinement only; not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0001 integration:** No AI profile is required to use Lorebound. When AI is requested but unconfigured, provide clear setup guidance; when a model is configured, attempt the API and report actual failures without globally disabling local/manual features or overwriting canon. No mandatory prior connection test. Staging only.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
