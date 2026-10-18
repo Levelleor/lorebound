@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -48,6 +48,10 @@ Hard-coding every gameplay operation in the core may simplify the first implemen
 - Go/Wails provides the privileged **SQLite/filesystem boundary**; plugin-produced durable changes must be submitted through the coordinator and saved atomically, not written directly to arbitrary database files.
 - Loading third-party client-side plugin code and requesting elevated Go privileges are separate trust/permission problems, especially when headless mode is browser-accessible. The selected runtime does not itself approve an unrestricted script execution system or external MCP connector.
 
+## Capabilities live in the browser-side Lore Engine
+- **Accepted IDEA-0061 naming:** The native gameplay capability registry and enabled TypeScript operations are part of the **Lore Engine**, the collective term for the non-UI side of Lorebound. This includes supporting Wails/Go platform and persistence services as separate non-UI responsibilities, **not** a second Go gameplay-capability executor.
+- Svelte remains the **UI**. The registry and coordinator remain TypeScript modules in that **same browser application**, enforcing their accepted typed operation/validation contracts. `Lorebound Backend` is superseded terminology and does not dictate deployment, folder structure or published package naming.
+
 ## Dependencies and constraints
 - Extends accepted [[Deterministic Adventure Coordinator]] (IDEA-0044), which owns authoritative validation/dispatch/finalisation, and [[LLM State Interpreter and Proposed Operations]] (IDEA-0045), which may suggest registered operations but cannot commit them directly.
 - Typed tool rejections and narrative repair follow accepted [[Typed Tool Rejection and Narrative Repair]] (IDEA-0046).
@@ -74,6 +78,7 @@ Hard-coding every gameplay operation in the core may simplify the first implemen
 - How should side-effect classification, permissions and deterministic replay be represented in a uniform native capability contract, including native plugins that themselves call outside services?
 
 ## Draft acceptance criteria
+- [ ] The capability registry is identified as browser-side TypeScript **Lore Engine** functionality, without implying a standalone backend/process or moving gameplay rules into Go.
 - [ ] Built-in and mod-provided operations can register with stable capability IDs and discoverable typed input/output contracts.
 - [ ] Each operation declares required permissions and participates in explicit validation and preparation before emitting accepted state events.
 - [ ] The coordinator can discover/invoke permitted operations without delegating canonical authority to an LLM or a mod.
@@ -98,6 +103,7 @@ Hard-coding every gameplay operation in the core may simplify the first implemen
 - This is **accepted for refinement**, not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0061 clarification:** User renamed the conceptual non-UI side to **Lore Engine**, including this browser-side TypeScript capability registry and supporting Go platform/SQLite functions. No new gameplay engine/runtime or independent package. Staging only.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
