@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Characters Inventory Equipment and Anatomy Brainstorm]]"]
@@ -33,6 +33,10 @@ Offer a skippable character creator accepting both freeform prose and optional s
 
 ## Alternatives and trade-offs
 A fully freeform description and optional guided fields are complementary, not mutually exclusive; both are accepted in principle. The exact form layout and amount of guidance remain open. Mandatory classes, numerical RPG statistics and blocking creation workflows are out of the accepted scope.
+
+## Minimal-start entry flow dependency
+- IDEA-0006 explicitly accepts **blank Custom Opening**, **all Guided Setup fields skippable**, and a fallback **`Untitled Adventure`** title for unnamed adventures. Character creation must remain **fully optional** and cannot interrupt or gate any of those minimal-start paths.
+- Character records and their chosen creation fields are initialized only when the player elects to provide them or the applicable game workflow validates them later. Do not invent a mandatory default character sheet merely to persist a new blank adventure.
 
 ## Dependencies and constraints
 - Depends on the shared character model, character sheet, lorebook and optional world/inventory modules that are covered by other individual idea notes.
@@ -69,5 +73,6 @@ A fully freeform description and optional guided fields are complementary, not m
 - This direction has been explicitly accepted for **staging/refinement**, not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0006 minimal-start alignment:** No character creation, structured player identity, attributes or starter choices are required to create a playable blank adventure or choose Quick Start. Guided Setup is skippable, and untitled stories use the ordinary `Untitled Adventure` display default. Existing optional character features remain separate staging scope.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Flexible optional character fields, freeform descriptions, no mandatory RPG classes/stats, skippable character creation, and a shared underlying entity model for players and NPCs. Moved to staging to refine specific behaviour, not to production.
