@@ -33,7 +33,7 @@ Different stories need different narrator behaviour.
 Narration controls steer the model's presentation. They are not authoritative game-state mutations, and they are distinct from provider-level decoding parameters such as temperature and Top-P.
 
 ## Proposed behaviour
-Expose optional narration preferences and a freeform instruction field for each adventure, along with a way to save and apply reusable style presets. Assemble the currently selected preferences into the narrator's instructions for subsequent generation requests, without retroactively altering existing document blocks. Keep story events, equipment, NPC locations and other authoritative state unchanged merely because narration settings are updated.
+Expose optional narration preferences and a freeform instruction field for each adventure, along with a way to save and apply reusable style presets. Assemble the currently selected preferences into the narrator's instructions for subsequent generation requests, without retroactively altering existing document blocks. Keep story events, equipment, character locations and other authoritative state unchanged merely because narration settings are updated.
 
 ## Alternatives and trade-offs
 A single author-note text field is flexible but harder to reuse and discover; dedicated controls are more approachable but can be overly prescriptive. The accepted direction supports both custom writing instructions and configurable options. Their exact UI layout, and whether controls are global defaults, per-adventure defaults, or temporary overrides, remain open.
@@ -47,6 +47,10 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - **Accepted IDEA-0002/0026 interaction rule:** The adventure Settings sidebar's **`Playing As`** selector chooses an existing Lorebook character who acts/speaks in **Do/Say**. Those modes are **disabled without a valid selection**; Story/Continue work regardless of character count or selected identity.
 - **Do/Say actor identity is distinct from narration style.** A third-person narration preference does not change who acts in Do/Say; a selected character does not force Story/Continue to narrate exclusively from that character's perspective. Whether a separate narrator-focus control is useful remains an open UI refinement.
 - Switching `Playing As` does not change recorded inventory, location, status or history; it only changes the actor/speaker of subsequent Do/Say input.
+
+## Narration perspective versus universal character choice
+- **Accepted IDEA-0026:** All characters in the Lorebook are equally eligible for Settings `Playing As`; there is no permanent PC/NPC kind or Playable designation. Temporary choice of Do/Say actor is **separate from prose tense/viewpoint/style**, and does not reclassify, teleport or alter any character's inventory/status.
+- Story and Continue remain actor-independent; narrative perspective can still be story-wide with no character. Exact narrator focus UI remains a future refinement.
 
 ## Dependencies and constraints
 - Depends on the narrator/context builder and generation model integration; the UI and prompt format remain to be refined.
@@ -82,6 +86,7 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - Accepted for staging and refinement only; this does not mean that controls have been implemented or approved for production.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted character-unification dependency:** No PC/NPC or Playable category; any Lorebook character may be used as Do/Say actor, without changing narration-style settings or canonical world state. Staging unchanged.
 - 2026-10-18 — **Accepted Do/Say identity selector dependency:** Settings `Playing As` is an explicit Lorebook-backed actor/speaker control for Do and Say (disabled if unset), separate from prose perspective/tense/style options. Story/Continue remain available characterless. Staging unchanged.
 - 2026-10-18 — **Accepted flexible-character integration:** Narrative perspective/focus may be unset or change among existing characters while zero-character and ensemble-cast adventures remain supported. Focus is a presentation/context choice and not a canonical action, location or inventory transfer. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
