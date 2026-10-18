@@ -57,6 +57,9 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - `Playing As` determines whose Do/Say actions and speech are being provided, **not** an automatic mutation of their location/inventory or a requirement that all narration always follows that person. Independent first/second/third-person prose-style preferences still apply, with Story/Continue free to follow other subjects.
 - What visual indicator or transition prose (if any) denotes a cut remains a separate UI/stylistic refinement; **no mandatory switching confirmation** is required.
 
+## Scene cuts when Playing As changes
+- **Accepted:** The next Do/Say after switching `Playing As` follows the selected character at their **existing established location**, however distant from the prior character. Narration may cut directly between scenes; it must not invent travel, teleportation, time lapse or shared location because of selection. `Story` and `Continue` remain independent. Narration tense/style is unchanged by selection.
+
 ## Dependencies and constraints
 - Depends on the narrator/context builder and generation model integration; the UI and prompt format remain to be refined.
 - Model adherence is best-effort; a selected perspective, tone or tense cannot be guaranteed by arbitrary LLMs.
@@ -92,6 +95,7 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - Accepted for staging and refinement only; this does not mean that controls have been implemented or approved for production.
 
 ## Decisions and review history
+- 2026-10-18 — **Explicit user acceptance:** `Playing As` switching is a narrative cut; the next Do/Say follows the chosen character in their existing circumstances. Switching causes no physical travel, time passage or item movement. Staging only.
 - 2026-10-18 — **User-approved viewpoint cut:** Changing `Playing As` makes next Do/Say follow that character where they already are, even across distant scenes. No travel/teleportation/time lapse, actor confirmation, or world-state transfer results from selection. Story/Continue and narration-style settings remain independent. Staging only.
 - 2026-10-18 — **Accepted character-unification dependency:** No PC/NPC or Playable category; any Lorebook character may be used as Do/Say actor, without changing narration-style settings or canonical world state. Staging unchanged.
 - 2026-10-18 — **Accepted Do/Say identity selector dependency:** Settings `Playing As` is an explicit Lorebook-backed actor/speaker control for Do and Say (disabled if unset), separate from prose perspective/tense/style options. Story/Continue remain available characterless. Staging unchanged.
