@@ -80,6 +80,11 @@ A combination of entry types and editable freeform lore supports both structured
 - **No implied facts:** Do not use a display label, unknown name or freeform phrasing to silently fill structured fields, promote rumours or manufacture lore. Any later manual correction is deliberate; no compulsory AI contradiction detector or resolution interface is required.
 
 
+## Template-derived Lorebook entries are copied per adventure
+- **Accepted IDEA-0008 Option A (2026-10-18):** Instantiating a reusable scenario template creates **independent Lorebook entity records for each new adventure**, including relevant characters, locations, factions, items and relationships supplied by that template when compatible. These are **not live linked** to the source template or to Lorebooks belonging to other adventures.
+- **References and certainty:** Preserve source-supported facts, unknown values, uncertain claims and entity relationships appropriately within each new copy. Stable IDs continue identifying entities **inside an adventure**, but instantiated copies must be distinct and internally linked to that adventure, not pointing to another adventure's mutable records. A copy of an unnamed character still has an unknown canonical name; copying does not require invented names, backgrounds or other details.
+- **No cross-instance propagation:** If the template later changes or is removed, existing adventure Lorebooks retain their independent accepted content. Editing one adventure's lore doesn't change template records or siblings. This does not make automatic template updates, shared live lore, external Lorebook import/export or automatic cross-adventure context inclusion mandatory.
+
 ## Dependencies and constraints
 - Lorebook entries should refer to authoritative entities in the future character, location and inventory systems; this idea does not approve those separate features by itself.
 - Dynamic state such as current location, ownership, inventory, alive/dead state and relationships must not be treated as immutable Lorebook fact.
@@ -97,6 +102,8 @@ A combination of entry types and editable freeform lore supports both structured
 - What precedence should manual inclusion and exclusion take if optional automatic Lorebook activation or RAG is accepted later?
 
 ## Draft acceptance criteria
+- [ ] Reusing one scenario template yields different adventures with **separately owned Lorebook entries** and coherently scoped relationships; no changes to the template or other instantiated adventures mutate existing entries.
+- [ ] Template instantiation preserves known/unknown/claimed character facts and doesn't manufacture missing names, relations or background merely to populate an entity copy.
 - [ ] Players can save a character's freeform description alongside individually valid but semantically inconsistent structured attributes **without a semantic conflict popup or automatic field/prose rewriting**.
 - [ ] Structural references and authoritative world-state/commit checks remain enforced; this exception does not weaken AI-generated operation validation or erase known-versus-unknown distinctions.
 - [ ] Lorebook supports a character with no recorded canonical name, identified by stable ID and a descriptive/neutral display label that does not assert unestablished facts.
@@ -128,6 +135,7 @@ A combination of entry types and editable freeform lore supports both structured
 - Accepted into **staging for refinement only**. Automatic embeddings-based RAG retrieval is intentionally recorded separately as a fresh unaccepted Inbox candidate.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0008 Lorebook alignment:** Template lore is copied independently into each new adventure, with correctly scoped entities and references, preserved uncertainty and no live cross-instance links. Editing a source template or sibling adventure never changes instantiated Lorebook state. Staging only.
 - 2026-10-18 — **IDEA-0007 user decision dependency:** Manual freeform character descriptions do not require automated semantic comparison with typed Lorebook fields; neither representation silently overrides or corrects the other. Existing stable IDs, schema checks, source-grounded narrative extraction and canonical gameplay validation remain in force. Staging only.
 - 2026-10-18 — **Accepted IDEA-0007 Option B:** Lorebook characters can have unknown proper names and only a stable identity; descriptive or generic UI labels are noncanonical name substitutes for display, not invented facts. Later grounded name revelation updates the same entity, unverified names stay uncertain, and all entries remain selectable as `Playing As`. Staging only.
 - 2026-10-18 — **Explicit user acceptance of Lorebook drawer:** From the icon left of the story input, open the Lorebook in a **resizable LEFT-side drawer** (expandable for detailed editing). Opening animation is **two-stage: leading sidebar first, full drawer from behind it second**. Closing uses **simple fade-out**, not reversed opening. Preserve reduced-motion accessibility, editable Lorebook semantics and the separate Info/Settings panel. Staging only; exact timing and dimensions remain open.
