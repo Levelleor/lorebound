@@ -27,7 +27,7 @@ A long-running interactive story may combine prose editing, travel maps, charact
 - **Adjustable presentation:** Permit appropriately configurable story/map/sheet panels and relevant layout preferences, while deferring deep window-management features such as unrestricted docking, many preset workspaces and exhaustive shortcut remapping for further prioritisation.
 - **Visibility follows enabled features:** Offer relevant panels and actions for the gameplay systems or modules actually enabled in an adventure. Do not clutter a story with irrelevant empty panels from disabled optional mechanics, and do not let UI visibility bypass capability permissions or validation.
 - **UI preferences are not canonical gameplay events:** Store layout, panel visibility and readability preferences separately from the authoritative narrative/event/state timeline. Changing font size or panel arrangement must never generate a gameplay mutation or affect historical reconstruction.
-- **Shared experience across distributions:** Preserve an accessible, keyboard-usable, lightweight interface with responsive behaviour in both the Wails v3 desktop application and its headless localhost browser experience. Do not design for native-window controls alone.
+- **Shared experience across distributions:** Preserve an accessible, keyboard-usable, lightweight interface with responsive behaviour in the Wails v3 headless localhost application's normal-browser UI, without a native WebView. Do not design for native-window controls alone.
 - **Refinement remains open:** Precise desktop/mobile compositions, shortcuts, focus and editor interaction requirements, panel resizing/docking details, preference storage/location, accessibility evaluation criteria and timing of advanced customisations require later design and verification. Acceptance to staging is not implementation approval.
 
 ## Proposed behaviour
@@ -39,7 +39,7 @@ Give players a primary readable story workspace and clear ways to open relevant 
 - **Fixed compact layout for MVP:** Could simplify initial delivery but must still be accessible, responsive and practical for the accepted major views. An inflexible layout that prevents useful navigation or readable story work does not meet the accepted baseline.
 
 ## Dependencies and constraints
-- [[Localhost Startup and Offline Mode]] (IDEA-0053) targets one statically built SvelteKit UI in Wails v3 desktop and headless Go server/browser modes. Keyboard navigation and responsive rendering must work in both.
+- [[Localhost Startup and Offline Mode]] (IDEA-0053) targets one statically built SvelteKit UI in Wails v3 headless Go server/normal-browser mode. Keyboard navigation and responsive rendering must work in both.
 - [[Native Gameplay Capability Registry]] (IDEA-0047) and [[Optional RPG Mechanics Plugins]] (IDEA-0055) provide optional enabled operations/systems. Panels and direct controls must reflect enabled applicable capabilities and their permissions.
 - [[Snapshots and Incremental State Rebuild]] (IDEA-0042) and [[Event-Sourced World History]] (IDEA-0039) require complete canonical adventure history. Purely presentational layout preferences must not be recorded as in-world state changes or affect replay.
 - The accepted direction does not make skipped [[Text-to-Speech Story Playback]] (IDEA-0056) a dependency. Baseline accessibility must be addressed without presuming TTS.
@@ -61,7 +61,7 @@ Give players a primary readable story workspace and clear ways to open relevant 
 - [ ] Players can reach story, map and relevant character/status views using responsive navigation appropriate to the available space.
 - [ ] Supported panel visibility or layout adjustments can be made without mutating canonical story/world state or generating gameplay events.
 - [ ] Only relevant panels and operations for enabled systems are offered, while disabled features do not clutter the interface or bypass permissions.
-- [ ] Keyboard accessibility, core responsive behaviour and a smooth story-editing experience work in Wails v3 desktop and headless localhost browser modes.
+- [ ] Keyboard accessibility, core responsive behaviour and a smooth story-editing experience work in the normal browser using Wails v3 headless localhost.
 - [ ] Advanced docking, extensive shortcut remapping and preset systems are optional follow-on features rather than mandatory first-release requirements.
 - [ ] Exact layout breakpoints, shortcuts, preferences persistence model and accessibility verification standards are resolved during refinement.
 
@@ -77,5 +77,6 @@ Give players a primary readable story workspace and clear ways to open relevant 
 - This note is an **accepted staging direction requiring refinement**. It is neither production-approved nor an implemented accessibility claim.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted runtime correction alignment:** Replaces the dual desktop/headless Wails direction with **Wails v3 headless localhost Go server only**, used through the normal browser, distributed as Windows/macOS/Linux server executables. No native WebView or separate npm player runtime. Docker is the separate unaccepted candidate [[Optional Docker Distribution]] (IDEA-0065). Remaining design specifics stay in staging.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-17 — **Explicitly accepted by the requesting user:** Accessible, keyboard-usable and responsive interface foundations with clear controls, readable text, focus management and practical navigation among story, map and character sheets on desktop and smaller screens. Support adjustable panels and layout preferences; keep advanced docking, exhaustive shortcuts and presets for refinement or later phases. Show panels based on enabled gameplay systems and persist preferences separately from canonical story/world history. Leave exact layouts, shortcut mappings, preference persistence and accessibility criteria open. Moved to staging, not production.
