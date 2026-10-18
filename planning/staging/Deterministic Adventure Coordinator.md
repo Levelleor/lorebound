@@ -89,6 +89,10 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - **User-accepted:** The next Do/Say after selecting a different character uses that character's **own established location and circumstances**, even if the last actor is far away. The coordinator must not reuse the previous actor's scene.
 - Changing the selection is **not a world event, travel, elapsed time, inventory transfer or story turn**. Real actions proposed during the subsequent Do/Say are validated normally. An unknown location remains unknown; Story/Continue remain unrestricted by `Playing As`.
 
+## TypeScript gameplay is part of the Lore Engine
+- **Accepted IDEA-0061 clarification:** The **Lore Engine** names Lorebound's conceptual **non-UI functionality**, including this deterministic **browser-side TypeScript coordinator**, validation, canonical state operations and the surrounding capability/context logic, **plus supporting Wails/Go platform and persistence services**. The term supersedes `Lorebound Backend`; it does not imply that this coordinator moves out of the frontend/browser application.
+- **Runtime separation remains authoritative:** The **Svelte UI** and **TypeScript Lore Engine gameplay modules** coexist in the same normal-browser runtime. The Wails v3 headless Go server, as the Lore Engine's supporting host/persistence component, enforces filesystem/SQLite transactions and service safety but does **not** become another coordinator or rules interpreter. The exact module/folder and service API names remain open.
+
 ## Dependencies and constraints
 - Works with accepted [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and [[One-Model Task Routing]] (IDEA-0017); avoid a mandatory stack of simultaneously loaded models.
 - All accepted persistent changes must be recorded compatibly with [[Event-Sourced World History]] (IDEA-0039) and the complete incremental reconstruction requirement in [[Snapshots and Incremental State Rebuild]] (IDEA-0042).
@@ -111,6 +115,7 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - How should cancellations, timeouts, network/provider failures and recovery preserve exactly-once or idempotent outcomes?
 
 ## Draft acceptance criteria
+- [ ] The coordinator remains browser-side TypeScript under the conceptual **Lore Engine** umbrella and does not acquire a second Go gameplay implementation or independent engine process simply because the non-UI code is named.
 - [ ] Switching `Playing As` cuts the next Do/Say to the chosen actor's existing scene with no automatic movement, time or inventory event.
 - [ ] The coordinator binds the selected character and their established location as context for the next Do/Say, even if the previous actor is elsewhere; changing selection alone produces **no canonical events or history changes**.
 - [ ] A subsequent Do/Say movement/action passes normal validation independently; a viewpoint switch itself is never treated as travel or character teleportation.- [ ] A deterministic non-LLM TypeScript coordinator drives turn orchestration rather than delegating authoritative workflow control to an agent.
@@ -135,6 +140,7 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - This is an accepted **unrefined direction**, not approval for production or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0061 terminology alignment:** Browser-side TypeScript deterministic coordination belongs to the **Lore Engine**, which collectively names Lorebound's non-UI gameplay and supporting Go/platform/persistence functions. User replaced Lorebound Backend with Lore Engine. No separate process or change in coordinator authority. Staging only.
 - 2026-10-18 — **Explicit user acceptance:** Switching between distant `Playing As` characters is a narrative cut for the next Do/Say, never travel or world-state mutation. Staging only.
 - 2026-10-18 — **Explicit user acceptance of character cuts:** A `Playing As` change is not a gameplay action. The next Do/Say follows the selected character at their known location/context; no auto travel, teleportation, elapsed time or transfer occurs, while actual subsequent actions still validate. Story/Continue stay independent. Staging only.
 - 2026-10-18 — **User accepted one universal character kind:** The coordinator has no PC/NPC or Playable entity eligibility restrictions. Any Lorebook character may be selected for Do/Say. Historical ambiguous Do/Say clarification proposal superseded by the explicit selector gate; staging only.
