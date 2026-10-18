@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Lorebound Vision Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -48,6 +48,11 @@ Full world snapshots each turn can be simpler for point-in-time reads but duplic
 - The new adventure must have an independent identity, with event/entity/turn/revision references coherent **inside its own copy** and no mutable coupling to the original. Exact internal identifier remapping remains a schema design detail.
 - Pending unsubmitted player input and unconfirmed prose-edit drafts are not copied. Duplication performs no new AI inference, historical event reenactment or external side effects.
 
+## Committed event history supports forks from arbitrary turns
+- **Accepted IDEA-0011 Option A (2026-10-18):** Every committed source turn is an eligible **fork boundary**. A fork is a separate adventure with the **complete accepted ordered event prefix** and compatible canonical baseline, source-prose/revision links and material needed to reconstruct world state **through and including** that turn. Event/state changes committed **after** the boundary remain only in the original adventure and may not leak into the fork's starting state.
+- **Independent provenance and ownership:** Preserve internally coherent source turn, event, revision and entity references within the fork, with a distinct adventure identity and no shared mutable events/state. A source identifier may be noted as optional provenance metadata without making the new adventure dependent on later edits, deletions or histories of the original. Exact ID copying/remapping and lineage metadata are implementation details.
+- **No checkpoint restriction:** Reconstruct canonical state from the accepted baseline and incremental log, with valid optional snapshots only as acceleration, not as required fork locations. Fork creation is consistent and atomic under SQLite expected-version checks, so a concurrent source commit cannot yield a mixed-prefix or half-copied fork. Pending drafts, incomplete proposals and rejected events are excluded.
+
 ## Dependencies and constraints
 - Integrates with accepted persistent character entities (IDEA-0026), inventory and items (IDEA-0029), locations, travel and presence (IDEA-0033 through IDEA-0036), and mutable environmental state ([[Persistent Location State and Travel Interactions]], IDEA-0038).
 - Uses accepted generation/validation boundaries (IDEA-0018): an AI-produced description or proposed operation must not become an authoritative event before validation.
@@ -68,6 +73,8 @@ Full world snapshots each turn can be simpler for point-in-time reads but duplic
 - What audit information is useful while avoiding unnecessary sensitive or excessive generation logs?
 
 ## Draft acceptance criteria
+- [ ] For a chosen committed Turn N, an independent fork can replay the correct event sequence and state up to N, excluding all later effects and preserving accepted source-turn/revision provenance.
+- [ ] Forking never requires a special snapshot, shares no mutable event/state with source, and cannot commit a partial/mixed-version fork under concurrent modifications.
 - [ ] Every accepted world-state change can be represented as an ordered committed event with source turn, relevant entity IDs, type, validation provenance and revision reference.
 - [ ] Reapplying the same valid event history through deterministic reducers yields the same authoritative world state.
 - [ ] Rejected, failed or merely proposed changes do not affect the active accepted world-state projection.
@@ -89,6 +96,7 @@ Full world snapshots each turn can be simpler for point-in-time reads but duplic
 - This is **accepted for refinement**, not approved for production or implemented; event invalidation, branching and migration remain open.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0011 event-history dependency:** An arbitrary committed-turn fork copies/reconstructs the full accepted event/source-provenance prefix through that turn into an independent adventure, omits later source events, and does not require checkpoints or changes to original history. Staging only.
 - 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
