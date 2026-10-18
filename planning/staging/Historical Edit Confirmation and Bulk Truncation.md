@@ -58,6 +58,11 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - **Dependent events:** Because world-event provenance identifies an **accepted source turn/passage revision**, any derived events from the revised passage may require review/invalidation/replay; do not assume events from the unchanged paragraphs automatically remain valid solely because their text was untouched. Exact targeted optimisation remains optional.
 - **Other edit semantics remain open:** The handling of **whole-passage** splits, merges, moving content to another turn, and downstream provenance reassignment needs future refinement. Existing stale-version protection, latest-only draft autosave, explicit historical-edit choices and no automatic downstream prose regeneration remain unchanged.
 
+## Confirm historical edits as passage revisions
+- **User accepted IDEA-0003 Option A (2026-10-18):** Editing any paragraphs inside an earlier logical story turn/passage remains a **noncanonical passage-scoped draft**. The required **Keep Later Turns** or **Delete All After Point** confirmation creates the next **accepted passage revision**, not individual paragraph revisions.
+- Historical state reconciliation uses **source turn/passage ID and accepted revision** to identify potentially affected world events. A changed paragraph can require reconsidering all dependent events from that passage; no paragraph-specific stable IDs are needed.
+- Existing latest-only draft autosaving, expected-version conflict checks, coherent all-or-nothing SQLite writes, and no automatic downstream prose rewriting remain unchanged. Identity rules for moving/splitting/merging **whole passages** remain open.
+
 ## Dependencies and constraints
 - Source passages have stable IDs and versions through accepted [[Versioned Text Blocks and Revision IDs]] (IDEA-0040), so historical edits can identify affected state-changing source revisions.
 - World-state projections and events follow accepted [[Event-Sourced World History]] (IDEA-0039), with active versus obsolete historical effects kept distinct.
@@ -78,6 +83,7 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - How should selected history branches and snapshots affect recovery without preapproving those separate features?
 
 ## Draft acceptance criteria
+- [ ] Confirming a paragraph edit to an earlier passage creates a **new canonical passage revision** after Keep/Delete selection and reconciles dependent events; no paragraph ID or revision history is required.
 - [ ] Editing one paragraph of an earlier committed passage does not create paragraph-specific canonical IDs. Confirmed edits create a **new passage revision** after the chosen Keep/Delete gate, with consistent corresponding state replay.
 - [ ] Rejecting or discarding a draft leaves the accepted passage revision and all dependent canonical events unchanged; passage edits cannot bypass stale-version atomicity.
 - [ ] Autosaving an unconfirmed historical prose edit from another tab may **replace the shared saved draft** for that same target; earlier drafts need not be recoverable or conflict-gated, and other draft targets remain distinct.
@@ -107,6 +113,7 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - Staging is not production approval or evidence of any implementation. Truncation recovery, reconciliation and detailed UX require refinement.
 
 ## Decisions and review history
+- 2026-10-18 — **IDEA-0003 Option A accepted:** Historical prose revisions use **logical turn/passage-level identities**, not per-paragraph canonical IDs. Continue to confirm and reconcile state for a revised passage; whole-passage split/move/merge details remain open. Staging only.
 - 2026-10-18 — **Accepted IDEA-0003 granular-edit dependency:** Story text and provenance are versioned by **turn/passage**, not paragraph. Historical paragraph edits remain noncanonical until confirmation, then update a passage revision with appropriate event/state reconciliation. Whole-passage split/merge policy remains open. Staging only.
 - 2026-10-18 — **User accepted draft Option B for all player-authored drafts:** Historical prose-edit drafts use **one latest saved value per editing target**, freely overwritten by a later successful autosave even across tabs, with no retained older drafts or conflict notification required. This supersedes the older draft nonclobber condition; **historical edit confirmation and expected-version checked canonical/truncation transactions are unchanged**. Staging only.
 - 2026-10-18 — **Accepted IDEA-0005 multi-tab rule:** All historical edit confirmations depend on the expected authoritative version. Conflicting older Keep Later Turns or Delete All After Point requests reject atomically, preserving newer history and the editor's unconfirmed draft. No exclusive edit lock or automatic conflict merge. Staging only.
