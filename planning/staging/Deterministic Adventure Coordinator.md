@@ -93,6 +93,11 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - **Accepted IDEA-0061 clarification:** The **Lore Engine** names Lorebound's conceptual **non-UI functionality**, including this deterministic **browser-side TypeScript coordinator**, validation, canonical state operations and the surrounding capability/context logic, **plus supporting Wails/Go platform and persistence services**. The term supersedes `Lorebound Backend`; it does not imply that this coordinator moves out of the frontend/browser application.
 - **Runtime separation remains authoritative:** The **Svelte UI** and **TypeScript Lore Engine gameplay modules** coexist in the same normal-browser runtime. The Wails v3 headless Go server, as the Lore Engine's supporting host/persistence component, enforces filesystem/SQLite transactions and service safety but does **not** become another coordinator or rules interpreter. The exact module/folder and service API names remain open.
 
+## Reject stale adventure commits across concurrent browser tabs
+- **Explicit accepted IDEA-0005 refinement (2026-10-18):** Different tabs may each prepare actions, model requests, prose revisions or world-state proposals for the **same adventure** based on an observed authoritative version. The TypeScript Lore Engine coordinator must supply that expected version with its validated proposed atomic commit to Go/SQLite. **Go checks the current version and commits only on match**, otherwise returns a **stale-state conflict** without applying any text/world changes, even if the browser validation previously succeeded.
+- When another tab commits while a request is generating/validating, the losing result remains **provisional** and may not be auto-appended, automatically revalidated as if current, or silently merged. Keep the player's input and editable draft recoverable and surface a clear chance to inspect the latest adventure and decide whether to reapply/retry. Exact resynchronisation and draft display design remain open.
+- Concurrent editor tabs are **not made read-only** merely because a second tab has the adventure open; these checks prevent conflicting outcomes and complement ordinary backend transaction authority. Noncanonical draft autosave has its own no-silent-clobber safeguards under IDEA-0005/0051.
+
 ## Dependencies and constraints
 - Works with accepted [[Configurable Generation Pipeline Strategies]] (IDEA-0018) and [[One-Model Task Routing]] (IDEA-0017); avoid a mandatory stack of simultaneously loaded models.
 - All accepted persistent changes must be recorded compatibly with [[Event-Sourced World History]] (IDEA-0039) and the complete incremental reconstruction requirement in [[Snapshots and Incremental State Rebuild]] (IDEA-0042).
@@ -115,6 +120,8 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - How should cancellations, timeouts, network/provider failures and recovery preserve exactly-once or idempotent outcomes?
 
 ## Draft acceptance criteria
+- [ ] Two browser coordinators using the same expected adventure version cannot both commit incompatible changes: the stale commit is rejected by the Go/SQLite transaction boundary, without a partially committed narrative or state.
+- [ ] A failed stale commit preserves last accepted canon and the rejected tab's player input/drafts for intentional resolution, not silent re-generation or merge.
 - [ ] The coordinator remains browser-side TypeScript under the conceptual **Lore Engine** umbrella and does not acquire a second Go gameplay implementation or independent engine process simply because the non-UI code is named.
 - [ ] Switching `Playing As` cuts the next Do/Say to the chosen actor's existing scene with no automatic movement, time or inventory event.
 - [ ] The coordinator binds the selected character and their established location as context for the next Do/Say, even if the previous actor is elsewhere; changing selection alone produces **no canonical events or history changes**.
@@ -140,6 +147,7 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - This is an accepted **unrefined direction**, not approval for production or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0005 multi-tab dependency:** Client-side TypeScript coordinator commits include their authoritative expected adventure version; Go/SQLite atomically rejects stale commits when another tab has advanced the history. No exclusive edit lock, automatic merge or loss of local drafts. Staging only.
 - 2026-10-18 — **Accepted IDEA-0061 terminology alignment:** Browser-side TypeScript deterministic coordination belongs to the **Lore Engine**, which collectively names Lorebound's non-UI gameplay and supporting Go/platform/persistence functions. User replaced Lorebound Backend with Lore Engine. No separate process or change in coordinator authority. Staging only.
 - 2026-10-18 — **Explicit user acceptance:** Switching between distant `Playing As` characters is a narrative cut for the next Do/Say, never travel or world-state mutation. Staging only.
 - 2026-10-18 — **Explicit user acceptance of character cuts:** A `Playing As` change is not a gameplay action. The next Do/Say follows the selected character at their known location/context; no auto travel, teleportation, elapsed time or transfer occurs, while actual subsequent actions still validate. Story/Continue stay independent. Staging only.
