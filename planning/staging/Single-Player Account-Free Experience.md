@@ -53,6 +53,11 @@ On a supported desktop operating system, a player opens Lorebound, selects or cr
 - **Accepted IDEA-0053 startup refinement (2026-10-18):** Single-player/account-free means the packaged app exposes **one current running Lorebound server instance** for the active application/library, not that each executable click creates another independent server. Re-launching when already running opens/focuses its existing local-browser address. This keeps the ordinary one-app experience and reduces conflicting database access without adding user accounts, multiplayer, a second storage backend or a native window.
 - Multiple tabs can still connect to that same running instance; accepted expected-revision, atomic SQLite write and browser-origin safety rules remain in force. Exact process handoff/recovery belongs to IDEA-0053.
 
+## Browser closure is not Lorebound application quit
+- **Accepted IDEA-0053 server lifecycle:** Lorebound remains a single-user local application served by one **persistent headless localhost Go process**. Closing the last browser tab or entire browser does **not** shut down the application. The server stays running until the user deliberately **quits Lorebound** or the OS ends the process.
+- Re-launching Lorebound while the server remains active **reopens/focuses its existing browser URL** without starting another competing server or changing the database. No Lorebound account, system tray requirement, multiplayer feature, always-running background service on OS login or automatic restart is implied.
+- Browser-owned unfinished AI generation and unsaved draft keystrokes are not guaranteed to survive tab closure; accepted persisted drafts/committed adventure history remain managed by existing SQLite rules. Exact explicit Quit access belongs to IDEA-0053.
+
 ## Dependencies and constraints
 - IDEA-0053 now selects **Wails v3 headless localhost Go server only**, with the SvelteKit/TypeScript UI and gameplay logic in the normal browser; IDEA-0051 now selects **Go-managed filesystem SQLite** for canonical adventures. IDEA-0001 establishes account-free/offline requirements but does not independently prescribe these implementation choices.
 - IDEA-0013 specifies local-model connectivity. The app must be usable offline once installed with local assets and a functioning compatible model, but bundling/downloading/running models inside the application is not approved by this idea.
@@ -61,6 +66,8 @@ On a supported desktop operating system, a player opens Lorebound, selects or cr
 - Account-free local saves are not automatically private from other users of the same OS/browser profile.
 
 ## Draft acceptance criteria
+- [ ] The player may close every Lorebound browser tab and later reopen the same still-running app via its executable without losing canonical adventure data or starting another server.
+- [ ] Browser close does not equal application Quit; only deliberate Quit or OS/process shutdown stops the running instance.
 - [ ] Re-launching a running Lorebound executable reuses the same localhost server and browser address without starting a second competing process or requiring a Lorebound account.
 - [ ] With **no configured AI profile**, the app starts and the player can create/resume adventures, manually edit/write story prose and Lorebook/character records, save and use other supported local operations **without AI connection setup**.
 - [ ] When an **AI-only operation** is requested without a suitable configured model, the UI explains the requirement, offers a usable route to provider/model configuration, and does not imply that generation succeeded.
@@ -86,6 +93,7 @@ On a supported desktop operating system, a player opens Lorebound, selects or cr
 - The direction is accepted for **staging/refinement**. The 2026-10-17 refinement confirms offline-capable local play on Windows/macOS/Linux and intentionally removes browser-only persistence from this idea. Runtime-specific details remain for related ideas. No production approval or implemented functionality is claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0053 Option A:** Browser tabs/windows may close while Lorebound's one headless server keeps running, until explicit Quit or OS shutdown. Relaunching reconnects; no auto-exit on last-tab close. Staging unchanged.
 - 2026-10-18 — **Accepted IDEA-0053 integration:** User chose Option A: subsequent executable launches should reuse the existing Lorebound server and bring/open its browser address, never create a second competing server against the same library. Multiple browser tabs remain compatible. Staging only.
 - 2026-10-18 — **Explicit user selection of Option A, clarified:** Lorebound does **not** require any AI configuration or working connection to launch or use manual adventure/Lorebook/database features. **Only calls requiring an AI API** depend on provider availability: if a suitable model is configured, **attempt the call** and handle real errors; if none is configured, **indicate this clearly and guide the player to connection/model setup**. Failed AI operations cannot damage accepted story/world state or lock out unrelated functions. Separate local-offline model support remains as previously accepted. No implementation/production approval.
 - 2026-10-17 — **Accepted runtime correction alignment:** Replaces the dual desktop/headless Wails direction with **Wails v3 headless localhost Go server only**, used through the normal browser, distributed as Windows/macOS/Linux server executables. No native WebView or separate npm player runtime. Docker is the separate unaccepted candidate [[Optional Docker Distribution]] (IDEA-0065). Remaining design specifics stay in staging.
