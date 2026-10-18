@@ -42,6 +42,11 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - In both headless localhost/normal-browser mode, the shared client-side TypeScript engine tracks block/revision provenance; Go atomically commits validated revisions and related accepted events, rejecting stale revisions.
 - Export/import must preserve precise revision ancestry and identifiers; choosing the archive format remains a separate storage/backup refinement.
 
+## Draft autosave and accepted revisions
+- Player-authored, unfinished prose is autosaved after a brief idle pause into the **same SQLite library**, but is **noncanonical**. A saved draft is not an accepted revision, source of event provenance, or reason to rebuild world state.
+- Only confirmation creates a canonical text revision, atomically with accepted related state changes. Draft IDs/cleanup rules remain implementation details.
+- On return to the browser/editor, restore the last successfully autosaved draft; exact debounce interval and conflict handling remain open.
+
 ## Dependencies and constraints
 - Works with accepted [[Event-Sourced World History]] (IDEA-0039), whose event records need stable source turn and revision references.
 - Historical editing confirmation and deletion UX belong to separate unaccepted [[Historical Edit Confirmation and Bulk Truncation]] (IDEA-0041). Checkpoint design and undo safety are independently unaccepted (IDEA-0042, IDEA-0043).
@@ -82,6 +87,7 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - Design remains unrefined, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
