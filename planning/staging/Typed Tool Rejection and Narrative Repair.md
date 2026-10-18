@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[World Map and Location Rules Brainstorm]]"]
@@ -38,6 +38,11 @@ Validate typed candidate operations against current authoritative state and the 
 ## Alternatives and trade-offs
 A failed operation does not always require discarding a whole story turn: describing the failed attempt may be more natural, cheaper and more faithful to player intent. A draft that already asserted impossible success may instead need repair before finalisation. Attempting several revisions can increase cost and latency, while immediately aborting may be less fluid. Select reasonable bounded fallback behaviour in refinement. Structured errors support code-based handling but require consistent taxonomy and careful suppression of hidden-state spoilers; accessible alternatives should only be suggested when grounded and permitted.
 
+## Story-authorial outcomes are not ordinary invalid gameplay attempts
+- **Accepted IDEA-0002 Option B (2026-10-18):** Fictionally impossible **Do/Say attempts**, Continue narration and unsupported AI proposals still receive existing typed rule rejections and bounded narrative repair. But an **explicit player-authored Story assertion** is not a normal gameplay attempt: the coordinator may allow its authored outcome by an **authorial override of in-fiction restrictions**. Do not repair or veto the user's declared outcome merely because fictional adjacency, ability or other optional gameplay rules would reject an equivalent Do attempt.
+- **Distinguish genuine errors:** Data corruption, unresolved entity references, invalid schema/unique placement, stale adventure versions and other technical/integrity failures **are not** authorially overrideable. Do not manufacture an in-world workaround just to make structured state seem valid. If a Story-authored outcome cannot be safely represented, report it truthfully without partial canonical commit. Exact focused recovery UX remains open.
+- **Provenance and semantics:** Once a supported Story-authorial event is accepted and safely committed with its prose, it is not an 'invalid operation' for the purposes of rejection/repair. The event history should distinguish the player's declared authority from a mechanically permitted Do/Say outcome. The AI may narrate within that accepted reality but does not thereby acquire independent permission to invalidate rules.
+
 ## Dependencies and constraints
 - Validated proposal and narration pipelines are governed by accepted [[Configurable Generation Pipeline Strategies]] (IDEA-0018), [[Deterministic Adventure Coordinator]] (IDEA-0044) and [[LLM State Interpreter and Proposed Operations]] (IDEA-0045).
 - Accepted state and story turns remain coherent, with all persistent accepted mutations recorded in the complete incremental history (IDEA-0039 and IDEA-0042).
@@ -60,6 +65,8 @@ A failed operation does not always require discarding a whole story turn: descri
 - How can validation- and repair-loop behaviour be tested across different configured generation pipelines and model sizes?
 
 ## Draft acceptance criteria
+- [ ] A Story-authored extraordinary change is not auto-rejected/repaired solely as fictional rule violation, while an equivalent Do attempted change can still be rejected and faithfully narrated as unsuccessful.
+- [ ] Rejection and repair never bypass typed/identifier, storage, concurrent version or canonical atomicity checks, and AI-created additions never inherit player Story authority.
 - [ ] Deterministic validators return structured typed rejection reasons for invalid world-state or tool operations.
 - [ ] Where reliably known, valid alternatives reflect the actual current accessible world and enabled rules without invented routes or hidden spoilers.
 - [ ] A rejected action can be represented as an in-story failed attempt without committing an impossible world-state change.
@@ -82,5 +89,6 @@ A failed operation does not always require discarding a whole story turn: descri
 - This is an accepted but **unrefined** planning direction, not production approval or an implemented feature.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0002 interaction:** The existing typed rejection/repair path still handles impossible gameplay attempts, but explicit player-authored Story declarations may override ordinary fictional restrictions instead of being rejected. Technical integrity and version/safe commit checks remain non-negotiable; the AI does not get independent override authority. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Structured rejection reasons for invalid proposed world-state or tool operations; known permissible/reachable alternatives; in-story failures or bounded narrative repair of inconsistent drafts; no invalid operations or contradictory final prose; retain coherent prior state if repair fails. Rejection schemas, retry limits, fallback handling and player-facing presentation remain open. Moved to staging for refinement, not production.
