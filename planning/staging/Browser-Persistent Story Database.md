@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Local First Storage and Deployment Brainstorm]]", "[[Story Editing and Event Timeline Brainstorm]]"]
@@ -58,6 +58,11 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - Ensure coherent internal IDs and references in the duplicate, with no mutable records or dependencies unintentionally shared with its source. Whether scoped IDs can be retained or need remapping is a schema detail, not a new acceptance gate.
 - Duplicate as one coherent database operation or transaction, so failures do not create half-copied adventures. Both copies can evolve independently. This is **not** file export/import; the only data-transfer functions remain full SQLite snapshot Backup Database/Restore Database.
 
+## Single-instance ownership of the active SQLite library
+- **Explicit IDEA-0053 user acceptance (2026-10-18):** Lorebound's executable uses a **single running headless server instance for its active application/library**. A second executable launch connects to/reopens the first server's browser address instead of creating a second competing Go server against the same SQLite file. This is independent of the already accepted one-file library architecture and does not create a library-manager feature.
+- **Distinct processes versus browser clients:** Multiple browser windows/tabs may access **one** server; Go/SQLite must still enforce expected revision checks, transaction boundaries and write conflict handling. Prevent racing **server processes** that believe they exclusively own the same active library, including rapid double launches. The exact OS-level single-instance claim, connection/handoff and stale-owner recovery remain for runtime implementation.
+- **Failure boundary:** A crashed/defunct previous process may leave a stale owner marker; startup must recover safely rather than accept two live owners or strand the app. Any port/handshake result must be verified as the intended Lorebound server and must not compromise loopback security. Do not silently switch directories, create a new database or auto-migrate data to work around an active-instance conflict.
+
 ## Dependencies and constraints
 - User selected Wails v3 headless localhost only in [[Localhost Startup and Offline Mode]] (IDEA-0053), packaged into Windows/macOS/Linux server executables. The headless mode requires a running Go process but not Node SSR.
 - [[Snapshots and Incremental State Rebuild]] (IDEA-0042), [[Event-Sourced World History]] (IDEA-0039) and [[Versioned Text Blocks and Revision IDs]] (IDEA-0040) require full durable reconstructibility at supported history points.
@@ -77,6 +82,9 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - What benchmarks ensure history replay/queries and large write batches keep the UI responsive?
 
 ## Draft acceptance criteria
+- [ ] A second Lorebound executable launch with an already running server **reuses the active instance**, rather than opening another competing server process connected to its database.
+- [ ] Multiple browser clients of the one headless server remain supported with expected-revision and atomic write protections; simultaneous launches cannot create two active owners of the same library.
+- [ ] Stale/crashed owner state can be handled safely without starting a second conflicting writer, silently selecting a different SQLite file or locking the user out permanently.
 - [ ] The Wails v3 headless localhost server uses filesystem-backed SQLite via Go services and serves the game to normal browsers.
 - [ ] No canonical adventure, text revision or world event requires browser localStorage/IndexedDB to survive closing, restarting or switching views.
 - [ ] All accepted state mutations and story revisions are persisted durably and are fully reconstructible at supported history boundaries.
@@ -103,6 +111,7 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - Earlier staging acceptance had **not** selected an engine or location; these were **subsequently decided** on 2026-10-17: Go-managed filesystem SQLite, one shared library database, and OS per-user app-data default with optional custom data directory. Exact implementation, minimal file/connection safety and production readiness remain open. Automatic library migration and advanced corruption recovery are not selected.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0053 single-instance startup dependency:** A second executable launch reuses the running headless server/its URL, rather than opening a competing server on the same SQLite database. Multiple browser tabs may still use that server and need revision/transaction safeguards; stale locks and simultaneous launches are implementation details. Staging only.
 - 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
 - 2026-10-17 — **Accepted IDEA-0005 deletion dependency:** A user-confirmed delete permanently and **transactionally** removes a selected adventure and its owned canonical records, histories, drafts and plugin data from the **one shared SQLite database**. No trash, retention or automatic pre-deletion snapshot. Deleting one adventure must never delete unrelated adventures; full-library snapshot restore is the only selected backup recovery route. Staging unchanged.
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
