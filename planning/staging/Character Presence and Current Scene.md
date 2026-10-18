@@ -27,7 +27,7 @@ A character may be mentioned in lore without materialising into the current scen
 - **Remote participation does not imply travel:** A remote character may participate in communication when a suitable method is established (e.g., telephone, radio, magic or other setting-appropriate means). They remain at their actual location or in an unknown/in-transit state; remote speech does not silently move them into the scene. Exact communication permissions and media are not yet specified.
 - **No silent teleportation:** A change in canonical physical character location must arise from an accepted, validated movement or equivalent location-changing event, not incidental narration, a context entry or a character being named.
 - **Unknown stays unknown:** If a character's whereabouts are not recorded, do not default to the player's current room, assume absence from the story/world, or invent a location. A character known to be elsewhere should not be treated as present simply because the exact place isn't displayed.
-- **Separate participation from knowledge:** Characters may be known to the player or relevant to lore without participating in a scene. A character can be a remote participant, nearby observer, or physically co-located NPC without those concepts collapsing into one undifferentiated list.
+- **Separate participation from knowledge:** Characters may be known to the player or relevant to lore without participating in a scene. A character can be a remote participant, nearby observer, or physically co-located character without those concepts collapsing into one undifferentiated list.
 - **Context and UI coherence:** The active scene can identify physical participants and explicitly remote participants while preserving their source location references. Only relevant current presence/state should be included in narration context, subject to [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024).
 - **Refinement boundaries:** Detection of characters within large venues, proximity/line-of-sight, nearby conversations and remote communication mechanics are open. Exact thresholds and whether physical presence alone entails active participation are not preselected.
 - **Travel rules remain independent:** Exact graph adjacency, traversal limitations and route permission rules belong to separately unaccepted [[Configurable Travel Graph Rules]] (IDEA-0035), not to this acceptance.
@@ -73,7 +73,7 @@ Scene membership could be inferred solely from exact shared location IDs, or ref
 - When do hearing, visibility and reachability matter independently of co-location?
 - How should manual corrections, undo or historical changes update the current participant and location lists?
 - When should current physical or remote participants be included in model context, and how should omitted/uncertain presence be shown?
-- How can scene-change and travel events update multiple party members without inadvertently moving absent NPCs?
+- How can scene-change and travel events update multiple party members without inadvertently moving absent characters?
 
 ## Draft acceptance criteria
 - [ ] Each character can reference their current known location by stable location ID or represent transit/unknown state, with no PC/NPC category.
