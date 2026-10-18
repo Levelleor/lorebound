@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Local First Storage and Deployment Brainstorm]]"]
@@ -37,8 +37,13 @@ Provide an adventure library with Create, Resume, Rename, Duplicate, Import, Exp
 ## Alternatives and trade-offs
 Portable JSON archives and SQLite-based export are possibilities for full-fidelity saves; neither is chosen yet. A plain-text or Markdown story export may be offered additionally for reading/sharing, but cannot replace the full playable-state export. Autosave frequency, backup retention and recovery design remain open.
 
+## Architecture integration (2026-10-17)
+- All adventures are durably stored in **Go-managed SQLite on the computer's filesystem** for both Wails v3 desktop and headless browser/localhost delivery. Browser-owned storage is not the source of truth.
+- Save, resume, duplicate, import and export must operate through Wails Go persistence services. The TypeScript frontend sends typed requests and renders outcomes; Go applies atomic database operations.
+- SQLite is the canonical data store and basis for export/import; the precise portable archive or SQLite snapshot format is **not yet decided**. Complete revision/event history, stable IDs, migrations, import validation and credential exclusion remain essential.
+
 ## Dependencies and constraints
-- Depends on browser-local persistence, transaction-safe storage, stable IDs and event/document revision history.
+- Depends on filesystem-backed SQLite via Go, transaction-safe storage, stable IDs and event/document revision history.
 - Duplication must not cause the original and duplicate adventures to share mutable state inadvertently.
 - Saving a narrative turn and its accepted state events must have consistent recovery semantics after interruptions.
 - Export/import must not leak provider credentials, local authentication details or secrets stored in provider profiles.
@@ -76,5 +81,6 @@ Portable JSON archives and SQLite-based export are possibilities for full-fideli
 - Technical export format, import compatibility and recovery details remain open; no implementation or production approval is claimed.
 
 ## Decisions and review history
+- 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user** for staging: multiple independent adventures, autosave, resume, rename, duplicate, import, full-fidelity export, confirmed deletion and no credential export. This acceptance authorises refinement, not production or implementation.
