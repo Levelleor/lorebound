@@ -38,7 +38,7 @@ Expose a reusable connection manager for cloud APIs and user-hosted local endpoi
 Automatic model discovery makes well-supported APIs easier to use but may be unavailable, incomplete or unreliable, especially for custom gateways and local servers. Manual-only configuration is flexible but error-prone. The accepted approach includes **both** optional discovery and manual entry. Precise credential storage technology, defaults, connection test depth and automatic retry policies remain open.
 
 ## Architecture integration (2026-10-17)
-- Provider profiles are consumed by client-side TypeScript AI adapters in both Wails v3 desktop and headless browser modes. Provider credentials and custom headers require explicit secure storage/handling design distinct from SQLite adventure-save data.
+- Provider profiles are consumed by client-side TypeScript AI adapters in the Wails v3 headless localhost server runtime, played through the normal browser. Provider credentials and custom headers require explicit secure storage/handling design distinct from SQLite adventure-save data.
 - A Go service should be considered for privileged credential storage/transport where necessary; browser storage must not become the canonical adventure database. Headless localhost access and multi-tab credential visibility need careful attention.
 
 ## Dependencies and constraints
@@ -79,6 +79,7 @@ Automatic model discovery makes well-supported APIs easier to use but may be una
 - Accepted for staging and refinement only; not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Multiple saved connection profiles, configurable endpoints, credentials and headers, timeout and retry settings, optional model discovery, manual model ID entry, and connection testing. Credentials and other secrets must be excluded from adventure exports. Moved to staging for refinement, not to production.
