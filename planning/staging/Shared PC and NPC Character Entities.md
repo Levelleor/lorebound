@@ -52,7 +52,7 @@ Separate PC and NPC schemas might simplify highly specialised UI but make intera
 - How much NPC detail should be populated lazily, and what prompts or events should cause a new field to be filled?
 - Which minimum fields are necessary to create a character entity, beyond stable ID and identification information?
 - How are missing/unknown versus explicitly none, zero or empty represented in storage, APIs and interface controls?
-- **User resolved Do/Say selection:** Adventures may have zero/one/many characters; the **Settings sidebar** offers `Playing As` from actual Lorebook character entries plus an **Add Character → Lorebook manual entry** route. A nullable selected ID persists as an adventure setting. **No Do/Say per-turn confirmation**; Story/Continue stay enabled. Other narrator focus/perspective UI, and what happens immediately after creating a character, remain for later refinement.
+- **User resolved Do/Say selection and post-creation behaviour:** Adventures may have zero/one/many characters; the **Settings sidebar** offers `Playing As` from actual Lorebook character entries plus an **Add Character → Lorebook manual entry** route. Creating and saving any number of characters **never implicitly sets or replaces `Playing As`**, and should **not automatically navigate away from the Lorebook**. The player explicitly chooses from the list when ready. A nullable selected ID persists as an adventure setting. **No Do/Say per-turn confirmation**; Story/Continue stay enabled. Other narrator focus/perspective UI remains for later refinement.
 - How should character merge, deletion, duplicate detection, identity changes and references be handled?
 - Where do profile text, appearance, relationships, inventory, anatomy, status and location records attach to the shared entity?
 - When should fields be explicitly authored by the player versus inferred as a proposed AI change requiring validation?
@@ -68,6 +68,7 @@ Separate PC and NPC schemas might simplify highly specialised UI but make intera
 - [ ] Switching or clearing character focus does not duplicate, delete or rewrite any character, item placement, equipment or world state.
 - [ ] Do/Say use the selected character as player actor/speaker; Story/Continue can have **zero, one or multiple** grounded actors independent of `Playing As`. No per-turn Do/Say actor confirmation or fabricated protagonist is required.
 - [ ] The Settings sidebar lists existing Lorebook characters and routes **Add Character** to manual Lorebook character creation; missing/deleted selection cannot refer to a nonexistent actor.
+- [ ] **Creating or saving a Lorebook character never changes the selected `Playing As` ID or automatically returns to the story.** Several new characters can be created before the player selects one explicitly.
 - [ ] Authoritative validation prevents proposed character state changes from becoming canonical without the required checks.
 
 ## Refinement checklist
@@ -82,6 +83,7 @@ Separate PC and NPC schemas might simplify highly specialised UI but make intera
 - Staging means accepted for refinement, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Explicit latest refinement:** Adding one or multiple Lorebook characters is independent of `Playing As`. Saving a new character does **not automatically select it, replace an existing choice, or return to the story**; the player explicitly picks their character later. This supersedes the assistant's proposed auto-selection/return shortcut. Staging unchanged.
 - 2026-10-18 — **Latest explicit user choice superseding ambiguous-actor clarification proposal:** A **nullable, per-adventure `Playing As` selection in the Settings sidebar** refers to an existing Lorebook character (chosen from a list; Add Character navigates to manual Lorebook entry). **Do and Say require that selection and use it as their actor/speaker**. Story/Continue need no selection. This refines earlier optional focus/multiple-character acceptance; no obligatory protagonist or global inventory. Staging only.
 - 2026-10-18 — **Explicit user acceptance updating former single-PC-pointer interpretation:** Maintain one universal character entity model, but **no permanent or compulsory protagonist**. Permit zero or many playable characters over an adventure and optional/changeable focus, distinct from the actual actors of a turn. Characterless stories and non-character world events remain valid. Neither player identity nor inventories are stored as a fake default character. Staging only.
 - 2026-10-17 — **Accepted IDEA-0006 minimal fact extraction dependency:** In supported Quick Start openings, register characters and relationships only where **explicitly grounded in accepted narration or player setup**. Preserve missing fields as unknown; don't populate invented biographies, traits, motives, equipment ownership or other unspoken lore. Atomic validated first-turn commit; staging unchanged.
