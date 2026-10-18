@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
@@ -38,6 +38,10 @@ The coordinator invokes a configured LLM interpretation task on a player action,
 
 ## Alternatives and trade-offs
 Native function/tool calling may provide provider-supported structured arguments, but not all locally hosted or role-playing-oriented models reliably support it. Constrained JSON or schema-guided text extraction can work with more providers yet may fail parsing or omit semantic changes. Either approach must pass schema checks and domain validators; correctness of the extracted meaning is a separate quality concern. Reusing one narrator model in successive tasks avoids compulsory multiple simultaneous model loads but may add latency or suffer weaker tool adherence. Dedicated interpreter model routing may be optional when desired, not a mandatory architecture.
+
+## Architecture integration (2026-10-17)
+- Interpretation and structured operation proposal logic run in the shared client-side TypeScript game runtime, not a mandatory Go inference service or Node backend. Model APIs are external and accessed from the frontend when permitted.
+- Proposals remain provisional until TypeScript domain validation and coordinator agreement; Go/Wails writes only complete, revision-consistent transactions into filesystem SQLite and must protect database integrity when used by multiple browser clients.
 
 ## Dependencies and constraints
 - Works under accepted [[Deterministic Adventure Coordinator]] (IDEA-0044): model output is a provisional proposal and cannot mutate canonical state without deterministic validation and coherent finalisation.
@@ -87,5 +91,6 @@ Native function/tool calling may provide provider-supported structured arguments
 - This remains an **unrefined accepted planning direction**, not a production-ready specification or implemented feature.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** LLM interpretation of unconstrained player language and draft prose into schema-checked proposed typed operations; stable entity IDs where resolvable, explicit ambiguity, and distinctions among attempts, intentions, memories and completed acts; no authoritative state change without coordinator validation; sequential use of narrator model supported; native function calling and constrained JSON extraction both kept available for evaluation. Extraction reliability, schemas, fallback and repair details remain open. Moved to staging only, not production.
