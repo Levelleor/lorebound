@@ -30,7 +30,7 @@ Running out of disk space, database corruption, interrupted Go server writes, fa
 - **Storage usage and quota awareness:** Provide meaningful estimation of usage and relevant quota/retention constraints, including warnings and recoverable handling as storage becomes constrained. Do not assume browser quota APIs or server quota reporting always return exact available capacity.
 - **No browser persistence workflow:** Browser persistent-storage APIs are irrelevant to the canonical host-filesystem SQLite database and are **not** part of this accepted backup flow.
 - **Optional automatic snapshots:** A scheduled snapshot mechanism could be considered separately, but the approved required behaviour is **manual whole-database snapshot backup**. No automatic migration, repair, backup cadence, retention or storage-permission request is currently selected.
-- **Open policy and engineering choices:** Keep format, location, encryption/access-control design, backup cadence, retention, migrations, overwrite/conflict resolution, automatic backup policies, provider-specific tooling and precise quota UI open for staging refinement.
+- **Narrow remaining choices:** The **file type is a full SQLite snapshot** and the restore operation is **unconditional whole-database replacement by the selected import action**; no merge/conflict resolution. Implementation details for safe snapshotting, close/reopen, basic file compatibility/error handling, download destination and any future optional automation remain open. No extensive recovery or migration workflow is required.
 
 ## Proposed behaviour
 The player can request a **consistent snapshot backup of the active SQLite database** and later **restore that file as a complete replacement** of the active library. A standalone per-adventure export is a separate previously accepted idea whose continued scope is still to be clarified. A complete backup must contain all canonical persistent story revisions, entities, initial baselines, accepted incremental changes and supporting references necessary for deterministic reconstruction. Lorebound reports available storage-usage estimates and applicable warnings for the selected storage backend, and handles exceeded quotas or interrupted writes without silently dropping committed data. Automatic backup scheduling is not currently required; SQLite remains the source of truth at the configured filesystem location.
@@ -54,15 +54,15 @@ A user-requested SQLite snapshot is a simple full-library backup and preserves t
 
 ## Open questions
 - What backup location and cadence should the always-present local Go server support?
-- Which adventure assets, settings, generated images or plugin-specific data belong in single-adventure versus full-library exports?
+- If a standalone per-adventure export is later retained, which adventure-scoped data would it contain? The required whole-library snapshot contains exactly the data persisted in SQLite; externally stored files are outside the raw DB snapshot unless separately approved.
 - Which supported SQLite snapshot API/file convention produces a consistent **whole-database backup**, including active WAL-mode transactions?
-- How can restore validation verify completeness and reconstructibility without executing historical external commands or AI calls?
+- What minimal SQLite compatibility check suffices to open a user-selected snapshot for replacement without attempting historical AI regeneration or external side effects?
 - How should Go close/replace/reopen the **entire active SQLite database** on restore and reject incompatible/corrupt snapshot files without creating a new library or trying to merge adventure IDs?
 - How can a crash, partial import, full disk or expired permission be handled without corrupting existing adventures?
 - If optional scheduled snapshots are later added, where should they live and how should disk space be managed? No cadence or extra backup copies are required today.
 - Should any future scheduled backups or encryption be considered separately? Neither is selected by the current simple manual snapshot/restore decision.
-- How should old backup formats and plugin-specific events migrate if an older adventure is imported years later?
-- Which filesystem capacity, SQLite page count, WAL size and backup-space estimates are reliable enough for actionable warnings in desktop and headless modes?
+- If an imported whole-library snapshot has an incompatible schema/version, should the application simply report failure? Sophisticated legacy import conversion is not a selected requirement.
+- Which filesystem capacity, SQLite size and snapshot-space estimates are useful for minimal error/warning messages in the headless localhost runtime?
 - Which messages and recovery paths should appear if quota is exhausted, the database becomes unavailable or an export fails?
 
 ## Draft acceptance criteria
