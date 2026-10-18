@@ -59,6 +59,11 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 - The composer provides a **Lorebook icon immediately to the left of the story input field**. It opens the editable Lorebook directly for frequent consultation and updates. It is **not** an alternative Do/Say actor shortcut or a required third information-panel tab. Lorebook manual **Add Character** flow and no-auto-selection policy remain unchanged.
 - Switching panel tabs or opening Lorebook never submits an input, accepts a story turn or changes canonical state. Keyboard accessibility and responsive presentation follow IDEA-0062.
 
+## Composer Lorebook button opens the left drawer
+- **Accepted IDEA-0062 drawer behaviour:** The Lorebook icon immediately **LEFT of the story input** opens the Lorebook as a **resizable left-side drawer** (with an optional expanded workspace), rather than as a third Info/Settings tab. It follows the user-specified **two-phase entrance**: the narrow sidebar/rail first, then the larger Lorebook body reveals from behind it. Closing is a **simple fade-out** rather than a two-stage reverse. Durations and exact visual treatment remain open; support reduced-motion preferences.
+- This is a **navigation/editor affordance**, not another action mode. Opening or closing the drawer does not submit the composer text or alter the selected `Playing As` actor. The **Info/Settings** tabs stay distinct and Do/Say remain gated on an explicitly selected character; Story/Continue stay available in characterless adventures.
+- The drawer exposes normal Lorebook editing, including multiple manual character creations. It must not imply automatic selection of the latest created character. Restore sensible input focus when closing where appropriate; opening/closing is noncanonical.
+
 ## Dependencies and constraints
 - Depends on the eventual narrative coordinator, model prompting and optional game-state modules.
 - Interpret mode intent carefully: *attempted* action, spoken words, authored narrative and autonomous continuation may all lead to different consequences.
@@ -72,6 +77,8 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 - How do validation errors appear without interrupting prose writing?
 
 ## Draft acceptance criteria
+- [ ] The story input has a Lorebook icon immediately to its left that opens a **LEFT-side drawer**; **sidebar/rail first, main content from behind it second** on entrance, with simple **fade-out** on close and reduced-motion support.
+- [ ] Opening/closing the Lorebook drawer does not submit Do/Say/Story text, change action modes, or change `Playing As` automatically.
 - [ ] A dedicated, keyboard-accessible Lorebook icon sits immediately left of the input field and opens Lorebook directly.
 - [ ] The **Settings** tab in the two-tab information panel contains `Playing As`; **Info** shows the explicitly selected character's authoritative information, while Do/Say still require selection and Story/Continue do not.
 - [ ] With Mara in the capital and Theo in a forest, changing `Playing As` to Theo makes the next Do/Say follow Theo **in the forest** without relocating anyone or moving items.
@@ -100,6 +107,7 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 - No implementation is claimed; this is not production approval.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0062 composer refinement:** The composer-left Lorebook icon opens a resizable drawer from the **left edge**, animated **sidebar first, main body from behind second**; closing is a **simple fade-out**. Lorebook remains an editor rather than action mode and does not auto-select a character. Accessible reduced-motion support. Staging only.
 - 2026-10-18 — **Explicit user acceptance (IDEA-0062):** Use **Info** and **Settings** tabs together in the information panel, place the `Playing As` selector under Settings, and provide a **Lorebook icon immediately left of the story input** for frequent access. Nothing auto-selects a character or commits world state. Staging only.
 - 2026-10-18 — **User explicitly accepted:** Switching `Playing As` between distant characters is a **narrative cut**. The next Do/Say uses the newly chosen character's established scene/location, with no travel, teleportation, time passage, inventory/state transfer or extra confirmation. Story/Continue remain independent. Staging only.
 - 2026-10-18 — **Explicit user acceptance of narrative-cut switching:** Changing Settings `Playing As` between characters, even distant ones, causes the **next Do/Say to follow the newly chosen character at their already established scene/location**. No travel, teleportation, time passage or transfer of world state is caused by selection; Story/Continue remain actor-independent. Staging only.
