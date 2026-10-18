@@ -43,6 +43,11 @@ A fully freeform description and optional guided fields are complementary, not m
 - The creator supports making **multiple characters** in succession. It must not automatically tag any of them as the protagonist, set `Playing As`, or navigate back to the story. A character can be present in the world without ever being controlled by the player.
 - Characterless adventures remain valid; Story and Continue remain available even before any characters exist. All earlier optional fields and validation rules remain intact.
 
+## Manual character creation and the two-tab panel
+- **User-accepted IDEA-0062 interface:** The same information panel has **Info** (selected character's recorded inventory, status and known location) and **Settings** (including the nullable `Playing As` dropdown). Any Lorebook character can be explicitly chosen from Settings; no PC/NPC or Playable distinction. **Do/Say are disabled without a choice**, while Story/Continue work as usual.
+- The input field has a **Lorebook shortcut icon directly to its left**. `Add Character` from `Playing As` still opens **manual Lorebook creation**. The player may create multiple characters there without auto-selecting one or being sent back to the story.
+- Info always reflects the user's explicitly selected character, not the latest created character. A characterless story creates no fake profile, inventory or location to populate Info. Exact empty-state presentation remains open.
+
 ## Dependencies and constraints
 - Depends on the shared character model, character sheet, lorebook and optional world/inventory modules that are covered by other individual idea notes.
 - A character created without numerical stats or a fully defined species must remain valid.
@@ -58,6 +63,8 @@ A fully freeform description and optional guided fields are complementary, not m
 - How should starting equipment and a starting location be handled when their tracking modules are disabled?
 
 ## Draft acceptance criteria
+- [ ] Newly created characters are available in the Settings tab's `Playing As` list but are **never selected automatically**; the Info tab follows the actual saved selection.
+- [ ] Lorebook can be opened from the icon left of the input field as well as via Add Character navigation.
 - [ ] A new adventure can start with **zero character entities, no designated player character and no completed character-creation fields**, while retaining valid narrative and non-character world tracking.
 - [ ] A player can optionally enter a freeform character description and save it with their adventure.
 - [ ] Character creation accepts unusual/nonstandard species, roles and backgrounds without mandatory predefined classes.
@@ -82,6 +89,7 @@ A fully freeform description and optional guided fields are complementary, not m
 - This direction has been explicitly accepted for **staging/refinement**, not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0062 two-tab interface:** Info shows data about the explicitly selected character; Settings contains `Playing As`, while a Lorebook icon beside the input offers direct access to manual entry. Creating several characters still never selects one automatically. Staging only.
 - 2026-10-18 — **Explicit user-confirmed change:** Lorebound recognises **one character kind**, no PC/NPC or Playable status; every Lorebook character can be chosen for Do/Say via explicit Settings `Playing As` selection. Creating characters does not mark/select any of them automatically. Zero-character adventures remain valid. Staging only.
 - 2026-10-18 — **Explicit user rejection of automatic selection after Add Character:** Lorebook can be used to add **multiple** characters. Saving a new character **must not auto-select it as `Playing As`**, change any prior selection, or force return to the story. Selection is always an explicit action in the Settings sidebar after the user chooses which character to play. Existing Do/Say selection gate and Story/Continue availability remain. Staging only.
 - 2026-10-18 — **Explicit user direction on character selection:** Rather than asking which actor the player means in each Do/Say input, add a **Settings sidebar `Playing As`** selector sourced from existing Lorebook character entries, with **Add Character → Lorebook manual character entry**. **Disable Do/Say without a selection**, including zero-character stories; **Story/Continue still work**. Selecting a character does not invent or move items. Staging unchanged.
