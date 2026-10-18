@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[LLM Providers and Generation Brainstorm]]", "[[Local First Storage and Deployment Brainstorm]]"]
@@ -35,6 +35,11 @@ Display streamed output in a visibly provisional region. Report which model and 
 
 ## Alternatives and trade-offs
 The accepted direction favours streaming **provisional** drafts early for responsiveness while ensuring validation precedes any authoritative commit. Waiting for completed validation before showing prose is simpler but provides less feedback for slow local inference. Exact preview treatment (inline provisional text vs separate draft region), recovery/discard options, and diagnostic-retention policy remain to be refined.
+
+## Architecture integration (2026-10-17)
+- Streaming generation, status and cancellation run through the shared client-side TypeScript coordinator/provider adapters in both Wails v3 desktop and headless browser modes, not through a required Node/SvelteKit server.
+- Long generations, context retrieval and replay should not block the Svelte interface. Go/SQLite commits only complete accepted outcomes atomically after validation; streamed or cancelled drafts are not automatically authoritative.
+- Browser fetch/CORS and optional native transports can differ by provider; preserve truthful cancellation and timing diagnostics across both runtime modes.
 
 ## Dependencies and constraints
 - Requires provider/local server streaming and abort behaviour through accepted [[Cloud LLM Provider Connectors]], [[Local LLM Server Connections]] and [[Provider Connection Profiles and Discovery]].
@@ -77,5 +82,6 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Accepted for **staging/refinement** only; not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Streaming output, cancellation, generation and pipeline-stage status, model/settings/errors/usage/timing diagnostics, provisional text before final validation, safe handling of cancelled and failed requests, and secret redaction. Moved to staging for refinement, not to production.
