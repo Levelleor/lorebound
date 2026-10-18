@@ -63,6 +63,11 @@ On a supported desktop operating system, a player opens Lorebound, selects or cr
 - Closing the last browser tab **does not** invoke Quit. To quit later with no tabs open, relaunch the existing application to reconnect to its already-running server, then use Settings → Quit. OS shutdown can also stop it. This does not change non-AI operation, saved adventures or local-first constraints.
 
 
+## Application shortcut always returns to the current Lorebound browser address
+- **Explicit IDEA-0053 acceptance (2026-10-18):** The installed executable/application shortcut is a convenient **Open Lorebound** action. Whenever used, it starts the single headless server **only if none is running**, or else securely finds the already-running server and **opens/focuses its actual current browser URL**. This remains possible when all prior browser tabs were closed, so the player can reach **Settings → Quit Lorebound** without a native tray.
+- On fresh starts, the server first tries a **preferred localhost port** for a usually stable/bookmark-friendly address; if occupied, it selects an **available fallback port** and the shortcut opens the actual URL. Fallback ports are not OS-sticky across restarts. The shortcut does not assume a fixed/hardcoded port, require the player to remember a random one, or create a competing process.
+- This is launcher convenience, not application accounts, cloud access, mandatory native window/tray functionality or a new source of story storage; implementation details belong to IDEA-0053.
+
 ## Dependencies and constraints
 - IDEA-0053 now selects **Wails v3 headless localhost Go server only**, with the SvelteKit/TypeScript UI and gameplay logic in the normal browser; IDEA-0051 now selects **Go-managed filesystem SQLite** for canonical adventures. IDEA-0001 establishes account-free/offline requirements but does not independently prescribe these implementation choices.
 - IDEA-0013 specifies local-model connectivity. The app must be usable offline once installed with local assets and a functioning compatible model, but bundling/downloading/running models inside the application is not approved by this idea.
@@ -71,6 +76,8 @@ On a supported desktop operating system, a player opens Lorebound, selects or cr
 - Account-free local saves are not automatically private from other users of the same OS/browser profile.
 
 ## Draft acceptance criteria
+- [ ] A user can close every browser tab, click the Lorebound shortcut and reopen the still-running application's correct browser URL, including on a fallback port, without needing a tray or starting a duplicate server.
+- [ ] Fresh runs prefer a consistent port when free, fall back when occupied and do not promise that OS-assigned fallback ports remain the same after Quit and restart.
 - [ ] Users can quit the persistent headless server from **Settings → Quit Lorebound**, without needing a tray/menu bar icon or creating an app account; closing tabs alone continues to leave the server running.
 - [ ] The player may close every Lorebound browser tab and later reopen the same still-running app via its executable without losing canonical adventure data or starting another server.
 - [ ] Browser close does not equal application Quit; only deliberate Quit or OS/process shutdown stops the running instance.
@@ -99,6 +106,7 @@ On a supported desktop operating system, a player opens Lorebound, selects or cr
 - The direction is accepted for **staging/refinement**. The 2026-10-17 refinement confirms offline-capable local play on Windows/macOS/Linux and intentionally removes browser-only persistence from this idea. Runtime-specific details remain for related ideas. No production approval or implemented functionality is claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0053 launcher discoverability:** User approved preferred localhost port with automatic available-port fallback, paired with the executable/OS shortcut that always opens/focuses the **real existing server URL** after tabs close. Fallback ports are not sticky; shortcut eliminates the need to memorize them and preserves access to Settings → Quit without a tray. Staging only.
 - 2026-10-18 — **Accepted IDEA-0053 Quit dependency:** User prefers **Settings → Quit Lorebound** as the initial explicit server-exit control, no native tray/menu-bar requirement. Closing tabs does not quit; relaunch can reconnect to access Quit. Staging unchanged.
 - 2026-10-18 — **Accepted IDEA-0053 Option A:** Browser tabs/windows may close while Lorebound's one headless server keeps running, until explicit Quit or OS shutdown. Relaunching reconnects; no auto-exit on last-tab close. Staging unchanged.
 - 2026-10-18 — **Accepted IDEA-0053 integration:** User chose Option A: subsequent executable launches should reuse the existing Lorebound server and bring/open its browser address, never create a second competing server against the same library. Multiple browser tabs remain compatible. Staging only.
