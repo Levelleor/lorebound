@@ -74,6 +74,10 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - Closing the last browser tab continues to leave the server/library open; relaunch reconnects for access to Settings Quit. Shutdown requests must originate from appropriately authorised app clients, not arbitrary origins or another local process.
 
 
+## Go persistence is a supporting Lore Engine responsibility
+- **Accepted IDEA-0061 rename/scope:** The **Lore Engine** collectively labels Lorebound's **non-UI responsibilities**. Under that conceptual umbrella, **browser-side TypeScript** still owns the deterministic gameplay coordinator/rules, while the **single Wails v3 headless Go server** continues to own privileged filesystem/SQLite persistence, safe transactional commits and library backup/restore. The earlier internal label `Lorebound Backend` is superseded.
+- **No split or migration caused by naming:** Go persistence does not become a second gameplay authority or a separately deployed Lore Engine service; the project keeps one server and one active Go-managed SQLite library with existing client revision checks, transaction boundaries and backup/restore policies. The exact code structure remains future design.
+
 ## Dependencies and constraints
 - User selected Wails v3 headless localhost only in [[Localhost Startup and Offline Mode]] (IDEA-0053), packaged into Windows/macOS/Linux server executables. The headless mode requires a running Go process but not Node SSR.
 - [[Snapshots and Incremental State Rebuild]] (IDEA-0042), [[Event-Sourced World History]] (IDEA-0039) and [[Versioned Text Blocks and Revision IDs]] (IDEA-0040) require full durable reconstructibility at supported history points.
@@ -93,6 +97,7 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - What benchmarks ensure history replay/queries and large write batches keep the UI responsive?
 
 ## Draft acceptance criteria
+- [ ] Go/SQLite platform persistence is documented as supporting **Lore Engine** functionality, while the coordinator and gameplay operations remain browser-side TypeScript and no new independent engine/SQL server is required.
 - [ ] **Settings → Quit Lorebound** initiates an authorised server/SQLite shutdown and releases resources cleanly without corrupting or partially committing authoritative state.
 - [ ] Last-tab closure leaves the shared library available to the running server; all successfully persisted data survives a subsequent explicit Quit/relaunch.
 - [ ] The SQLite library remains associated with the single still-running server when all browser clients close; a later browser relaunch reconnects without opening a competing server or separate library.
@@ -126,6 +131,7 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - Earlier staging acceptance had **not** selected an engine or location; these were **subsequently decided** on 2026-10-17: Go-managed filesystem SQLite, one shared library database, and OS per-user app-data default with optional custom data directory. Exact implementation, minimal file/connection safety and production readiness remain open. Automatic library migration and advanced corruption recovery are not selected.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0061 umbrella terminology:** The Lore Engine includes the app's non-UI browser TypeScript game logic and its Go/Wails SQLite persistence/platform support. The old Lorebound Backend label is superseded; no second game engine, package, process or storage architecture change. Staging only.
 - 2026-10-18 — **Accepted IDEA-0053 Settings Quit dependency:** The Settings tab's explicit Quit action stops the single headless server/SQLite owner, preserving committed and successfully autosaved data as normal. No tray helper or new backup is implied. Closing tabs alone does not quit. Staging only.
 - 2026-10-18 — **Accepted IDEA-0053 persistent server lifetime:** Last browser-tab close does not shut down the Go/SQLite owner; relaunch reconnects to the existing server and library. Explicit Quit/OS shutdown ends it, with normal graceful database close where possible. No guarantee of browser-owned pending work after tab closure. Staging only.
 - 2026-10-18 — **Accepted IDEA-0053 single-instance startup dependency:** A second executable launch reuses the running headless server/its URL, rather than opening a competing server on the same SQLite database. Multiple browser tabs may still use that server and need revision/transaction safeguards; stale locks and simultaneous launches are implementation details. Staging only.
