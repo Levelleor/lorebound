@@ -58,6 +58,11 @@ On a supported desktop operating system, a player opens Lorebound, selects or cr
 - Re-launching Lorebound while the server remains active **reopens/focuses its existing browser URL** without starting another competing server or changing the database. No Lorebound account, system tray requirement, multiplayer feature, always-running background service on OS login or automatic restart is implied.
 - Browser-owned unfinished AI generation and unsaved draft keystrokes are not guaranteed to survive tab closure; accepted persisted drafts/committed adventure history remain managed by existing SQLite rules. Exact explicit Quit access belongs to IDEA-0053.
 
+## In-app Quit without tray or account
+- **Accepted IDEA-0053 refinement:** The account-free, normal-browser interface exposes **Settings → Quit Lorebound** to deliberately stop the **one persistent localhost server**. No system tray, macOS menu-bar companion, Linux status-indicator integration, separate native GUI or app account is required to operate or quit Lorebound.
+- Closing the last browser tab **does not** invoke Quit. To quit later with no tabs open, relaunch the existing application to reconnect to its already-running server, then use Settings → Quit. OS shutdown can also stop it. This does not change non-AI operation, saved adventures or local-first constraints.
+
+
 ## Dependencies and constraints
 - IDEA-0053 now selects **Wails v3 headless localhost Go server only**, with the SvelteKit/TypeScript UI and gameplay logic in the normal browser; IDEA-0051 now selects **Go-managed filesystem SQLite** for canonical adventures. IDEA-0001 establishes account-free/offline requirements but does not independently prescribe these implementation choices.
 - IDEA-0013 specifies local-model connectivity. The app must be usable offline once installed with local assets and a functioning compatible model, but bundling/downloading/running models inside the application is not approved by this idea.
@@ -66,6 +71,7 @@ On a supported desktop operating system, a player opens Lorebound, selects or cr
 - Account-free local saves are not automatically private from other users of the same OS/browser profile.
 
 ## Draft acceptance criteria
+- [ ] Users can quit the persistent headless server from **Settings → Quit Lorebound**, without needing a tray/menu bar icon or creating an app account; closing tabs alone continues to leave the server running.
 - [ ] The player may close every Lorebound browser tab and later reopen the same still-running app via its executable without losing canonical adventure data or starting another server.
 - [ ] Browser close does not equal application Quit; only deliberate Quit or OS/process shutdown stops the running instance.
 - [ ] Re-launching a running Lorebound executable reuses the same localhost server and browser address without starting a second competing process or requiring a Lorebound account.
@@ -93,6 +99,7 @@ On a supported desktop operating system, a player opens Lorebound, selects or cr
 - The direction is accepted for **staging/refinement**. The 2026-10-17 refinement confirms offline-capable local play on Windows/macOS/Linux and intentionally removes browser-only persistence from this idea. Runtime-specific details remain for related ideas. No production approval or implemented functionality is claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0053 Quit dependency:** User prefers **Settings → Quit Lorebound** as the initial explicit server-exit control, no native tray/menu-bar requirement. Closing tabs does not quit; relaunch can reconnect to access Quit. Staging unchanged.
 - 2026-10-18 — **Accepted IDEA-0053 Option A:** Browser tabs/windows may close while Lorebound's one headless server keeps running, until explicit Quit or OS shutdown. Relaunching reconnects; no auto-exit on last-tab close. Staging unchanged.
 - 2026-10-18 — **Accepted IDEA-0053 integration:** User chose Option A: subsequent executable launches should reuse the existing Lorebound server and bring/open its browser address, never create a second competing server against the same library. Multiple browser tabs remain compatible. Staging only.
 - 2026-10-18 — **Explicit user selection of Option A, clarified:** Lorebound does **not** require any AI configuration or working connection to launch or use manual adventure/Lorebook/database features. **Only calls requiring an AI API** depend on provider availability: if a suitable model is configured, **attempt the call** and handle real errors; if none is configured, **indicate this clearly and guide the player to connection/model setup**. Failed AI operations cannot damage accepted story/world state or lock out unrelated functions. Separate local-offline model support remains as previously accepted. No implementation/production approval.
