@@ -45,6 +45,11 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - **Explicit IDEA-0026 refinement:** Every Lorebook character is eligible for `Playing As` without PC/NPC or Playable classification. A status sheet belongs to its stable character ID, independent of how often the player chooses to act as that character.
 - The selected actor may change without altering any status field, inventory or historical event. Sparse characters and characterless adventures remain valid; no default protagonist sheet is required.
 
+## Selected-character status in the Info tab
+- **User-accepted IDEA-0062 layout:** The shared information panel contains **Info** and **Settings** tabs. For a valid explicit `Playing As` character, the **Info** tab shows the current authoritative **tracked status** (alongside that character's inventory and known location from their own systems). The **Settings** tab includes the `Playing As` character selector. The Lorebook remains directly accessible using its icon **left of the story input field**.
+- Switching `Playing As` changes **which existing character's status is displayed**, not the data itself, and never activates automatic status mutation. Fields remain unknown when unrecorded, instead of being populated with fabricated stats or a false empty state. With no actor selected, the exact Info empty-state display remains an interface refinement.
+- Full status editing and advanced field views may still live in the character's Lorebook record, without promising a specific editor inside Info.
+
 ## Dependencies and constraints
 - Depends on accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) for stable identity and one unclassified character type.
 - Coordinates with accepted [[Entity-Based Lorebook]] (IDEA-0020) to avoid conflicting copies of current status in persistent lore.
@@ -65,6 +70,8 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - Which updates are manual, disabled or automatically proposed and validated? This is expressly for separately evaluated IDEA-0028.
 
 ## Draft acceptance criteria
+- [ ] The Info tab shows the explicitly chosen `Playing As` character's recorded status fields where enabled, and updates when the selection changes without changing stored status values.
+- [ ] Unknown/unrecorded fields remain unknown; no placeholder status sheet is created for characterless adventures.
 - [ ] Every character can have editable status sheets linked to their durable universal character identity.
 - [ ] A player can create and modify arbitrary character fields for stats, conditions, identity, goals and current state.
 - [ ] An adventure can use its own fields rather than being forced to use one fixed RPG character sheet.
@@ -87,6 +94,7 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - Accepted direction remains unrefined and is neither production-approved nor implemented. Exact schema and automatic-update behaviour remain open.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0062 info-panel refinement:** Info tab surfaces existing status for the explicit `Playing As` character, while the Settings tab provides character selection. Lorebook is accessible via the icon left of the composer input. No selection or presentation change mutates stats. Staging only.
 - 2026-10-18 — **Accepted universal-character dependency:** One character type, optional sheets for all, no PC/NPC or Playable categories and no status changes merely because `Playing As` changes. Staging only.
 - 2026-10-18 — **Accepted character-control dependency:** An adventure may have no characters or no main character, while status and inventory remain anchored to actual character entity IDs. Multi-character focus/actor switches do not modify status records or create dummy player sheets. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
