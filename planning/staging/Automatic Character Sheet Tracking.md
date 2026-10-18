@@ -26,14 +26,14 @@ The user wants a simpler initial approach: a living character sheet that stays u
 - **No routine approval prompt:** Do not require the player to approve each automatic field update one at a time. This does not waive deterministic validation or prevent the user from inspecting/correcting records.
 - **Manual editing remains available:** Players continue to view, edit and correct character sheets directly even though automatic tracking is the general policy. How later automatic proposals interact with direct edits needs refinement.
 - **Correct missing-value semantics:** A missing or unrecorded field remains unknown, not zero, false, empty or a guessed value. Only establish newly known values from trustworthy accepted outcomes, preserving explicitly known-empty values distinctly.
-- **Consistent shared PC/NPC identity:** Use the same stable character entities and editable status-sheet structures from [[Shared PC and NPC Character Entities]] (IDEA-0026) and [[Customisable Character Status Sheets]] (IDEA-0027). Apply automatic maintenance to relevant custom fields as well as common fields.
+- **Consistent universal character identity:** Use the same stable unclassified character entities and editable status-sheet structures from [[Shared PC and NPC Character Entities]] (IDEA-0026) and [[Customisable Character Status Sheets]] (IDEA-0027). Apply automatic maintenance to relevant custom fields as well as common fields.
 - **Coherent failures and reversals:** Failed generations or rejected state proposals must not change saved sheets. Historical edits, undo and replay should preserve or rebuild the correct current status with traceable provenance; exact mechanism remains for refinement.
 - **Single-model and multi-model compatible:** Works with accepted pipeline strategies and one generative model or multiple task-specialised models, without a required dedicated tracker model.
 - **Explicitly defer complexity:** Per-field Disabled / Manual Only / Automatic modes and optional approve-each-change controls proposed in [[Character State Tracking Modes]] (IDEA-0028) are **not accepted** here; IDEA-0028 remains an independent unaccepted Inbox candidate.
 - **Scope boundary:** Automatic status-sheet tracking does not independently approve the full item/inventory, equipment, anatomy or location systems, which have separate review decisions.
 
 ## Proposed behaviour
-- Apply a single automatic tracking policy to the entire current character sheet, including custom fields created under [[Customisable Character Status Sheets]] (IDEA-0027), for both PCs and NPCs under [[Shared PC and NPC Character Entities]] (IDEA-0026).
+- Apply a single automatic tracking policy to the entire current character sheet, including custom fields created under [[Customisable Character Status Sheets]] (IDEA-0027), for every character under [[Shared PC and NPC Character Entities]] (IDEA-0026), whether selected as `Playing As` or not.
 - When a **committed, validated** story event changes a known character property, propose and validate the corresponding sheet update, then persist only the accepted change. Examples might include injuries, recovered stamina, changes in goals or a relationship-related status.
 - Keep current values coherent with authoritative game state and accepted narrative outcomes; generated prose by itself must not silently override deterministic rules or commit contradictory changes.
 - Continue to support **manual viewing and editing** of sheets from IDEA-0027; this simpler idea means AI-assisted state tracking is generally automatic, not that the player loses editing access.
@@ -47,6 +47,10 @@ During or after each successful adventure turn, gather authoritative accepted ch
 - The accepted policy is **one automatic tracking mode for all applicable sheet fields**. The separate question of whether the system may propose entirely new field definitions remains open: automatic population of known fields does not automatically grant permission to invent arbitrary new schema keys.
 - Apply changes immediately after validated turn completion versus batch them as part of generation commit; exact timing and failure recovery require refinement.
 - Fine-grained Disabled/Manual Only/Automatic modes and optional per-change confirmations remain a separate **deferred, unaccepted** direction (IDEA-0028). There is no requirement to build these controls as part of IDEA-0064.
+
+## Automatic tracking for any character
+- **Latest accepted IDEA-0026 decision:** There is no permanent PC/NPC or Playable classification. Automatic tracking applies to the actual character entities affected by validated events, whether or not the player has ever selected them for Do/Say.
+- Selecting a different character merely changes who the player speaks/acts as; it cannot automatically alter status fields or make another character's events target the selected one.
 
 ## Dependencies and constraints
 - Uses accepted shared character entities (IDEA-0026), customisable current status sheets (IDEA-0027), and generation pipeline validation/failure boundaries (IDEA-0018).
@@ -68,13 +72,13 @@ During or after each successful adventure turn, gather authoritative accepted ch
 - Should high-impact identity or goal changes need special safeguards? The user has **not** accepted per-field tracking modes or approve-each-change controls.
 
 ## Draft acceptance criteria
-- [ ] Accepted character changes update applicable configured PC and NPC status fields automatically, including user-defined custom fields, after validation.
+- [ ] Accepted character changes update applicable status fields for any character automatically, including user-defined custom fields, after validation.
 - [ ] The player can use automated sheet tracking without setting Disabled/Manual/Automatic modes per field or module.
 - [ ] Routine validated automatic updates do not require separate player confirmation for every changed value.
 - [ ] Player manual editing and correction of current character-sheet values remain possible.
 - [ ] A rejected, uncommitted or failed narrative generation never changes authoritative sheet values.
 - [ ] Unrecorded values remain unknown, explicitly empty/zero/false are preserved distinctly, and updates do not invent unsupported character facts.
-- [ ] Updates attach to stable character identities and preserve PC/NPC consistency.
+- [ ] Updates attach to stable unclassified character identities consistently, regardless of `Playing As` selection.
 - [ ] Undo and historical revision pathways can invalidate/rebuild relevant derived sheet updates without treating old outcomes as current canon.
 - [ ] Tracking works with either one configured model or task-specific model routing.
 - [ ] No per-field tracking mode controls, approve-each-change requirements, or unrelated full equipment/inventory/anatomy implementations are implied.
@@ -93,5 +97,6 @@ During or after each successful adventure turn, gather authoritative accepted ch
 - The scope is character-sheet fields, not an implicit approval of other standalone inventory, equipment, anatomy or location proposals.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted universal-character dependency:** Auto-tracking uses one unclassified character model with no PC/NPC or Playable tags. Temporary `Playing As` does not change an entity's status. Staging only.
 - 2026-10-16 — **User-requested capture, not acceptance.** During review of IDEA-0028, user said: "Lets just keep this idea unaccepted for now and introduce a new one, simpler one, where we just have automated tracking of character sheet for now for everything." Created as a separate candidate while IDEA-0028 remains unaccepted in Inbox.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** "Accept IDEA-0064 with automatic validated updates to all applicable PC and NPC character-sheet fields, including custom fields, without per-field Disabled/Manual/Automatic tracking modes or required approval for each change. Preserve manual editing, known versus unknown values, and authoritative state validation. Keep IDEA-0028 deferred and unaccepted." Promoted to staging for refinement only; IDEA-0028 remains an unaccepted Inbox candidate.
