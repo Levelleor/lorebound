@@ -46,6 +46,10 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - **Latest accepted IDEA-0026 direction:** There is **one universal character type**, with no permanent PC/NPC or Playable distinction. Every Lorebook character may be selected as `Playing As`. Their item custody, ownership and history are attached to the stable character ID, not the player's selection.
 - Switching `Playing As` never transfers an item, grants possession or creates a global player inventory. Validation of Do/Say actions still checks the selected character's actual state. Characters never selected by the player use the **same** inventory rules.
 
+## Distant character cuts keep inventories attached to holders
+- **Accepted `Playing As` scene-cut refinement (IDEA-0026/0034):** Selecting Theo in a forest after acting as Mara in the capital means the next Do/Say follows Theo where he is, while **Mara retains all her existing possessions**. No travel or inventory change is produced by the cut.
+- The selected character may act on **their own or otherwise accessible** items under ordinary item-location/custody validation. Neither the old actor's gear nor scene-local objects become available simply because the player switches perspective. Item histories, placement and ownership remain independent of the current Do/Say actor.
+
 ## Dependencies and constraints
 - Uses accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) for durable character ownership/custody references; integrates with future world-location data without presuming that separate candidate is approved.
 - Item create/move/delete actions must be validated against committed canonical state and must not follow uncommitted, rejected or failed narrative generation as if authoritative.
@@ -68,7 +72,7 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - How do item location/holder references work when character or location entities are deleted, merged or renamed?
 
 ## Draft acceptance criteria
-- [ ] Tracked unique item instances have durable IDs that survive renames and transfers.
+- [ ] Changing `Playing As` between characters in distant locations never duplicates, teleports, swaps or transfers their items; Do/Say inventory actions still target and validate the selected character's actual accessible items.- [ ] Tracked unique item instances have durable IDs that survive renames and transfers.
 - [ ] A player or validated gameplay event can create, pick up, drop, store and transfer items between characters, containers and world locations where those entities exist.
 - [ ] A transfer removes an item from its prior incompatible placement before establishing its new placement; an individual instance is not simultaneously owned by multiple inventories as the same physical object.
 - [ ] Invalid transfers, unsupported creation or contradictory concurrent item placements are rejected or resolved without silently duplicating unique items.
@@ -92,6 +96,7 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - Accepted into **staging for refinement only**, not production. The precise model for stacking, capacity, item categories and ownership rules remains undecided; no implementation is claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted scene-cut/inventory independence:** Next Do/Say follows the new `Playing As` actor's established whereabouts, not the previous actor's location or possessions. Selection itself performs no travel or item transfer; staging unchanged.
 - 2026-10-18 — **Accepted universal-character dependency:** One character kind, every Lorebook character eligible for `Playing As`; no PC/NPC or Playable tag. All item ownership/custody remains entity-based, never transferred by selection. Staging only.
 - 2026-10-18 — **Accepted IDEA-0002 actor selector dependency:** The Settings `Playing As` selection supplies the actor for Do/Say and gates their availability but has no inventory/ownership transfer effects. Item custody stays attached to actual entities; unselected adventures use Story/Continue. Staging unchanged.
 - 2026-10-18 — **Accepted flexible-character inventory clarification:** The player is **not** an inventory-owning entity. Tracked items belong in actual character custody, containers or world locations; narrative focus/acting-character changes must not transfer inventory. Characterless and ensemble-cast stories are supported without a global Player Inventory or a mandatory dummy character. Existing identity, holder-versus-owner and validation rules still apply. Staging only.
