@@ -43,6 +43,11 @@ Full world snapshots each turn can be simpler for point-in-time reads but duplic
 - Go is responsible for **atomic writes, expected-revision/concurrency checks and durable data consistency** when applying a prepared accepted turn, including from multiple headless browser tabs. This does not create an independent Go narrative/gameplay rule engine.
 - Events should carry stable IDs and schema/provenance metadata sufficient for full replay and safe SQLite-backed export/import.
 
+## Full-history adventure duplication dependency
+- IDEA-0005 now accepts **duplicating an entire committed adventure history**, not merely cloning current world state. The duplicate preserves all accepted events in order, their source turns and text-revision provenance, and any data needed to replay its history at prior turn boundaries.
+- The new adventure must have an independent identity, with event/entity/turn/revision references coherent **inside its own copy** and no mutable coupling to the original. Exact internal identifier remapping remains a schema design detail.
+- Pending unsubmitted player input and unconfirmed prose-edit drafts are not copied. Duplication performs no new AI inference, historical event reenactment or external side effects.
+
 ## Dependencies and constraints
 - Integrates with accepted persistent character entities (IDEA-0026), inventory and items (IDEA-0029), locations, travel and presence (IDEA-0033 through IDEA-0036), and mutable environmental state ([[Persistent Location State and Travel Interactions]], IDEA-0038).
 - Uses accepted generation/validation boundaries (IDEA-0018): an AI-produced description or proposed operation must not become an authoritative event before validation.
@@ -84,6 +89,7 @@ Full world snapshots each turn can be simpler for point-in-time reads but duplic
 - This is **accepted for refinement**, not approved for production or implemented; event invalidation, branching and migration remain open.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
