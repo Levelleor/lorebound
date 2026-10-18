@@ -53,6 +53,9 @@ Separate permanent PC/NPC or Playable categories are now **explicitly out of sco
 - The selected actor's inventory, status, whereabouts, knowledge and valid action constraints remain their **own existing records**. If a specific location is not established, preserve it as unknown; **never borrow the previous actor's scene or invent a destination** to render the cut.
 - **Story and Continue stay actor-independent** and may narrate another established character, multiple characters or environmental/world events. The UI presentation of scene transitions is open; no mandatory confirmation or narrated journey is required.
 
+## Switching Playing As cuts to the selected character's scene
+When `Playing As` changes, the **next Do/Say follows the new character at their already established location and circumstances**, even if the previously played character is far away. Example: switching from Mara in the capital to Theo in the forest cuts to Theo **in the forest**, without transporting either character. Selection creates **no movement, travel route, elapsed journey/time, inventory transfer, world-state event or altered past**. The chosen character's own location, equipment, status and existing context are used; an unknown location remains unknown, never inherited from the previous character. Story/Continue stay independent; no switching confirmation or narrated journey is needed.
+
 ## Dependencies and constraints
 - Relates to accepted [[Entity-Based Lorebook]] (IDEA-0020), which should link durable character entities without confusing static lore with changing character state.
 - The next separate candidates include status sheet fields and tracking (IDEA-0027, IDEA-0028), items and equipment (IDEA-0029, IDEA-0030), anatomy (IDEA-0031, IDEA-0032) and locations/presence (IDEA-0033, IDEA-0034). This approval does not advance any of those candidates.
@@ -71,6 +74,7 @@ Separate permanent PC/NPC or Playable categories are now **explicitly out of sco
 - When should fields be explicitly authored by the player versus inferred as a proposed AI change requiring validation?
 
 ## Draft acceptance criteria
+- [ ] Switching `Playing As` between two distant characters makes the next Do/Say follow the selected character at their **existing location**, without travel, teleportation, time passage, inventory transfer or a world-state event.
 - [ ] After switching `Playing As` from Mara (capital) to Theo (forest), the next Do/Say follows Theo at his **established forest location**; neither character's location, possessions, status or event history changes merely due to selection.
 - [ ] Switching `Playing As` produces **no travel event, elapsed travel time, new graph edge or automatic time passage**, and does not require actor/transition confirmation; real narrated movement remains subject to ordinary validation.
 - [ ] If the new actor's location is unknown, the system does not inherit the old scene or fabricate a location; Story/Continue remain actor-independent.- [ ] **Every character** uses one common identity/schema with stable IDs, and **no PC/NPC kind, playable designation or permanent-control category** is required or used to filter selection.
@@ -98,6 +102,7 @@ Separate permanent PC/NPC or Playable categories are now **explicitly out of sco
 - Staging means accepted for refinement, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **User explicitly accepted:** Switching `Playing As` between distant characters is a **narrative cut**. The next Do/Say uses the newly chosen character's established scene/location, with no travel, teleportation, time passage, inventory/state transfer or extra confirmation. Story/Continue remain independent. Staging only.
 - 2026-10-18 — **Explicit user acceptance of cross-character scene-cut semantics:** Changing `Playing As` is **only a narrative viewpoint/actor cut**; the **next Do/Say follows the selected character at their existing location and circumstances**, even when other characters are far away. No travel, teleportation, time passage, inventory/status transfer, special confirmation or history rewrite occurs by selecting a different character. Story/Continue remain freeform. Staging only.
 - 2026-10-18 — **Explicit user-confirmed supersession of PC/NPC distinction:** There are **no PC or NPC categories and no Playable flag**. Every character is identical in kind and **selectable in `Playing As`**, because the player may temporarily take turns acting/speaking for any character. `Playing As` remains optional and selection is explicit, never automatic upon creation. Characterless stories continue with Story/Continue and no invented character. File name preserved for stable wiki references. Staging only, no implementation/promotion.
 - 2026-10-18 — **Explicit latest refinement:** Adding one or multiple Lorebook characters is independent of `Playing As`. Saving a new character does **not automatically select it, replace an existing choice, or return to the story**; the player explicitly picks their character later. This supersedes the assistant's proposed auto-selection/return shortcut. Staging unchanged.
