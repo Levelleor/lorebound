@@ -38,6 +38,11 @@ Open an older turn or text block in an isolated draft editor, preserving the sav
 ## Alternatives and trade-offs
 Reconstructing after every keystroke may provide immediate preview feedback but wastes compute and risks inconsistent intermediate state. Draft-first explicit confirmation prioritises control and avoids work that will be thrown away. Keeping later turns may leave contradictory *prose* even when state is reconciled; this accepted version deliberately avoids automatic regeneration or contradiction-flagging. Truncation simplifies the active continuation but introduces accidental-data-loss risks, so reversible retention or backup mechanisms should be evaluated without presuming a chosen design.
 
+## Persisted historical-edit drafts
+- Editing an earlier passage autosaves a **noncanonical draft into SQLite** after a brief pause, preserving the last saved edit across browser restarts. No downstream rebuild, AI call, story revision or canonical world mutation occurs while typing.
+- **Continue Editing** retains that draft and **Discard** abandons it. Only explicit **Keep Later Turns** or **Delete All After Point** confirmation can commit the revision and trigger appropriate world-state reconciliation.
+- Draft-save errors and the exact retention/debounce interval remain for refinement.
+
 ## Dependencies and constraints
 - Source passages have stable IDs and versions through accepted [[Versioned Text Blocks and Revision IDs]] (IDEA-0040), so historical edits can identify affected state-changing source revisions.
 - World-state projections and events follow accepted [[Event-Sourced World History]] (IDEA-0039), with active versus obsolete historical effects kept distinct.
@@ -81,5 +86,6 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - Staging is not production approval or evidence of any implementation. Truncation recovery, reconciliation and detailed UX require refinement.
 
 ## Decisions and review history
+- 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by requesting user:** Draft-first historical editing; explicit confirmation before expensive reconstruction; four choices Keep Later Turns, Delete All After Point, Continue Editing and Discard; no wasted AI calls for history that may be deleted; no automatic downstream prose regeneration or contradiction flagging in this version. Accidental-truncation recovery, downstream state reconciliation and confirmation UX left open for refinement. Moved to staging only, not production.
