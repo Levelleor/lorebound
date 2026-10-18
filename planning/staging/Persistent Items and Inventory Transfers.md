@@ -50,6 +50,9 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - **Accepted `Playing As` scene-cut refinement (IDEA-0026/0034):** Selecting Theo in a forest after acting as Mara in the capital means the next Do/Say follows Theo where he is, while **Mara retains all her existing possessions**. No travel or inventory change is produced by the cut.
 - The selected character may act on **their own or otherwise accessible** items under ordinary item-location/custody validation. Neither the old actor's gear nor scene-local objects become available simply because the player switches perspective. Item histories, placement and ownership remain independent of the current Do/Say actor.
 
+## Actor scene cuts leave item possession unchanged
+- **Accepted:** Switching `Playing As` between characters in distant scenes changes which character the **next Do/Say** follows. No item travels or changes hands because of a perspective switch. Inventory/ownership/accessible items remain attached to their established character, container or location. Any transfer described in a subsequent turn still requires normal validation.
+
 ## Dependencies and constraints
 - Uses accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) for durable character ownership/custody references; integrates with future world-location data without presuming that separate candidate is approved.
 - Item create/move/delete actions must be validated against committed canonical state and must not follow uncommitted, rejected or failed narrative generation as if authoritative.
@@ -96,6 +99,7 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - Accepted into **staging for refinement only**, not production. The precise model for stacking, capacity, item categories and ownership rules remains undecided; no implementation is claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Explicit user acceptance:** `Playing As` switching is a narrative cut; the next Do/Say follows the chosen character in their existing circumstances. Switching causes no physical travel, time passage or item movement. Staging only.
 - 2026-10-18 — **Accepted scene-cut/inventory independence:** Next Do/Say follows the new `Playing As` actor's established whereabouts, not the previous actor's location or possessions. Selection itself performs no travel or item transfer; staging unchanged.
 - 2026-10-18 — **Accepted universal-character dependency:** One character kind, every Lorebook character eligible for `Playing As`; no PC/NPC or Playable tag. All item ownership/custody remains entity-based, never transferred by selection. Staging only.
 - 2026-10-18 — **Accepted IDEA-0002 actor selector dependency:** The Settings `Playing As` selection supplies the actor for Do/Say and gates their availability but has no inventory/ownership transfer effects. Item custody stays attached to actual entities; unselected adventures use Story/Continue. Staging unchanged.
