@@ -75,7 +75,7 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - [ ] The system can represent current holder or location separately from ownership/claim information where needed.
 - [ ] Missing item placement or owner information is not silently converted into an invented definite state.
 - [ ] Failed, rejected or uncommitted generation proposals do not mutate persistent item placement.
-- [ ] Character inventories/possession link to **stable character IDs**, and items may reside in containers/locations independent of characters. Changing focus between several playable characters **does not reassign items** or create a global player-owned inventory.
+- [ ] Character inventories/possession link to **stable character IDs**, and items may reside in containers/locations independent of characters. Changing focus between several characters **does not reassign items** or create a global player-owned inventory.
 - [ ] Characterless adventures can track world items/containers/locations without creating a default character; missing inventory details are **unknown**, not automatically empty.
 - [ ] Encumbrance, capacity and stack/quantity mechanics are not imposed by default simply because item tracking exists.
 - [ ] Equipment/body-slot design and detailed world-location systems remain separate decisions.
