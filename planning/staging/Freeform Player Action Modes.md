@@ -56,6 +56,7 @@ The same composer UI may be reused across Do, Say and Story; whether modes use s
 ## Draft acceptance criteria
 - [ ] Story and Continue can always be used, including in an entirely characterless adventure. Do and Say appear unavailable/disabled unless an actual character has been selected in the adventure Settings sidebar's `Playing As` control.
 - [ ] The `Playing As` selector lists existing Lorebook character entities by name and stable ID, with an **Add Character** route that takes the player to Lorebook **manual character entry**; choosing a character enables Do/Say without needing per-turn actor confirmation.
+- [ ] **Creating or saving characters does not enable Do/Say by itself, automatically assign the newly created character to `Playing As`, or return to the story.** Several Lorebook characters may be added before the user explicitly makes a choice. An existing selection is not replaced by later creation.
 - [ ] Do input is attributed to the currently selected `Playing As` character as an attempted action, not automatically a successful state mutation; Say is attributed to that same character as their dialogue. Changing the selection does not move inventory or mutate character facts.
 - [ ] Say input is conveyed as in-character dialogue, and Story input as authorial narrative instruction or text.
 - [ ] Continue generates a continuation without requiring new player text.
@@ -75,6 +76,7 @@ The same composer UI may be reused across Do, Say and Story; whether modes use s
 - No implementation is claimed; this is not production approval.
 
 ## Decisions and review history
+- 2026-10-18 — **User rejected proposed automatic actor selection/return after creating characters:** Players may add multiple Lorebook characters. Creating/saving one does not automatically set/replace `Playing As` or return to story; explicit Settings selection alone chooses the actor/speaker for Do/Say. If no character is selected those modes stay disabled. Staging unchanged.
 - 2026-10-18 — **User explicitly selected Settings sidebar `Playing As` character selector instead of per-turn confirmations:** Do and Say **must be disabled unless a character is selected**. Selector choices come from existing Lorebook character entities, with **Add Character** navigating to Lorebook manual entry. Do/Say use the selected character's name/identity for speaking and actions without asking who 'I' is every turn. **Story and Continue always work without a character**. No placeholder avatar or global player inventory. Earlier suggestion that all four modes are available in characterless adventures and would ask for ambiguous Do/Say actor confirmation is **superseded**; remains staging only.
 - 2026-10-18 — **Accepted IDEA-0007/0026 flexible-character integration:** Do, Say, Story and Continue must work with zero or many characters, optional narrative focus and per-turn actor identification. Actions and inventory cannot silently default to a made-up permanent protagonist; ambiguous first-person input remains unresolved or requires clarification. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
