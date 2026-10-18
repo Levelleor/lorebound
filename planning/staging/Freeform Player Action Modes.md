@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -35,6 +35,11 @@ Provide a mode selector and unrestricted text input for Do, Say and Story, plus 
 
 ## Alternatives and trade-offs
 The same composer UI may be reused across Do, Say and Story; whether modes use separate buttons, shortcuts or one menu remains open. One universal mode was an alternative, but the user accepted all four. Validation strictness and interpretation pass strategy are separate design decisions.
+
+## Characterless and multi-character actions
+- **Accepted flexible character model (IDEA-0007/0026):** All four modes work even when an adventure has **no designated protagonist or no characters at all**. Story-wide narration may describe environmental/world events without pretending an unnamed player character caused them.
+- **Per-turn actors, not permanent player identity:** Do/Say actions may involve an identifiable acting character, several named characters, or be unresolved if the text supplies no grounded referent. Story and Continue can contain events with **zero, one or multiple actors**. A current narrative focus is optional and does not inherently establish who performed a turn's action.
+- When a first-person input such as "I draw my sword" has **no unambiguous established actor**, the system must not invent a protagonist or assume a global Player Inventory. Use an appropriate unresolved/clarification path rather than silently assigning possession. Detailed UI and disambiguation policy remain open.
 
 ## Dependencies and constraints
 - Depends on the eventual narrative coordinator, model prompting and optional game-state modules.
@@ -69,5 +74,6 @@ The same composer UI may be reused across Do, Say and Story; whether modes use s
 - No implementation is claimed; this is not production approval.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0007/0026 flexible-character integration:** Do, Say, Story and Continue must work with zero or many characters, optional narrative focus and per-turn actor identification. Actions and inventory cannot silently default to a made-up permanent protagonist; ambiguous first-person input remains unresolved or requires clarification. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user** for staging: all four modes (Do, Say, Story, Continue), with shared world-state validation for enabled simulation/tracking features. Staging signifies accepted direction, **not** approval for production or implementation.
