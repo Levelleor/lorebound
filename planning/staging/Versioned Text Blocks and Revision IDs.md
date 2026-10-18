@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]"]
@@ -52,6 +52,11 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - The new adventure identity is distinct; precise block/revision ID copying versus remapping depends on their chosen scope. Avoid pointers from the duplicate to mutable records owned by the source adventure.
 - **Do not duplicate unconfirmed editing drafts** or unsent player input; those are noncanonical and stay with the original adventure.
 
+## Concurrent edits cannot overwrite accepted revisions
+- **Accepted IDEA-0005 user decision (2026-10-18):** Multiple tabs can propose edits to the same adventure. A confirmed text revision and its state/event provenance must commit against the **expected authoritative adventure version** checked by Go/SQLite. If Tab A commits first, a conflicting Tab B revision prepared from earlier state is **rejected**, not used to overwrite, reassign or silently rebase A's recorded revision lineage and event sources.
+- Local unconfirmed text edits remain **noncanonical drafts** even when a concurrent committed revision supersedes their starting version. Preserve the losing tab's unfinished work and make the conflict visible for intentional reconciliation. Draft autosaves must not silently overwrite other tabs' drafts; precise session IDs, draft versioning, merge controls and handling of independent blocks remain implementation refinements.
+- This does not require exclusive editing locks, automatic prose merging, per-keystroke canonical revisions, or a particular block-granularity conflict algorithm. Earlier accepted historical-edit confirmation and downstream reconstruction rules continue to apply.
+
 ## Dependencies and constraints
 - Works with accepted [[Event-Sourced World History]] (IDEA-0039), whose event records need stable source turn and revision references.
 - Historical editing confirmation and deletion UX belong to separate unaccepted [[Historical Edit Confirmation and Bulk Truncation]] (IDEA-0041). Checkpoint design and undo safety are independently unaccepted (IDEA-0042, IDEA-0043).
@@ -71,6 +76,8 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - How can old source references remain resolvable after truncation, undo or branch selection?
 
 ## Draft acceptance criteria
+- [ ] Concurrent edits that originate from stale adventure versions cannot overwrite accepted block revisions or misattribute event provenance; rejected edits retain their uncommitted text for reconciliation.
+- [ ] Noncanonical drafts from different tabs cannot silently replace one another; canonical revision IDs are created only after successful validation and accepted commit.
 - [ ] Editable story text retains stable block identities through ordinary revisions and non-destructive reordering.
 - [ ] Different versions of the same continuing block have distinct revision IDs and retrievable lineage.
 - [ ] Generated story turns and accepted world-state events can identify the exact source text revision(s) from which they derive.
@@ -92,6 +99,7 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - Design remains unrefined, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0005 conflict dependency:** Concurrent tabs may edit the same adventure, but stale expected-version canonical text commits are rejected atomically. Preserve accepted revision lineage/provenance and the other tab's uncommitted work; draft save conflict policy remains open, with no silent cross-tab overwrite. Staging only.
 - 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
