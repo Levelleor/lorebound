@@ -44,6 +44,9 @@ All three travel policy directions are **accepted as configurable alternatives**
 - Existing freeform/strict travel rules **still apply** if that actor's subsequent Do/Say action attempts real movement; this is **not an exception permitting in-world teleportation**. Switching cannot create secret connections, relocate characters or merge their scenes. Characterless Story/Continue still work.
 
 
+## Playing As scene cut is not travel
+- **Accepted:** Changing `Playing As` between characters at different established locations is a narrative cut, not a movement event. The next Do/Say follows the selected character where they already are. No travel graph edge, journey time, route validation or teleportation is needed for the switch itself, including under strict travel rules. A subsequent actual movement action still undergoes the normal configured travel-policy validation.
+
 ## Dependencies and constraints
 - Requires stable location IDs and a containment hierarchy from accepted [[Hierarchical World Locations]] (IDEA-0033), while preserving the distinction between hierarchy and route edges.
 - Validated travel should update accepted [[Character Presence and Current Scene]] (IDEA-0034) state and avoid automatically relocating remote or absent NPCs.
@@ -91,6 +94,7 @@ All three travel policy directions are **accepted as configurable alternatives**
 - **Staging means accepted for refinement, not production-approved or implemented.** The default policy, route solver, conditional-edge schema and user experience need review.
 
 ## Decisions and review history
+- 2026-10-18 — **Explicit user acceptance:** Switching to a distant character is not travel. Next Do/Say follows their established scene, and actual later movement still validates as normal. Staging only.
 - 2026-10-18 — **Accepted scene-cut dependency:** `Playing As` switching is a narrative cut and not travel, so no route or movement validation is triggered by switching between far-apart characters. Actual travel still follows normal selected policy. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Configurable travel graph separately from the location hierarchy, supporting freeform movement, strict adjacent-only movement and valid multi-hop routes; validated location changes and optional conditional edges such as locked doors, permissions and one-hop limits; no invalid travel under strict rules. Default policy, route resolution and precise restrictions remain open. Moved to staging for refinement only.
