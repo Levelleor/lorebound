@@ -60,6 +60,10 @@ A single author-note text field is flexible but harder to reuse and discover; de
 ## Scene cuts when Playing As changes
 - **Accepted:** The next Do/Say after switching `Playing As` follows the selected character at their **existing established location**, however distant from the prior character. Narration may cut directly between scenes; it must not invent travel, teleportation, time lapse or shared location because of selection. `Story` and `Continue` remain independent. Narration tense/style is unchanged by selection.
 
+## Settings tab beside selected-character Info
+- **Accepted IDEA-0062 presentation:** A shared panel offers **Info** and **Settings** tabs, with explicit `Playing As` selection in Settings and the chosen character's known inventory/status/location presented in Info. Narration style preferences remain distinct from `Playing As` actor selection; their precise controls and grouping within Settings remain to be designed.
+- A dedicated **Lorebook icon immediately left of the story input field** opens Lorebook for frequent inspection/editing; it is not another required tab or an action that changes the selected character. UI navigation/selection has no canonical story or world-state effect.
+
 ## Dependencies and constraints
 - Depends on the narrator/context builder and generation model integration; the UI and prompt format remain to be refined.
 - Model adherence is best-effort; a selected perspective, tone or tense cannot be guaranteed by arbitrary LLMs.
@@ -95,6 +99,7 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - Accepted for staging and refinement only; this does not mean that controls have been implemented or approved for production.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0062 interface refinement:** Info and Settings share two tabs in the information panel; `Playing As` is in Settings while Info reflects the selected actor, and Lorebook is reached from a composer-left icon. Narration style remains separate from player actor identity. Staging only.
 - 2026-10-18 — **Explicit user acceptance:** `Playing As` switching is a narrative cut; the next Do/Say follows the chosen character in their existing circumstances. Switching causes no physical travel, time passage or item movement. Staging only.
 - 2026-10-18 — **User-approved viewpoint cut:** Changing `Playing As` makes next Do/Say follow that character where they already are, even across distant scenes. No travel/teleportation/time lapse, actor confirmation, or world-state transfer results from selection. Story/Continue and narration-style settings remain independent. Staging only.
 - 2026-10-18 — **Accepted character-unification dependency:** No PC/NPC or Playable category; any Lorebook character may be used as Do/Say actor, without changing narration-style settings or canonical world state. Staging unchanged.
