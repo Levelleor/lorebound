@@ -68,6 +68,11 @@ When `Playing As` changes, the **next Do/Say follows the new character at their 
 - **Universal selection unchanged:** All existing characters, including those with no known name, are eligible for explicit `Playing As` selection via **display labels tied to stable IDs**. No unnamed-character filter, automatic protagonist selection or change in Do/Say/Story/Continue rules.
 
 
+## Character description and typed attributes are not semantically cross-validated
+- **Accepted IDEA-0007 user refinement (2026-10-18):** A character's **player-authored freeform description/background** and optional typed attributes are both permissible even when their natural-language meanings appear inconsistent. Do **not** require a cross-field semantic analysis of arbitrary prose, force a conflict resolution step, or automatically treat structured field values as overriding/writing back to prose. Save each user-provided representation subject to its normal independent field and data-integrity constraints.
+- **State protection is separate:** This does not remove stable identity, relationship/reference integrity, the name/label/unknown distinction, expected-version checks for accepted edits, or validation of gameplay actions and model-proposed world-state changes. It also does not require introducing a background contradiction detector or AI comparison pass.
+
+
 ## Dependencies and constraints
 - Relates to accepted [[Entity-Based Lorebook]] (IDEA-0020), which should link durable character entities without confusing static lore with changing character state.
 - The next separate candidates include status sheet fields and tracking (IDEA-0027, IDEA-0028), items and equipment (IDEA-0029, IDEA-0030), anatomy (IDEA-0031, IDEA-0032) and locations/presence (IDEA-0033, IDEA-0034). This approval does not advance any of those candidates.
@@ -86,6 +91,8 @@ When `Playing As` changes, the **next Do/Say follows the new character at their 
 - When should fields be explicitly authored by the player versus inferred as a proposed AI change requiring validation?
 
 ## Draft acceptance criteria
+- [ ] Manually supplied character prose and valid structured details may coexist despite apparent semantic contradiction without mandatory AI/natural-language reconciliation or a silent precedence rule.
+- [ ] Stable-ID links and authoritative operation/state-validation boundaries are unaffected.
 - [ ] Character records may exist with an immutable stable ID and **unknown/absent name** and no mandatory other descriptive fields; no fabricated default identity facts are stored.
 - [ ] The interface can distinguish unnamed characters with descriptive or neutral UI labels without treating those labels or unverified aliases as established names.
 - [ ] A later established name updates the same entity and preserves attached world data, source history and any `Playing As` reference; unnamed entities remain eligible for selection.
@@ -119,6 +126,7 @@ When `Playing As` changes, the **next Do/Say follows the new character at their 
 - Staging means accepted for refinement, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0007 dependency:** No mandatory semantic comparison/reconciliation between freeform player-authored character background and typed fields. Keep both as authored and independently valid; do not invent precedence or rewrite prose, while maintaining world-state and referential integrity requirements. Staging only.
 - 2026-10-18 — **Accepted IDEA-0007 unnamed-character refinement:** Name is optional/unknown; stable ID holds identity. Character labels and generic fallback are display-only, and claimed aliases remain uncertain. Later name revelation enriches the same entity; unnamed characters appear in `Playing As` by ID. No PC/NPC kinds or invented backstories. Staging only.
 - 2026-10-18 — **User-accepted info/settings UI refinement:** Two-tab information panel, with **Info reflecting selected character's real inventory/status/location** and **Settings containing `Playing As`**. Lorebook has a direct icon at the left of the input field. Characterless stories and unselected actors do not receive invented display data. Staging only.
 - 2026-10-18 — **User explicitly accepted:** Switching `Playing As` between distant characters is a **narrative cut**. The next Do/Say uses the newly chosen character's established scene/location, with no travel, teleportation, time passage, inventory/state transfer or extra confirmation. Story/Continue remain independent. Staging only.
