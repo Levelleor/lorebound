@@ -68,6 +68,12 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - The user can relaunch Lorebound and reconnect to the **same existing server/database**. Normal explicit Quit or OS shutdown will end the process; the server should close SQLite resources gracefully where feasible, retaining the existing transaction, WAL and durable history guarantees. Crash/power-loss recovery relies on SQLite integrity rules, not on assuming all unsaved browser input was flushed.
 - Successfully written noncanonical drafts and canonical turns remain durable according to existing rules; closing the browser can abandon in-memory unsaved keystrokes and browser-side AI work. The server does not independently finish such client-side tasks. No automatic extra backup or new physical library is implied.
 
+## Explicit in-app Quit closes the SQLite owner
+- **Accepted IDEA-0053 shutdown UX:** The normal-browser **Settings → Quit Lorebound** action initiates shutdown of the **single headless server and its Go-managed SQLite library owner**. Quit is app-wide, not merely a tab close, adventure close or data export. No tray/menu-bar helper or competing server is needed.
+- **Durability:** Cleanly finish or reject in-flight writes, safely close database resources and release single-instance ownership as feasible, retaining **all successfully committed canonical turns and autosaved draft writes**. Client-side unfinished AI requests and never-autosaved keystrokes are not promised to survive Quit. This does not create a new automatic backup or change established whole-library backup/restore policies.
+- Closing the last browser tab continues to leave the server/library open; relaunch reconnects for access to Settings Quit. Shutdown requests must originate from appropriately authorised app clients, not arbitrary origins or another local process.
+
+
 ## Dependencies and constraints
 - User selected Wails v3 headless localhost only in [[Localhost Startup and Offline Mode]] (IDEA-0053), packaged into Windows/macOS/Linux server executables. The headless mode requires a running Go process but not Node SSR.
 - [[Snapshots and Incremental State Rebuild]] (IDEA-0042), [[Event-Sourced World History]] (IDEA-0039) and [[Versioned Text Blocks and Revision IDs]] (IDEA-0040) require full durable reconstructibility at supported history points.
@@ -87,6 +93,8 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - What benchmarks ensure history replay/queries and large write batches keep the UI responsive?
 
 ## Draft acceptance criteria
+- [ ] **Settings → Quit Lorebound** initiates an authorised server/SQLite shutdown and releases resources cleanly without corrupting or partially committing authoritative state.
+- [ ] Last-tab closure leaves the shared library available to the running server; all successfully persisted data survives a subsequent explicit Quit/relaunch.
 - [ ] The SQLite library remains associated with the single still-running server when all browser clients close; a later browser relaunch reconnects without opening a competing server or separate library.
 - [ ] Deliberate server Quit/OS termination releases database handles safely where possible, and only persisted drafts/canonical transactions are promised to survive client closure.
 - [ ] A second Lorebound executable launch with an already running server **reuses the active instance**, rather than opening another competing server process connected to its database.
@@ -118,6 +126,7 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - Earlier staging acceptance had **not** selected an engine or location; these were **subsequently decided** on 2026-10-17: Go-managed filesystem SQLite, one shared library database, and OS per-user app-data default with optional custom data directory. Exact implementation, minimal file/connection safety and production readiness remain open. Automatic library migration and advanced corruption recovery are not selected.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0053 Settings Quit dependency:** The Settings tab's explicit Quit action stops the single headless server/SQLite owner, preserving committed and successfully autosaved data as normal. No tray helper or new backup is implied. Closing tabs alone does not quit. Staging only.
 - 2026-10-18 — **Accepted IDEA-0053 persistent server lifetime:** Last browser-tab close does not shut down the Go/SQLite owner; relaunch reconnects to the existing server and library. Explicit Quit/OS shutdown ends it, with normal graceful database close where possible. No guarantee of browser-owned pending work after tab closure. Staging only.
 - 2026-10-18 — **Accepted IDEA-0053 single-instance startup dependency:** A second executable launch reuses the running headless server/its URL, rather than opening a competing server on the same SQLite database. Multiple browser tabs may still use that server and need revision/transaction safeguards; stale locks and simultaneous launches are implementation details. Staging only.
 - 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
