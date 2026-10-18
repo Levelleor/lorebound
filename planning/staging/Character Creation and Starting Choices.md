@@ -48,6 +48,11 @@ A fully freeform description and optional guided fields are complementary, not m
 - The input field has a **Lorebook shortcut icon directly to its left**. `Add Character` from `Playing As` still opens **manual Lorebook creation**. The player may create multiple characters there without auto-selecting one or being sent back to the story.
 - Info always reflects the user's explicitly selected character, not the latest created character. A characterless story creates no fake profile, inventory or location to populate Info. Exact empty-state presentation remains open.
 
+## Add Character opens the same Lorebook left drawer
+- **Accepted IDEA-0062 navigation:** Choosing **Add Character** in the Settings-tab `Playing As` dropdown opens the **same editable Lorebook LEFT-side drawer** that the dedicated icon immediately left of the story input opens, navigating to manual character creation there. Do not create a separate mandatory full-page character wizard.
+- The Lorebook drawer opens with **two sequential phases**: the narrow leading sidebar/rail appears first from the left, then the main content comes out from behind it. **Closing fades out simply**; do not replay the opening in reverse. Exact dimensions/timings remain under UI refinement; support reduced motion and keyboard navigation.
+- Players may add **multiple characters** without being forced out of the drawer or automatically assigned a `Playing As` identity. The existing selected actor, if any, remains unchanged until explicitly set in Settings. The Info/Settings two-tab panel remains a separate surface.
+
 ## Dependencies and constraints
 - Depends on the shared character model, character sheet, lorebook and optional world/inventory modules that are covered by other individual idea notes.
 - A character created without numerical stats or a fully defined species must remain valid.
@@ -89,6 +94,7 @@ A fully freeform description and optional guided fields are complementary, not m
 - This direction has been explicitly accepted for **staging/refinement**, not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0062 Lorebook drawer integration:** Settings Add Character opens the same left-side editable Lorebook drawer as the composer-left icon, with rail-first/content-second entrance and simple fade-out exit. Manual creation may continue for multiple characters with no automatic Playing As selection or forced redirect. Staging only.
 - 2026-10-18 — **Accepted IDEA-0062 two-tab interface:** Info shows data about the explicitly selected character; Settings contains `Playing As`, while a Lorebook icon beside the input offers direct access to manual entry. Creating several characters still never selects one automatically. Staging only.
 - 2026-10-18 — **Explicit user-confirmed change:** Lorebound recognises **one character kind**, no PC/NPC or Playable status; every Lorebook character can be chosen for Do/Say via explicit Settings `Playing As` selection. Creating characters does not mark/select any of them automatically. Zero-character adventures remain valid. Staging only.
 - 2026-10-18 — **Explicit user rejection of automatic selection after Add Character:** Lorebook can be used to add **multiple** characters. Saving a new character **must not auto-select it as `Playing As`**, change any prior selection, or force return to the story. Selection is always an explicit action in the Settings sidebar after the user chooses which character to play. Existing Do/Say selection gate and Story/Continue availability remain. Staging only.
