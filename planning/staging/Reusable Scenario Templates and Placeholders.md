@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-17"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Memory Lorebook and Context Brainstorm]]"]
@@ -35,6 +35,10 @@ A player saves a reusable scenario containing a premise/opening instructions and
 
 ## Alternatives and trade-offs
 A plain-text/template-data editor would be simpler and allow technical users to author scenarios; a visual form-based editor may be friendlier for nontechnical users. Both remain implementation options. Prompt-only templates are supported as the simple case, while structured scenarios add richer state but more validation and schema dependencies.
+
+## Minimal-start dependency
+- IDEA-0006 now explicitly permits adventure creation with **blank Custom Opening**, no named title (defaults to **`Untitled Adventure`**) and no mandatory Guided Setup fields. **Scenario templates remain optional** and must not become a prerequisite or compulsory preset for creating an adventure.
+- Instantiating a chosen template still creates a fresh independent adventure with its own ID and no copied playthrough history; this decision does not add mandatory templates or new template import/export functionality.
 
 ## Dependencies and constraints
 - Adventure creation and isolation should follow the accepted [[Adventure Save and Export Management]] (IDEA-0005).
@@ -72,5 +76,6 @@ A plain-text/template-data editor would be simpler and allow technical users to 
 - Accepted for **staging/refinement**. Implementation and production approval are not claimed.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0006 minimal-start dependency:** Quick Start, blank Custom Opening and fully optional Guided Setup remain possible **without applying a scenario template**. Untitled adventures use the `Untitled Adventure` display fallback and still receive independent IDs. The reusable-template idea remains staging; the decision is not approval to require templates.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user**: reusable scenario templates, variable placeholders, optional Lorebook/world setup and structured starting state, producing fresh independent adventures without copied play history. Move to staging for refinement, not production.
