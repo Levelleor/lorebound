@@ -53,6 +53,11 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 ## Actor scene cuts leave item possession unchanged
 - **Accepted:** Switching `Playing As` between characters in distant scenes changes which character the **next Do/Say** follows. No item travels or changes hands because of a perspective switch. Inventory/ownership/accessible items remain attached to their established character, container or location. Any transfer described in a subsequent turn still requires normal validation.
 
+## Selected-character inventory in the Info tab
+- **Accepted IDEA-0062 layout:** The **Info** tab in the shared Info/Settings panel shows the **actual inventory/possessions of the explicitly selected `Playing As` character** when inventory tracking is enabled. **Settings** contains the Lorebook-backed actor selector. Other characters' possessions are still inspectable by opening Lorebook directly from the **icon immediately left of the story input**.
+- Changing selection changes **which character's real inventory is displayed**, not the holder/owner of an item. A missing inventory record is **unknown**, not proof of empty pockets; a known-empty inventory is only shown as empty when established. Nothing is auto-created for characterless adventures.
+- Showing inventory in Info does not grant new transfer/ownership rights or commit any event; actual item changes remain separately validated and persisted.
+
 ## Dependencies and constraints
 - Uses accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) for durable character ownership/custody references; integrates with future world-location data without presuming that separate candidate is approved.
 - Item create/move/delete actions must be validated against committed canonical state and must not follow uncommitted, rejected or failed narrative generation as if authoritative.
@@ -75,6 +80,8 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - How do item location/holder references work when character or location entities are deleted, merged or renamed?
 
 ## Draft acceptance criteria
+- [ ] The Info tab displays the selected `Playing As` character's real known inventory when enabled, updates on selection, and never shows the previous actor's items as the new actor's possessions.
+- [ ] Missing inventory data is not presented as a definite empty inventory; the Info tab does not change item state.
 - [ ] Changing `Playing As` between characters in distant locations never duplicates, teleports, swaps or transfers their items; Do/Say inventory actions still target and validate the selected character's actual accessible items.- [ ] Tracked unique item instances have durable IDs that survive renames and transfers.
 - [ ] A player or validated gameplay event can create, pick up, drop, store and transfer items between characters, containers and world locations where those entities exist.
 - [ ] A transfer removes an item from its prior incompatible placement before establishing its new placement; an individual instance is not simultaneously owned by multiple inventories as the same physical object.
@@ -99,6 +106,7 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - Accepted into **staging for refinement only**, not production. The precise model for stacking, capacity, item categories and ownership rules remains undecided; no implementation is claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Explicitly accepted selected-character Info display:** The Info tab in a two-tab Info/Settings panel presents the selected character's **existing inventory**, while Settings holds `Playing As` and Lorebook is available at the composer-left icon. Switching only changes presentation, not custody. Staging only.
 - 2026-10-18 — **Explicit user acceptance:** `Playing As` switching is a narrative cut; the next Do/Say follows the chosen character in their existing circumstances. Switching causes no physical travel, time passage or item movement. Staging only.
 - 2026-10-18 — **Accepted scene-cut/inventory independence:** Next Do/Say follows the new `Playing As` actor's established whereabouts, not the previous actor's location or possessions. Selection itself performs no travel or item transfer; staging unchanged.
 - 2026-10-18 — **Accepted universal-character dependency:** One character kind, every Lorebook character eligible for `Playing As`; no PC/NPC or Playable tag. All item ownership/custody remains entity-based, never transferred by selection. Staging only.
