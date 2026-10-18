@@ -12,33 +12,40 @@ related: []
 tags:
   - planning/idea
 ---
-# Shared PC and NPC Character Entities
+# Unified Character Entities (historical file: Shared PC and NPC Character Entities)
 
 ## Idea
-Use one character schema for protagonists and NPCs, with a pointer to the player-controlled character.
+Use one unified character model for every character in an adventure, with a nullable per-adventure `Playing As` reference for temporary player actions; **no permanent PC/NPC or Playable classification**.
 
 ## Why this idea matters
 All characters can move, own items and change state.
 
 ## Accepted direction
-- **One shared character entity model:** Player characters (PCs) and non-player characters (NPCs) use the same fundamental character schema and data relationships. Being player-controlled is not a separate incompatible entity type.
+- **One universal character entity model (explicitly accepted):** Characters have **no PC versus NPC distinction**, no permanently player-controlled class, and **no Playable flag or role eligibility filter**. Every existing character in the adventure's Lorebook is a possible `Playing As` choice. Player interaction with a character is a temporary choice for Do/Say, not an intrinsic characteristic of the character.
 - **Stable character IDs:** Every character has a durable identifier used to connect profile, inventory, equipment, anatomy, relationships, current location and other records, even when its name or details change.
 - **Explicit optional `Playing As` actor selection (latest user refinement):** An adventure has **no mandatory or permanent protagonist**, but may save a **nullable, changeable selected character ID** in a Settings-sidebar `Playing As` selector populated from existing Lorebook character entities. **Do and Say use that selection as their player actor/speaker** and are disabled if it is unset. **Story and Continue always work without one** and may involve any grounded actor(s) or no actors. Switching the selected character never creates a new entity, changes their possessions/location, or rewrites history. This control's active Do/Say identity is conceptually separate from broader narrator perspective/viewpoint settings.
-- **Consistent shared mechanics regardless of playability:** Every existing character can move, hold/transfer items, wear equipment, form relationships and change persistent state through the same underlying systems, subject to game rules. A player may act through a different character without reassigning their inventory or changing persistent character type.
+- **Consistent mechanics for every character:** Every character can move, hold/transfer items, wear equipment, form relationships and change persistent state through the same systems, subject to game rules. The player may take turns acting/speaking **as any character** without reclassifying the entity or moving its inventory.
 - **Optional and lazily populated character details:** Minor NPCs can initially be represented by a stable ID and a few known properties. Other records and fields may be populated later as they become necessary without requiring full RPG sheets, equipment inventories or anatomy for every incidental character.
 - **Unknown is not a default:** Missing or unrecorded character values must remain **unknown/not recorded** rather than silently treated as zero, empty, absent, healthy, unequipped or any other definite in-world state. Distinguish deliberately known empty values from unknown values.
 - **Separate feature boundaries:** The specific form and tracking policies for status sheets, inventory, equipment, anatomy and locations are separate candidates, not automatically accepted by this character-model decision.
 
 ## Proposed behaviour
-Persist characters in a shared entity registry keyed by immutable IDs, **but permit an adventure with no characters**. Save a **nullable per-adventure `Playing As` character ID** that references one of the actual Lorebook-backed character entities when selected. **Do/Say are disabled while that reference is unset**; Story/Continue and world events still work without a character. Changing `Playing As` assigns the player actor/speaker for subsequent Do/Say turns, not inventory, equipment, world-state or historical turns. Do **not** invent an unnamed protagonist or empty character sheet. Other narrative turns may refer to **zero, one or multiple actors** regardless of selection. Character detail can be progressively added in linked profile, inventory, equipment, anatomy, relationship, status and location records as known. Players and application/game events should be able to refer to any character consistently, even if initially little is known about an NPC. A missing value remains unknown, while an explicit empty/none value means the corresponding fact has actually been established. Avoid inferring unwritten details during context assembly.
+Persist **all characters in one unclassified entity registry** keyed by immutable IDs, **but permit an adventure with no characters**. Save a **nullable per-adventure `Playing As` character ID** that references one of the actual Lorebook-backed character entities when selected. **Do/Say are disabled while that reference is unset**; Story/Continue and world events still work without a character. Changing `Playing As` assigns the player actor/speaker for subsequent Do/Say turns, not inventory, equipment, world-state or historical turns. Do **not** invent an unnamed protagonist or empty character sheet. Other narrative turns may refer to **zero, one or multiple actors** regardless of selection. Character detail can be progressively added in linked profile, inventory, equipment, anatomy, relationship, status and location records as known. Players and application/game events should be able to refer to any character consistently, even if initially little is known about a character. A missing value remains unknown, while an explicit empty/none value means the corresponding fact has actually been established. Avoid inferring unwritten details during context assembly.
 
 ## Alternatives and trade-offs
-Separate PC and NPC schemas might simplify highly specialised UI but make interaction, inventory transfer and identity preservation more brittle. Requiring equally complete records for everyone would add unnecessary generation and storage work. The accepted solution combines a **uniform identity/data model** with **optional or lazily filled details**. The precise typed record relationships, defaults for UI display and lazy-population policy still require refinement.
+Separate permanent PC/NPC or Playable categories are now **explicitly out of scope**; they would add arbitrary restrictions on which characters can be played and complicate entity identity. Requiring equally complete records for everyone would add unnecessary generation and storage work. The accepted solution combines a **uniform identity/data model** with **optional or lazily filled details**. The precise typed record relationships, defaults for UI display and lazy-population policy still require refinement.
 
-## No invented NPC details on initial extraction
-- **Accepted IDEA-0006:** A successfully validated Quick Start opening can automatically register an explicitly named or otherwise clearly established NPC with a stable ID and **only details stated in the scene or already established in canon**. Do not manufacture an age, species, personality, appearance, motive, past experiences, statistics or private relationship just to fill a profile.
+## No invented character details on initial extraction
+- **Accepted IDEA-0006:** A successfully validated Quick Start opening can automatically register an explicitly named or otherwise clearly established character with a stable ID and **only details stated in the scene or already established in canon**. Do not manufacture an age, species, personality, appearance, motive, past experiences, statistics or private relationship just to fill a profile.
 - A minimal character is sufficient. For example, "your old friend Marcus approaches" establishes a character and the stated old-friend relationship, **not** a detailed shared childhood history. "Marcus carries a bloodstained sword" does **not** establish Marcus as its owner or reveal whose blood it is.
 - Interpreter-proposed initial character facts retain source provenance and must pass deterministic validation before the opening and world records commit atomically. Unknown properties stay unknown, not made-up defaults.
+
+## One character kind; any Lorebook character may be played
+- **Latest user-accepted refinement (2026-10-18):** There is **no conceptual player-character versus NPC split** in Lorebound. All characters are characters in the shared entity registry; the player can choose to speak or act as **any one of them** on a given series of Do/Say turns.
+- The adventure Settings sidebar's **`Playing As` dropdown lists every actual character entity in the adventure's Lorebook**, with no role-based eligibility, `isNpc`, `isPlayerCharacter`, `Playable`, special ownership or first-character filter. The saved selection is merely a **nullable character-ID reference** determining the actor/speaker for upcoming Do/Say input; it **does not change the character's type, permissions, past, world state, relationships or possessions**.
+- **No characters → no selection:** Story and Continue still work; Do and Say are disabled until the player explicitly selects a character. `Add Character` opens Lorebook manual entry; adding many characters never auto-selects one.
+- Historical references to `PC`/`NPC` in this file's name and previous decisions are **legacy vocabulary**, not active entity categories. **Retain the filename** to preserve existing wiki links and review history; updated behavioural text supersedes those old distinctions.
+- Precise dropdown ordering/search and any separate narration perspective UI remain to refine; do not add a Playable eligibility flag.
 
 ## Dependencies and constraints
 - Relates to accepted [[Entity-Based Lorebook]] (IDEA-0020), which should link durable character entities without confusing static lore with changing character state.
@@ -49,7 +56,7 @@ Separate PC and NPC schemas might simplify highly specialised UI but make intera
 - Any generation-driven updates to character state must still obey separately accepted authoritative validation boundaries.
 
 ## Open questions
-- How much NPC detail should be populated lazily, and what prompts or events should cause a new field to be filled?
+- How much character detail should be populated lazily, and what accepted prose or explicitly authored events should fill a new field?
 - Which minimum fields are necessary to create a character entity, beyond stable ID and identification information?
 - How are missing/unknown versus explicitly none, zero or empty represented in storage, APIs and interface controls?
 - **User resolved Do/Say selection and post-creation behaviour:** Adventures may have zero/one/many characters; the **Settings sidebar** offers `Playing As` from actual Lorebook character entries plus an **Add Character → Lorebook manual entry** route. Creating and saving any number of characters **never implicitly sets or replaces `Playing As`**, and should **not automatically navigate away from the Lorebook**. The player explicitly chooses from the list when ready. A nullable selected ID persists as an adventure setting. **No Do/Say per-turn confirmation**; Story/Continue stay enabled. Other narrator focus/perspective UI remains for later refinement.
@@ -58,10 +65,10 @@ Separate PC and NPC schemas might simplify highly specialised UI but make intera
 - When should fields be explicitly authored by the player versus inferred as a proposed AI change requiring validation?
 
 ## Draft acceptance criteria
-- [ ] Both player characters and NPCs can be stored and referenced through one common entity identity/schema with stable IDs.
+- [ ] **Every character** uses one common identity/schema with stable IDs, and **no PC/NPC kind, playable designation or permanent-control category** is required or used to filter selection.
 - [ ] An adventure with **no characters and no `Playing As` selection** is valid and can use Story/Continue but **not Do/Say**. `Playing As` references only a valid existing Lorebook character ID for that adventure and can be changed/unset without modifying inventory/world state.
 - [ ] PCs and NPCs can link to the same kinds of profile, inventory, equipment, anatomy, relationships, status and location records when those features become available.
-- [ ] A minor NPC may have incomplete optional details without requiring a fully populated character sheet or unused attached records.
+- [ ] A minor character may have incomplete optional details without requiring a fully populated sheet or attached unused records.
 - [ ] Adding details later preserves the same durable character ID and existing relationships/references.
 - [ ] Missing values remain unknown/not recorded and are not silently converted to asserted zero, empty or other in-world facts.
 - [ ] Explicitly established empty values can be distinguished from unrecorded/missing fields.
@@ -79,10 +86,11 @@ Separate PC and NPC schemas might simplify highly specialised UI but make intera
 - [ ] Human approved promotion to production
 
 ## Evaluation notes
-- Origin: **user**. User-requested direction, expressly accepted for staging with stable character identities and optional lazily populated NPC details.
+- Origin: **user**. The initially accepted shared PC/NPC architecture has been **superseded by the user's explicit choice of one unclassified character model** with no intrinsic playable/NPC distinction; stable identities and sparse details remain accepted.
 - Staging means accepted for refinement, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Explicit user-confirmed supersession of PC/NPC distinction:** There are **no PC or NPC categories and no Playable flag**. Every character is identical in kind and **selectable in `Playing As`**, because the player may temporarily take turns acting/speaking for any character. `Playing As` remains optional and selection is explicit, never automatic upon creation. Characterless stories continue with Story/Continue and no invented character. File name preserved for stable wiki references. Staging only, no implementation/promotion.
 - 2026-10-18 — **Explicit latest refinement:** Adding one or multiple Lorebook characters is independent of `Playing As`. Saving a new character does **not automatically select it, replace an existing choice, or return to the story**; the player explicitly picks their character later. This supersedes the assistant's proposed auto-selection/return shortcut. Staging unchanged.
 - 2026-10-18 — **Latest explicit user choice superseding ambiguous-actor clarification proposal:** A **nullable, per-adventure `Playing As` selection in the Settings sidebar** refers to an existing Lorebook character (chosen from a list; Add Character navigates to manual Lorebook entry). **Do and Say require that selection and use it as their actor/speaker**. Story/Continue need no selection. This refines earlier optional focus/multiple-character acceptance; no obligatory protagonist or global inventory. Staging only.
 - 2026-10-18 — **Explicit user acceptance updating former single-PC-pointer interpretation:** Maintain one universal character entity model, but **no permanent or compulsory protagonist**. Permit zero or many playable characters over an adventure and optional/changeable focus, distinct from the actual actors of a turn. Characterless stories and non-character world events remain valid. Neither player identity nor inventories are stored as a fake default character. Staging only.
