@@ -54,6 +54,11 @@ The same composer UI may be reused across Do, Say and Story; whether modes use s
 ## Do and Say follow the selected character's established scene
 After selecting any Lorebook character in `Playing As`, **the next Do/Say takes place from that character's own established scene**, not the previously selected actor's location. Switching is a narrative cut, **not an in-world move**, and needs neither actor confirmation nor travel narration. Subsequent narrated movement is validated normally. `Story` and `Continue` remain independent and usable without a selected character; unknown whereabouts are not invented.
 
+## Composer Lorebook shortcut and Settings tab
+- **Accepted IDEA-0062 layout refinement:** The information panel includes **Info** and **Settings** tabs. The already accepted Lorebook-backed **`Playing As` selector sits in the Settings tab**; Do/Say still require an explicit choice of any existing character. A prior reference to a 'Settings sidebar' refers to this tab in the shared info/settings panel, not a separate mandatory sidebar.
+- The composer provides a **Lorebook icon immediately to the left of the story input field**. It opens the editable Lorebook directly for frequent consultation and updates. It is **not** an alternative Do/Say actor shortcut or a required third information-panel tab. Lorebook manual **Add Character** flow and no-auto-selection policy remain unchanged.
+- Switching panel tabs or opening Lorebook never submits an input, accepts a story turn or changes canonical state. Keyboard accessibility and responsive presentation follow IDEA-0062.
+
 ## Dependencies and constraints
 - Depends on the eventual narrative coordinator, model prompting and optional game-state modules.
 - Interpret mode intent carefully: *attempted* action, spoken words, authored narrative and autonomous continuation may all lead to different consequences.
@@ -67,10 +72,13 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 - How do validation errors appear without interrupting prose writing?
 
 ## Draft acceptance criteria
+- [ ] A dedicated, keyboard-accessible Lorebook icon sits immediately left of the input field and opens Lorebook directly.
+- [ ] The **Settings** tab in the two-tab information panel contains `Playing As`; **Info** shows the explicitly selected character's authoritative information, while Do/Say still require selection and Story/Continue do not.
 - [ ] With Mara in the capital and Theo in a forest, changing `Playing As` to Theo makes the next Do/Say follow Theo **in the forest** without relocating anyone or moving items.
 - [ ] If Mara is at the capital and Theo in a forest, choosing Theo in `Playing As` makes the next Do/Say **Theo's action or speech from his forest scene**, without modifying Mara's or Theo's established location/state.
 - [ ] A switch needs no user confirmation or narrated travel; subsequent world-affecting actions still receive their normal validation.
-- [ ] Story/Continue are not constrained to the chosen Do/Say actor, and a new actor with unknown whereabouts is not teleported to the previous scene.- [ ] Story and Continue can always be used, including in an entirely characterless adventure. Do and Say appear unavailable/disabled unless an actual character has been selected in the adventure Settings sidebar's `Playing As` control.
+- [ ] Story/Continue are not constrained to the chosen Do/Say actor, and a new actor with unknown whereabouts is not teleported to the previous scene.
+- [ ] Story and Continue can always be used, including in an entirely characterless adventure. Do and Say appear unavailable/disabled unless an actual character has been selected in the adventure Settings sidebar's `Playing As` control.
 - [ ] The `Playing As` selector lists **every existing character in the adventure's Lorebook** by name and stable ID, **without PC/NPC or Playable filtering**, with an **Add Character** route to Lorebook **manual character entry**; explicitly choosing any character enables Do/Say without per-turn actor confirmation.
 - [ ] **Creating or saving characters does not enable Do/Say by itself, automatically assign the newly created character to `Playing As`, or return to the story.** Several Lorebook characters may be added before the user explicitly makes a choice. An existing selection is not replaced by later creation.
 - [ ] Do input is attributed to the currently selected `Playing As` character as an attempted action, not automatically a successful state mutation; Say is attributed to that same character as their dialogue. Changing the selection does not move inventory or mutate character facts.
@@ -92,6 +100,7 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 - No implementation is claimed; this is not production approval.
 
 ## Decisions and review history
+- 2026-10-18 — **Explicit user acceptance (IDEA-0062):** Use **Info** and **Settings** tabs together in the information panel, place the `Playing As` selector under Settings, and provide a **Lorebook icon immediately left of the story input** for frequent access. Nothing auto-selects a character or commits world state. Staging only.
 - 2026-10-18 — **User explicitly accepted:** Switching `Playing As` between distant characters is a **narrative cut**. The next Do/Say uses the newly chosen character's established scene/location, with no travel, teleportation, time passage, inventory/state transfer or extra confirmation. Story/Continue remain independent. Staging only.
 - 2026-10-18 — **Explicit user acceptance of narrative-cut switching:** Changing Settings `Playing As` between characters, even distant ones, causes the **next Do/Say to follow the newly chosen character at their already established scene/location**. No travel, teleportation, time passage or transfer of world state is caused by selection; Story/Continue remain actor-independent. Staging only.
 - 2026-10-18 — **User explicitly accepted universal character eligibility:** Every Lorebook character appears in `Playing As`; there is **no PC/NPC type** and no Playable designation. The player simply takes Do/Say turns as whichever existing character they explicitly select. Unselected Do/Say stay disabled; Story/Continue and manual multiple-character creation stay unchanged. Staging only.
