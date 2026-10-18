@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Memory Lorebook and Context Brainstorm]]"]
@@ -39,6 +39,10 @@ A plain-text/template-data editor would be simpler and allow technical users to 
 ## Minimal-start dependency
 - IDEA-0006 now explicitly permits adventure creation with **blank Custom Opening**, no named title (defaults to **`Untitled Adventure`**) and no mandatory Guided Setup fields. **Scenario templates remain optional** and must not become a prerequisite or compulsory preset for creating an adventure.
 - Instantiating a chosen template still creates a fresh independent adventure with its own ID and no copied playthrough history; this decision does not add mandatory templates or new template import/export functionality.
+
+## Optional generated starting Lorebook relationship
+- **IDEA-0066 is separately accepted for later refinement:** A player may explicitly request a rich AI-generated starting Lorebook **before Turn 1**, independently of the reusable-scenario-template concept. Whether a generated world can later be saved as a reusable template or used with a template is **not approved or specified** yet.
+- Existing scenario instantiation remains an optional alternative starting route. It must not become mandatory merely because optional pre-play world generation now exists, and templates should not implicitly auto-generate undocumented lore via the source-facts-only Custom Opening/Quick Start extractor (IDEA-0006).
 
 ## Dependencies and constraints
 - Adventure creation and isolation should follow the accepted [[Adventure Save and Export Management]] (IDEA-0005).
@@ -76,6 +80,7 @@ A plain-text/template-data editor would be simpler and allow technical users to 
 - Accepted for **staging/refinement**. Implementation and production approval are not claimed.
 
 ## Decisions and review history
+- 2026-10-18 — **Dependency to accepted IDEA-0066:** A separate optional AI-built starting Lorebook/world may be created before Turn 1. Integration with reusable scenario templates is **unresolved** rather than silently included. Normal authored prose extraction remains source-grounded (IDEA-0006). Staging unchanged.
 - 2026-10-17 — **Accepted IDEA-0006 minimal-start dependency:** Quick Start, blank Custom Opening and fully optional Guided Setup remain possible **without applying a scenario template**. Untitled adventures use the `Untitled Adventure` display fallback and still receive independent IDs. The reusable-template idea remains staging; the decision is not approval to require templates.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user**: reusable scenario templates, variable placeholders, optional Lorebook/world setup and structured starting state, producing fresh independent adventures without copied play history. Move to staging for refinement, not production.
