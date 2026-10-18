@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
@@ -48,6 +48,11 @@ Native function/tool calling may provide provider-supported structured arguments
 - **Extract, do not author additional lore:** The interpretation pass is **not an independent worldbuilding request**. It must not invent background, physical descriptions, personalities, motivations, geography, item ownership, character relationships, events or numeric stats that the source never established. Assigning a necessary stable ID is technical bookkeeping, not a license to fabricate in-world details.
 - **Unknown remains unknown:** Minimal entities are valid. Unstated fields remain unknown/not recorded; rumours, hypotheticals, figurative language and ambiguous reference resolution cannot be promoted to established canon. Include source turn/text-revision references so every accepted structured fact can be traced to actual narrative evidence.
 - Example: "Marcus approaches, carrying a bloodstained sword" supports Marcus, an item and the **carrying** relationship; it does **not** prove Marcus owns the sword, where blood came from, or why it is stained. The same restriction applies to lore/location creation through this interpretation pathway.
+
+## Player-authored opening extraction and pre-play worldbuilding boundary
+- **IDEA-0006 extends source-grounded extraction to Custom Opening:** On committed player-authored prose, as on successfully accepted AI-generated Quick Start prose, propose only typed facts **actually stated in that passage**, explicit setup or previously accepted canonical context. An input draft is noncanonical; a blank opening supplies no facts. Do not invent unstated lore, NPC traits, places or relations to complete a schema.
+- **Intentional generation is a separate task (accepted IDEA-0066):** A player may explicitly request AI to **author new starting Lorebook/world content before Turn 1**. That task is **worldbuilding generation**, not factual extraction. It may propose genuinely new lore under validation and eventual acceptance rules, but must not be invoked implicitly whenever normal narrative prose mentions something.
+- The exact generation/review/commit process for IDEA-0066 remains a **future refinement**. It should not weaken fact provenance, unknown-state handling, deterministic checks or the separation of provisional model text from canonical facts.
 
 ## Dependencies and constraints
 - Works under accepted [[Deterministic Adventure Coordinator]] (IDEA-0044): model output is a provisional proposal and cannot mutate canonical state without deterministic validation and coherent finalisation.
@@ -97,6 +102,7 @@ Native function/tool calling may provide provider-supported structured arguments
 - This remains an **unrefined accepted planning direction**, not a production-ready specification or implemented feature.
 
 ## Decisions and review history
+- 2026-10-18 — **User-confirmed expansion and separate new idea:** Strict source-only structured extraction applies to **accepted Custom Opening** as well as generated Quick Start (IDEA-0006). The new **accepted IDEA-0066** permits **explicitly requested pre-first-turn AI Lorebook worldbuilding**, which is a different generation role and must not cause hidden lore creation during ordinary extraction. Exact workflow deferred. Staging unchanged.
 - 2026-10-17 — **Explicit user-approved IDEA-0006 constraint:** Automatic structured initial-world extraction is approved when supported systems are enabled, but the interpreter must **only extract source-established facts** and must **never create additional unspoken lore** while constructing location, character, item or relationship records. Preserve uncertainty and source provenance; validate proposals and atomically commit with the first opening turn. Staging only.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
