@@ -56,6 +56,11 @@ A combination of entry types and editable freeform lore supports both structured
 - `Playing As` changes only the actor/speaker attributed to subsequent Do/Say turns. It never transforms character identity, relocates characters, transfers equipment, creates lore or changes story history. Story/Continue remain independent.
 - The **Add Character** route enables manual creation of several characters before choosing any one explicitly. No character is auto-selected on save, and the player need not leave the Lorebook after creating one.
 
+## Direct-access Lorebook icon next to story input
+- **Explicitly accepted UI refinement (IDEA-0062):** The story composer has a **dedicated Lorebook icon immediately to the left of its input field**. It opens the editable Lorebook directly because lore and entity records are accessed and updated frequently during play. The Lorebook is **not** squeezed into the information panel's Info/Settings tabs as a required third tab. The presentation (overlay, full view, etc.) is still open.
+- **Settings retains `Playing As`:** The information panel's **Settings** tab holds the existing character selector, which lists **every** character entity in this adventure's Lorebook. Its **Add Character** option still navigates to manual Lorebook entry. Players may create several characters without auto-selecting or automatically returning to the story.
+- Opening Lorebook and editing its UI do not automatically change the selected player actor; actual canonical lore/world edits still follow normal validation/persistence rules.
+
 ## Dependencies and constraints
 - Lorebook entries should refer to authoritative entities in the future character, location and inventory systems; this idea does not approve those separate features by itself.
 - Dynamic state such as current location, ownership, inventory, alive/dead state and relationships must not be treated as immutable Lorebook fact.
@@ -73,6 +78,8 @@ A combination of entry types and editable freeform lore supports both structured
 - What precedence should manual inclusion and exclusion take if optional automatic Lorebook activation or RAG is accepted later?
 
 ## Draft acceptance criteria
+- [ ] A dedicated Lorebook icon immediately left of the story input opens Lorebook directly without routing through Info/Settings tabs.
+- [ ] Lorebook remains the authoritative editable place for character records used in Settings `Playing As`; creating a character there does not auto-select it or close the view.
 - [ ] A player can create, edit, inspect and link typed Lorebook entries for characters, places, factions, species, objects and abilities.
 - [ ] Lorebook entries can link to stable character/location/item entities without treating their current mutable state as frozen lore.
 - [ ] The system can distinguish established facts from rumours or attributed character beliefs in an inspectable manner.
@@ -94,6 +101,7 @@ A combination of entry types and editable freeform lore supports both structured
 - Accepted into **staging for refinement only**. Automatic embeddings-based RAG retrieval is intentionally recorded separately as a fresh unaccepted Inbox candidate.
 
 ## Decisions and review history
+- 2026-10-18 — **User-accepted Lorebook navigation placement:** Place a direct Lorebook icon **to the left of the story input field** because lore changes frequently. The nearby information panel has **Info/Settings tabs**, with `Playing As` under Settings, not Lorebook as a required tab. Staging only.
 - 2026-10-18 — **Explicit user decision:** The Lorebook's `Playing As` options include **every existing character**, with no PC/NPC distinction or Playable tag. Players may temporarily act as anyone by selecting their character in Settings. Manual character creation never auto-selects. This supersedes any previous implication of a permanent player versus NPC category. Staging unchanged.
 - 2026-10-18 — **User accepted manual choice after adding characters, rejecting automatic assignment:** The Lorebook may host creation of several characters in succession. **Saving one does not auto-select it as `Playing As` or force a story return**, and does not disturb a previously chosen actor. Only an explicit Settings selection chooses who Do/Say use. Staging unchanged.
 - 2026-10-18 — **Explicit user-approved Settings/Lorebook link:** The `Playing As` character selector reads actual Lorebook character entities; `Add Character` in its dropdown navigates to **manual Lorebook character creation**. The selection is required for Do/Say but not Story/Continue. No characters means no selectable actor, not a fabricated player hero. Remains staging.
