@@ -21,7 +21,7 @@ Store editable current stats, conditions, identity details, goals and status for
 Narrator context benefits from accurate current character state.
 
 ## Accepted direction
-- **Editable, customisable status sheets for every character:** Player characters and NPCs both use status data attached to their stable, shared character entities ([[Shared PC and NPC Character Entities]], IDEA-0026), without forcing every character to have a fully populated sheet.
+- **Editable, customisable status sheets for every character:** Every character uses the same optional status data linked to a stable, unclassified character entity ([[Shared PC and NPC Character Entities]], IDEA-0026). There is **no PC/NPC or Playable kind**, and no requirement to populate every character's sheet.
 - **Arbitrary player-defined fields:** Support custom fields covering stats, conditions, identity details, goals and mutable current character status rather than imposing a fixed RPG-only sheet.
 - **Flexible applicability:** Different adventures or characters may need different categories and field sets. A simple conversational adventure must not be forced to track numerical health, mana or other irrelevant attributes.
 - **Optional typed fields and validation:** Allow a future schema to distinguish relevant value types (for example numbers, text, booleans, options, references or other structured fields) and apply suitable validation. Exactly which types, constraints and templates are supported remains open for refinement.
@@ -31,7 +31,7 @@ Narrator context benefits from accurate current character state.
 - **Do not preapprove automatic state mutation:** Rules for manual-only, disabled or AI-assisted validated updates are reserved for separate unaccepted [[Character State Tracking Modes]] (IDEA-0028). Accepting the editable data model alone does not grant the AI permission to change status fields automatically.
 
 ## Proposed behaviour
-Provide per-character editable fields and optional typed definitions for current status, identity, conditions, goals and numeric or qualitative statistics. Let sparse NPC records remain sparse until information is genuinely established. Store mutable values on the linked authoritative character-status record rather than creating copies of live state in Lorebook prose. Allow players to choose which recorded fields are eligible for AI context; surface omitted fields and preserve distinctions between unknown, explicitly empty and known values. Keep how automatic updates work independent of the status sheet data model until IDEA-0028 is reviewed.
+Provide per-character editable fields and optional typed definitions for current status, identity, conditions, goals and numeric or qualitative statistics. Let sparse character records remain sparse until information is genuinely established. Store mutable values on the linked authoritative character-status record rather than creating copies of live state in Lorebook prose. Allow players to choose which recorded fields are eligible for AI context; surface omitted fields and preserve distinctions between unknown, explicitly empty and known values. Keep how automatic updates work independent of the status sheet data model until IDEA-0028 is reviewed.
 
 ## Alternatives and trade-offs
 A universal predefined RPG sheet can make validation and UI simpler but forces genre-specific assumptions on stories where the metrics don't fit. A flexible key/value sheet works across genres but may sacrifice type safety and user experience unless typed values and optional templates are provided. The accepted approach favours flexible player-defined fields with optional typing and validation; exact type catalogues, presets, reusable schemas and field inheritance remain refinement choices.
@@ -40,6 +40,10 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - **Accepted IDEA-0007/0026 flexible character control:** Character status sheets are attached only to **real, established character IDs**, irrespective of whether the character is currently focused, one of several acted-through characters, or an NPC. No player-global character status sheet or invented default protagonist is required.
 - Stories with **zero characters** can exist and track non-character world state without generating a placeholder sheet. A focus switch changes which existing record the interface may show; it must not mutate status values, inventories or other canonical character details.
 - Sparse character information stays unknown until explicitly established and validated, consistent with existing no-invented-lore rules.
+
+## Uniform character sheet regardless of player selection
+- **Explicit IDEA-0026 refinement:** Every Lorebook character is eligible for `Playing As` without PC/NPC or Playable classification. A status sheet belongs to its stable character ID, independent of how often the player chooses to act as that character.
+- The selected actor may change without altering any status field, inventory or historical event. Sparse characters and characterless adventures remain valid; no default protagonist sheet is required.
 
 ## Dependencies and constraints
 - Depends on accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) for stable identity and shared PC/NPC support.
@@ -83,6 +87,7 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - Accepted direction remains unrefined and is neither production-approved nor implemented. Exact schema and automatic-update behaviour remain open.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted universal-character dependency:** One character type, optional sheets for all, no PC/NPC or Playable categories and no status changes merely because `Playing As` changes. Staging only.
 - 2026-10-18 — **Accepted character-control dependency:** An adventure may have no characters or no main character, while status and inventory remain anchored to actual character entity IDs. Multi-character focus/actor switches do not modify status records or create dummy player sheets. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Editable, customisable status sheets for PCs and NPCs; arbitrary fields for stats, conditions, identity, goals and current state; optional inclusion of current values in generation context; optional typed fields and validation; preservation of unknown values versus explicitly empty ones. Exact schema and automatic state-update rules remain for refinement and IDEA-0028. Moved to staging, not production.
