@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[LLM Providers and Generation Brainstorm]]", "[[Local First Storage and Deployment Brainstorm]]"]
@@ -51,6 +51,11 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Cancellation, connection failure, incomplete streams and validation failures must not partially persist the opening or world state. Show an appropriate retry/failure state; do not represent incomplete preview tokens as an accepted first turn.
 - This rule does not change the **noncanonical autosave of player-written drafts**, nor does it remove explicit confirmation of later historical prose edits.
 
+## Unavailable model errors must remain local to the AI request
+- **Accepted IDEA-0001 refinement:** If an AI operation is requested without a configured usable provider/model, report the missing configuration **with a route to provider/model settings** instead of pretending to generate output. With a configured profile, try the actual API call; report failures at the request/stage level, not as a reason the adventure library or manual Lorebook/prose editor becomes unusable.
+- Continue existing provisional-generation policy: **failed, incomplete, interrupted or invalid AI response does not produce canonical story/events/world changes**. Preserve last accepted canon and recoverable input draft; show actionable API error details where available and avoid inventing diagnostics. Connection testing is optional rather than mandatory to launch or start any non-AI action.
+- A configured but offline local model or unreachable cloud provider can error; non-AI work remains available.
+
 ## Dependencies and constraints
 - Requires provider/local server streaming and abort behaviour through accepted [[Cloud LLM Provider Connectors]], [[Local LLM Server Connections]] and [[Provider Connection Profiles and Discovery]].
 - Pipelines may have multiple stages, retries, or different assigned models ([[Configurable Generation Pipeline Strategies]], [[One-Model Task Routing]]); a cancellation should stop or invalidate all remaining work belonging to that generation attempt.
@@ -92,6 +97,7 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Accepted for **staging/refinement** only; not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0001 dependency:** Only actual AI API operations can be blocked by missing model configuration or fail because of provider errors; non-AI play/editing/persistence works regardless. Guidance to model setup and clear stage-specific error feedback are required. Provisional generations never partially commit. Staging only.
 - 2026-10-17 — **Accepted IDEA-0006 Quick Start alignment:** Streamed opening is provisional during AI generation and validation; on completed validated success it is **automatically committed as canonical turn one**. Partial/cancelled/failed/invalid opening output cannot be committed. No additional Accept click is required for Quick Start; historical edit confirmation remains separate. Staging unchanged.
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
