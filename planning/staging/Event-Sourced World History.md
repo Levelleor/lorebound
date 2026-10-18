@@ -58,6 +58,11 @@ Full world snapshots each turn can be simpler for point-in-time reads but duplic
 - **Event validity remains strong:** Distinguish source/mode/authorial authority as needed by the eventual typed event/provenance schema, while keeping stable entity IDs, uniqueness/placement invariants, referential coherence, expected adventure version and atomic commit integrity. Do not invent routes or other fiction merely to make the event look mechanically possible. The exact metadata representation remains open.
 - **Replay stable reality:** Reducers, snapshots, forks, history edits, redo and downstream context must reconstruct the authored state transition correctly. A later ordinary gameplay action still observes enabled fictional constraints **from the new accepted state**. Provisional, model-invented or rejected effects must not enter canonical history.
 
+## Passage revision is the canonical event source
+- **Accepted IDEA-0003 Option A (2026-10-18):** Events reference their stable originating story **turn/passage ID and exact accepted passage revision**. A multi-paragraph passage can support multiple events, but individual paragraphs need no canonical IDs or independent revision histories.
+- Revising any paragraph of a committed passage changes the **passage revision** after confirmation. Reconciliation can then identify all potentially affected events from that passage. Correctness must not depend on perfect single-paragraph attribution.
+- Stable world entity IDs, complete ordered event provenance, event replay, cross-adventure forks and full-history duplication remain unchanged. Optional finer source-span metadata is a future optimisation, never required for correct canonical reconstruction.
+
 ## Dependencies and constraints
 - Integrates with accepted persistent character entities (IDEA-0026), inventory and items (IDEA-0029), locations, travel and presence (IDEA-0033 through IDEA-0036), and mutable environmental state ([[Persistent Location State and Travel Interactions]], IDEA-0038).
 - Uses accepted generation/validation boundaries (IDEA-0018): an AI-produced description or proposed operation must not become an authoritative event before validation.
@@ -78,6 +83,7 @@ Full world snapshots each turn can be simpler for point-in-time reads but duplic
 - What audit information is useful while avoiding unnecessary sensitive or excessive generation logs?
 
 ## Draft acceptance criteria
+- [ ] Events derived from a multi-paragraph passage retain the accepted **passage ID and revision**, not mandatory per-paragraph IDs; later paragraph edits can identify possibly affected events for reconstruction.
 - [ ] A committed Story-authorial override has explicit source/turn/revision provenance and reliably replays to the same canonical world state; it does not fabricate a preceding mechanic/route.
 - [ ] Unique identities and current placements remain coherent, and a failed partial proposal or unrelated AI/Continue claim cannot enter the authoritative event log as an authorial override.
 - [ ] For a chosen committed Turn N, an independent fork can replay the correct event sequence and state up to N, excluding all later effects and preserving accepted source-turn/revision provenance.
@@ -103,6 +109,7 @@ Full world snapshots each turn can be simpler for point-in-time reads but duplic
 - This is **accepted for refinement**, not approved for production or implemented; event invalidation, branching and migration remain open.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0003 Option A:** Canonical event-to-narrative provenance is at **turn/passage revision level** rather than at individual paragraph level. Revisions continue to support historic replay and validation. Staging only.
 - 2026-10-18 — **Accepted IDEA-0002 history integration:** Explicit player Story assertions may overrule fictional mechanics but remain source-traceable validated canonical events under strong ID/provenance/version/atomic integrity rules. Reducers replay the resulting accepted world truth; Do/Say/Continue do not receive a blanket bypass. Staging only.
 - 2026-10-18 — **Accepted IDEA-0011 event-history dependency:** An arbitrary committed-turn fork copies/reconstructs the full accepted event/source-provenance prefix through that turn into an independent adventure, omits later source events, and does not require checkpoints or changes to original history. Staging only.
 - 2026-10-17 — **Cross-reference to explicitly accepted IDEA-0005 duplication:** An adventure duplicate has its own identity but preserves **the complete accepted story/history and reconstructible state**, including provenance, lore and durable plugin data. **Unsubmitted input and unconfirmed drafts are excluded.** Internal references must be coherent and neither adventure may share mutable canonical records. This is an in-library operation, not file import/export. Remains staging.
