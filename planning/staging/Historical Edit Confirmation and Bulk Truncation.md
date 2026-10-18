@@ -43,6 +43,11 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - **Continue Editing** retains that draft and **Discard** abandons it. Only explicit **Keep Later Turns** or **Delete All After Point** confirmation can commit the revision and trigger appropriate world-state reconciliation.
 - Draft-save errors and the exact retention/debounce interval remain for refinement.
 
+## Historical edit choices respect multi-tab version conflicts
+- **Accepted IDEA-0005 multi-tab decision (2026-10-18):** If one tab is drafting or choosing **Keep Later Turns** or **Delete All After Point** while another tab advances or edits the same adventure, the historical-edit confirmation is tied to the **authoritative adventure version it was prepared against**. Go/SQLite must reject an outdated commit rather than truncating, overwriting or reconstructing from a stale history. Other tabs may continue editing; no exclusive adventure editing lock is required.
+- On conflict, preserve the unconfirmed historical prose draft and the chosen operation as an **uncommitted request**, surface the changed-adventure state and let the player explicitly review/reconcile before attempting again. No automatic deletion of newly committed downstream turns, auto-merging histories, or AI rewriting merely to resolve stale state. Exact conflict screen and rebase/retry steps remain to be refined.
+- Draft autosave remains noncanonical and must not silently overwrite another tab's draft, consistent with IDEA-0005/0051. This conflict protection supplements, rather than replaces, the existing explicit historical-edit confirmation gate.
+
 ## Dependencies and constraints
 - Source passages have stable IDs and versions through accepted [[Versioned Text Blocks and Revision IDs]] (IDEA-0040), so historical edits can identify affected state-changing source revisions.
 - World-state projections and events follow accepted [[Event-Sourced World History]] (IDEA-0039), with active versus obsolete historical effects kept distinct.
@@ -63,6 +68,8 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - How should selected history branches and snapshots affect recovery without preapproving those separate features?
 
 ## Draft acceptance criteria
+- [ ] If one tab commits new turns or a historical revision, a second tab's stale historical-edit confirmation cannot overwrite those turns or truncate the later history; it returns a visible conflict and retains the second tab's draft.
+- [ ] Both tabs remain editable, with an explicit reconciliation/retry path and no implicit replay or forced merge of the stale revision.
 - [ ] A player can edit an earlier story passage in a draft without modifying the active canonical history before confirmation.
 - [ ] The confirmation presents Keep Later Turns, Delete All After Point, Continue Editing and Discard as distinct operations.
 - [ ] Continue Editing preserves the draft for additional changes without beginning reconstruction.
@@ -86,6 +93,7 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - Staging is not production approval or evidence of any implementation. Truncation recovery, reconciliation and detailed UX require refinement.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0005 multi-tab rule:** All historical edit confirmations depend on the expected authoritative version. Conflicting older Keep Later Turns or Delete All After Point requests reject atomically, preserving newer history and the editor's unconfirmed draft. No exclusive edit lock or automatic conflict merge. Staging only.
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by requesting user:** Draft-first historical editing; explicit confirmation before expensive reconstruction; four choices Keep Later Turns, Delete All After Point, Continue Editing and Discard; no wasted AI calls for history that may be deleted; no automatic downstream prose regeneration or contradiction flagging in this version. Accidental-truncation recovery, downstream state reconciliation and confirmation UX left open for refinement. Moved to staging only, not production.
