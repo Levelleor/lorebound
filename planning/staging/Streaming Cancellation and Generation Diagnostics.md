@@ -66,6 +66,12 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - **No failure-created empty adventure:** Unsuccessful first-opening attempts may display **provisional** generated text but do **not automatically create or save a blank adventure**, canonical first turn or world-state/events. Fully valid completed Quick Start output retains the accepted automatic canonical first-turn commit, without a review/accept gate.
 - The failure handling preserves any other adventure or pre-Turn-1 Lorebook data intentionally created through a different workflow; exact draft saving of setup fields and retry/cancellation presentation remain open.
 
+## Retry replaces only the uncommitted generation candidate
+- **Accepted IDEA-0004 user clarification (2026-10-18):** While an ordinary generated continuation is **provisional/uncommitted**, Retry requests a new generation that **supersedes the previous candidate and its uncommitted state proposals**. There is no saved or browsable variant gallery. Only the latest candidate may become canonical after the applicable validation/commit path; candidate streaming/partial output is never accepted by itself.
+- **Late results and failures:** Cancel or invalidate obsolete in-flight provider attempts so a late response from an older retry cannot overwrite or commit the current candidate. If a retry fails, avoid committing incomplete prose, preserve last accepted story/world state and recoverable player-written input; do not manufacture a previous-candidate restoration guarantee. Exact transient display/error UX remains open.
+- **Quick Start exception:** The accepted Quick Start flow still **automatically commits its first completed, validated opening**, without a new review click. An unsuccessful Quick Start stays on setup with premise intact as previously decided. This policy does not require persisting provisional AI output into the shared noncanonical player-draft autosave mechanism.
+- **Separate committed rollback:** Once a turn is canonical, ordinary candidate replacement no longer applies to it. To reverse the **current committed turn**, the distinct version-checked committed Undo action moves the active adventure head back and deterministically reconstructs the prior world state (IDEA-0004/0044), after which a new continuation can be generated in the same adventure. Temporary editor undo remains separately bounded.
+
 ## Dependencies and constraints
 - Requires provider/local server streaming and abort behaviour through accepted [[Cloud LLM Provider Connectors]], [[Local LLM Server Connections]] and [[Provider Connection Profiles and Discovery]].
 - Pipelines may have multiple stages, retries, or different assigned models ([[Configurable Generation Pipeline Strategies]], [[One-Model Task Routing]]); a cancellation should stop or invalidate all remaining work belonging to that generation attempt.
@@ -85,6 +91,9 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - What interface distinguishes a user-cancelled request, connection failure and a validation-rejected result?
 
 ## Draft acceptance criteria
+- [ ] Retry supersedes an uncommitted generated candidate, and prior candidates or late provider replies can neither be selected as alternative versions nor commit effects after replacement.
+- [ ] The first valid Quick Start generated opening still commits automatically; failed generation remains provisional and does not lose the premise or alter canon.
+- [ ] Committed story turns can be reversed only by the distinct canonical Undo operation, not by ordinary uncommitted candidate replacement.
 - [ ] A Quick Start failure/cancel/invalid output retains the user's premise on the setup screen and offers Retry or explicit Custom Opening, with actionable error feedback.
 - [ ] A failed Quick Start request does not create a blank fallback adventure or commit partial narrative/state; a valid successful opening still commits automatically.
 - [ ] A player-authored draft may be overwritten by a later shared autosave on the same target without requiring a conflict popup; **AI streaming preview text** is not thereby automatically autosaved or committed.
@@ -110,6 +119,7 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Accepted for **staging/refinement** only; not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0004 generation semantics:** Retry overwrites the current provisional AI candidate without preserving a response gallery, while committed turns require deterministic canonical Undo to roll back. Late/failing generations must not mutate canon. Quick Start automatic accepted opening and missing-model failure path remain unchanged. Staging only.
 - 2026-10-18 — **Accepted IDEA-0006 failure UX:** When Quick Start generation fails, is cancelled or invalid, stay in setup, retain the premise, offer Retry or deliberate Custom Opening and make errors understandable. Do not generate an automatic blank saved adventure or partial canon as fallback. Successful validated generation remains automatically committed. Staging only.
 - 2026-10-18 — **Accepted IDEA-0005 Option B cross-reference:** Player-written noncanonical drafts are latest-only shared records per logical editing target with clean overwrite across tabs. This does not include a new promise to autosave streamed AI previews and never relaxes canonical expected-version validation. Staging only.
 - 2026-10-18 — **Accepted IDEA-0001 dependency:** Only actual AI API operations can be blocked by missing model configuration or fail because of provider errors; non-AI play/editing/persistence works regardless. Guidance to model setup and clear stage-specific error feedback are required. Provisional generations never partially commit. Staging only.
