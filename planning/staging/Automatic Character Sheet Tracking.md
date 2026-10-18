@@ -15,13 +15,13 @@ tags:
 # Automatic Character Sheet Tracking
 
 ## Idea
-Automatically track and update **all applicable character-sheet fields** for player characters and NPCs as the story develops, without requiring separate Disabled, Manual Only or Automatic tracking modes for different fields or modules.
+Automatically track and update **all applicable character-sheet fields** for every character as the story develops, without requiring separate Disabled, Manual Only or Automatic tracking modes for different fields or modules.
 
 ## Why this idea matters
 The user wants a simpler initial approach: a living character sheet that stays up to date with accepted story outcomes without the burden of configuring tracking modes for each statistic, condition, identity detail or goal.
 
 ## Accepted direction
-- **Automatic tracking for the whole sheet:** For PCs and NPCs, automatically maintain **all applicable defined character-sheet fields**, including user-created custom fields, as accepted story events change them. Do not require players to configure individual state modules or field-level tracking modes.
+- **Automatic tracking for the whole sheet:** For every character, automatically maintain **all applicable defined character-sheet fields**, including user-created custom fields, as accepted story events change them. Do not require players to configure individual state modules or field-level tracking modes.
 - **Validated state changes only:** Model output may propose updates, but changes must satisfy the authoritative validation rules and remain consistent with accepted narrative outcomes and committed world-state events. An unsupported AI assertion is not a valid change by itself.
 - **No routine approval prompt:** Do not require the player to approve each automatic field update one at a time. This does not waive deterministic validation or prevent the user from inspecting/correcting records.
 - **Manual editing remains available:** Players continue to view, edit and correct character sheets directly even though automatic tracking is the general policy. How later automatic proposals interact with direct edits needs refinement.
