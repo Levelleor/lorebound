@@ -27,8 +27,8 @@ Historical editing must identify precisely which facts may be invalidated.
 - **Event-to-text provenance:** Validated state-change events from accepted [[Event-Sourced World History]] (IDEA-0039) can refer to the exact originating block ID, revision and turn, not just an ambiguous substring or current text.
 - **Editing lineage:** Preserve meaningful relationships between original and edited blocks, including when historical prose changes. A later revision must not silently inherit facts that were supported only by superseded text.
 - **Historical consistency:** When an earlier passage is changed, its provenance should make downstream affected events identifiable for review, invalidation or state reconstruction under separately accepted/refined historical-edit rules. Do not approve automatic downstream prose regeneration merely by accepting block revision IDs.
-- **No fixed text granularity yet:** Whether IDs attach to paragraphs, turn-body ranges or another stable editor representation remains for refinement.
-- **Split and merge semantics remain open:** Preserve traceability across split/merge operations, but do not preselect how identities, ranges, event links or new revision ancestry are reassigned.
+- **Granularity selected (user acceptance, 2026-10-18):** Canonical IDs and accepted revisions apply to logical story **turn/passage bodies**, not individual paragraphs or source ranges. Exact editor and storage representation remain open.
+- **Whole-passage split and merge still open:** Changes to paragraphs within one passage revise the same passage without paragraph IDs. Moving, splitting or merging whole passages must keep coherent source references; exact ID and ancestry rules remain open.
 - **No production or implementation approval:** This acceptance moves the original candidate to staging for design and evaluation only.
 
 ## Proposed behaviour
@@ -73,11 +73,11 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - Existing validated events retain traceable origin even when their text source is changed or no longer active.
 - A new text revision is not automatically proof that old world-state changes remain valid; any invalidation/replay must respect the event-sourcing and authoritative-state validation boundaries.
 - Generated prose and user-authored edits must remain distinguishable where provenance requires it.
-- Do not commit to automatic regeneration of downstream prose or to a mandatory paragraph-versus-turn-range strategy.
+- Do not automatically regenerate downstream prose. The selected canonical revision unit is a story **turn/passage**, not individual paragraphs; exact rich-text editor implementation remains open.
 
 ## Open questions
 - How should split/merge edits retain event provenance and stable lineage?
-- Should canonical block identity refer to individual paragraphs, larger turn bodies or persistent text ranges?
+- **Resolved:** Canonical source identity is a logical story turn/passage body, not individual paragraphs or persistent text ranges.
 - How should inserts, deletions, reordering, copy/paste and moving text between turns affect lineage?
 - Can one event depend on multiple source blocks or revisions, and how are such dependencies represented?
 - Which model-generation metadata is useful and safe to keep as source provenance?
@@ -86,6 +86,8 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - How can old source references remain resolvable after truncation, undo or branch selection?
 
 ## Draft acceptance criteria
+- [ ] Each story turn/passage body has a stable canonical ID and accepted revision lineage; edits inside its paragraphs create a new passage revision only on confirmation, never individual paragraph revisions.
+- [ ] World events identify the originating turn/passage and exact committed revision, enabling downstream reconstruction without paragraph-level IDs.
 - [ ] Forking at any committed Turn N preserves accepted block/revision/source-event links and history through N only; later turns and unconfirmed drafts are excluded.
 - [ ] Text edits to the new adventure remain independent of the source and work without a required named checkpoint or snapshot.
 - [ ] A prose edit's noncanonical saved draft can be replaced by a newer successful save from another tab for the **same editing target**, without overwriting accepted revisions, authoritatively changing event provenance or retaining older draft copies.
@@ -112,6 +114,7 @@ Paragraph-level IDs can make specific event provenance precise, but require care
 - Design remains unrefined, not production-approved or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **User explicitly chose Option A:** Canonical narrative revision identity is at **turn/passage** level rather than per paragraph. Paragraphs remain freely editable; events retain turn/passage revision provenance. Whole-passage split/merge rules remain open, and existing historical confirmation and atomic write safety apply. Staging only.
 - 2026-10-18 — **Accepted IDEA-0011 revision dependency:** A manually created separate adventure fork may start at any committed turn and must retain the complete accepted text-revision lineage/provenance through that point, while excluding later and uncommitted revisions. No shared mutable source links or in-chat branch UI. Staging only.
 - 2026-10-18 — **IDEA-0005 Option B explicitly accepted:** Provisional composer and narrative-edit drafts are **latest-only shared per logical target**, and newer autosaves can replace earlier stored drafts across tabs without draft version checks or history. This supersedes the prior draft nonclobber wording; **accepted text revisions, provenance and world state remain protected by canonical expected-version conflict checks**. Staging only.
 - 2026-10-18 — **Accepted IDEA-0005 conflict dependency:** Concurrent tabs may edit the same adventure, but stale expected-version canonical text commits are rejected atomically. Preserve accepted revision lineage/provenance and the other tab's uncommitted work; draft save conflict policy remains open, with no silent cross-tab overwrite. Staging only.
