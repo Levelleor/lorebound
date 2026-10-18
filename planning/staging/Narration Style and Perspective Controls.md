@@ -43,6 +43,11 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - Focusing on a different established character changes the narrator's viewpoint/context **without changing their persistent location, inventory, status or identity**. A turn can feature a different actor or multiple actors regardless of narrative focus. Perspective preferences must not fabricate an unstated character or turn an ambiguous first-person sentence into a fact.
 - Specific viewpoint/focus controls and persistence are implementation details for later refinement.
 
+## Do/Say identity selector versus writing perspective
+- **Accepted IDEA-0002/0026 interaction rule:** The adventure Settings sidebar's **`Playing As`** selector chooses an existing Lorebook character who acts/speaks in **Do/Say**. Those modes are **disabled without a valid selection**; Story/Continue work regardless of character count or selected identity.
+- **Do/Say actor identity is distinct from narration style.** A third-person narration preference does not change who acts in Do/Say; a selected character does not force Story/Continue to narrate exclusively from that character's perspective. Whether a separate narrator-focus control is useful remains an open UI refinement.
+- Switching `Playing As` does not change recorded inventory, location, status or history; it only changes the actor/speaker of subsequent Do/Say input.
+
 ## Dependencies and constraints
 - Depends on the narrator/context builder and generation model integration; the UI and prompt format remain to be refined.
 - Model adherence is best-effort; a selected perspective, tone or tense cannot be guaranteed by arbitrary LLMs.
@@ -77,6 +82,7 @@ A single author-note text field is flexible but harder to reuse and discover; de
 - Accepted for staging and refinement only; this does not mean that controls have been implemented or approved for production.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted Do/Say identity selector dependency:** Settings `Playing As` is an explicit Lorebook-backed actor/speaker control for Do and Say (disabled if unset), separate from prose perspective/tense/style options. Story/Continue remain available characterless. Staging unchanged.
 - 2026-10-18 — **Accepted flexible-character integration:** Narrative perspective/focus may be unset or change among existing characters while zero-character and ensemble-cast adventures remain supported. Focus is a presentation/context choice and not a canonical action, location or inventory transfer. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Configurable perspective, tense, genre, tone, pacing, response length, custom writing instructions and reusable narration presets. These changes affect future narration without rewriting existing prose. Moved to staging for refinement, not production.
