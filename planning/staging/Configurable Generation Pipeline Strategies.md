@@ -41,6 +41,11 @@ Single-pass typically has fewer inference requests and lower latency, but its co
 - The TypeScript browser-side coordinator executes selectable pipelines inside the shared SvelteKit frontend in the Wails v3 headless localhost server runtime, played through the normal browser; no mandatory Go narration engine or Node SSR process.
 - Pipeline stages produce provisional text/state until a single transaction is committed by the Go SQLite service. Long-running model calls and repair attempts should not freeze UI updates.
 
+## Quick Start opening generation integration
+- **IDEA-0006 Option A accepted:** A Quick Start AI opening uses the selected generation strategy like other narrative turns. Only after all required stages succeed and any initial state operations pass deterministic validation does the coordinator **automatically commit the opening and corresponding accepted events together**.
+- There is **no mandatory player review** of a successfully generated first scene. A pipeline failure, cancellation or exhaustion of bounded repair preserves the uncommitted initial state and allows a retry instead of saving a partial opening.
+- This decision does **not** select a default generation strategy, alter one-model/multi-model routing, or override explicit user confirmation for later historical edits.
+
 ## Dependencies and constraints
 - Task routing and selected model(s) come from [[One-Model Task Routing]] (IDEA-0017); a strategy cannot force users to load more than one model.
 - State proposals and validation must eventually integrate with the coordinator, structured operations, typed rejection and event/state provenance (see IDEA-0044, IDEA-0045, IDEA-0046 and IDEA-0039 candidates). Those ideas are separate and not implicitly approved here.
@@ -81,6 +86,7 @@ Single-pass typically has fewer inference requests and lower latency, but its co
 - Accepted for **staging/refinement** only. Deterministic validators, pipeline implementations and production approval have not been claimed.
 
 ## Decisions and review history
+- 2026-10-17 — **Accepted IDEA-0006 opening dependency:** Every selected generation strategy must support automatic **first-scene finalisation after successful full validation** for Quick Start, with atomic Go/SQLite commit and no manual scene-review gate. Failed/partial/invalid output is not canonical. No strategy default is selected; staging unchanged.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
