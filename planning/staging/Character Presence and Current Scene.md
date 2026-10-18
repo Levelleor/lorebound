@@ -60,6 +60,11 @@ The **next Do/Say after a `Playing As` switch** follows the selected character *
 - As the player switches `Playing As`, Info follows **the newly chosen character's known location**, consistent with the accepted scene-cut rule. It does not relocate either character or reinterpret the current scene. Unknown/in-transit/elsewhere statuses remain truthful instead of inheriting the previous actor's location. With no selected character, no protagonist or location is fabricated.
 - Presenting a location is not a navigation/travel command and cannot bypass normal movement validation.
 
+## Explicit Story-authored relocation is a real event, not incidental mention
+- **Accepted IDEA-0002 Option B (2026-10-18):** Distinguish an **explicit player Story statement establishing a character's new physical location**, including instantaneous relocation, from a **mere name mention, remote message, UI focus/Playing As switch, rumour or speculative AI text**. Only the former can establish an **authorially overridden location/presence event** when normal fictional movement constraints would forbid that transition.
+- **Consistent presence:** On a validated Story-authored relocation, update the specific character's actual stable location and physical scene membership with the same accepted canonical revision/event, without assuming their companions moved, inventing transit/route, or changing unrelated character/world state. Subsequent gameplay uses this new presence; mere selecting a character for Do/Say still creates **no movement**.
+- **Guardrails:** Referent/destination identity, location hierarchy, physical vs remote participation, history/provenance, expected-version checks and atomic state integrity remain necessary. Do/Say travel and model-generated Continue outcomes still follow ordinary rules. This does not approve location inference from a character appearing in prose, or from uncertain claims.
+
 ## Dependencies and constraints
 - Depends on accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) and [[Hierarchical World Locations]] (IDEA-0033) for persistent entity/location IDs.
 - Related accepted [[Entity-Based Lorebook]] (IDEA-0020) supplies descriptive information but does not itself establish where a character is physically located now. Recalling a known character must not imply presence.
@@ -84,6 +89,8 @@ The **next Do/Say after a `Playing As` switch** follows the selected character *
 - How can scene-change and travel events update multiple party members without inadvertently moving absent characters?
 
 ## Draft acceptance criteria
+- [ ] A definite authored Story location-change can update the correct person's location even without an ordinary allowed route, with provenance and physical scene membership synchronised.
+- [ ] Merely naming someone, switching Playing As or generating unsupported AI location claims cannot authoritatively teleport them, and other characters are not moved implicitly.
 - [ ] Info reflects the currently selected character's known current location (including unknown/in-transit distinctions), rather than the prior character's location.
 - [ ] Changing Info/Settings tabs or `Playing As` does not move a character or create an event.
 - [ ] A switch between characters at distant locations cuts the next Do/Say to the newly selected actor's established scene, without mutating any character's location or presence.
@@ -110,6 +117,7 @@ The **next Do/Say after a `Playing As` switch** follows the selected character *
 - This note represents an **accepted but unrefined staging direction**, not production approval or implemented feature evidence.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0002 explicit-author event clarification:** Player-written Story can establish extraordinary location/presence changes without normal fictional movement restrictions, but mere mention, Do/Say attempts, selected viewpoint and autonomous AI claims are not authorial overrides. Persist a grounded, coherent event without moving bystanders. Staging only.
 - 2026-10-18 — **Accepted Info/Settings panel dependency:** Info shows the explicit `Playing As` character's established current location, while Settings contains the actor selector. Lorebook opens from the icon left of the input field. Changing selection is only a viewpoint/display cut, not travel. Staging only.
 - 2026-10-18 — **User explicitly accepted:** Switching `Playing As` between distant characters is a **narrative cut**. The next Do/Say uses the newly chosen character's established scene/location, with no travel, teleportation, time passage, inventory/state transfer or extra confirmation. Story/Continue remain independent. Staging only.
 - 2026-10-18 — **Accepted character-unification dependency:** All Lorebook characters are eligible for `Playing As`, without PC/NPC or Playable distinction. Changing selection does not teleport characters or alter scene presence. Staging only.
