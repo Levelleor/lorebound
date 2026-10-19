@@ -30,18 +30,18 @@ This document consolidates **architectural ownership only**. It does not promote
 
 | ID | Top-level subsystem | Pass A primary ideas | Former responsibilities grouped here |
 |---|---|---:|---|
-| **S01** | **Application Host & Lifecycle** | undefined | Application Foundation & Lifecycle; Runtime & Platform Services; Credential & Secret Storage |
-| **S02** | **Adventure Library & Initialization** | undefined | Adventure Library & Persistence; Adventure Initialization & Setup; Scenario Templates & Configuration |
-| **S03** | **Narrative Interaction & Editing** | undefined | Narrative Interaction & Intent; Narrative Document & Editing |
-| **S04** | **Presentation & Accessibility** | undefined | Presentation & UX |
-| **S05** | **Canonical History & Reconstruction** | undefined | Narrative History & Versioning; World State Reconstruction |
-| **S06** | **Gameplay Coordination & Capabilities** | undefined | Adventure Coordinator; Gameplay Capability Registry & Plugins; World Rules & Validation |
-| **S07** | **AI Workflow & Interpretation** | undefined | AI Generation Pipeline; Generation Lifecycle & Diagnostics; AI Task Routing & Model Selection; AI Interpretation & Operation Proposals |
-| **S08** | **AI Connections & Configuration** | undefined | AI Provider Integration; Provider Connection Management; Model Capability Management; Narrative Generation Configuration |
-| **S09** | **Lore, Context & Memory** | undefined | Entity-Based Lorebook; AI Context & Prompt Construction; Narrative Memory & Retrieval |
-| **S10** | **Character & Scene State** | undefined | Character & Scene State |
-| **S11** | **World, Travel & Inventory** | undefined | World Locations & Topology; World Environment & Mutable State; Inventory & Item State |
-| **S12** | **Storage & Backup** | undefined | Persistence & Draft Management |
+| **S01** | **Application Host & Lifecycle** | 3 | Application Foundation & Lifecycle; Runtime & Platform Services; Credential & Secret Storage |
+| **S02** | **Adventure Library & Initialization** | 5 | Adventure Library & Persistence; Adventure Initialization & Setup; Scenario Templates & Configuration |
+| **S03** | **Narrative Interaction & Editing** | 4 | Narrative Interaction & Intent; Narrative Document & Editing |
+| **S04** | **Presentation & Accessibility** | 2 | Presentation & UX |
+| **S05** | **Canonical History & Reconstruction** | 4 | Narrative History & Versioning; World State Reconstruction |
+| **S06** | **Gameplay Coordination & Capabilities** | 4 | Adventure Coordinator; Gameplay Capability Registry & Plugins; World Rules & Validation |
+| **S07** | **AI Workflow & Interpretation** | 4 | AI Generation Pipeline; Generation Lifecycle & Diagnostics; AI Task Routing & Model Selection; AI Interpretation & Operation Proposals |
+| **S08** | **AI Connections & Configuration** | 7 | AI Provider Integration; Provider Connection Management; Model Capability Management; Narrative Generation Configuration |
+| **S09** | **Lore, Context & Memory** | 5 | Entity-Based Lorebook; AI Context & Prompt Construction; Narrative Memory & Retrieval |
+| **S10** | **Character & Scene State** | 6 | Character & Scene State |
+| **S11** | **World, Travel & Inventory** | 6 | World Locations & Topology; World Environment & Mutable State; Inventory & Item State |
+| **S12** | **Storage & Backup** | 2 | Persistence & Draft Management |
 
 **Important:** Source-role counts indicate where an idea has its **primary** Pass B owner. All major secondary touchpoints are still represented in §3. Internal modules may have dedicated contracts and files without becoming new top-level subsystems.
 
@@ -52,84 +52,84 @@ This document consolidates **architectural ownership only**. It does not promote
 - **Owns:** Product lifecycle and distribution; one loopback-only Wails v3 headless Go host; cross-platform startup, service exposure and native OS integration; privileged credential vault access and separately keyed encrypted-secret fallback.
 - **Internal responsibility areas:** Product foundation; launcher/runtime; localhost service security; privileged OS services; secret vault adapter.
 - **Does not own:** No Go gameplay engine, separate native WebView product, model HTTP proxy, Node player server, account service or second product identity.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 3.
 
 ### S02 — Adventure Library & Initialization
 
 - **Owns:** Adventure catalog and lifecycle (create, resume, rename, duplicate, delete, independent fork); blank/Quick Start/custom/guided entry; optional scenario-template instantiation and pre-turn AI-authored starting Lorebook workflow.
 - **Internal responsibility areas:** Adventure library operations; new-adventure setup; reusable template definitions; opening/Turn-0 orchestration.
 - **Does not own:** No ownership of SQLite transaction mechanics, cross-adventure state sharing, AI model transport, or automatically invented facts from ordinary opening-prose extraction.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 5.
 
 ### S03 — Narrative Interaction & Editing
 
 - **Owns:** Do/Say/Story/Continue intent entry and structured UI action intents; directly editable story document; noncanonical drafts; historical edit confirmation choices and player-facing edit workflow.
 - **Internal responsibility areas:** Interaction modes; command entry; prose editor; historical-edit review; noncanonical editor undo.
 - **Does not own:** Does not independently declare state changes valid, persist unapproved history, or bypass the coordinator when confirming historical changes.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 4.
 
 ### S04 — Presentation & Accessibility
 
 - **Owns:** Accessible responsive Svelte UI, story and entity views, status/equipment panels, map canvas, notifications, contextual action affordances and layout/readability preferences.
 - **Internal responsibility areas:** Svelte components; navigation/layout; accessibility; map renderer; inspector and status views.
 - **Does not own:** Presentation coordinates and visibility are not fictional coordinates or canonical gameplay events; visual actions do not directly mutate world state.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 2.
 
 ### S05 — Canonical History & Reconstruction
 
 - **Owns:** Active timeline and append-only event provenance; logical turn/passage IDs and revisions; committed Undo and historical head/truncation semantics; complete deterministic state replay; revision-aware cache/summary invalidation and optional derived checkpoints.
 - **Internal responsibility areas:** Passage lineage; event ledger; active-history selector; reducers/replay; checkpoint management; dependent-derived-data invalidation.
 - **Does not own:** No AI regeneration of previous accepted outcomes; no reliance on snapshots for correctness; no claim that superseded audit events remain active canon.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 4.
 
 ### S06 — Gameplay Coordination & Capabilities
 
 - **Owns:** Browser TypeScript turn coordinator, universal typed capability registry, operation dispatch, authorisation/permissions, deterministic validation, bounded rejection/repair decisions and coherent finalisation requests; optional mechanics use shared rules/contracts.
 - **Internal responsibility areas:** Turn coordinator; capability contracts; permission and domain-rule interfaces; plugin integration; typed rejection and repair decision policy.
 - **Does not own:** The coordinator does not become an LLM; plugins cannot commit directly or maintain independent canonical stores; validation is not replaced by a schema-valid model response.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 4.
 
 ### S07 — AI Workflow & Interpretation
 
 - **Owns:** Configurable one-pass / plan-validate-narrate / draft-audit-repair orchestration; per-task profile+model routing; provisional stream/cancel/status/diagnostics; extraction of proposed typed actions with uncertainty and stable entity references.
 - **Internal responsibility areas:** Generation strategy executors; task router; provisional attempt lifecycle; interpreter/proposal stage; stage-level diagnostics.
 - **Does not own:** Does not determine world-rule validity, mutate canon directly, require a second loaded model, or retain cancelled/failed provisional output as an accepted turn.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 4.
 
 ### S08 — AI Connections & Configuration
 
 - **Owns:** Browser-initiated cloud/local provider adapters, reusable profiles and model discovery, known/ignored/unsupported/unknown capability policy, sampling presets, style preferences and persistent author-note configuration.
 - **Internal responsibility areas:** Provider adapters; profile/model catalog; effective-request parameter mapping; model capability registry; sampling presets; narration/author instructions.
 - **Does not own:** No Go/Node model transport proxy; provider responses are not canonical world operations; style notes and decoding controls cannot override validated world rules. Secret storage remains S01's privileged service.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 7.
 
 ### S09 — Lore, Context & Memory
 
 - **Owns:** Persistent entity-based descriptive lore and beliefs; manual/conditional selection; long-term derived summaries, episodic indexing/retrieval; token-budgeted model-aware context construction and requested/selected/transmitted inspection.
 - **Internal responsibility areas:** Lorebook and fact/belief links; activation rules; source-provenanced summaries; episodic search; context budget/inspector.
 - **Does not own:** No independent mutable character/item/location facts, no stale summaries as authority, no silent reintroduction of explicitly excluded lore, no mandatory embeddings/RAG.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 5.
 
 ### S10 — Character & Scene State
 
 - **Owns:** Stable universal characters without PC/NPC classification; optional Playing As selection references; editable and automatically maintained validated status sheets; free-form anatomy/transformation state; physical location, presence, transit and remote participation.
 - **Internal responsibility areas:** Character identity; current statuses; anatomy; presence/scene participation; actor-selection state.
 - **Does not own:** Does not own location hierarchy/routes, item identity/custody, or assume a character is present based solely on being mentioned or selected.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 6.
 
 ### S11 — World, Travel & Inventory
 
 - **Owns:** Persistent unique items and custody; equipment slots; stable nested locations and separate travel graph; known versus hidden world discovery; mutable routes, doors, containers and environmental conditions. Domain-specific rules for movement and transfers integrate with S06.
 - **Internal responsibility areas:** Item identity/custody and equipment; place hierarchy and graph; discovery/visibility; environmental conditions; validated world-domain transitions.
 - **Does not own:** No global Player Inventory, automatically inferred travel edge from containment, duplicate unique item placement, or travel to a location solely because narration claims it.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 6.
 
 ### S12 — Storage & Backup
 
 - **Owns:** Go-managed single shared filesystem SQLite adventure library; logical adventure isolation; drafts and committed transactions with stale-write protection; consistent full-library SQLite snapshot backup and deliberate full-library replacement restore.
 - **Internal responsibility areas:** SQLite schema/data access; atomic commit boundary; draft persistence; optimistic version checks; consistent backup/restore.
 - **Does not own:** No browser-local canonical save, per-adventure file export, multi-library merger, independent game-rule engine, credential values within SQLite or automatic restore reconciliation.
-- **Pass A primary idea count:** undefined.
+- **Pass A primary idea count:** 2.
 
 ## 3. Complete 52-idea ownership map
 
@@ -238,19 +238,19 @@ These are **conceptual contracts for refinement**, not approved TypeScript type 
 | Producer → consumer | Conceptual exchange | Required invariant / receiving authority |
 |---|---|---|
 | **S04 → S03** | UI-entered Do/Say/Story/Continue, editor changes and typed control selections | Presentation never directly changes canonical gameplay facts. |
-| **S03 → S06** | Player intent, structured UI commands, historical edit/Undo confirmation choices | All state-changing intents use the coordinator and enabled typed capability/rule checks; no UI bypass. |
+| **S03 → S06** | Player intent, structured UI commands, historical edit/Undo confirmation choices | **Do/Say** express attempted actions subject to enabled ordinary rules; explicit player-authored **Story** asserts outcomes with authorial authority over fictional mechanics (IDEA-0002). Both still require validated entity/integrity contracts and coherent atomic commit. |
 | **S02 → S06 / S05 / S12** | New adventure / initial baseline / duplication / fork / deletion requests | S02 owns user-visible lifecycle; S06 coordinates necessary validation, S05 selects coherent history and state, S12 enforces isolated atomic storage. |
 | **S02 → S07 / S09 / S06** | Optional Quick Start opening and explicitly requested AI-authored Turn-0 Lorebook proposals | Quick Start first turn auto-commits only after complete validation. Fact-only extraction from opening text must not invent lore. Intentionally generated starting lore is separately authorised and stored before Turn 1; its review policy is still open. |
 | **S08 → S07** | Provider/model profile, supported parameters and effective model request transport | Browser directly contacts supported local/cloud model APIs; no Go AI transport proxy. Style/decoding preferences do not override world rules. |
 | **S07 → S09** | Generation task / scene / budget needs and candidate source anchors | Context assembly respects authority, manual exclusions, finite model capacity and source provenance. |
 | **S09 → S07 / S08** | Requested → selected → actually transmitted context, instruction text and source/omission trace | Never claim that excluded, stale, clipped or provider-omitted context was sent. Provider wrappers/hidden overhead may limit observability. |
 | **S07 → S06** | Provisional prose plus typed operation candidates, uncertain entities and stage/attempt metadata | Schema-valid or persuasive AI output cannot commit itself; attempted actions are not automatic successes. |
-| **S06 ↔ S10** | Character/entity ID resolution, sheet/anatomy/presence rules, validated character deltas | Missing values remain unknown; no forced PC/NPC class or implicit teleportation. Character constraints are tested before commit. |
-| **S06 ↔ S11** | Item transfers, equip, location/travel, discovery and environment operations | Stable IDs, custody uniqueness, distinct containment/traversal, travel permissions and cross-entity consistency are validated. |
+| **S06 ↔ S10** | Character/entity ID resolution, sheet/anatomy/presence rules, validated character deltas | Missing values remain unknown; no forced PC/NPC class or implicit teleportation. Valid **manual character-sheet corrections are authoritative historied changes**; later automatic updates must use latest accepted values, never stale AI assumptions. |
+| **S06 ↔ S11** | Item transfers, equip, location/travel, discovery and environment operations | Stable IDs, unique custody and separate containment/traversal are validated. **Optional map/travel modes primarily protect AI continuity, not player creativity**: freeform map may be reference-only; strict ordinary attempts use grounded bounded narrative repair (e.g., a locked/wrong treasury door), not fabricated bypass routes. Direct user-authored Story can establish exceptional outcomes without bypassing state integrity. |
 | **S06 → S05** | Approved turn/passage revisions, ordered accepted events, history-head transitions and invalidation requests | Changes retain exact source provenance; active canon is distinct from append-only superseded audit records. |
 | **S05 ↔ S10 / S11 / S09** | Point-in-time reconstruction and derived-index/summary invalidation | Complete persistent state rebuild from accepted records; caches and summaries are secondary, revision-aware projections. No model calls during replay. |
 | **S06 / S05 / S02 → S12** | Expected-version checked coherent commits, draft writes, read queries and adventure lifecycle mutations | Go/SQLite enforces safety, transaction integrity and cross-tab concurrency; state/event/prose changes are committed together or rejected, even if browser code errs. |
-| **S08 → S01** | Credential storage/retrieval request and privileged OS keyring/sidecar operation | Secrets are outside SQLite and excluded from full-library backup. Direct browser model calls necessarily handle the usable secret when issuing requests; define exact exposure scope and protection. |
+| **S08 ↔ S01** | Two-way credential load, create/update, delete and invalidation through a narrow, authorised Go OS-vault/encrypted-sidecar service | Go is persistent credential authority; browser holds **active secrets in memory only** for direct provider requests, refreshing at launch/profile selection and after changes. **No raw tokens in localStorage/sessionStorage/IndexedDB, logs, or SQLite**. Cross-tab invalidation and origin/session security need implementation refinement; no Go model transport proxy. |
 | **S12 → S01** | Privileged filesystem/database and snapshot/restore service requests | Go owns filesystem access and safe DB open/close; localhost origin/host/CSRF/DNS-rebinding and service permissions must be enforced. |
 | **S04 → S02 / S09 / S07 / S12** | Library selection, context inspector, attempt/status diagnostics, backup/restore and settings displays | UI renders responses and surfaces omission/failure; neither visual layout nor provisional streamed text becomes a canonical event. |
 
@@ -298,6 +298,9 @@ The chart is a **logical dataflow**, not a call graph. Actual stage order follow
 8. **No per-adventure file export.** Whole SQLite Backup Database and deliberate whole-library replacement Restore Database only. Provider secrets never enter this SQLite snapshot; stable adventure identity persists independently of display names.
 9. **Presentation is not canon.** Layout, map node positions, accessibly rendered panels, author style settings and `Playing As` selection have their defined non-world-effect boundaries and must not fabricate events or physical state changes.
 10. **No new optional capability by consolidation alone.** Skipped MCP, semantic embeddings/RAG, native WebView UI, Docker distribution, global simulation strictness, individual adventure export and saved narration-style preset managers remain outside current accepted scope.
+11. **Player authors the story; optional rules guard AI fidelity.** The map is useful even without strict travel enforcement. In strict mode, the AI's ordinary Do/Say/Continue movement proposals use established routes/doors and can be narratively repaired as unsuccessful or corrected attempts. Explicit player-authored Story outcomes have fictional authorial override but cannot bypass identity, event provenance or transaction integrity. Never invent an unrelated route simply to make rejected AI movement succeed (IDEA-0002/0035/0036/0046).
+12. **Manual character corrections are canon, not temporary hints.** A valid confirmed sheet edit is an authoritative recorded mutation; later automatic updates begin from the current committed value. No field-level tracking-mode system is inferred from this (IDEA-0027/0064).
+13. **Go credentials persist; browser secrets are ephemeral.** Profile secrets persist only in Go's OS vault or consented encrypted sidecar, not browser localStorage/sessionStorage/IndexedDB. The browser retrieves them through an authorised service, caches them in memory while active, syncs edits/deletes back to Go and sends AI requests directly (IDEA-0014/0053).
 
 ## 7. Highest-priority detailed contracts for a subsequent design pass
 
@@ -305,13 +308,15 @@ These are **open design items**, not additional approved implementation choices.
 
 1. **Atomic turn contract (S06 ↔ S05 ↔ S12):** typed accepted event/revision payloads, expected-version tokens, multi-entity validation, cancellation races, idempotency, stale tabs and transactional rollback/failure.
 2. **Full replay coverage (S05 ↔ S10 / S11 / S09):** event/reducer versions, custom plugin state, manual edits, non-event versioned records, history head selection, checkpoint invalidation, derived memory rebuilding and proof of arbitrary-point reconstructibility.
-3. **Credential/browser trust boundary (S01 ↔ S08 ↔ S12):** secure Go-to-browser credential access for directly issued provider requests, localhost API origin authentication, CSRF/rebinding resistance, profile settings, sidecar lifecycle and explicit browser-secret exposure boundaries.
+3. **Credential/browser trust boundary (S01 ↔ S08 ↔ S12):** implement the **already selected two-way Go credential synchronisation with browser memory-only caching**, while refining narrow localhost service authentication, CSRF/rebinding protection, cache invalidation between tabs, vault/sidecar lifecycle and memory-secret exposure. No Go AI transport or persistent raw token browser cache.
 4. **Starting-world transaction (S02 ↔ S06 ↔ S09):** blank valid baseline, automatic validated Quick Start first-turn commit, text-grounded fact-only extraction and optional AI-authored Turn-0 Lorebook, including failure and optional review semantics.
-5. **World invariants across modules (S06 ↔ S10 / S11):** stable entity references, equipment/custody consistency, valid travel versus hierarchy, character presence, mutable environment, plugin event effects and unknown-value handling.
+5. **World invariants across modules (S06 ↔ S10 / S11):** stable entity references, equipment/custody consistency, valid travel versus hierarchy, presence, mutable environment, plugin effects and unknowns. Retain **player Story authorial overrides**, optional freeform map reference use, grounded bounded AI movement repair and authoritative historied manual sheet changes.
 6. **Context and model contracts (S07 ↔ S08 ↔ S09):** per-stage task routing, provider capabilities, precise requested/selected/transmitted inspection, budget estimation, secret redaction, memory/retrieval consistency and source revision staleness.
 7. **Internal module interfaces vs. package layout:** decide which of the 30 original labels merit independent TypeScript/Go modules without re-inflating top-level subsystem vocabulary. A subsystem boundary does not mandate a build artifact or separately launched service.
 
 ## 8. Change control and verification
+
+- **2026-10-19 clarification and defect correction:** Incorporated explicitly accepted player-first optional map/AI travel refinement, historied manual character-sheet corrections and two-way Go credential synchronisation with **in-memory** browser token cache. Corrected 24 earlier document-generation missing numeric counts using the actual 52-idea owner table (Pass A register not edited). No new top-level subsystem or implementation permission was added.
 
 - This document implements the **approved 12-subsystem Pass B architecture consolidation**, without rewriting Pass A ownership history.
 - Any later refinements should keep a traceable before/after mapping of legacy labels, accepted idea IDs and changing interface contracts.
