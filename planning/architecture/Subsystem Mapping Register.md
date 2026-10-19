@@ -196,9 +196,69 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0010 (separate narration style), IDEA-0012 (cloud adapters), IDEA-0013 (local adapters), IDEA-0014 (profiles), IDEA-0015 (capability states), IDEA-0017 (task/model routing).
 - **Deferred:** Exact parameter catalogue, ranges/defaults, JSON safety/validation, provider translations and diagnostics UI.
 
+### IDEA-0017 — One-Model Task Routing
+
+- **Source:** [[One-Model Task Routing]] (`planning/staging/One-Model Task Routing.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** AI Task Routing & Model Selection
+- **Secondary subsystems:** Provider Connection Management; AI Generation Pipeline; Model Capability Management; Narrative Generation Configuration
+- **Classification:** AI task-to-model binding and resolution.
+- **Responsibility:** Resolve supported roles, initially narration/writing, state interpretation and summarisation, to selected **connection/profile plus model ID**. A single cloud/local model shared sequentially among roles and distinct models across a single or multiple providers are equally normal configurations. Unassigned tasks may use a convenient primary/fallback route without duplicating credentials.
+- **Boundary:** Routing answers **which model performs a task**, not which tasks/passes execute. Pipeline strategy owns pass selection and ordering (IDEA-0018); Connection Management owns provider profiles; Capability Management and Generation Configuration supply relevant features and preferences. No extra loaded model is required merely by selecting a pipeline.
+- **Key idea dependencies:** IDEA-0012 (cloud adapters), IDEA-0013 (local adapters), IDEA-0014 (profiles), IDEA-0015 (capabilities), IDEA-0016 (sampling), IDEA-0018 (pipeline stages).
+- **Deferred:** Global/per-adventure routing scopes and precedence, fallback when an assigned model is unavailable, additional roles and usage attribution.
+
+### IDEA-0018 — Configurable Generation Pipeline Strategies
+
+- **Source:** [[Configurable Generation Pipeline Strategies]] (`planning/staging/Configurable Generation Pipeline Strategies.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** AI Generation Pipeline
+- **Secondary subsystems:** AI Task Routing & Model Selection; Adventure Coordinator; World Rules & Validation; Narrative History & Versioning
+- **Classification:** Configurable provisional generation workflow and stage orchestration.
+- **Responsibility:** Support three separate selectable strategies: **single-pass prose and events**, **plan → validate → narrate**, and **draft → audit → repair**. Every strategy may use one model across sequential stages or distinct task-assigned models. Model-proposed actions remain provisional until deterministically validated; repair/retries are bounded and failure is explicit.
+- **Boundary:** The pipeline chooses which generation/analysis passes run and their sequencing, while Task Routing chooses each task's model. The Adventure Coordinator and validators remain authoritative for permitted operations and atomic canonical commit. A partial, rejected or cancelled stage result never becomes accepted prose/state. Strategy changes affect future turns only; no default strategy is yet approved.
+- **Key idea dependencies:** IDEA-0004 (retry), IDEA-0017 (routing), IDEA-0019 (streaming/cancellation), IDEA-0039 (event history), IDEA-0044 (coordinator), IDEA-0045 (operation proposals), IDEA-0046 (typed rejection/repair).
+- **Deferred:** Preferred default strategy, stage contracts, structured output fallback, repair budgets and inconsistent prose/state failure policies.
+
+### IDEA-0019 — Streaming Cancellation and Generation Diagnostics
+
+- **Source:** [[Streaming Cancellation and Generation Diagnostics]] (`planning/staging/Streaming Cancellation and Generation Diagnostics.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Generation Lifecycle & Diagnostics
+- **Secondary subsystems:** AI Generation Pipeline; AI Provider Integration; Adventure Coordinator; Persistence & Draft Management; Presentation & UX
+- **Classification:** In-progress generation attempt control, observation and reporting.
+- **Responsibility:** Stream supported provisional text, offer cancellation, track waiting/generating/validating/auditing/completed/cancelled/failed stages and show model, provider, effective settings, errors, available token/usage data and timing. Distinguish observed measurements from estimates/unavailable information; redact credentials.
+- **Boundary:** Generation Lifecycle manages and observes **attempts**, not canonical history. Cancellation must invalidate late results and all downstream work from a cancelled attempt, even if the remote server continues computation. The coordinator and persistence remain responsible for preventing incomplete prose/events from committing and for preserving previously accepted state.
+- **Key idea dependencies:** IDEA-0004 (provisional retry), IDEA-0005 (draft persistence), IDEA-0012 (cloud streaming), IDEA-0013 (local streaming), IDEA-0017 (routing), IDEA-0018 (pipeline), IDEA-0044 (coordinator).
+- **Deferred:** Stage cancellation propagation, pending stream recovery, log retention, billing after provider-side abort and aggregating usage across models/stages.
+
+### IDEA-0020 — Entity-Based Lorebook
+
+- **Source:** [[Entity-Based Lorebook]] (`planning/staging/Entity-Based Lorebook.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Entity-Based Lorebook
+- **Secondary subsystems:** Character & Scene State; World Rules & Validation; AI Context & Prompt Construction; Adventure Library & Persistence; Presentation & UX
+- **Classification:** Durable typed lore, knowledge and player-directed context selection.
+- **Responsibility:** Store editable lore for characters, places, objects, factions and other concepts, with stable linked entity IDs, flexible prose, and distinctions between established facts and attributed beliefs/rumours. Support player-controlled manual inclusion/exclusion of entries for model context with visible selection and honest budget omissions.
+- **Boundary:** Lorebook owns persistent descriptive/knowledge records, **not competing authoritative mutable copies** of live location, inventory, possession or other world state; those must link to domain entities. AI Context & Prompt Construction decides prompt inclusion while respecting manual exclusions. Automatic rules-based activation (IDEA-0021) and semantic RAG (unaccepted IDEA-0063) are separate capabilities, not implied by this mapping.
+- **Key idea dependencies:** IDEA-0007 (character creation), IDEA-0021 (conditional activation), IDEA-0024 (context budget), IDEA-0026 (shared character identities), IDEA-0033 (locations), IDEA-0045 (interpreted operations).
+- **Deferred:** Fact/belief reliability schema, entry taxonomies, field-level selection and rename/merge/delete reference semantics.
+
+### IDEA-0021 — Conditional Lorebook Activation
+
+- **Source:** [[Conditional Lorebook Activation]] (`planning/staging/Conditional Lorebook Activation.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** AI Context & Prompt Construction
+- **Secondary subsystems:** Entity-Based Lorebook; World Rules & Validation; Presentation & UX
+- **Classification:** Deterministic rules-driven Lorebook context selection.
+- **Responsibility:** Evaluate optional keyword, alias, location and logical-state triggers to propose Lorebook entries for the current generation request. Prioritise eligible entries and expose rule matches, inclusions and omissions; manual exclusions override automatic matches, and manually requested entries may be excluded by finite context size only with an explicit warning.
+- **Boundary:** Activation is a **context-selection** concern and never commits world state, proves a rumour, or forces embeddings. Lorebook owns entries and the player's manual selection; World Rules & Validation provides trusted state for conditions; Context & Prompt Construction applies selection and budget policies. Embedding/RAG retrieval (IDEA-0063) remains an unaccepted separate idea.
+- **Key idea dependencies:** IDEA-0020 (Lorebook/manual controls), IDEA-0024 (token budget/inspection), IDEA-0034 (scene/presence), IDEA-0044 (authoritative coordinator).
+- **Deferred:** Trigger language and matching scope, ambiguity resolution, ordering/recursion limits, default activation scope and activation inspector UX.
+
 ## Next pending mapping
 
-- Next batch: IDEA-0017 through IDEA-0021. **Not yet accepted in Pass A.**
+- Next batch: IDEA-0022 through IDEA-0026. **Not yet accepted in Pass A.**
 
 ## Process
 
