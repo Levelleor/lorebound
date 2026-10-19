@@ -136,9 +136,69 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0004 (retry/undo distinction), IDEA-0005 (library and duplication), IDEA-0039 (event history), IDEA-0040 (revision IDs), IDEA-0042 (state rebuild), IDEA-0051 (SQLite).
 - **Deferred:** Fork-point UX, ID/reference remapping, provenance conventions and snapshot/replay implementation.
 
+### IDEA-0012 — Cloud LLM Provider Connectors
+
+- **Source:** [[Cloud LLM Provider Connectors]] (`planning/staging/Cloud LLM Provider Connectors.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** AI Provider Integration
+- **Secondary subsystems:** AI Generation Pipeline; Provider Connection Management; Model Capability Management
+- **Classification:** External AI model transport/adapters.
+- **Responsibility:** Support browser-side cloud generation through four accepted provider families: OpenAI, Anthropic, Google Gemini and OpenRouter. Present a common generation and streaming contract across genuinely compatible adapters while preserving provider-specific differences, errors and capabilities.
+- **Boundary:** AI Provider Integration handles protocol conversion, transport, streaming and provider errors. Connection Management owns profile/credential configuration; Capability Management owns supported controls; the Coordinator alone permits canonical turn/state commit. OpenRouter is a broad model gateway rather than an implied direct connector for every model vendor. No additional first-party cloud connectors are approved by this mapping.
+- **Key idea dependencies:** IDEA-0013 (local provider parity), IDEA-0014 (profiles/secrets), IDEA-0015 (capabilities), IDEA-0017 (model routing), IDEA-0018 (generation strategies).
+- **Deferred:** Precise adapter interfaces/SDKs, per-provider API coverage, compatibility tests and model discovery mechanics.
+
+### IDEA-0013 — Local LLM Server Connections
+
+- **Source:** [[Local LLM Server Connections]] (`planning/staging/Local LLM Server Connections.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** AI Provider Integration
+- **Secondary subsystems:** Provider Connection Management; Model Capability Management; AI Generation Pipeline
+- **Classification:** Local/LAN AI model transport/adapters.
+- **Responsibility:** Connect to user-running Ollama, LM Studio, vLLM and llama.cpp/llama-server endpoints plus explicitly configured compatible local or LAN servers. Use the same internal generation abstraction as cloud models, including supported streaming and useful errors; a single locally loaded model must suffice for all ordinary tasks.
+- **Boundary:** AI generation/model discovery requests originate in the browser using the actual browser origin, **not** an implicit Go proxy or local bridge. CORS, browser security and private-network restrictions are explicit deployment constraints, not hidden by the adapter. No built-in model download/installation service or automatic public exposure is implied.
+- **Key idea dependencies:** IDEA-0012 (shared abstraction), IDEA-0014 (connection profiles), IDEA-0015 (capabilities), IDEA-0017 (one-model routing), IDEA-0053 (browser/Go runtime).
+- **Deferred:** Local-server compatibility matrices, endpoint discovery variations, streaming formats and concrete connection diagnostics.
+
+### IDEA-0014 — Provider Connection Profiles and Discovery
+
+- **Source:** [[Provider Connection Profiles and Discovery]] (`planning/staging/Provider Connection Profiles and Discovery.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Provider Connection Management
+- **Secondary subsystems:** AI Provider Integration; Runtime & Platform Services; Credential & Secret Storage; Presentation & UX
+- **Classification:** Reusable model connection configuration with separate credential ownership.
+- **Responsibility:** Manage named profiles, endpoint/base URLs, model discovery or manual IDs, multiple independent per-profile credentials/secret headers, connection testing and timeout/retry preferences. The primary accepted credential persistence is native OS vault access through a cross-platform Go keyring adapter. Where unavailable, allow only an expressly consented AES-256-GCM encrypted credential sidecar adjacent to the active SQLite library with a separately stored random key in private OS config.
+- **Boundary:** Nonsecret profile/configuration data remains separate from noncanonical credentials. The credential vault/sidecar/key are excluded from whole-library SQLite backups. Browser-side provider requests must not leak secrets into logs, narrative prompts or diagnostics. Go may own credential storage access but not secretly proxy model requests. Connection tests/model discovery use the actual browser origin and are subject to browser CORS/private-network rules.
+- **Key idea dependencies:** IDEA-0001 (account-free experience), IDEA-0005 (backup boundary), IDEA-0012 (cloud connectors), IDEA-0013 (local connectors), IDEA-0015 (capabilities), IDEA-0051 (SQLite), IDEA-0053 (Go/browser runtime).
+- **Deferred:** Credential API, keyring availability/failure handling, consent UX, connection discovery cache and retries for ambiguous request success.
+
+### IDEA-0015 — Model-Capability-Aware Controls
+
+- **Source:** [[Model-Capability-Aware Controls]] (`planning/staging/Model-Capability-Aware Controls.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Model Capability Management
+- **Secondary subsystems:** AI Provider Integration; Narrative Generation Configuration; Presentation & UX
+- **Classification:** Per-provider/model/endpoint parameter compatibility and effective-request policy.
+- **Responsibility:** Classify each applicable model capability as **supported**, **unsupported**, **ignored** or **unknown**. Reflect the assessment in UI availability and actual request parameters. Omit unsupported parameters from normal requests even where stored preferences exist; permit deliberate, visibly warned and narrowly scoped expert override without silently rewriting preferred settings.
+- **Boundary:** Capability Management describes/assesses model support and controls omission/overrides. Generation Configuration stores player intent and values; provider adapters translate and send effective values. Successful HTTP requests do not prove the provider applied a parameter. Effective-request inspection must distinguish preferred from transmitted/effective settings and redact credentials.
+- **Key idea dependencies:** IDEA-0012 (cloud), IDEA-0013 (local), IDEA-0014 (profiles), IDEA-0016 (sampling/preferences).
+- **Deferred:** Metadata/probing sources, unknown/ignored policies, cache invalidation, evidence of parameter effect and override UX.
+
+### IDEA-0016 — Sampling Presets and Advanced Parameters
+
+- **Source:** [[Sampling Presets and Advanced Parameters]] (`planning/staging/Sampling Presets and Advanced Parameters.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Narrative Generation Configuration
+- **Secondary subsystems:** Model Capability Management; Provider Connection Management; AI Provider Integration; Presentation & UX
+- **Classification:** Persistent desired generation parameters, including provider/model-specific presets.
+- **Responsibility:** Support basic and advanced decoding/sampling controls (when applicable), reusable named model-specific generation presets, preservation of preferred values on model changes, inspected effective requests, and guarded provider-specific custom JSON.
+- **Boundary:** Narrative Generation Configuration owns player-preferred parameters/presets; Model Capability Management decides support/omission/advanced overrides; AI Provider Integration performs provider-specific mapping and transport; Connection Management associates the preferences with the appropriate selected model/profile. Unlike IDEA-0010's narration style preferences, these are decoding/API request parameters and do not mutate canon.
+- **Key idea dependencies:** IDEA-0010 (separate narration style), IDEA-0012 (cloud adapters), IDEA-0013 (local adapters), IDEA-0014 (profiles), IDEA-0015 (capability states), IDEA-0017 (task/model routing).
+- **Deferred:** Exact parameter catalogue, ranges/defaults, JSON safety/validation, provider translations and diagnostics UI.
+
 ## Next pending mapping
 
-- Next batch: five staging ideas after IDEA-0011, exact IDs to be verified. **Not yet accepted in Pass A.**
+- Next batch: IDEA-0017 through IDEA-0021. **Not yet accepted in Pass A.**
 
 ## Process
 
