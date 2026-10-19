@@ -24,7 +24,7 @@ The user wants a simpler initial approach: a living character sheet that stays u
 - **Automatic tracking for the whole sheet:** For every character, automatically maintain **all applicable defined character-sheet fields**, including user-created custom fields, as accepted story events change them. Do not require players to configure individual state modules or field-level tracking modes.
 - **Validated state changes only:** Model output may propose updates, but changes must satisfy the authoritative validation rules and remain consistent with accepted narrative outcomes and committed world-state events. An unsupported AI assertion is not a valid change by itself.
 - **No routine approval prompt:** Do not require the player to approve each automatic field update one at a time. This does not waive deterministic validation or prevent the user from inspecting/correcting records.
-- **Manual editing remains available:** Players continue to view, edit and correct character sheets directly even though automatic tracking is the general policy. How later automatic proposals interact with direct edits needs refinement.
+- **Manual corrections are authoritative and historied (user acceptance 2026-10-19):** Players may directly correct defined character-sheet values. When confirmed, a valid manual correction is an **authoritative canonical state mutation with durable history and provenance**, not merely a UI preference or temporary exception. Later automatic updates evaluate the **latest accepted state**, including that correction, and must not replace it with an older AI assumption or stale proposal. A genuinely new validated story event may still change the value later; manual input is not a permanent immunity lock. Resolve concurrent/stale updates using the common transaction/version checks.
 - **Correct missing-value semantics:** A missing or unrecorded field remains unknown, not zero, false, empty or a guessed value. Only establish newly known values from trustworthy accepted outcomes, preserving explicitly known-empty values distinctly.
 - **Consistent universal character identity:** Use the same stable unclassified character entities and editable status-sheet structures from [[Shared PC and NPC Character Entities]] (IDEA-0026) and [[Customisable Character Status Sheets]] (IDEA-0027). Apply automatic maintenance to relevant custom fields as well as common fields.
 - **Coherent failures and reversals:** Failed generations or rejected state proposals must not change saved sheets. Historical edits, undo and replay should preserve or rebuild the correct current status with traceable provenance; exact mechanism remains for refinement.
@@ -48,6 +48,13 @@ During or after each successful adventure turn, gather authoritative accepted ch
 - Apply changes immediately after validated turn completion versus batch them as part of generation commit; exact timing and failure recovery require refinement.
 - Fine-grained Disabled/Manual Only/Automatic modes and optional per-change confirmations remain a separate **deferred, unaccepted** direction (IDEA-0028). There is no requirement to build these controls as part of IDEA-0064.
 
+## Authoritative manual corrections and subsequent automatic updates (2026-10-19)
+
+- A player's accepted direct edit is a validated canonical change, captured in the same replayable provenance/history contract as any other persistent character-sheet mutation.
+- An AI-proposed change must be evaluated relative to the **current committed character value and version**, not the model's stale recollection or an earlier snapshot. Example: after the player corrects a known Health value from 80 to 95, a later valid 10-point injury must be calculated from 95, **not** an earlier 80, assuming the adventure actually uses those numeric mechanics.
+- A later established event can legitimately change the corrected value. This is **not** a permanent manual-over-auto priority that prevents future story development; it is a rule against overwriting authoritative facts with stale assumptions.
+- No new per-field tracking modes or individual approve-every-update confirmations are implied. Event representation, conflict messages and the treatment of ambiguous qualitative changes remain design refinements.
+
 ## Automatic tracking for any character
 - **Latest accepted IDEA-0026 decision:** There is no permanent PC/NPC or Playable classification. Automatic tracking applies to the actual character entities affected by validated events, whether or not the player has ever selected them for Do/Say.
 - Selecting a different character merely changes who the player speaks/acts as; it cannot automatically alter status fields or make another character's events target the selected one.
@@ -58,14 +65,14 @@ During or after each successful adventure turn, gather authoritative accepted ch
 - No model or provider configuration should force a separate always-loaded model to make sheet tracking work.
 - Preservation of unknown versus expressly zero/empty/false values is required.
 - The system must not treat rejected, preview-only or failed generation output as committed changes; undo/edits must not leave derived sheet values contradicted by the current narrative history.
-- Manual edits remain possible; precedence between deliberate manual corrections and later event-derived automatic updates must be determined.
+- Manual corrections, once validly committed, have authoritative historical provenance and are included in the current state for all subsequent automatic change proposals. The implementation must reject stale proposals or reconcile against the latest accepted version. The exact event schemas and conflict/error presentation remain to be designed.
 - IDEA-0028 remains **status: candidate** in Inbox, explicitly deferred rather than accepted or rejected. No configurable tracking-mode system or approve-every-change dialogue is in the accepted scope.
 - Other separate idea gates govern inventory transfers, equipment, anatomy, world map/location persistence and simulation mechanics. This acceptance covers automatic **character-sheet fields** only.
 
 ## Open questions
 - How should the engine identify meaningful updates to arbitrary player-defined fields reliably while avoiding hallucinated or needless changes?
 - Does "everything" cover every explicitly configured sheet field, and under what circumstances may the system suggest entirely new fields?
-- How does the system reconcile a player's direct manual edit with a later AI-proposed update?
+- Which event/revision/version checks guarantee that an automatic update uses the most recent authoritative manually corrected value, and how are concurrent or ambiguous changes surfaced?
 - What deterministic validation can be applied to freeform/qualitative status fields versus numeric stats?
 - Should automatic tracking run on every completed generation turn or only when validated outcomes affect the character sheet?
 - How will historical edits, undo and failed generation pipelines roll back or rebuild automatic sheet changes?
@@ -97,6 +104,8 @@ During or after each successful adventure turn, gather authoritative accepted ch
 - The scope is character-sheet fields, not an implicit approval of other standalone inventory, equipment, anatomy or location proposals.
 
 ## Decisions and review history
+
+- 2026-10-19 — **User explicitly accepted manual-correction precedence:** Player-confirmed, valid character-sheet corrections are authoritative canonical state changes with durable history/provenance. Subsequent automatic tracking must use the latest accepted state and must not overwrite a correction using stale model assumptions. Future genuinely established events can still modify those values. IDEA-0028 remains unaccepted; exact transaction/reconciliation interfaces remain open. Staging clarification only.
 - 2026-10-18 — **Accepted universal-character dependency:** Auto-tracking uses one unclassified character model with no PC/NPC or Playable tags. Temporary `Playing As` does not change an entity's status. Staging only.
 - 2026-10-16 — **User-requested capture, not acceptance.** During review of IDEA-0028, user said: "Lets just keep this idea unaccepted for now and introduce a new one, simpler one, where we just have automated tracking of character sheet for now for everything." Created as a separate candidate while IDEA-0028 remains unaccepted in Inbox.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** "Accept IDEA-0064 with automatic validated updates to all applicable PC and NPC character-sheet fields, including custom fields, without per-field Disabled/Manual/Automatic tracking modes or required approval for each change. Preserve manual editing, known versus unknown values, and authoritative state validation. Keep IDEA-0028 deferred and unaccepted." Promoted to staging for refinement only; IDEA-0028 remains an unaccepted Inbox candidate.
