@@ -38,7 +38,7 @@ Exact keyword and alias matching are easier to explain and debug but can miss co
 
 ## Dependencies and constraints
 - Depends on accepted [[Entity-Based Lorebook]] (IDEA-0020), including durable entity IDs, manual context inclusion/exclusion and an accurate distinction between persistent lore and authoritative mutable world state.
-- The unaccepted [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024) is a potential refinement dependency for detailed budget allocation and request inspection, not separately approved here.
+- The separately **accepted staging** [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024) owns detailed context budgeting, omission reasons and requested/selected/transmitted inspection. Its implementation scope is not implicitly part of IDEA-0021; the two accepted directions are compatible.
 - Never allow triggered lore to override authoritative world state or to treat character rumours as unquestioned facts.
 - Automatic rules must not defeat a player's explicit exclusions or hide that a requested included entry was omitted due to size limits.
 - No semantic embedding model or vector index should be required for this accepted rules-based feature; IDEA-0063 remains unaccepted.
@@ -78,5 +78,7 @@ Exact keyword and alias matching are easier to explain and debug but can miss co
 - IDEA-0063, the user's separately captured semantic embedding/RAG proposal, remains an unaccepted candidate.
 
 ## Decisions and review history
+
+- 2026-10-19 — **Pass A reference correction:** IDEA-0024 is already accepted independently in staging. Earlier description of it as unaccepted is obsolete. Automatic Lorebook activation still honours manual exclusions; embedding-based RAG IDEA-0063 remains unaccepted. No new approval.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Optional keyword, alias, location and logical-condition Lorebook activation, priorities, activation inspection and precedence for explicit manual inclusion/exclusion. The user replied "Accept this" to the presented IDEA-0021 scope. Embedding-based RAG (IDEA-0063) remains a separate unaccepted Inbox candidate. Moved to staging for refinement only, not production.
