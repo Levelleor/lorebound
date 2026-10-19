@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Memory Lorebook and Context Brainstorm]]", "[[Gameplay Feature Catalogue Brainstorm]]"]
@@ -24,10 +24,10 @@ Players need persistent steering of the narrator.
 - **Persistent editable author notes:** Let players author and revise enduring story-writing guidance, narrative preferences and instructions without placing those instructions inside narrative prose.
 - **Separate from canonical fiction and world state:** Author notes are prompts to the narrator, not historical events, Lorebook facts or mutations of game entities. Editing instructions must not retroactively rewrite saved story text or validated world state.
 - **Layered instruction scopes:** Support **global** preferences across adventures, **per-adventure** directions and **optional per-scene** notes for local storytelling guidance. Players should be able to see which scopes apply to a generation.
-- **Independent yet coordinated with style controls:** Custom author notes complement [[Narration Style and Perspective Controls]] (IDEA-0010) and may clarify creative direction beyond a preset style or perspective choice.
-- **Context integration and transparency:** Include applicable notes as separately identifiable instructions in the generation context under [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024), with inspector visibility into requested, selected and actually transmitted instructions. Explain any omissions or inability to fit instructions within the active model's context budget.
+- **Independent yet coordinated with current settings:** Custom author notes complement the adventure's current [[Narration Style and Perspective Controls]] (IDEA-0010) and any initial writing directions supplied by a reusable **scenario template** (IDEA-0008). **No narration-style preset manager** is accepted.
+- **Context inclusion each narrative turn:** Without making the player restate them, include the **currently applicable persistent author notes on every AI narrative generation turn**, along with the active style settings, through [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024). Show requested, selected and actually transmitted instruction context, making material omissions/capacity limits explicit. A note that could not fit must never be silently presented as if it was sent.
 - **Explicit precedence constraints:** Player-authored stylistic or narrative directions must **not override validated, authoritative world-state constraints or established game outcomes**. A losing character cannot become victorious solely because a note asks the narrator never to show a loss.
-- **Conflicts are inspectable:** Handle clashes between global, adventure and scene notes, chosen style controls, provider/model requirements and hard world rules explicitly. The exact override/merge precedence among compatible author-note layers is not yet decided.
+- **Conflicts are inspectable:** Handle clashes between global, adventure and scene notes, **current style settings**, optional template-provided starting instructions, provider/model requirements and hard world rules explicitly. Exact precedence among these applicable inputs remains to be refined; **there is no competing saved style-preset inheritance layer**.
 - **Respect single- and multi-model use:** Applicable narration/task instructions should be routed coherently with the user's model and pipeline choices; separate stage-specific prompt policies are refinement work.
 
 ## Proposed behaviour
@@ -35,6 +35,12 @@ Offer editable global, adventure and optional scene-level author-note fields, se
 
 ## Alternatives and trade-offs
 A single instruction field is simpler but can force players to repeat shared preferences and mix global rules with adventure-local or scene-specific direction. The accepted direction uses layered global, adventure and optional scene scopes, though precise inheritance and override UX remain open. An explicit instruction inspector adds clarity but consumes UI space and may expose complicated prompt conflicts that need understandable presentation.
+
+## Persistent steering on every generation turn, without style presets
+- **Accepted IDEA-0010 user revision (2026-10-18):** The player steers ongoing narration through **template-provided initial inputs when a scenario template was used**, **current narration settings**, and **editable persistent author notes**. There is **no saved narration-style preset gallery** to copy/apply or keep synchronized. Scenario templates are optional and do not become an account-level style manager.
+- **Once written, notes are reused automatically:** Resolve applicable global, adventure and optional scene-scoped author notes and supply them to the context builder **on every AI-generated narrative turn**, along with the current effective narration controls. Do not require the player to repeatedly paste a note into the story input. Editing a note affects future prompt assembly only and does not revise past prose or canonical world facts.
+- **Preserve transparent context limits:** Prioritize material active instructions as appropriate alongside authoritative world-state constraints. IDEA-0024 still enforces finite model context budgets and reports what was actually transmitted; if relevant note text cannot be included, communicate that fact rather than silently dropping it while claiming continuity. Exact precedence/budget-resolution UX remains open.
+- **Authorship boundary:** Author notes and creative style instructions influence model behaviour; they are **not accepted world-state events** or a way for the AI to bypass canonical validation. Player-written Story mode declarations may separately establish world changes under IDEA-0002; that does not transform author notes into unrestricted world-edit commands.
 
 ## Dependencies and constraints
 - Builds on accepted [[Narration Style and Perspective Controls]] (IDEA-0010), [[Entity-Based Lorebook]] (IDEA-0020) and [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024), while respecting the approved planning direction for deterministic validation in [[Configurable Generation Pipeline Strategies]] (IDEA-0018).
@@ -50,13 +56,14 @@ A single instruction field is simpler but can force players to repeat shared pre
 - How should instruction notes interact with hard validated world constraints, creative controls and player direct actions?
 - Should different model task roles (narrator, interpreter, summariser) receive different author-note sections?
 - What limits, character/token counts or budget priorities should apply to persistent notes?
-- Can players save, copy or export global note presets independently of adventures?
+- **Out of scope after IDEA-0010 revision (2026-10-18):** No separate reusable narration-style or author-note preset manager or style-preset import/export is approved. Directly editable persistent author notes and reusable scenario-template inputs are the accepted steering mechanisms.
 - How should users view conflicts or omissions in the effective context without overwhelming the ordinary writing UI?
 
 ## Draft acceptance criteria
+- [ ] Current narration settings and applicable author notes are assembled anew for **each** AI narrative generation, reflecting edits since the prior turn, without a standalone reusable style/author-note preset system.
 - [ ] A player can create, edit and persist author notes independently of story prose and world-state entity records.
 - [ ] The user interface supports global and per-adventure instruction scopes, with optional scene-level notes.
-- [ ] A future generation can receive applicable author-note layers through the context builder without requiring the player to paste them into narrative prose.
+- [ ] **Every AI narrative generation turn** incorporates the then-applicable persistent author-note layers and current narration settings into its requested context, without requiring the player to paste them into prose. Material context-window omissions must be surfaced and distinguished from transmitted instructions.
 - [ ] The context inspector distinguishes requested, selected and actually transmitted author instructions and reports their inclusion or omission.
 - [ ] Incompatible instructions cannot override validated world-state constraints or independently rewrite already committed narrative history.
 - [ ] Players can inspect or control how global, adventure and scene scopes apply to the current generation.
@@ -75,5 +82,6 @@ A single instruction field is simpler but can force players to repeat shared pre
 - Staging is an unrefined, human-accepted direction, not approval for production or evidence of implementation.
 
 ## Decisions and review history
+- 2026-10-18 — **User revised IDEA-0010:** Removed narration-style presets from accepted features. Story steering comes from optional scenario-template initial instructions, current narration settings and persistent author notes, automatically included as relevant context on every AI narrative turn with transparent budget limitations. No author-note/style-preset manager or extra repeated player input is required. Original layered note scopes and canonical-state safeguards remain. Staging only.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Persistent editable author notes and story instructions separate from narrative prose; layered global/adventure/optional scene scopes; inclusion in model context with inspector visibility; and clear precedence that does not override authoritative world-state constraints. Moved to staging for refinement, not production.
