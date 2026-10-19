@@ -76,9 +76,69 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0001 (account-free independent adventures), IDEA-0003 (draft prose), IDEA-0011 (fork), IDEA-0039 (event history), IDEA-0040 (revision provenance), IDEA-0042 (reconstruction), IDEA-0051 (shared SQLite), IDEA-0052 (backup/restore/storage), IDEA-0053 (Go runtime).
 - **Deferred:** Concrete APIs for draft retirement, duplication ID/remapping, deletion and restore; backup/restore mechanics belong to IDEA-0052 and SQLite architecture belongs to IDEA-0051. IDEA-0006 owns blank and Quick Start opening behaviour.
 
+### IDEA-0006 — Quick Start and Custom Story Openings
+
+- **Source:** [[Quick Start and Custom Story Openings]] (`planning/staging/Quick Start and Custom Story Openings.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Adventure Initialization & Setup
+- **Secondary subsystems:** Adventure Library & Persistence; AI Generation Pipeline; Adventure Coordinator; World Rules & Validation; Presentation & UX
+- **Classification:** Adventure creation and initial canonical world/story setup.
+- **Responsibility:** Offer Quick Start with a short premise, optionally blank or authored Custom Opening, and skippable Guided Setup; require neither character/world questionnaire, title nor initial prose. The first fully generated, validated Quick Start opening is automatically committed with supported initial world facts in one atomic turn, without an additional Accept click. Committed player-authored opening prose may produce only grounded, explicitly supported, validated facts; unfinished drafts never trigger canonical changes. Blank adventures are valid with no model connection, using the display name `Untitled Adventure` where necessary.
+- **Boundary:** Initialization owns starting paths and first-turn semantics. The AI Generation Pipeline generates provisional material; the coordinator validates and commits; persistence creates the stable independent adventure; world validators prevent invented lore during fact extraction. Optional intentionally generated pre-turn Lorebook material belongs to IDEA-0066, not to prose fact extraction. No partial or cancelled generation is committed.
+- **Key idea dependencies:** IDEA-0005 (adventure save), IDEA-0018 (generation strategy), IDEA-0020 (Lorebook), IDEA-0044 (coordinator), IDEA-0045 (proposed state operations), IDEA-0051 (SQLite), IDEA-0066 (optional starting world generation).
+- **Deferred:** Setup UX, guided choices, extraction schema, prompting and failure/unsupported-fact handling.
+
+### IDEA-0007 — Character Creation and Starting Choices
+
+- **Source:** [[Character Creation and Starting Choices]] (`planning/staging/Character Creation and Starting Choices.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Character & Scene State
+- **Secondary subsystems:** Adventure Initialization & Setup; Entity-Based Lorebook; Narrative Interaction & Intent; Presentation & UX; World Rules & Validation
+- **Classification:** Optional character authoring and actor selection.
+- **Responsibility:** Support flexible freeform character attributes without compulsory race/class/stats or any required character at adventure creation. Characters share a single unclassified stable entity model. Persist `Playing As` as a nullable, per-adventure explicitly chosen Lorebook character reference: Do/Say require it; Story/Continue do not. Creation and Add Character do not automatically select an actor or create gameplay events.
+- **Boundary:** Character & Scene State owns character identity and state; Lorebook owns its editable record; settings/presentation own deliberate actor selection and the UI; interaction modes consume the selected actor. Optional inventory/location attributes must be represented and validated by their enabled authoritative systems, not silently fabricated.
+- **Key idea dependencies:** IDEA-0002 (Do/Say actor), IDEA-0006 (skippable setup), IDEA-0020 (Lorebook), IDEA-0026 (unclassified characters), IDEA-0027 (custom status), IDEA-0034 (presence/location).
+- **Deferred:** Editor layout, optional RPG schemas, advanced starting attributes and structured state UI.
+
+### IDEA-0008 — Reusable Scenario Templates and Placeholders
+
+- **Source:** [[Reusable Scenario Templates and Placeholders]] (`planning/staging/Reusable Scenario Templates and Placeholders.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Scenario Templates & Configuration
+- **Secondary subsystems:** Adventure Initialization & Setup; Adventure Library & Persistence; Entity-Based Lorebook; Character & Scene State; World Rules & Validation
+- **Classification:** Reusable parameterized adventure-start configurations.
+- **Responsibility:** Store reusable scenario definitions with placeholders and optional setup prose, Lorebook, characters, locations and validated initial state. Template instantiation creates a fresh, independent adventure with its own identity and newly coherent stable references; it never copies an existing adventure's played turns, active revisions or live history. Prose-only templates remain possible without mandatory structured modules.
+- **Boundary:** Scenario Templates owns definition/parameter substitution; Initialization orchestrates instantiation; Adventure Library creates independent saves; entity/world modules validate optional structured seed records. Templates are starting material, not mutable played history.
+- **Key idea dependencies:** IDEA-0005 (adventure separation), IDEA-0006 (optional start), IDEA-0007 (characters), IDEA-0020 (Lorebook), IDEA-0026 (character identities), IDEA-0033 (location identities).
+- **Deferred:** Template representation and UI, supported placeholder types, import/export policy and initial event/schema details.
+
+### IDEA-0010 — Narration Style and Perspective Controls
+
+- **Source:** [[Narration Style and Perspective Controls]] (`planning/staging/Narration Style and Perspective Controls.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Narrative Generation Configuration
+- **Secondary subsystems:** AI Generation Pipeline; AI Context & Prompt Construction; Presentation & UX; Adventure Library & Persistence
+- **Classification:** Noncanonical configuration of future AI narration.
+- **Responsibility:** Manage current perspective, tense, genre, tone, pacing, response-length preference and custom stylistic instructions. Apply to subsequent generations only: changing style neither retroactively rewrites committed prose nor changes canonical world facts. Do not create a separate saved narration-style preset system.
+- **Boundary:** Narrative Generation Configuration owns preferences; Context & Prompt Construction selects/transmits applicable instructions; Generation Pipeline enforces supported provider/model request parameters; Presentation & UX provides controls; persistence stores applicable settings outside event history. Style guidance does not override deterministic game-world constraints or provider-level decoding controls.
+- **Key idea dependencies:** IDEA-0008 (optional scenario-provided setup), IDEA-0016 (separate sampling parameters), IDEA-0018 (generation pipeline), IDEA-0024 (context builder), IDEA-0025 (persistent author notes).
+- **Deferred:** UI controls, prompt precedence/adherence and model-specific length limits. No narration-style preset library.
+
+### IDEA-0011 — Manual Generation Branches
+
+- **Source:** [[Manual Generation Branches]] (`planning/staging/Manual Generation Branches.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Adventure Library & Persistence
+- **Secondary subsystems:** Narrative History & Versioning; World State Reconstruction; Adventure Coordinator; Presentation & UX
+- **Classification:** Independent adventure fork, not an in-adventure branching mechanic.
+- **Responsibility:** Fork a source adventure at a chosen committed history point into a new independent saved adventure with the appropriate committed narrative/revision history and matching canonical world state. Future changes diverge independently; the source's later prose/state remain untouched. Present the fork as a separate adventure in the library.
+- **Boundary:** Adventure Library owns creation and isolation of the fork; History & Versioning defines the source boundary and provenance; Reconstruction provides consistent state at that point; the coordinator validates/coordinates and persistence atomically stores the new adventure. Do not introduce branch graphs, branch switching, retained AI variants or an in-story timeline tree. Retry and committed Undo (IDEA-0004) remain distinct.
+- **Key idea dependencies:** IDEA-0004 (retry/undo distinction), IDEA-0005 (library and duplication), IDEA-0039 (event history), IDEA-0040 (revision IDs), IDEA-0042 (state rebuild), IDEA-0051 (SQLite).
+- **Deferred:** Fork-point UX, ID/reference remapping, provenance conventions and snapshot/replay implementation.
+
 ## Next pending mapping
 
-- IDEA-0006 through IDEA-0010 — pending review/acceptance as a batch.
+- Next batch: five staging ideas after IDEA-0011, exact IDs to be verified. **Not yet accepted in Pass A.**
 
 ## Process
 
