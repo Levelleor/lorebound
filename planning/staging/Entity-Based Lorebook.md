@@ -27,7 +27,7 @@ World knowledge must outlive any individual prose passage.
 - **Separate stable knowledge from mutable state:** Link to live character/location/item world-state records instead of duplicating changeable facts as permanently authoritative Lorebook text. A change in the game world's current state should not cause stale Lorebook text to override it.
 - **Facts versus beliefs:** Allow representing established world facts distinctly from rumours, hypotheses and beliefs attributed to particular characters or sources. The exact knowledge/reliability schema remains for refinement.
 - **Explicit player control of lore injected into AI context:** Players must be able to **select what Lorebook material enters the generation context**. At minimum allow manual entry-level inclusion/exclusion (and consider field/section-level control), plus a visible indication of the resulting selection. A player should be able to deliberately include useful lore or keep unrelated lore out without relying solely on automatic triggers.
-- **No automatic semantic retrieval accepted here:** This note covers the Lorebook and manual selection. Keyword/conditional inclusion ([[Conditional Lorebook Activation]], IDEA-0021) and **embedding-based retrieval/RAG** ([[Embedding-Based Lore Retrieval and RAG Context Selection]], IDEA-0063) are distinct unaccepted candidates requiring their own approvals.
+- **Separate activation and semantic retrieval approvals (current status):** This idea establishes Lorebook entries and manual selection; the independent [[Conditional Lorebook Activation]] (IDEA-0021) has **since been accepted in staging** for optional rules/keyword-based inclusion, with explicit manual exclusions taking precedence. **Embedding-based retrieval/RAG** ([[Embedding-Based Lore Retrieval and RAG Context Selection]], IDEA-0063) remains **unaccepted in Inbox**. Neither distinct capability is silently approved by this Lorebook note alone.
 - **Context-size constraints:** Manual inclusion requests remain subject to the selected model's context limit. If selected lore cannot fit, show an understandable warning/omission rather than silently pretending it was passed to the model.
 
 ## Proposed behaviour
@@ -88,8 +88,8 @@ A combination of entry types and editable freeform lore supports both structured
 ## Dependencies and constraints
 - Lorebook entries should refer to authoritative entities in the future character, location and inventory systems; this idea does not approve those separate features by itself.
 - Dynamic state such as current location, ownership, inventory, alive/dead state and relationships must not be treated as immutable Lorebook fact.
-- The context builder ([[Token-Budgeted Context Builder and Inspector]], IDEA-0024) should respect explicit inclusion/exclusion requests while handling model token/context limits transparently; that candidate is not accepted here.
-- Selective Lorebook inclusion is **manual** under this decision. Automatic keyword-based activation (IDEA-0021) and embeddings/RAG selection (IDEA-0063) remain independent unaccepted ideas.
+- The separately **accepted staging** context builder ([[Token-Budgeted Context Builder and Inspector]], IDEA-0024) respects explicit Lorebook include/exclude requests and communicates token/context limits. It has its own scope and refinement gate; its later acceptance does not expand this individual Lorebook idea retroactively.
+- Manual Lorebook control originates in this idea; optional keyword/rules activation in **accepted staging** IDEA-0021 is a separate compatible capability. Embedding/RAG selection (IDEA-0063) is still unaccepted. Manual exclusions take precedence over automatic activation and context budgets may cause explicitly reported omissions.
 - Lorebook beliefs and rumours should not be indistinguishable from verified state when instructions are built for the narrator.
 
 ## Open questions
@@ -135,6 +135,8 @@ A combination of entry types and editable freeform lore supports both structured
 - Accepted into **staging for refinement only**. Automatic embeddings-based RAG retrieval is intentionally recorded separately as a fresh unaccepted Inbox candidate.
 
 ## Decisions and review history
+
+- 2026-10-19 — **Pass A audit reference correction (no new feature approval):** IDEA-0021 (conditional Lorebook activation) and IDEA-0024 (token-budgeted context/inspector) are already accepted separately in staging, not unaccepted Inbox candidates. IDEA-0063 (semantic embeddings/RAG) remains unaccepted. Original idea ownership and manual inclusion/exclusion precedence unchanged.
 - 2026-10-18 — **Accepted IDEA-0008 Lorebook alignment:** Template lore is copied independently into each new adventure, with correctly scoped entities and references, preserved uncertainty and no live cross-instance links. Editing a source template or sibling adventure never changes instantiated Lorebook state. Staging only.
 - 2026-10-18 — **IDEA-0007 user decision dependency:** Manual freeform character descriptions do not require automated semantic comparison with typed Lorebook fields; neither representation silently overrides or corrects the other. Existing stable IDs, schema checks, source-grounded narrative extraction and canonical gameplay validation remain in force. Staging only.
 - 2026-10-18 — **Accepted IDEA-0007 Option B:** Lorebook characters can have unknown proper names and only a stable identity; descriptive or generic UI labels are noncanonical name substitutes for display, not invented facts. Later grounded name revelation updates the same entity, unverified names stay uncertain, and all entries remain selectable as `Playing As`. Staging only.
