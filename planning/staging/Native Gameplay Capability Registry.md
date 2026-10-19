@@ -55,13 +55,13 @@ Hard-coding every gameplay operation in the core may simplify the first implemen
 ## Dependencies and constraints
 - Extends accepted [[Deterministic Adventure Coordinator]] (IDEA-0044), which owns authoritative validation/dispatch/finalisation, and [[LLM State Interpreter and Proposed Operations]] (IDEA-0045), which may suggest registered operations but cannot commit them directly.
 - Typed tool rejections and narrative repair follow accepted [[Typed Tool Rejection and Narrative Repair]] (IDEA-0046).
-- Persistent results across all registered mechanics must satisfy [[Event-Sourced World History]] (IDEA-0039) and **complete incremental reconstruction** in [[Snapshots and Incremental State Rebuild]] (IDEA-0042); no mod-owned persistent fact may be unreplayable.
+- Persistent results across registered mechanics must be recorded through [[Event-Sourced World History]] (IDEA-0039) and the incremental reconstruction contract of [[Snapshots and Incremental State Rebuild]] (IDEA-0042) **while the capability is installed/supported**. If removed, the historical custom plugin state has no required migration or replay compatibility; existing canonical story/history is not automatically erased.
 - Shared world entities and provenance must remain consistent with accepted inventory, character, location and environment modelling. Registered operations cannot silently create duplicate identities or contradictory ownership/position state.
 - Native capabilities must function without optional MCP connectivity. [[MCP Tool Connectivity and Side-Effect Safety]] (IDEA-0048) was **skipped by the requesting user**; no MCP connector is currently an accepted feature.
 - Keep the native contracts protocol-neutral and define a future adapter seam so an MCP connector can be considered later without duplicating the registry or coordinator authority; this does not require implementing MCP today.
 - Separate replayable state changes from external side effects across *all* module transports. Store sufficient accepted outcomes/provenance for historical reconstruction without reissuing an external action.
-- Capability permissions, trust/sandboxing, module lifecycle and historical migration are intentionally unresolved.
-- A module may be disabled or removed from future gameplay without making already accepted canonical story history disappear; how historic event decoding/migration works is left to refinement.
+- Capability permissions, trust/sandboxing and normal module loading/lifecycle require refinement. **Plugin-removal migration is explicitly not required**; it is not an unresolved blocking decision.
+- After disabling/removing a module, the story continues without its new mechanics or model context; retain already saved story/history and core-safe records where available, with **no historical plugin-event decoding, migration or emulation requirement**.
 - This is staging acceptance for design refinement only, not production approval or implementation.
 
 ## Open questions
@@ -89,7 +89,7 @@ Hard-coding every gameplay operation in the core may simplify the first implemen
 - [ ] Capability contracts and coordinator dispatch do not depend on a particular wire protocol, model provider or runtime transport; a future MCP adapter could map tools into this single capability authority.
 - [ ] The registry's contract can distinguish replayable accepted internal state changes from potentially irreversible external effects so historical reconstruction need not reinvoke those effects.
 - [ ] MCP transport, connector implementation and authentication remain **unapproved** and may be reviewed separately if wanted later.
-- [ ] Schema evolution, module unload/isolation, permission enforcement and replay of events from disabled/updated modules remain explicitly documented as blocking refinement questions.
+- [ ] Module unload/isolation, permission enforcement and any supported-version compatibility needs are reviewed, but **removal of a plugin does not block continued play on migration or historical replay compatibility**.
 
 ## Refinement checklist
 - [ ] Behaviour and scope are clear
