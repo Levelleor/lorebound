@@ -31,7 +31,7 @@ Plain TypeScript cannot reliably infer meanings from unconstrained natural langu
 - **Provider-flexible output strategies:** Support consideration of native function/tool calling when available and constrained JSON or equivalent structured extraction where not. Neither is mandated as the universal implementation; schema validation still applies.
 - **Explicit uncertainty and failure:** Malformed outputs, omitted operations, unsupported targets, conflicting references and uncertain interpretations require safe handling. Do not turn an uncertain model guess into a committed fact.
 - **Refinement choices remain open:** Detailed operation schema and entity-resolution rules, extraction reliability across local role-playing models, confidence/ambiguity handling, fallback and repair strategy, parser/tool interface and benchmarks remain to be decided before production.
-- **Separate candidate boundary:** Typed error reasons and narrator repair on rejected operations belong to separate unaccepted [[Typed Tool Rejection and Narrative Repair]] (IDEA-0046); accepting interpretation alone does not promote that idea.
+- **Separately accepted error and repair responsibilities:** Typed error reasons and bounded narrator repair on rejected operations belong to separately **accepted staging** [[Typed Tool Rejection and Narrative Repair]] (IDEA-0046). The interpreter remains a proposal mechanism; accepting it alone did not constitute approval of the other idea, which has since received its own separate staging acceptance.
 
 ## Proposed behaviour
 The coordinator invokes a configured LLM interpretation task on a player action, narrated event or draft. The interpreter proposes typed operations with arguments and any confidently resolvable stable entity references, while preserving when an event is only attempted, intended, historical or ambiguous. Schema validation catches malformed output and missing fields; deterministic domain validation then resolves whether the operation can occur given current authoritative state and adventure rules. Only the coordinator may commit accepted world changes and corresponding story events, coherently with narration. Interpretation can use the narrator model sequentially or an optionally configured task-specific model, with function-calling and constrained-JSON strategies as alternatives to evaluate. Any incomplete, contradictory or unsupported proposal remains provisional and triggers explicit safe handling rather than silent state mutation.
@@ -92,7 +92,7 @@ For Do/Say, interpret the selected character's identity and **already establishe
 - The interpreter may suggest an operation requiring a new entity or world location, but validated creation is governed by the corresponding separately accepted rules, not by guessed identity resolution.
 - Distinguish attempts, intentions, memories, hypotheticals and completed changes during extraction to prevent model hallucinations from becoming persistent consequences.
 - Failure to produce meaningful or schema-valid operations is not permission to silently ignore necessary state changes and commit contradictory narration. Escalation/fallback needs refinement.
-- Typed rejection and narrative repair specifics remain a separate unaccepted candidate [[Typed Tool Rejection and Narrative Repair]] (IDEA-0046).
+- Typed rejection and narrative repair remain a separate, **accepted staging** responsibility in [[Typed Tool Rejection and Narrative Repair]] (IDEA-0046), with detailed schemas/budgets still deferred.
 - This is staging acceptance for refinement only, not approval for production or evidence of implementation.
 
 ## Open questions
@@ -135,6 +135,8 @@ For Do/Say, interpret the selected character's identity and **already establishe
 - This remains an **unrefined accepted planning direction**, not a production-ready specification or implemented feature.
 
 ## Decisions and review history
+
+- 2026-10-19 — **Pass A reference correction:** IDEA-0046 (typed rejections and narrative repair) is already independently accepted in staging. Earlier 'unaccepted candidate' references were historical and are superseded, not new feature acceptance.
 - 2026-10-18 — **Accepted IDEA-0002 interpretation distinction:** Explicit Story-authored assertions can bypass fictional gameplay prerequisites as player-directed world facts, with source-grounded minimal typed effects and coordinator/governed safe commits. Hypotheticals, rumours, Do/Say attempts and autonomous AI claims do not receive that authority. Staging only.
 - 2026-10-18 — **Explicit user acceptance:** `Playing As` switching is a narrative cut; the next Do/Say follows the chosen character in their existing circumstances. Switching causes no physical travel, time passage or item movement. Staging only.
 - 2026-10-18 — **User explicitly accepted:** A `Playing As` switch is an editorial scene cut; next Do/Say follows the new character in their established place, no automatic travel/time/state effects, and Story/Continue remain independent. Staging only.
