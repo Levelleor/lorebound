@@ -556,9 +556,69 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0001 (local account-free), IDEA-0005 (adventure management), IDEA-0014 (credentials), IDEA-0039 (events), IDEA-0040 (revisions), IDEA-0042 (complete history), IDEA-0044 (browser coordinator), IDEA-0052 (backup/restore), IDEA-0053 (headless Wails runtime).
 - **Deferred:** Driver/table schemas, WAL/transaction tuning, service authentication and expected-version tokens, schema compatibility checks, safe DB file switching and consistent snapshot/restore mechanics. The source document's legacy `Browser-Persistent` title does not mean browser-owned canonical storage.
 
+### IDEA-0052 — Backups Export and Storage Quotas
+
+- **Source:** [[Backups Export and Storage Quotas]] (`planning/staging/Backups Export and Storage Quotas.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Persistence & Draft Management
+- **Secondary subsystems:** Runtime & Platform Services; Adventure Library & Persistence; World State Reconstruction; Credential & Secret Storage; Presentation & UX
+- **Classification:** Consistent whole-library data protection and storage-capacity feedback.
+- **Responsibility:** Create a transactionally consistent SQLite **snapshot of the entire active shared library** and deliberately replace the whole active database on Restore Database, with user-facing storage-space feedback, warnings and basic recoverable error handling. Preserve every adventure's committed history, revisions and plugin/world data necessary for full reconstruction.
+- **Boundary:** Persistence & Draft Management owns data snapshot/restore semantics; Go Runtime & Platform Services owns privileged file access, safe SQLite backup APIs, connection quiescing/close-replace-reopen and basic snapshot compatibility/error checks. Adventure Library supplies the library-wide user workflow, not per-adventure archive export. World State Reconstruction must remain valid after restoring previously accepted records without rerunning AI or external effects. The SQLite-only backup excludes OS-vault credentials, encrypted sidecar and independent secret keys. **No per-adventure export/import, merge, multi-library manager, automatic pre-restore backup, advanced repair, mandatory automatic backup cadence or alternate archive format is selected.** Browser persistent-storage quotas are not canonical SQLite quotas.
+- **Key idea dependencies:** IDEA-0005 (adventure management and backup boundaries), IDEA-0014 (credentials), IDEA-0039 (history), IDEA-0042 (complete reconstruction), IDEA-0051 (one SQLite database), IDEA-0053 (headless Go runtime).
+- **Deferred:** Consistent SQLite snapshot API/WAL handling, safe restore transaction/file replacement, output location, storage estimates and optional future scheduled backups.
+
+### IDEA-0053 — Localhost Startup and Offline Mode
+
+- **Source:** [[Localhost Startup and Offline Mode]] (`planning/staging/Localhost Startup and Offline Mode.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Runtime & Platform Services
+- **Secondary subsystems:** Application Foundation & Lifecycle; Presentation & UX; Persistence & Draft Management; AI Provider Integration; Credential & Secret Storage
+- **Classification:** Sole selected headless application delivery/runtime and privileged service boundary.
+- **Responsibility:** Distribute a **Wails v3 headless Go localhost server** as packaged Windows/macOS/Linux executables, serving statically built/client-rendered SvelteKit assets in the player's **ordinary browser**. Bind to loopback by default, launch the browser with a fallback address, and provide typed, protected Go services for SQLite, filesystem and other privileged platform features. Support one active filesystem SQLite library (per-user OS app-data default or optional chosen directory), multi-tab expected-version integrity and local/offline functionality with optional separately running inference servers.
+- **Boundary:** Browser TypeScript owns UI-adjacent gameplay coordinator, validators, registered native plugins and **direct** local/cloud AI provider requests; Go serves assets and enforces storage/platform service safety, **not** a parallel game engine, model-proxy fallback, native WebView edition, Node SSR/product server or bundled mandatory inference process. Browser CORS, origin, HTTPS/mixed-content and private-network access remain explicit provider compatibility constraints. Protect loopback APIs from unintended origins, CSRF/DNS rebinding and clients. No Docker/Compose delivery is approved under this idea (IDEA-0065 remains unaccepted).
+- **Key idea dependencies:** IDEA-0001 (single-user account-free), IDEA-0012 (browser cloud adapters), IDEA-0013 (browser local model adapters), IDEA-0044 (TypeScript coordinator), IDEA-0047 (capabilities), IDEA-0051 (SQLite), IDEA-0052 (backup), IDEA-0061 (engine terminology), IDEA-0062 (browser UI).
+- **Deferred:** Wails v3 headless packaging/version compatibility, preferred/fallback port details, instance reuse, browser launching, authentication/origin protection, filesystem directory selection, multi-tab failure recovery and responsiveness.
+
+### IDEA-0055 — Optional RPG Mechanics Plugins
+
+- **Source:** [[Optional RPG Mechanics Plugins]] (`planning/staging/Optional RPG Mechanics Plugins.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Gameplay Capability Registry & Plugins
+- **Secondary subsystems:** World Rules & Validation; Adventure Coordinator; Narrative History & Versioning; World State Reconstruction; Presentation & UX
+- **Classification:** Optional composable gameplay mechanics implemented through the shared capability architecture.
+- **Responsibility:** Allow individual adventures to enable independently selected typed mechanics/modules—potentially including combat, dice, magic, economy, survival, quests, reputation or progression—without making any one RPG system a universal gameplay requirement. Surface appropriate UI controls only for enabled and permitted operations. Require every accepted plugin-state change to enter complete versioned/replayable canonical history.
+- **Boundary:** Modules extend the **same protocol-neutral native capability registry** (IDEA-0047), validator and deterministic coordinator/commit pipeline used by core gameplay; they do not introduce a separate RPG engine, a mod-owned conflicting source of canonical truth or their own mandatory runtime. Disabling or removing modules must not silently erase or reinterpret accepted historical records. A skipped global Freeform/Balanced/Strict simulation profile (IDEA-0049) is **not** approved; adventure-specific per-system toggles are the selected direction.
+- **Key idea dependencies:** IDEA-0018 (generation), IDEA-0039 (events), IDEA-0042 (complete reconstruction), IDEA-0044 (coordinator), IDEA-0046 (typed rejection), IDEA-0047 (capability registry), IDEA-0050 (contextual UI controls).
+- **Deferred:** Which modules ship, common-versus-plugin mechanics, module versioning/discovery/package rules, dependency conflicts, permission model, disable/upgrade effects and historic replay after plugin absence.
+
+### IDEA-0061 — Lorebound Branding and Engine Split
+
+- **Source:** [[Lorebound Branding and Engine Split]] (`planning/staging/Lorebound Branding and Engine Split.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Application Foundation & Lifecycle
+- **Secondary subsystems:** Presentation & UX; Adventure Coordinator; Gameplay Capability Registry & Plugins; Runtime & Platform Services; Persistence & Draft Management
+- **Classification:** Product terminology and conceptual top-level architecture boundary, not a new executable component.
+- **Responsibility:** Preserve **Lorebound** as the sole product/repository identity; describe all non-UI game/application functionality collectively as **Lore Engine**. Conceptually distinguish the player-facing UI from the engine's browser-side TypeScript gameplay, AI, rules and capabilities and its supporting Go headless platform/persistence/SQLite services.
+- **Boundary:** Lore Engine is an **architectural umbrella** spanning browser TypeScript and supporting Go responsibilities. It is not a second brand, independent server/process, separate mandatory package, published SDK, dual-repository architecture or transferred Go gameplay authority. `Lorebound Backend` is historical superseded terminology, and `Fablecore` is not selected. Source directory/package boundaries are still open.
+- **Key idea dependencies:** IDEA-0042 (reconstructible state), IDEA-0044 (browser TypeScript orchestration), IDEA-0047 (gameplay registry), IDEA-0051 (Go SQLite persistence), IDEA-0053 (headless runtime).
+- **Deferred:** Practical UI/engine module boundaries, source directory naming, browser-Go contracts and future external reuse decisions.
+
+### IDEA-0062 — Accessibility and Customisable Interface
+
+- **Source:** [[Accessibility and Customisable Interface]] (`planning/staging/Accessibility and Customisable Interface.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Presentation & UX
+- **Secondary subsystems:** Application Foundation & Lifecycle; Narrative Interaction & Intent; Gameplay Capability Registry & Plugins; Adventure Library & Persistence
+- **Classification:** Accessible, responsive browser UI with optional presentation customisation.
+- **Responsibility:** Provide baseline readable and accessible story/editor, character-sheet, map and game-action interfaces with meaningful labels, clear keyboard focus/navigation and responsive layouts. Offer appropriately adjustable panels and readability settings; show relevant controls/panels according to enabled mechanics, valid capability permissions and device space.
+- **Boundary:** Accessibility is a core UI expectation, not contingent on optional custom layout tooling. Layout, panel visibility, text sizing and similar preferences are **presentation settings**, never committed fictional world-state events or historical reconstruction inputs. Responsive operation targets the Wails headless server's ordinary-browser UI, **not** a separate native WebView layout. Neither deep unrestricted docking/shortcut remapping nor skipped text-to-speech IDEA-0056 is implied.
+- **Key idea dependencies:** IDEA-0003 (prose editor), IDEA-0037 (map), IDEA-0042 (replay separation), IDEA-0047 (capabilities), IDEA-0050 (typed UI actions), IDEA-0053 (normal-browser runtime), IDEA-0055 (optional enabled modules).
+- **Deferred:** Layout/breakpoint details, keyboard shortcut scheme, screen-reader/focus test matrix, preference storage scope, panel docking priorities and accessibility acceptance tests.
+
 ## Next pending mapping
 
-- Next batch: IDEA-0052, IDEA-0053, IDEA-0055, IDEA-0061 and IDEA-0062. **Not yet accepted in Pass A.**
+- Remaining eligible staging ideas: IDEA-0064 and IDEA-0066. **Not yet accepted in Pass A.**
 
 ## Process
 
