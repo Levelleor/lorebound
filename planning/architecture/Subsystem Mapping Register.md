@@ -316,9 +316,69 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0002 (Do/Say), IDEA-0005 (adventure settings), IDEA-0007 (character authoring), IDEA-0020 (Lorebook), IDEA-0027 (status sheets), IDEA-0029 (items), IDEA-0033 (locations), IDEA-0034 (presence).
 - **Deferred:** Entity minimum schema, unknown-value representation, merge/deletion/duplicate detection, reference-integrity behaviour and optional related data structures.
 
+### IDEA-0027 — Customisable Character Status Sheets
+
+- **Source:** [[Customisable Character Status Sheets]] (`planning/staging/Customisable Character Status Sheets.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Character & Scene State
+- **Secondary subsystems:** Entity-Based Lorebook; World Rules & Validation; AI Context & Prompt Construction; Presentation & UX
+- **Classification:** Optional, mutable, customisable character-sheet state.
+- **Responsibility:** Support player-defined and optionally typed status fields, conditions and character details on every stable unclassified character entity, with direct editing and applicable validation. Preserve unknown/unrecorded values distinctly from explicitly empty/zero/false values. Relevant current fields may be selected for model context.
+- **Boundary:** Character & Scene State owns current sheet values attached to IDEA-0026 character IDs; Lorebook links descriptions rather than keeping a competing authoritative copy of mutable status. Context construction decides which values are requested, selected and transmitted; direct player edits must respect validated persistent state. This mapping does not independently approve specific update policies or mandatory RPG mechanics; automatic whole-sheet tracking is separately accepted under IDEA-0064 while per-field tracking modes in inbox IDEA-0028 remain unaccepted.
+- **Key idea dependencies:** IDEA-0020 (Lorebook), IDEA-0024 (context), IDEA-0026 (character identities), IDEA-0064 (separate automatic tracking).
+- **Deferred:** Field schemas/types, migrations on schema edits, precise UI, manual-versus-generated update precedence and optional mechanics.
+
+### IDEA-0029 — Persistent Items and Inventory Transfers
+
+- **Source:** [[Persistent Items and Inventory Transfers]] (`planning/staging/Persistent Items and Inventory Transfers.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Inventory & Item State
+- **Secondary subsystems:** Character & Scene State; World Locations & Topology; World Rules & Validation; Narrative History & Versioning
+- **Classification:** Persistent item identity, physical custody and validated transfers.
+- **Responsibility:** Give each tracked item a durable unique ID; track its established placement in a character, container or location and validate creation, pickup, drop, storage and transfer. Avoid conflicting simultaneous physical placement or duplication. Distinguish holder/custody from ownership claims where needed, and unknown from established absence/none. Any character can hold items without a global Player Inventory.
+- **Boundary:** Inventory & Item State owns item identities and custody; characters, locations and containers are referenced by their own stable IDs. World Rules & Validation checks transactions and prevents impossible transfers; Narrative History & Versioning preserves changes for rollback/reconstruction. Switching `Playing As` does not transfer items. Equipment uses the **same** item identities under IDEA-0030, not a second inventory.
+- **Key idea dependencies:** IDEA-0026 (character IDs), IDEA-0030 (equipment), IDEA-0033 (locations), IDEA-0039 (event history), IDEA-0042 (state rebuild), IDEA-0047 (capability validation).
+- **Deferred:** Stackability, nested containers/cycles, legal ownership semantics, consumption/destruction, encumbrance and manual-edit conflicts.
+
+### IDEA-0030 — Slot-Based Equipment and Body Diagram
+
+- **Source:** [[Slot-Based Equipment and Body Diagram]] (`planning/staging/Slot-Based Equipment and Body Diagram.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Inventory & Item State
+- **Secondary subsystems:** Character & Scene State; World Rules & Validation; AI Context & Prompt Construction; Presentation & UX
+- **Classification:** Current equipment assignments and functional body-slot visualisation.
+- **Responsibility:** Represent equipped/held gear using customisable body slots, left/right hands, clothing layers and nonstandard body configurations; provide a legible text-labelled functional schematic. Equip, unequip and transfer actions must be validated against authoritative item and character state. Distinguish worn/equipped from merely carried.
+- **Boundary:** Equipment is a state/assignment of the unique item identities owned by Inventory & Item State, not an independent inventory store. Character & Scene State supplies relevant anatomy/available body features. Presentation & UX renders slot layout but does not own physical truth; AI context may select current equipment data. No generated illustration or rigid human-only slot scheme is mandated.
+- **Key idea dependencies:** IDEA-0024 (context), IDEA-0026 (characters), IDEA-0029 (item identity/custody), IDEA-0031 (variable anatomy), IDEA-0047 (validated capabilities).
+- **Deferred:** Exact slots/layers, two-hand/multislot constraints, equipment conflicts, response to transformations and visual layout.
+
+### IDEA-0031 — Configurable Anatomy and Transformations
+
+- **Source:** [[Configurable Anatomy and Transformations]] (`planning/staging/Configurable Anatomy and Transformations.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Character & Scene State
+- **Secondary subsystems:** Inventory & Item State; World Rules & Validation; Narrative History & Versioning; AI Context & Prompt Construction
+- **Classification:** Free-form mutable physical character state with validated change history.
+- **Responsibility:** Let any character possess optional text-first records of arbitrary named anatomical features and states, injuries, absences, prosthetics and temporary/permanent transformations. Optional starter templates remain fully editable or omittable. Maintain the same character identity through physical changes and preserve unknown versus known-present/known-absent semantics.
+- **Boundary:** Character & Scene State owns canonical anatomical status, not equipment or UI schematics; World Rules & Validation checks fictional changes, Inventory & Item State reconciles affected equipped objects without duplication/teleportation, and Narrative History & Versioning supports undo/edit provenance. Removing an editor field or starter-template entry is **not** by itself an in-world amputation. Context inclusion must be deliberate and inspectable; the mature-specific optional controls of inbox IDEA-0032 are outside this mapping.
+- **Key idea dependencies:** IDEA-0024 (context inclusion), IDEA-0026 (character IDs), IDEA-0027 (status fields), IDEA-0030 (equipment), IDEA-0039 (history), IDEA-0042 (rebuild), IDEA-0064 (separate automatic tracking).
+- **Deferred:** Flexible machine-readable anatomy relations, transformation operations, compatibility rules, historical/manual update reconciliation and private-context handling.
+
+### IDEA-0033 — Hierarchical World Locations
+
+- **Source:** [[Hierarchical World Locations]] (`planning/staging/Hierarchical World Locations.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** World Locations & Topology
+- **Secondary subsystems:** Character & Scene State; Inventory & Item State; Entity-Based Lorebook; World Rules & Validation; AI Context & Prompt Construction
+- **Classification:** Persistent stable world-place identity and hierarchical containment.
+- **Responsibility:** Model arbitrary, sparse and custom-typed places with stable IDs, descriptions and flexible acyclic parent-child containment across any depth. Preserve references through renames and reorganisation; permit incomplete/unknown location details and broad-to-specific context. Other domain entities may refer to location IDs.
+- **Boundary:** World Locations & Topology owns location identity and containment, **not** a presumption of travel edges, permitted access or character co-location. Traversal rules and active presence are separately modelled (IDEA-0035, IDEA-0034). A parent-child relation does not automatically mean a traversable route. The zoomable map UI (IDEA-0037) and automated world discovery (IDEA-0036) are separate features, not implied implementations.
+- **Key idea dependencies:** IDEA-0020 (lore references), IDEA-0024 (context), IDEA-0026 (characters), IDEA-0029 (item locations), IDEA-0034 (presence), IDEA-0035 (travel routes), IDEA-0036 (discovery), IDEA-0037 (map).
+- **Deferred:** Location move/merge/delete reference handling, moving containers/vehicles, discovery visibility and multi-parent/alias questions.
+
 ## Next pending mapping
 
-- Next batch: five staged ideas starting with IDEA-0027, skipping IDs not in staging. **Not yet accepted in Pass A.**
+- Next batch: five staged ideas starting with IDEA-0034, skipping IDs not in staging. **Not yet accepted in Pass A.**
 
 ## Process
 
