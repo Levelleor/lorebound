@@ -29,7 +29,7 @@ Long stories exceed model context windows.
 - **Full history retained:** Summaries are a derived context aid, not a destructive replacement for underlying saved narrative prose and committed state/events.
 - **One-model and multi-model parity:** Summary generation can reuse the single configured local/cloud model or a dedicated task-specific model, as chosen through [[One-Model Task Routing]] (IDEA-0017). A dedicated summariser model is never mandatory.
 - **Summary architecture remains open:** Rolling accumulated summaries, hierarchical scene/chapter/arc summaries or a hybrid are possible; the user deliberately left this choice for staging refinement.
-- **No premature retrieval commitment:** Choosing which past summaries enter a particular model prompt is a separate context-building/retrieval concern. This decision doesn't independently approve embeddings/RAG (IDEA-0063), episodic retrieval (IDEA-0023) or a specific token-budgeting design (IDEA-0024).
+- **Separate scope for retrieval and context:** Choosing which past summaries enter a model prompt belongs to other ideas. IDEA-0023 (episodic retrieval) and IDEA-0024 (token-budgeted context) were **later accepted independently in staging**; their detailed algorithms remain unrefined. This summary idea does **not** approve embeddings/RAG (IDEA-0063), which remains unaccepted.
 
 ## Proposed behaviour
 As a story grows, a configured summarisation step creates summaries from accepted, versioned story material, with explicit source ranges and revision references. Persist summaries as derived records, distinct from original narrative and authoritative state. When a player revises or truncates older text or associated events, invalidate the affected derived summaries and allow automatic or user-initiated regeneration from the updated sources. Supply only current, suitably selected summaries as context memory. Summarisation may run through the primary model or a separately assigned compatible model; maintain clear generation/validation failure handling and never commit an unverified summary as a new world-state fact.
@@ -43,7 +43,7 @@ A rolling summary is straightforward and relatively cheap to maintain but may ac
 - Summary output is derived material. It must not take precedence over the current authoritative world state, and stale summaries must not be passed as current facts after relevant historical edits.
 - Rebuilds or retries should avoid race conditions and duplicated effects when the story is concurrently revised.
 - A summary that fails to generate or verify should not destroy its underlying story source, corrupt committed events, or masquerade as a valid up-to-date summary.
-- Context-budget and per-request selection are integration points with the separately unaccepted IDEA-0024 and IDEA-0023; semantic RAG is separately tracked as unaccepted IDEA-0063.
+- Context-budget and per-request selection integrate with the separately **accepted staging** IDEA-0024 (context budget/inspector) and IDEA-0023 (episodic retrieval). This summary idea alone does not define their algorithms, interfaces or release readiness. Semantic RAG IDEA-0063 remains **unaccepted**.
 
 ## Open questions
 - How will the summariser avoid promoting failed player actions, rejected state proposals and uncommitted drafts into established facts?
@@ -77,5 +77,7 @@ A rolling summary is straightforward and relatively cheap to maintain but may ac
 - Staging is for refinement; this does not grant production approval or claim implementation.
 
 ## Decisions and review history
+
+- 2026-10-19 — **Pass A audit reference correction:** IDEA-0023 and IDEA-0024 were accepted as separate staging ideas after the original summary note. Their detailed functionality is not automatically in IDEA-0022; IDEA-0063 RAG remains unaccepted. No new approval.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Automatic persistent long-term story summaries, source turn/revision tracking, invalidation and rebuilding after historical edits, consistency with authoritative narrative and world state, support for either one model or dedicated task-specific models. Rolling versus hierarchical summaries deliberately left open for refinement. Moved to staging only, not production.
