@@ -43,7 +43,7 @@ A text and entity inverted index can efficiently search **across the entire adve
 - Stable scene/turn/source-revision tracking and edit invalidation are needed; coordination with accepted [[Automatic Long-Term Story Summaries]] (IDEA-0022) and future story revision/event features must not assume those separate candidate mechanics are already implemented.
 - Must work with one local/cloud model, with no mandatory embedding model or additional inference call for indexing or lookup.
 - RAG/vector embeddings in [[Embedding-Based Lore Retrieval and RAG Context Selection]] (IDEA-0063) remain unaccepted. Accepting this concept does not promote that candidate.
-- Relevant excerpts are subject to context-budget policies, player lore selection and the separately considered [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024).
+- Relevant excerpts are subject to context-budget policies, player lore selection and the separately **accepted staging** [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024). Its model-budget settings and algorithms still require refinement.
 - Searching all committed history is a supported **design avenue to evaluate**, not a guarantee that every retrieval pass will always perform a full exhaustive scan regardless of resource cost.
 - Retrieval should avoid sending vast story history to cloud providers when local selection and a smaller final context will do. Never claim reduced model-token cost without measurement.
 
@@ -82,5 +82,7 @@ A text and entity inverted index can efficiently search **across the entire adve
 - Accepted into **staging for refinement only**. No particular ranking/query algorithm or benchmark result has been approved or demonstrated.
 
 ## Decisions and review history
+
+- 2026-10-19 — **Pass A reference correction:** IDEA-0024 (token-budgeted context and inspector) is accepted independently in staging, not merely an unaccepted proposal. Embedding-based RAG IDEA-0063 remains unaccepted; no new feature approval.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — After reviewing limitations of BM25 query-term selection, the requesting user **explicitly accepted** episodic memory retrieval and added: "lets not ignore a possibility that we may want to search across all history in case that would be quick enough for us to have more useful context for smaller price (context window)." Thus leave query/ranking open, evaluate broad searches of all committed history (indexed or exhaustive) against targeted lookup, and transmit only useful excerpts to save context. IDEA-0063 embeddings/RAG remains a separate **unaccepted** Inbox idea. Moved to staging, not production.
