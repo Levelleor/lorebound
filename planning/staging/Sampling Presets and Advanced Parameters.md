@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[LLM Providers and Generation Brainstorm]]", "[[Gameplay Feature Catalogue Brainstorm]]"]
@@ -37,6 +37,10 @@ Provide a simple generation-settings panel with a separately accessible advanced
 ## Alternatives and trade-offs
 A basic-first interface with an optional advanced panel is accepted as the intended UX direction, though exact timing and presentation remain to be refined. Presets may be attached to model IDs, profiles or provider/model combinations; how inheritance/fallback works is not yet decided. Raw JSON offers flexibility for emerging model features but requires safety checks and must not bypass ordinary compatibility handling by accident.
 
+## Technical sampling presets remain distinct from narration style
+- **Scope clarification after IDEA-0010 change (2026-10-18):** The user's removal of **reusable narration-style presets** does **not** remove this idea's separately accepted **model/provider generation-parameter presets**. IDEA-0016 presets control request-side sampling values and capability-supported parameters such as temperature, Top-P, output limits and provider-specific options; they do **not** represent a saved narrative persona, author-note preset or reusable bundle of story-writing style instructions.
+- Narration comes from current adventure style settings, applicable persistent author notes and any starting directions supplied by a scenario template, assembled for every AI narrative generation through IDEA-0024/0025. Model-specific technical parameter presets, where selected, influence compatible **provider request parameters** separately. Neither changes already committed story prose or canonical world state merely by selection.
+
 ## Dependencies and constraints
 - The active model's parameter support is governed by [[Model-Capability-Aware Controls]] (IDEA-0015), including supported/unsupported/ignored/unknown classifications and opt-in advanced overrides.
 - Provider connection profiles and local/cloud adapters determine available models and endpoint-specific parameter mappings (IDEA-0012 through IDEA-0014).
@@ -54,6 +58,7 @@ A basic-first interface with an optional advanced panel is accepted as the inten
 - Can users import/export nonsecret presets independently of adventures, and what compatibility warnings are needed?
 
 ## Draft acceptance criteria
+- [ ] A model sampling preset changes compatible provider-generation parameters but does not introduce a reusable narration-style or author-note preset or silently change existing adventure prose.
 - [ ] A player can adjust basic supported generation parameters through a straightforward UI.
 - [ ] Advanced mode can expose additional sampling, output, repetition, seed, reasoning and stop settings where supported.
 - [ ] A player can save and reuse a named model-specific parameter preset.
@@ -75,5 +80,6 @@ A basic-first interface with an optional advanced panel is accepted as the inten
 - Explicitly accepted for **staging/refinement**; parameter specifics, implementation and production approval remain outstanding.
 
 ## Decisions and review history
+- 2026-10-18 — **IDEA-0010 boundary clarification:** Reusable narration-style presets were explicitly removed from accepted scope, but **technical provider/model sampling-parameter presets in IDEA-0016 remain independently accepted**. Narrative guidance comes from template starting inputs/current settings/author notes in per-turn context. Staging only.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Basic and advanced sampling controls, model-specific reusable presets, preserved preferences when switching models, effective-request inspection and optional custom JSON parameters, all subject to IDEA-0015 capability rules. Moved to staging for refinement, not production.
