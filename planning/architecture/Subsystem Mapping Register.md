@@ -616,9 +616,36 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0003 (prose editor), IDEA-0037 (map), IDEA-0042 (replay separation), IDEA-0047 (capabilities), IDEA-0050 (typed UI actions), IDEA-0053 (normal-browser runtime), IDEA-0055 (optional enabled modules).
 - **Deferred:** Layout/breakpoint details, keyboard shortcut scheme, screen-reader/focus test matrix, preference storage scope, panel docking priorities and accessibility acceptance tests.
 
-## Next pending mapping
+### IDEA-0064 — Automatic Character Sheet Tracking
 
-- Remaining eligible staging ideas: IDEA-0064 and IDEA-0066. **Not yet accepted in Pass A.**
+- **Source:** [[Automatic Character Sheet Tracking]] (`planning/staging/Automatic Character Sheet Tracking.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Character & Scene State
+- **Secondary subsystems:** AI Interpretation & Operation Proposals; World Rules & Validation; Adventure Coordinator; Narrative History & Versioning; World State Reconstruction; Presentation & UX
+- **Classification:** Validated automatic maintenance of every applicable, defined character-sheet field.
+- **Responsibility:** Automatically maintain current character-sheet values, including player-defined custom fields, where accepted story outcomes actually establish their changes. Preserve stable unclassified character identity and correct unknown-versus-known-empty semantics. Permit direct player inspection and manual correction without demanding routine per-update confirmation. Provisional, rejected or failed AI output is never itself a sheet update.
+- **Boundary:** Character & Scene State owns current canonical sheet records. An AI interpreter may propose relevant changes; domain validators and the Adventure Coordinator must authorise and commit them consistently with accepted narrative/state events. Narrative History & Versioning records provenance, and World State Reconstruction makes edits/Undo/replay yield the correct earlier values. No mandatory dedicated tracker model; no per-field Disabled/Manual/Automatic modes or approve-each-change dialogs from unaccepted IDEA-0028.
+- **Key idea dependencies:** IDEA-0018 (single/multi-model pipeline), IDEA-0026 (character entity), IDEA-0027 (custom sheets), IDEA-0039 (history), IDEA-0042 (reconstruction), IDEA-0044 (coordinator), IDEA-0045 (model-proposed operations).
+- **Deferred:** Extracting meaningful updates from arbitrary custom fields, manual-correction precedence, qualitative validation, field creation policy and revision/Undo reconciliation.
+
+### IDEA-0066 — AI-Generated Starting Lorebook and World
+
+- **Source:** [[AI-Generated Starting Lorebook and World]] (`planning/staging/AI-Generated Starting Lorebook and World.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Adventure Initialization & Setup
+- **Secondary subsystems:** Entity-Based Lorebook; AI Generation Pipeline; Adventure Coordinator; World Rules & Validation; Adventure Library & Persistence; World Locations & Topology
+- **Classification:** Optional intentional AI-authored initial worldbuilding before a first played turn.
+- **Responsibility:** Let a player deliberately request AI generation of a rich adventure-scoped Lorebook and associated coherent world entities at **Turn 0**, with validated persisted results before any narrative turn exists. Preserve the availability of blank Custom Opening, player-written opening, ordinary Quick Start and skippable guided setup without requiring this process or an extra loaded model.
+- **Boundary:** Adventure Initialization & Setup owns the optional creation workflow. AI Generation Pipeline produces provisional authored worldbuilding, the Coordinator/domain validators authorise accepted entities and connections, the Lorebook and World Locations & Topology own the resulting canonical data, and Adventure Library & Persistence stores it in the existing shared Go/SQLite database. This deliberate *world authoring* may invent lore, but routine opening-prose **fact extraction** under IDEA-0006 may capture only explicit established facts and may **not** secretly expand the setting. Saving pre-turn Lorebook data must not fabricate a played Turn 1, claim past character actions, introduce another database, or create a per-adventure export format.
+- **Key idea dependencies:** IDEA-0005 (adventure persistence), IDEA-0006 (optional start and fact-only opening extraction), IDEA-0008 (scenario templates), IDEA-0018 (generation), IDEA-0020 (Lorebook), IDEA-0026 (characters), IDEA-0033 (locations), IDEA-0036 (validated discovery), IDEA-0044 (coordinator), IDEA-0045 (operation proposals), IDEA-0051 (one SQLite library).
+- **Deferred:** Initial generation request UX and depth/breadth, multi-stage authoring, player review and confirmation policy, entity/relationship contradiction resolution, interruption/partial-output policy, model costs and scenario-template reuse. No automatic first-Lorebook-commit or mandatory review gate is predetermined by this mapping.
+
+## Pass A subsystem mapping status
+
+- **Complete:** All 52 staging ideas have an accepted primary subsystem mapping, related secondary subsystem ownership, boundaries and dependencies recorded in this register as of 2026-10-19.
+- Source idea files remain in `planning/staging/`. This register records architectural ownership only; it does not constitute production promotion, implementation approval or a final detailed specification.
+- Suggested next phase: consolidate subsystem boundaries and dependencies, resolve cross-cutting consistency decisions and then refine implementation contracts under explicit approval.
+
 
 ## Process
 
