@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-18"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Memory Lorebook and Context Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
@@ -38,6 +38,12 @@ For each generation, resolve the active model's known input capacity, output res
 ## Alternatives and trade-offs
 Automatic priority-based selection can reduce repetitive setup, while manual inclusion/exclusion gives players reliable control over important lore and memories. A wholly manual context list may become burdensome on long stories; an opaque fully automatic assembler may hide why facts were missed. The accepted direction combines manual override, automated budget assembly, and a transparent inspector. Budgeting can be based on provider token counters, locally available tokenizers or approximate estimators, with confidence made visible. Fixed category quotas, dynamically allocated shares and hierarchical trimming are alternatives for later comparison.
 
+## Include current story settings and author notes on each AI narrative turn
+- **Accepted IDEA-0010 user change (2026-10-18):** Each AI **narrative generation turn** resolves the adventure's **currently applicable narration settings** and **persistent author notes** (IDEA-0025) as request-context instruction sources. These may have started as **scenario-template input** (IDEA-0008), but are now adventure-owned/current values, not a live reference to a separate style preset. Players do not need to restate persistent writing guidance in every prompt.
+- **Every turn, budget honestly:** Include applicable notes/settings in the context selection and assemble what can actually be sent subject to model size, required world-state context and existing priority policies. An omitted/truncated note is **reported explicitly** in the context inspector or generation feedback, not silently presented as if the model received it. The exact priority and fallback when required instructions exceed available capacity remain for further refinement; this decision does not pretend unlimited model context.
+- **Authority remains clear:** Narration notes/settings guide **presentation** and may not replace current canonical world state or turn a speculative note into a factual event. User-authored Story-mode state changes still use their separately accepted authorial commit path (IDEA-0002), not an unchecked model instruction.
+- **No style preset source:** No separate named narration-style preset selection/serialization, inheritance or import/export is in accepted scope. Technical model sampling presets (IDEA-0016) remain provider request parameters, outside the narration-context instruction layer.
+
 ## Dependencies and constraints
 - Builds on accepted [[Entity-Based Lorebook]] (IDEA-0020), [[Conditional Lorebook Activation]] (IDEA-0021), [[Automatic Long-Term Story Summaries]] (IDEA-0022) and [[Episodic Memory Retrieval]] (IDEA-0023).
 - Depends on connector/model profiles, generation pipeline strategy and model capability information (IDEA-0012 to IDEA-0019) to identify context limits, output reservations, wrapper overhead and final provider request behaviour.
@@ -60,6 +66,8 @@ Automatic priority-based selection can reduce repetitive setup, while manual inc
 - How should all-history retrieval and context assembly coordinate to maximize recall while minimizing prompt size and latency?
 
 ## Draft acceptance criteria
+- [ ] For every AI narration turn, the context builder includes the applicable current adventure style settings and persistent author-note instructions in the candidate/effective request context without a separate narration-style preset source or repeated player text entry.
+- [ ] The inspector distinguishes instructions requested from those actually sent, surfacing capacity-driven omission/truncation rather than falsely asserting that absent notes were delivered.
 - [ ] Context is assembled from appropriate instructions, current scene/state, recent prose, Lorebook, summaries and retrieved memories against a configurable or model-derived budget.
 - [ ] The builder accounts for model-specific context limits, output-token reservation and relevant request overhead as far as reliably known.
 - [ ] Players can inspect **requested**, **selected**, **omitted/truncated** and **actually transmitted** context material, with clear distinctions among them.
@@ -83,5 +91,6 @@ Automatic priority-based selection can reduce repetitive setup, while manual inc
 - Explicitly accepted for **staging/refinement**, not production or implementation. Algorithmic and tokenizer details remain to be evaluated.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0010/0025 instruction-context refinement:** Every AI narrative turn assembles current narration settings and applicable persistent author notes, including directions originally provided by an optional scenario template. No reusable narration-style preset manager. Respect finite context budgets and clearly expose material omissions. Staging only.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Token-budgeted context assembly, model-aware capacity limits, priorities, requested/selected/actually-transmitted inspector, omission explanations, source references, manual inclusion/exclusion, and preserving broad full-history retrieval as an upstream option while only relevant excerpts enter the final prompt. Moved to staging for refinement only, not production.
