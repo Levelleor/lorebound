@@ -436,9 +436,69 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0029 (item/container state), IDEA-0033 (stable locations), IDEA-0034 (presence), IDEA-0035 (travel policies), IDEA-0039 (event history), IDEA-0042 (reconstruction), IDEA-0047 (capability validation).
 - **Deferred:** Environmental attribute schema, complex temporary/damage rules, interrupted journeys, transactional multi-entity effects and replay mechanics.
 
+### IDEA-0039 — Event-Sourced World History
+
+- **Source:** [[Event-Sourced World History]] (`planning/staging/Event-Sourced World History.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Narrative History & Versioning
+- **Secondary subsystems:** World State Reconstruction; Adventure Coordinator; World Rules & Validation; Persistence & Draft Management
+- **Classification:** Append-only authoritative event history, with distinct active-canon selection.
+- **Responsibility:** Record ordered validated, accepted world-state changes with source turn/passage-revision provenance, affected durable entity identities, event type and validation/acceptance information. Preserve superseded historical audit records while allowing invalidation or selection of a currently active sequence.
+- **Boundary:** Narrative History & Versioning owns accepted event provenance and active-versus-superseded history semantics; World State Reconstruction reduces **only active valid history** to authoritative state; Adventure Coordinator and domain validators approve events before atomic persistence. Old recorded events need not remain active canon. Snapshots are derived accelerators, not alternative sources of truth; no rejected or merely proposed model operation enters active authoritative events.
+- **Key idea dependencies:** IDEA-0004 (canonical Undo), IDEA-0026 (characters), IDEA-0029 (items), IDEA-0033–0038 (places/conditions), IDEA-0040 (revision IDs), IDEA-0041 (historical edits), IDEA-0042 (rebuild), IDEA-0044 (coordinator).
+- **Deferred:** Event payload/schema versioning, event ordering and dependencies, supersession/active-set algorithms, multi-entity atomicity and migration/reducer compatibility.
+
+### IDEA-0040 — Versioned Text Blocks and Revision IDs
+
+- **Source:** [[Versioned Text Blocks and Revision IDs]] (`planning/staging/Versioned Text Blocks and Revision IDs.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Narrative History & Versioning
+- **Secondary subsystems:** Narrative Document & Editing; Adventure Coordinator; World State Reconstruction; Persistence & Draft Management
+- **Classification:** Stable canonical prose identity, revisions and source/event provenance.
+- **Responsibility:** Track durable canonical **logical turn/passage-body IDs** and distinct revision IDs, connecting generation circumstances and accepted world-state events to the exact text versions that supported them. Preserve history/lineage when older prose changes so events supported only by superseded prose are not silently assumed valid.
+- **Boundary:** The editor owns freely editing/reordering text within the document, but Narrative History & Versioning owns identity of canonical passages, accepted revision lineage and event-to-text provenance. Paragraphs and substring ranges do **not** require canonical IDs. A changed source revision does not automatically retain old event authority or regenerate later prose.
+- **Key idea dependencies:** IDEA-0003 (document editor), IDEA-0004 (Undo/history), IDEA-0039 (event provenance), IDEA-0041 (historical edit choices), IDEA-0042 (rebuild).
+- **Deferred:** Whole-passage split/merge/move ancestry, copied or rearranged text, multiple-source event dependencies, draft-to-canonical revision transition and useful generation metadata.
+
+### IDEA-0041 — Historical Edit Confirmation and Bulk Truncation
+
+- **Source:** [[Historical Edit Confirmation and Bulk Truncation]] (`planning/staging/Historical Edit Confirmation and Bulk Truncation.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Narrative Document & Editing
+- **Secondary subsystems:** Narrative History & Versioning; World State Reconstruction; Adventure Coordinator; Persistence & Draft Management; Presentation & UX
+- **Classification:** Draft-first older-prose editing with deliberate canonical confirmation.
+- **Responsibility:** Present four distinct choices for editing an older passage: **Keep Later Turns**, **Delete All After Point**, **Continue Editing** and **Discard**. Keep drafts noncanonical without invoking expensive downstream replay or AI work; apply accepted historical revisions and necessary event/state reconciliation only after explicit confirmation.
+- **Boundary:** Narrative Document & Editing owns provisional historical edits and user-facing confirmation choices. Narrative History & Versioning selects/truncates the active history, World State Reconstruction reconciles affected canonical state, the coordinator validates/co-ordinates, and Go persistence commits coherently or not at all. Keep Later Turns preserves later prose without silently regenerating it; Delete All After Point removes later turns from **active** canon, with recovery policy still open.
+- **Key idea dependencies:** IDEA-0003 (document editor), IDEA-0004 (rollback distinction), IDEA-0005 (drafts), IDEA-0039 (events), IDEA-0040 (passage revisions), IDEA-0042 (incremental rebuilding), IDEA-0044 (coordinator).
+- **Deferred:** Later-event dependency reconciliation, truncation recovery, precise edit/turn boundaries, concurrency/failure policies and confirmation interface.
+
+### IDEA-0042 — Snapshots and Incremental State Rebuild
+
+- **Source:** [[Snapshots and Incremental State Rebuild]] (`planning/staging/Snapshots and Incremental State Rebuild.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** World State Reconstruction
+- **Secondary subsystems:** Narrative History & Versioning; Adventure Coordinator; Persistence & Draft Management; Narrative Memory & Retrieval; World Rules & Validation
+- **Classification:** Complete deterministic state derivation at committed history boundaries.
+- **Responsibility:** Reconstruct the **entire canonical persistent adventure state** at any supported turn/revision using the valid baseline, accepted incremental changes and versioned source records, including lore, story text, entities, character status, anatomy, items, equipment, locations, routes and all other persisted canonical modules. After confirmed historical edits, reuse unaffected prior state and replay/reconcile only the necessary downstream changes. Invalidate/rebuild dependent summaries/caches when needed.
+- **Boundary:** Reconstruction provides correct authoritative state at a chosen history boundary and must have **no missing recorded canonical mutations**. Snapshots are optional performance caches derived from accepted history, never correctness prerequisites or independent truth. Replay uses saved accepted AI-derived results instead of rerunning a model and inventing new past outcomes. Historical editing must first pass IDEA-0041's explicit confirmation gate, and retained later prose is not automatically rewritten.
+- **Key idea dependencies:** IDEA-0004 (Undo), IDEA-0022 (summary invalidation), IDEA-0023 (retrieval indexes), IDEA-0039 (event history), IDEA-0040 (revisions), IDEA-0041 (historical edits), IDEA-0044 (coordinator).
+- **Deferred:** Replay/snapshot algorithms, checkpoint frequency/invalidation, full-coverage contracts and tests, future-dependent event handling and derived index rebuild policies.
+
+### IDEA-0044 — Deterministic Adventure Coordinator
+
+- **Source:** [[Deterministic Adventure Coordinator]] (`planning/staging/Deterministic Adventure Coordinator.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Adventure Coordinator
+- **Secondary subsystems:** AI Generation Pipeline; AI Task Routing & Model Selection; World Rules & Validation; AI Context & Prompt Construction; Narrative History & Versioning; Persistence & Draft Management
+- **Classification:** Deterministic TypeScript orchestration of a complete authoritative turn.
+- **Responsibility:** Direct the turn lifecycle across player intent, context assembly, chosen model/pipeline stages, proposed typed operations, domain validation, bounded repair and atomic finalisation of coherent prose plus associated world/state events. Support one sequential model or several task-routed models. Handle cancellation, errors and rejected attempts without partially applying or falsely narrating successful state changes.
+- **Boundary:** The LLM **proposes**; a programmatic TypeScript coordinator orchestrates and ensures validation gates. Domain-specific validators (inventory, locations, characters, tools) own their rules. AI pipelines own model pass sequencing, routing selects model IDs, History owns accepted event/revision provenance, and Go/SQLite persistence performs atomic durable commit. External side effects require separately refined permissions/idempotency rather than assumed rollback.
+- **Key idea dependencies:** IDEA-0017 (routing), IDEA-0018 (pipeline), IDEA-0019 (streaming/cancellation), IDEA-0024 (context), IDEA-0039 (events), IDEA-0042 (reconstruction), IDEA-0045 (LLM interpretation), IDEA-0046 (typed rejection), IDEA-0047 (capabilities), IDEA-0051 (persistence).
+- **Deferred:** Exact typed operation/schema contracts, chosen pipeline default, stage/repair budgets, cross-tool side-effect protocol, failure/commit mechanics and interface feedback.
+
 ## Next pending mapping
 
-- Next batch: five staged ideas starting with IDEA-0039, skipping IDs not in staging. **Not yet accepted in Pass A.**
+- Next batch: five staged ideas starting with IDEA-0045, skipping IDs not in staging. **Not yet accepted in Pass A.**
 
 ## Process
 
