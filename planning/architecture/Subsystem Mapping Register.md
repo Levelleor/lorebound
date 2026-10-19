@@ -496,9 +496,69 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0017 (routing), IDEA-0018 (pipeline), IDEA-0019 (streaming/cancellation), IDEA-0024 (context), IDEA-0039 (events), IDEA-0042 (reconstruction), IDEA-0045 (LLM interpretation), IDEA-0046 (typed rejection), IDEA-0047 (capabilities), IDEA-0051 (persistence).
 - **Deferred:** Exact typed operation/schema contracts, chosen pipeline default, stage/repair budgets, cross-tool side-effect protocol, failure/commit mechanics and interface feedback.
 
+### IDEA-0045 — LLM State Interpreter and Proposed Operations
+
+- **Source:** [[LLM State Interpreter and Proposed Operations]] (`planning/staging/LLM State Interpreter and Proposed Operations.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** AI Interpretation & Operation Proposals
+- **Secondary subsystems:** AI Generation Pipeline; Adventure Coordinator; Gameplay Capability Registry & Plugins; World Rules & Validation; Entity-Based Lorebook
+- **Classification:** Provisional natural-language-to-typed-operation interpretation.
+- **Responsibility:** Interpret freeform player text and generated/draft prose into typed schema-checked proposed actions and state changes, using stable existing entity references when possible. Preserve uncertainty, unresolved references, attempts, intents, hypotheses, memories, figurative language and failed actions instead of fabricating a successful canonical event. Work with any selected pipeline and a single sequentially reused model or several task-routed models.
+- **Boundary:** AI Interpretation & Operation Proposals owns parsing/proposal, **not** action success, game-world validity or canonical authority. Adventure Coordinator and domain validators arbitrate and commit; the capability registry provides available typed operation contracts. Schema validity alone does not establish semantic correctness or license new entity creation.
+- **Key idea dependencies:** IDEA-0017 (model routing), IDEA-0018 (pipeline), IDEA-0020 (lore/entities), IDEA-0039 (event history), IDEA-0042 (reconstruction), IDEA-0044 (coordinator), IDEA-0046 (repair/rejection), IDEA-0047 (capability contracts).
+- **Deferred:** Proposal schemas, entity disambiguation, capability-based extraction methods, uncertainty/fallback policies and weak-local-model reliability tests.
+
+### IDEA-0046 — Typed Tool Rejection and Narrative Repair
+
+- **Source:** [[Typed Tool Rejection and Narrative Repair]] (`planning/staging/Typed Tool Rejection and Narrative Repair.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Adventure Coordinator
+- **Secondary subsystems:** World Rules & Validation; AI Generation Pipeline; AI Interpretation & Operation Proposals; Generation Lifecycle & Diagnostics; Gameplay Capability Registry & Plugins
+- **Classification:** Deterministically grounded rejection handling and bounded provisional-prose repair.
+- **Responsibility:** Handle rejected operation proposals with machine-readable reason codes, understandable explanations and permitted alternatives only when grounded in established and player-accessible state. Coordinate a valid in-story failed attempt, bounded provisional narrative revision or explicit failure. Final prose must not claim an outcome that validated rules rejected.
+- **Boundary:** World Rules & Validation/capability validators own rejection facts; Adventure Coordinator chooses repair/failure path; AI may revise **provisional** prose but cannot overturn rules, bypass validation or retroactively rewrite unrelated committed turns. Exhausted repair attempts preserve the last coherent canonical story/state. External side-effecting tools have different safeguards and are not automatically compensatable.
+- **Key idea dependencies:** IDEA-0018 (pipeline), IDEA-0019 (diagnostics), IDEA-0035 (travel validity), IDEA-0038 (environment), IDEA-0039 (events), IDEA-0042 (replay), IDEA-0044 (coordinator), IDEA-0045 (proposals), IDEA-0047 (registry).
+- **Deferred:** Rejection types, retry/repair limits, escalation rules, disclosure of hidden state, multi-operation batch handling and external side-effect failures.
+
+### IDEA-0047 — Native Gameplay Capability Registry
+
+- **Source:** [[Native Gameplay Capability Registry]] (`planning/staging/Native Gameplay Capability Registry.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Gameplay Capability Registry & Plugins
+- **Secondary subsystems:** Adventure Coordinator; World Rules & Validation; Narrative History & Versioning; World State Reconstruction; AI Interpretation & Operation Proposals
+- **Classification:** Extensible, protocol-neutral typed gameplay operations and permission contracts.
+- **Responsibility:** Allow built-in features and native mods to register discoverable stable capability identifiers, typed input/output contracts, permitted effects/access, validation/preparation and event-producing changes. Integrate every persisted module outcome with common canonical event history and complete reconstruction, including when a module later changes or disappears.
+- **Boundary:** Registry defines what supported operations exist and their declared contracts/permissions; domain validators enforce world rules; Adventure Coordinator owns authorised dispatch, ordering and finalisation. Plugins cannot maintain a conflicting private canonical world or bypass central checks. MCP adapter compatibility is a future seam only: skipped IDEA-0048 does **not** approve MCP connectivity or automatic external access. Distinguish internal/replayable operations from potentially irreversible external side effects.
+- **Key idea dependencies:** IDEA-0018 (generation), IDEA-0039 (events), IDEA-0042 (complete rebuild), IDEA-0044 (coordinator), IDEA-0045 (proposed commands), IDEA-0046 (typed rejections), IDEA-0050 (direct UI commands), IDEA-0055 (optional mechanics).
+- **Deferred:** Registry ID/version/schema conventions, plugin permissions and trust boundaries, lifecycle/migration, missing-module replay compatibility and side-effect classification/idempotency.
+
+### IDEA-0050 — Structured UI Game Actions
+
+- **Source:** [[Structured UI Game Actions]] (`planning/staging/Structured UI Game Actions.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Narrative Interaction & Intent
+- **Secondary subsystems:** Presentation & UX; Gameplay Capability Registry & Plugins; Adventure Coordinator; World Rules & Validation; AI Generation Pipeline
+- **Classification:** Optional typed gameplay intent from direct UI controls.
+- **Responsibility:** Convert applicable player controls such as Equip, Drop and selecting a destination into typed capability commands using stable entity IDs. Supplement, never replace, natural-language Do/Say/Story/Continue. Expose actions only where the corresponding enabled module, permitted capability and grounded target are available.
+- **Boundary:** Direct UI selection supplies known argument values without requiring LLM **interpretation**, but still passes through the exact same capability registry, world-rule validation and coordinator-controlled commit pipeline as interpreted prose. A click cannot bypass rules; narration may still use the selected model. Immediate commit, staged action and user confirmation remain implementation/design decisions.
+- **Key idea dependencies:** IDEA-0002 (interaction), IDEA-0018 (narration strategies), IDEA-0029 (items), IDEA-0035 (travel), IDEA-0042 (complete history), IDEA-0044 (coordinator), IDEA-0045 (interpretation contrast), IDEA-0046 (rejection), IDEA-0047 (capabilities).
+- **Deferred:** Contextual controls, immediate/staged execution, confirmation and turn progression, multi-action composition, accessibility and live permission refresh.
+
+### IDEA-0051 — Browser-Persistent Story Database
+
+- **Source:** [[Browser-Persistent Story Database]] (`planning/staging/Browser-Persistent Story Database.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Persistence & Draft Management
+- **Secondary subsystems:** Runtime & Platform Services; Adventure Library & Persistence; Narrative History & Versioning; World State Reconstruction; Credential & Secret Storage
+- **Classification:** One Go-managed filesystem SQLite canonical persistence boundary.
+- **Responsibility:** Store **all adventures** and their history, revisions, events, canonical world state, noncanonical drafts and plugin data in **one active SQLite database**, logically isolating adventures by durable identity. Go manages durable writes, reads, schema, atomic transactions, stale-tab expected-version checks, database file location and host filesystem access. Default to per-user OS application-data directory with optional custom directory; opening an existing database or creating a new one there does not automatically merge/migrate earlier data.
+- **Boundary:** Browser-side TypeScript owns gameplay coordinator, rules, plugins and direct model API calls; Go enforces authorised, transactional persistence and filesystem service safety, **not** parallel gameplay logic. Browser localStorage/IndexedDB/OPFS are not canonical saves. Only transactionally consistent **whole-database SQLite Backup Database** and deliberate **whole-database replacement Restore Database** are accepted, not per-adventure file transfer, merge or multiple-library management. Secrets remain outside SQLite in the native OS vault or accepted encrypted sidecar fallback; neither is included in SQLite snapshots.
+- **Key idea dependencies:** IDEA-0001 (local account-free), IDEA-0005 (adventure management), IDEA-0014 (credentials), IDEA-0039 (events), IDEA-0040 (revisions), IDEA-0042 (complete history), IDEA-0044 (browser coordinator), IDEA-0052 (backup/restore), IDEA-0053 (headless Wails runtime).
+- **Deferred:** Driver/table schemas, WAL/transaction tuning, service authentication and expected-version tokens, schema compatibility checks, safe DB file switching and consistent snapshot/restore mechanics. The source document's legacy `Browser-Persistent` title does not mean browser-owned canonical storage.
+
 ## Next pending mapping
 
-- Next batch: five staged ideas starting with IDEA-0045, skipping IDs not in staging. **Not yet accepted in Pass A.**
+- Next batch: IDEA-0052, IDEA-0053, IDEA-0055, IDEA-0061 and IDEA-0062. **Not yet accepted in Pass A.**
 
 ## Process
 
