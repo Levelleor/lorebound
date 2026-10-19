@@ -29,7 +29,7 @@ Allows a rich setting with intuitive zoom levels and local scene context.
 - **Containment is distinct from traversal:** Nesting indicates that a place is situated within a larger place. **Do not treat parent/child relations as automatically passable travel connections**, or sibling locations as directly connected. Route/adjacency/travel constraints belong to separately reviewed ideas such as [[Configurable Travel Graph Rules]] (IDEA-0035).
 - **Local scene context and discoverability:** The hierarchy can supply broad-to-specific place context, e.g. room → building → settlement → region, to a current scene or navigation interface without requiring the entire world to be supplied every time.
 - **Stable links to world entities:** Character presence, persistent items and Lorebook place references can point to stable location IDs, not only names or prose. The particular presence and travel mechanics remain separate review decisions.
-- **No premature visual map or strict travel approval:** This accepts the hierarchical location **data model**, not the zoomable graph UI (IDEA-0037), strict movement rules (IDEA-0035), automatic world discovery (IDEA-0036) or mutable route/environment systems (IDEA-0038).
+- **Separate acceptance boundaries:** This idea itself approves only the hierarchical location **data model**. Zoomable map UI (IDEA-0037), optional strict/freeform travel policies (IDEA-0035), AI world discovery (IDEA-0036) and mutable route/environment state (IDEA-0038) have each **subsequently been accepted separately in staging**. Their separate implementation and refinement gates remain intact.
 - **Open hierarchy operations:** Moving a location and its descendants, deleting or merging places and resolving parent/child transitions when no valid travel route exists need further refinement.
 
 ## Proposed behaviour
@@ -41,7 +41,7 @@ A strict World → Region → Settlement → Building → Room chain makes some 
 ## Dependencies and constraints
 - Compatible with accepted [[Shared PC and NPC Character Entities]] (IDEA-0026), [[Persistent Items and Inventory Transfers]] (IDEA-0029), and [[Entity-Based Lorebook]] (IDEA-0020), whose records may reference location IDs.
 - Character position and scene presence are a separate candidate [[Character Presence and Current Scene]] (IDEA-0034), not automatically accepted here.
-- Valid connections and traversal policies are separate candidate [[Configurable Travel Graph Rules]] (IDEA-0035). The graph visualization/UI (IDEA-0037) and persistent changes to routes/environments (IDEA-0038) also remain separate review gates.
+- Valid connections and traversal policies have been accepted separately in staging through [[Configurable Travel Graph Rules]] (IDEA-0035). Graph visualisation (IDEA-0037), AI discovery (IDEA-0036) and persistent environmental/route effects (IDEA-0038) are also separately accepted in staging, not unaccepted proposals. None is automatically implemented or in scope merely because the hierarchy was accepted.
 - Parent/child nesting must be acyclic and references remain valid across renaming or subtree reorganisation.
 - Moving or reorganising location containers must not silently teleport their occupants in violation of movement rules. Whether a ship and its interior occupants share mobile containment versus physical world location requires explicit design.
 - Sparse data and unknown descriptions/children must be distinguishable from intentionally recorded absence.
@@ -82,5 +82,7 @@ A strict World → Region → Settlement → Building → Room chain makes some 
 - This is **not yet refined or approved for production**, and the document makes no claim of implementation.
 
 ## Decisions and review history
+
+- 2026-10-19 — **Pass A audit reference correction:** IDEA-0035, IDEA-0036, IDEA-0037 and IDEA-0038 are now independently accepted staging ideas. Earlier descriptions as separate candidates reflected their former status. No implicit production approval or scope expansion.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Flexible hierarchical world locations with stable IDs; optional types; names and descriptions; parent/child nesting; acyclic ancestry; preservation of identity when renaming/reorganising; strict separation between containment hierarchy and travel links; and support for sparse, unusual location structures. Moved to staging for refinement only, not production.
