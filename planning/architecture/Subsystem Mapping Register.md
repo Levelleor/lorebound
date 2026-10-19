@@ -256,9 +256,69 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0020 (Lorebook/manual controls), IDEA-0024 (token budget/inspection), IDEA-0034 (scene/presence), IDEA-0044 (authoritative coordinator).
 - **Deferred:** Trigger language and matching scope, ambiguity resolution, ordering/recursion limits, default activation scope and activation inspector UX.
 
+### IDEA-0022 — Automatic Long-Term Story Summaries
+
+- **Source:** [[Automatic Long-Term Story Summaries]] (`planning/staging/Automatic Long-Term Story Summaries.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Narrative Memory & Retrieval
+- **Secondary subsystems:** Narrative History & Versioning; AI Generation Pipeline; AI Task Routing & Model Selection; AI Context & Prompt Construction; World State Reconstruction
+- **Classification:** Derived, source-traceable narrative memory summarisation.
+- **Responsibility:** Generate and maintain compact memories of older **committed** history with source turn/scene ranges and revision provenance. Mark summaries stale when their authoritative inputs are edited/undone and support rebuilding. Distinguish accepted outcomes from drafts, rumours, speculative prose and rejected actions; never replace full history or override canonical state. Summarisation works with one shared model or a task-specific model.
+- **Boundary:** Narrative Memory & Retrieval owns summary creation, provenance, staleness and rebuild; Narrative History & Versioning supplies source/revision identifiers; World State Reconstruction and committed events anchor truth; AI Task Routing provides a selected summarising model; AI Context & Prompt Construction separately decides which valid summaries enter a request. Generating a summary never commits new canonical world facts. Semantic RAG/embeddings (IDEA-0063) are not approved by this mapping.
+- **Key idea dependencies:** IDEA-0017 (model routing), IDEA-0023 (episodic retrieval), IDEA-0024 (context inclusion), IDEA-0039 (event history), IDEA-0040 (revisions), IDEA-0042 (rebuild), IDEA-0044 (coordination).
+- **Deferred:** Rolling vs hierarchical/hybrid summary design, source-dependency granularity, rebuild timing, conflict handling and fidelity/inspection measures.
+
+### IDEA-0023 — Episodic Memory Retrieval
+
+- **Source:** [[Episodic Memory Retrieval]] (`planning/staging/Episodic Memory Retrieval.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Narrative Memory & Retrieval
+- **Secondary subsystems:** Narrative History & Versioning; AI Context & Prompt Construction; Adventure Library & Persistence
+- **Classification:** Derived, revision-aware retrieval of old canonical incidents and passages.
+- **Responsibility:** Find relevant original committed prose/events and return source-linked excerpts with turn/passage/revision provenance. Consider local full-text, entity and event indexes without mandatory embeddings or a second LLM. Preserve full-history retrieval as an option to evaluate, independently of the small number of excerpts selected for the eventual model prompt. Invalidate/rebuild obsolete indexes and links after history edits, undo and truncation.
+- **Boundary:** Narrative Memory & Retrieval owns search/indexing and relevance candidates, while committed narrative/history remains the source of truth. AI Context & Prompt Construction decides which results fit the effective prompt; Persistence provides the stored history and optional derived indexes. Retrieved material does not create canonical facts or assert a match when no sufficient source exists. No specific BM25/vector/scanning algorithm is approved; embedding/RAG IDEA-0063 is separate.
+- **Key idea dependencies:** IDEA-0022 (summary coordination), IDEA-0024 (context selection), IDEA-0039 (events), IDEA-0040 (revision IDs), IDEA-0041 (historical editing), IDEA-0042 (state rebuild).
+- **Deferred:** Index implementation, query anchors, ranking, thresholds/chunking, all-history performance evaluation and revision invalidation policy.
+
+### IDEA-0024 — Token-Budgeted Context Builder and Inspector
+
+- **Source:** [[Token-Budgeted Context Builder and Inspector]] (`planning/staging/Token-Budgeted Context Builder and Inspector.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** AI Context & Prompt Construction
+- **Secondary subsystems:** Model Capability Management; Narrative Memory & Retrieval; Entity-Based Lorebook; AI Provider Integration; Presentation & UX
+- **Classification:** Model-aware prompt construction, budget allocation and context provenance/inspection.
+- **Responsibility:** Assemble player instructions, authoritative world/scene state, selected lore, recent committed prose, summaries and episodic excerpts within a model-aware context budget with appropriate output/framing reserves. Distinguish **requested**, **selected** and **actually transmitted** material; expose source provenance, priority, token confidence and explicit omissions. Honour manual exclusions and flag pinned content that could not fit.
+- **Boundary:** Context construction owns selecting/packing information for a request, not its underlying lore, events, memories or state. Capability Management supplies reliable/estimated model limits; AI Provider Integration maps the effective request to provider format and supplies whatever is observable about transmission; the inspector must not falsely promise that hidden provider transformations were fully observed. A wide local history search is compatible with a narrow transmitted context. Redact credentials. Embedding/RAG IDEA-0063 remains unaccepted.
+- **Key idea dependencies:** IDEA-0012–0019 (provider/model/pipeline), IDEA-0020 (manual Lorebook controls), IDEA-0021 (rule activation), IDEA-0022 (summaries), IDEA-0023 (episodic retrieval), IDEA-0025 (author notes).
+- **Deferred:** Accurate tokenisation across providers, priority/default budget allocations, truncation/resummarisation policies, conflict resolution for pinned items and UI presentation of omissions.
+
+### IDEA-0025 — Author Notes and Persistent Story Instructions
+
+- **Source:** [[Author Notes and Persistent Story Instructions]] (`planning/staging/Author Notes and Persistent Story Instructions.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Narrative Generation Configuration
+- **Secondary subsystems:** AI Context & Prompt Construction; Scenario Templates & Configuration; Adventure Library & Persistence; Presentation & UX
+- **Classification:** Persistent noncanonical narrative instruction configuration.
+- **Responsibility:** Store editable global, adventure-level and optional scene-specific author guidance separate from story prose, canonical events and Lorebook facts. Supply the applicable author instructions on each narrative generation turn, alongside current style settings and optional scenario-provided initial instructions. Make effective inclusion, priority conflicts and capacity omissions inspectable.
+- **Boundary:** Narrative Generation Configuration owns instruction content/scopes. AI Context & Prompt Construction selects applicable notes for each task/prompt and reports what was really sent. Scenario Templates can seed starting guidance; persistence stores mutable configuration separately from canonical event history. Author instructions cannot override validated world rules or rewrite previously committed text. No separate narration-style/author-note preset manager is implied.
+- **Key idea dependencies:** IDEA-0008 (scenario templates), IDEA-0010 (narration settings), IDEA-0018 (generation stages), IDEA-0020 (Lorebook), IDEA-0024 (prompt builder).
+- **Deferred:** Global/adventure/scene precedence, scene lifetime, stage-specific filtering, token priorities and conflict display.
+
+### IDEA-0026 — Shared PC and NPC Character Entities
+
+- **Source:** [[Shared PC and NPC Character Entities]] (`planning/staging/Shared PC and NPC Character Entities.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Character & Scene State
+- **Secondary subsystems:** Entity-Based Lorebook; Narrative Interaction & Intent; World Rules & Validation; Adventure Library & Persistence
+- **Classification:** Unified character entity identity and optional actor selection, not separate PC/NPC models.
+- **Responsibility:** Represent every character with a durable ID and incrementally populated optional details, without an inherent PC/NPC/Playable kind or mandatory protagonist. Any existing adventure Lorebook character may be explicitly selected as nullable `Playing As` for Do/Say; Story/Continue remain available without selection. All characters may participate in applicable shared gameplay systems and references must survive renames.
+- **Boundary:** Character & Scene State owns character identity and authoritative mutable character state; Entity-Based Lorebook owns descriptions/knowledge linked by stable IDs; Narrative Interaction & Intent consumes the saved selected actor, rather than creating a special player-character class. Changing selection is a noncanonical adventure setting and never changes location, possessions, historical attribution or creates an event. Missing values remain unknown, distinct from explicit zero/empty/none.
+- **Key idea dependencies:** IDEA-0002 (Do/Say), IDEA-0005 (adventure settings), IDEA-0007 (character authoring), IDEA-0020 (Lorebook), IDEA-0027 (status sheets), IDEA-0029 (items), IDEA-0033 (locations), IDEA-0034 (presence).
+- **Deferred:** Entity minimum schema, unknown-value representation, merge/deletion/duplicate detection, reference-integrity behaviour and optional related data structures.
+
 ## Next pending mapping
 
-- Next batch: IDEA-0022 through IDEA-0026. **Not yet accepted in Pass A.**
+- Next batch: five staged ideas starting with IDEA-0027, skipping IDs not in staging. **Not yet accepted in Pass A.**
 
 ## Process
 
