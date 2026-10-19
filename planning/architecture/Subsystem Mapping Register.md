@@ -376,9 +376,69 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0020 (lore references), IDEA-0024 (context), IDEA-0026 (characters), IDEA-0029 (item locations), IDEA-0034 (presence), IDEA-0035 (travel routes), IDEA-0036 (discovery), IDEA-0037 (map).
 - **Deferred:** Location move/merge/delete reference handling, moving containers/vehicles, discovery visibility and multi-parent/alias questions.
 
+### IDEA-0034 — Character Presence and Current Scene
+
+- **Source:** [[Character Presence and Current Scene]] (`planning/staging/Character Presence and Current Scene.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Character & Scene State
+- **Secondary subsystems:** World Locations & Topology; World Rules & Validation; Narrative Interaction & Intent; AI Context & Prompt Construction; Presentation & UX
+- **Classification:** Authoritative physical character location, scene presence and participation.
+- **Responsibility:** Track each character's actual current location by stable location ID and distinguish physically present, known elsewhere, in transit, unknown whereabouts and remotely participating. Limit in-person participation to established physical conditions; show current presence truthfully in story context and UI.
+- **Boundary:** Character & Scene State owns canonical location/presence and scene participation; World Locations & Topology provides stable locations, World Rules & Validation assesses movement, and AI Context & Prompt Construction selects relevant presence information. Character mentions, Lorebook retrieval, remote communication and changing `Playing As` do not create movement or co-location. Rejected events cannot move characters.
+- **Key idea dependencies:** IDEA-0002 (actor selection), IDEA-0024 (context), IDEA-0026 (character IDs), IDEA-0033 (location IDs), IDEA-0035 (travel validation), IDEA-0042 (reconstruction).
+- **Deferred:** Transit representation, large-scene co-location/proximity, line of sight, remote communication and party/group movement semantics.
+
+### IDEA-0035 — Configurable Travel Graph Rules
+
+- **Source:** [[Configurable Travel Graph Rules]] (`planning/staging/Configurable Travel Graph Rules.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** World Locations & Topology
+- **Secondary subsystems:** World Rules & Validation; Character & Scene State; Adventure Library & Persistence; Adventure Coordinator
+- **Classification:** Separate movement-connection graph with per-adventure travel policy.
+- **Responsibility:** Represent potential travel connections independently of hierarchical containment and permit freeform, strict adjacent-only and valid multi-hop policy directions, with optional conditional route restrictions. Coordinate accepted movement with persistent character location, and provide explicit blocked-route outcomes.
+- **Boundary:** World Locations & Topology owns route graph and policy definitions; World Rules & Validation checks whether a particular movement is allowed under current canonical conditions. Adventure Coordinator coordinates validated commits. Neither parent-child containment nor a narrator's asserted success grants travel access. Freeform policy relaxes adjacency without bypassing data or transaction integrity.
+- **Key idea dependencies:** IDEA-0018 (generation/validation), IDEA-0029 (items), IDEA-0033 (location hierarchy), IDEA-0034 (presence), IDEA-0036 (discovery), IDEA-0038 (mutable access conditions), IDEA-0047 (capabilities).
+- **Deferred:** Default travel policy, route-edge schema, pathfinding and timing, access/keys evaluator, movement granularity and exceptional traversal.
+
+### IDEA-0036 — AI World Discovery and Expansion
+
+- **Source:** [[AI World Discovery and Expansion]] (`planning/staging/AI World Discovery and Expansion.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** World Locations & Topology
+- **Secondary subsystems:** AI Generation Pipeline; Adventure Coordinator; World Rules & Validation; Entity-Based Lorebook; Character & Scene State
+- **Classification:** AI-assisted candidate world-graph creation, identification and discovery.
+- **Responsibility:** Accept AI proposals for new/discovered places, hierarchical placement, aliases, connections and associated arrivals as coherent validated operations. Resolve duplicate/uncertain references against existing stable IDs and distinguish world existence, character knowledge and player discovery/visibility. Coordinate dependent operations so rejected changes do not leave orphaned nodes, impossible movement or half-committed graph state.
+- **Boundary:** The AI proposes, while World Locations & Topology owns place/link identities, World Rules & Validation checks graph, movement and permissions, and the Adventure Coordinator decides canonical commits. Mention/discovery alone never teleports characters, proves rumours, reveals secrets or authorises a forbidden travel edge. Map visualisation remains separately owned by Presentation & UX under IDEA-0037.
+- **Key idea dependencies:** IDEA-0018 (pipeline), IDEA-0020 (Lorebook), IDEA-0033 (hierarchy), IDEA-0034 (presence), IDEA-0035 (travel rules), IDEA-0038 (mutable world), IDEA-0044 (coordinator), IDEA-0045 (operation proposals).
+- **Deferred:** Configurable discovery mode, alias ambiguity resolution, hidden world visibility, parentage when unknown and transactional multi-operation design.
+
+### IDEA-0037 — Zoomable Node Map Canvas
+
+- **Source:** [[Zoomable Node Map Canvas]] (`planning/staging/Zoomable Node Map Canvas.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Presentation & UX
+- **Secondary subsystems:** World Locations & Topology; Character & Scene State; Adventure Library & Persistence
+- **Classification:** Interactive player-facing projection of known world locations and travel connections.
+- **Responsibility:** Display a pannable/zoomable nested node canvas with readable grouped locations, known travel connections, node selection/inspection and optional user-adjusted layouts. Respect discovery permissions and reveal only appropriate known places/routes.
+- **Boundary:** The map renders validated world information; its visual positions, zoom and grouping are presentation preferences, not authoritative place containment, route state, travel permission or character movement. Dragging or selecting nodes must not silently mutate canon; hidden places must not leak through layout or labels.
+- **Key idea dependencies:** IDEA-0033 (location graph), IDEA-0034 (current presence), IDEA-0035 (route connections), IDEA-0036 (discovery visibility), IDEA-0062 (accessible responsive UI).
+- **Deferred:** Graph library, nested layout and overlap algorithms, persistence scope, grouping/zoom thresholds, virtualisation and keyboard/touch accessibility design.
+
+### IDEA-0038 — Persistent Location State and Travel Interactions
+
+- **Source:** [[Persistent Location State and Travel Interactions]] (`planning/staging/Persistent Location State and Travel Interactions.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** World Environment & Mutable State
+- **Secondary subsystems:** World Locations & Topology; Inventory & Item State; Character & Scene State; World Rules & Validation; Narrative History & Versioning
+- **Classification:** Authoritative mutable environmental conditions and multi-entity interactions.
+- **Responsibility:** Persist changing conditions of locations, doors, containers and routes, including locking/unlocking, blocking/opening passages, emptying containers and damaging/repairing infrastructure. Keep affected item placement, access permissions, scene state and route usability coherent across accepted transactions and historical reconstruction.
+- **Boundary:** World Environment & Mutable State owns mutable conditions, distinct from stable location identity, containment and travel-edge topology. World Rules & Validation authorises actions and route access using current conditions; Item and Character domains supply related authoritative states. A route becoming blocked affects future legality, not already committed journeys. Failed/provisional changes never partially mutate the world.
+- **Key idea dependencies:** IDEA-0029 (item/container state), IDEA-0033 (stable locations), IDEA-0034 (presence), IDEA-0035 (travel policies), IDEA-0039 (event history), IDEA-0042 (reconstruction), IDEA-0047 (capability validation).
+- **Deferred:** Environmental attribute schema, complex temporary/damage rules, interrupted journeys, transactional multi-entity effects and replay mechanics.
+
 ## Next pending mapping
 
-- Next batch: five staged ideas starting with IDEA-0034, skipping IDs not in staging. **Not yet accepted in Pass A.**
+- Next batch: five staged ideas starting with IDEA-0039, skipping IDs not in staging. **Not yet accepted in Pass A.**
 
 ## Process
 
