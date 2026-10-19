@@ -28,7 +28,7 @@ Narrator context benefits from accurate current character state.
 - **Player editability:** Players can inspect and change current status-sheet values in a clear interface, with updates respecting the authoritative game-state model rather than rewriting prose or stale Lorebook descriptions.
 - **Unknown is not empty:** Unrecorded/missing values must remain unknown, not automatically zero, false, empty, healthy, uninjured or another asserted state; explicitly recorded empty/none values are distinguishable from missing data.
 - **Optional context inclusion:** Expose selection controls so relevant *current* status values may be included in generation context through [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024); the context inspector should show requested, selected and transmitted material. Do not blindly include every possible custom field.
-- **Do not preapprove automatic state mutation:** Rules for manual-only, disabled or AI-assisted validated updates are reserved for separate unaccepted [[Character State Tracking Modes]] (IDEA-0028). Accepting the editable data model alone does not grant the AI permission to change status fields automatically.
+- **Acceptance history and later resolution:** This idea originally approved the **editable sheet model only**, not automatic status mutation. Later accepted [[Automatic Character Sheet Tracking]] (IDEA-0064) explicitly authorises **validated automatic tracking of all applicable defined fields** alongside manual editing; it supersedes the earlier unresolved automatic-update question. Player-confirmed valid manual corrections are authoritative historical state changes, and automatic tracking must subsequently use current committed values rather than stale inferred data. Fine-grained Disabled/Manual Only/Automatic modes in [[Character State Tracking Modes]] (IDEA-0028) remain **unaccepted**.
 
 ## Proposed behaviour
 Provide per-character editable fields and optional typed definitions for current status, identity, conditions, goals and numeric or qualitative statistics. Let sparse character records remain sparse until information is genuinely established. Store mutable values on the linked authoritative character-status record rather than creating copies of live state in Lorebook prose. Allow players to choose which recorded fields are eligible for AI context; surface omitted fields and preserve distinctions between unknown, explicitly empty and known values. Keep how automatic updates work independent of the status sheet data model until IDEA-0028 is reviewed.
@@ -67,7 +67,7 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - Which status values should default to being visible or included in AI context, and should players choose per-character, per-field, per-adventure or per-request?
 - How should freeform fields coexist with structured references and future mechanics (e.g., conditions, goals and equipment)?
 - What controls prevent invalid manual edits without imposing an unwanted universal RPG system?
-- Which updates are manual, disabled or automatically proposed and validated? This is expressly for separately evaluated IDEA-0028.
+- How should manually committed current-value corrections and later automatic proposals be represented and reconciled without stale overwrites? General automatic tracking is now accepted through IDEA-0064; per-field modes in IDEA-0028 remain unaccepted.
 
 ## Draft acceptance criteria
 - [ ] The Info tab shows the explicitly chosen `Playing As` character's recorded status fields where enabled, and updates when the selection changes without changing stored status values.
@@ -94,6 +94,8 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - Accepted direction remains unrefined and is neither production-approved nor implemented. Exact schema and automatic-update behaviour remain open.
 
 ## Decisions and review history
+
+- 2026-10-19 — **Cross-idea resolution accepted by user:** This original sheet-model idea did not by itself approve automation, but subsequent IDEA-0064 did. Valid manual corrections enter canonical state/history and later validated automatic updates start from the latest committed state. Do not reopen the separate unaccepted IDEA-0028 tracking modes. No production approval.
 - 2026-10-18 — **Accepted IDEA-0062 info-panel refinement:** Info tab surfaces existing status for the explicit `Playing As` character, while the Settings tab provides character selection. Lorebook is accessible via the icon left of the composer input. No selection or presentation change mutates stats. Staging only.
 - 2026-10-18 — **Accepted universal-character dependency:** One character type, optional sheets for all, no PC/NPC or Playable categories and no status changes merely because `Playing As` changes. Staging only.
 - 2026-10-18 — **Accepted character-control dependency:** An adventure may have no characters or no main character, while status and inventory remain anchored to actual character entity IDs. Multi-character focus/actor switches do not modify status records or create dummy player sheets. Staging unchanged.
