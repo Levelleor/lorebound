@@ -26,8 +26,8 @@ Some stories benefit from deterministic rules, while others should stay freeform
 - **Freeform stories remain possible:** When a module is disabled, its optional mechanics, checks and rules do not constrain unrelated storytelling or impose a required RPG ruleset. Turning off combat or survival should not mean a player cannot describe conflict or hunger in prose.
 - **Reuse the universal native capability registry:** Mechanics register discoverable typed capabilities, schema-checked inputs/outputs, permissions and validation under [[Native Gameplay Capability Registry]] (IDEA-0047). Do not introduce a separate RPG engine, mod executor or parallel canonical state authority.
 - **Deterministic coordinator authority:** All module-originated proposed operations flow through [[Deterministic Adventure Coordinator]] (IDEA-0044). If a module is enabled, its authoritative game rules and applicable validations must be enforced before changes are committed; neither an LLM nor a UI action can bypass these checks.
-- **Common incremental event/state pipeline:** Each module's accepted persistent changes, including custom module state, must be representable through the shared canonical event/history system and [[Snapshots and Incremental State Rebuild]] (IDEA-0042). Any supported historic turn must remain fully reconstructible.
-- **Plugin lifecycle must preserve historical state:** Disabling or removing a module must not silently erase or reinterpret historical events or break reconstruction. The exact handling of retained schemas, event versions, migration, missing plugins and replay compatibility needs refinement.
+- **Common incremental event/state pipeline while installed:** Accepted persistent module changes, including custom module state, use shared canonical event/history records and [[Snapshots and Incremental State Rebuild]] (IDEA-0042). The normal complete reconstruction guarantee applies while the relevant capability is present and supported. **If the plugin is later removed, its own historical state need not be reinterpreted/migrated**; the story can continue without that plugin, preserving surviving canonical history and basic system integrity.
+- **User-selected remove/disable simplicity (2026-10-19):** Removing or disabling a module ends its rules and plugin-specific context injection for subsequent AI turns. **No migration, compatibility shim, old-plugin installation requirement, or guarantee of continued plugin-state reconstruction** is required. Previously accepted story text and records are retained as history without turning the removed plugin into an active mechanic. The player accepts that later story outcomes may be unpredictable without the former rules/context. Core event/identity/SQLite safety remains required.
 - **Core versus module rules are undecided:** Keep generic identity, capability registration, permissions and state-history infrastructure reusable; do not prematurely commit damage, HP, stats, rolls, spell systems or other rule conventions to core.
 - **Leave the content and UX to refinement:** The set of initially shipped modules, rulesets, defaults, configuration UX, module dependencies, lifecycle, versioning and error/recovery behaviour remain open. This acceptance is to staging only, not approval of any mechanics implementation.
 
@@ -56,10 +56,10 @@ Hard-wiring combat, dice, experience, magic or survival into the core would make
 - Which example mechanics, if any, ship as built-ins or first-party modules in the initial release?
 - How are plugins enabled/disabled per story, configured, versioned and discovered?
 - What happens if a module is disabled while canonical state or outstanding outcomes depend on it?
-- How can old histories replay when the original plugin is removed, upgraded or unavailable, without rerunning AI or applying obsolete code incorrectly?
+- **Resolved removal policy:** No migration or replay compatibility for removed plugin-specific mechanics is required; continue without their context. What minimal non-destructive retention and status indication should be used for inactive plugin data, without promising to recover former behaviour?
 - How do interdependent modules, such as dice and combat or economy and quests, declare requirements and resolve conflicts?
 - Which validation, repair, UI-control visibility and error behaviour applies when a module action is invalid or disabled?
-- How do migrations preserve accepted incremental history, versioned outcomes and old adventure compatibility?
+- **Resolved scope:** Do not build plugin-removal migrations solely to preserve old mechanic behaviour. Safe plugin updates and optional reinstallation behaviour remain future design questions, not requirements for continuing without a removed plugin.
 - How should optional mechanics interact with narrative-only references to combat, hunger, spells or money in an otherwise freeform story?
 
 ## Draft acceptance criteria
@@ -84,6 +84,8 @@ Hard-wiring combat, dice, experience, magic or survival into the core would make
 - This is an accepted **unrefined staging** idea, not a production implementation specification or evidence any plugins are built.
 
 ## Decisions and review history
+
+- 2026-10-19 — **Explicit user policy for removed plugins:** No migrations. If a plugin is removed, the adventure simply continues without that module; its rules and plugin-supplied AI context stop applying, and resulting story behaviour may be unpredictable. Retain surviving story history and basic system integrity; no guarantee to replay/reconstruct absent plugin's own custom state. This supersedes earlier unconditional plugin historical-replay language. Staging only.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
