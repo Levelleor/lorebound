@@ -64,13 +64,25 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 - **Key idea dependencies:** IDEA-0003 (editing), IDEA-0005 (drafts/saves), IDEA-0011 (fork), IDEA-0039 (event history), IDEA-0040 (revisions), IDEA-0041 (historical edits), IDEA-0042 (reconstruction), IDEA-0044 (coordinator), IDEA-0051 (SQLite).
 - **Deferred:** How inactive audit/event records are retained, how stale rollback cancels in-flight generation, concurrency conflict UX and temporary-versus-committed Undo UI. Inactive provenance is **not** a playable alternative or a promised Redo mechanism.
 
+### IDEA-0005 — Adventure Save and Export Management
+
+- **Source:** [[Adventure Save and Export Management]] (`planning/staging/Adventure Save and Export Management.md`)
+- **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
+- **Primary subsystem:** Adventure Library & Persistence
+- **Secondary subsystems:** Persistence & Draft Management; Narrative History & Versioning; World State Reconstruction; Runtime & Platform Services; Presentation & UX
+- **Classification:** Core adventure lifecycle and data-management feature.
+- **Responsibility:** Create, list/resume, rename, full-history duplicate and permanently delete individual adventure records within one shared SQLite library. Keep debounced unfinished drafts noncanonical and persist validated committed turns/revisions and world changes atomically. Whole-database Backup/Restore are the only file-based transfer operations.
+- **Boundary:** Adventure Library & Persistence owns user-visible operations on individual adventures. Persistence & Draft Management owns draft autosave and transactions; Narrative History & Versioning and World State Reconstruction ensure a duplicate has all committed provenance and reconstructible state, but no pending drafts or credentials. Runtime & Platform Services uses the Go-managed SQLite database, handles atomic deletion, consistent complete-library snapshots and deliberate complete-library replacement. No per-adventure file export/import, recycle bin, merging or automatic pre-deletion backup is implied.
+- **Key idea dependencies:** IDEA-0001 (account-free independent adventures), IDEA-0003 (draft prose), IDEA-0011 (fork), IDEA-0039 (event history), IDEA-0040 (revision provenance), IDEA-0042 (reconstruction), IDEA-0051 (shared SQLite), IDEA-0052 (backup/restore/storage), IDEA-0053 (Go runtime).
+- **Deferred:** Concrete APIs for draft retirement, duplication ID/remapping, deletion and restore; backup/restore mechanics belong to IDEA-0052 and SQLite architecture belongs to IDEA-0051. IDEA-0006 owns blank and Quick Start opening behaviour.
+
 ## Next pending mapping
 
-- IDEA-0005 — Adventure Save and Export Management. **Not yet reviewed or accepted in Pass A.**
+- IDEA-0006 through IDEA-0010 — pending review/acceptance as a batch.
 
 ## Process
 
-1. Present one staging idea's proposed subsystem mapping and related boundaries/dependencies.
-2. Wait for explicit acceptance or requested adjustments.
-3. **Immediately write the accepted mapping to this register in GitHub before presenting the next idea.**
+1. Present one or a requested batch of staging idea subsystem mappings, with boundaries/dependencies per idea.
+2. Wait for explicit acceptance or requested adjustments, which may apply to the batch or individual ideas.
+3. **Immediately write every accepted mapping to this register in GitHub before proceeding to the next unreviewed idea/batch.**
 4. Keep source staging ideas in place and refrain from production promotion, code changes or specification claims unless separately authorised.
