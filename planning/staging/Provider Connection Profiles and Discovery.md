@@ -39,19 +39,25 @@ Automatic model discovery makes well-supported APIs easier to use but may be una
 
 ## Architecture integration (2026-10-17)
 - Provider profiles are consumed by client-side TypeScript AI adapters in the Wails v3 headless localhost server runtime, played through the normal browser. Provider credentials and custom headers require explicit secure storage/handling design distinct from SQLite adventure-save data.
-- A Go service should be considered for privileged credential storage/transport where necessary; browser storage must not become the canonical adventure database. Headless localhost access and multi-tab credential visibility need careful attention.
+- **No Go provider transport fallback (IDEA-0012 Option B, accepted 2026-10-18):** A Go service might ultimately be involved in **local at-rest credential handling if separately approved**, but **it may not perform AI provider network calls or proxy/relay AI HTTP requests**. Browser-side TypeScript must construct and send all AI requests directly. The exact key storage design is still open; browser JavaScript needs access to any key sent to a cloud API, so do not imply absolute browser-side secrecy. Browser storage is not the canonical adventure database. Multi-tab and localhost service security remain important.
 
 ## On-demand AI setup and gracefully failed requests
 - **Accepted IDEA-0001 refinement:** A usable Lorebound app and adventure library never depend on a saved provider connection. When a user attempts an AI-only operation without a suitable configured profile/model, display a clear reason and route them into these connection/model settings. Manual story editing, Lorebook maintenance, saving and other non-model features continue normally.
 - A saved/selected connection profile is **not proof of availability**, but is sufficient to **attempt the requested AI API call**. Do not require a successful Test Connection check or assume a periodically checked health status before every request. Handle actual reachability, authentication, model selection, quota and transport failures as **per-request recoverable errors**; leave the saved profile editable and preserve uncommitted input/last accepted story.
 - Explicit Test Connection and optional model discovery remain useful diagnostics, not an application startup gate. No implicit provider choice or model auto-installation is approved.
 
+## Browser-only connections for four cloud providers and retained local servers
+- **Accepted IDEA-0012 scope (2026-10-18):** Offer provider profiles for **OpenAI, Anthropic, Google Gemini, OpenRouter**, and the named **Ollama, LM Studio, vLLM and llama.cpp** local servers plus compatible custom endpoint/server profiles. **Mistral, DeepSeek, Z.ai/GLM and Kimi no longer have promised native cloud-profile/adapter types**. When OpenRouter offers one of those vendors' models, it remains an **OpenRouter model ID**.
+- **All AI networking is browser-origin:** The TypeScript client must send model discovery, connection tests, completions/generation and streaming **directly to the selected endpoint**, subject to the browser's CORS, private-network, mixed-content and credential/header policies. **No Go/Node transport proxy** is in accepted scope. Failed browser access is a normal recoverable provider failure and may require a deliberately configured browser-compatible gateway or permitted CORS setup.
+- **Credentials require accurate boundaries:** A browser-sent API token is necessarily available to browser execution while the request is made. Keep secrets outside the canonical SQLite adventure/library backup, world context, story prompts and diagnostics, but do not claim a Go transport or credential-forwarding backchannel hides them. At-rest storage/access boundaries and treatment of untrusted custom endpoints/gateways remain unresolved security-design work.
+- **Model selection:** OpenRouter is deliberately a multi-provider gateway for its **actual catalog**, not a universal guarantee of every model. Manual model-ID entry and optional discovery still work for browser-accessible endpoints; a test cannot assume a successful model list proves a generation endpoint or headers will work.
+
 ## Dependencies and constraints
 - Builds on accepted [[Cloud LLM Provider Connectors]] (IDEA-0012) and [[Local LLM Server Connections]] (IDEA-0013), including explicit llama.cpp support.
 - Provider auth, model enumeration, error types and supported response formats differ; connection tests should identify their limits rather than claim universal validation.
 - A saved profile must not leak API keys, bearer tokens or secret headers through adventure exports, prompts, diagnostic logs or UI previews.
 - Retry semantics must avoid duplicating accepted narrative turns, side-effecting tools, or authoritative world-state changes; requests with unknown success must be handled carefully.
-- Localhost/LAN access can be restricted by browser CORS and private-network rules; testing needs to report such restrictions clearly.
+- Browser CORS/private-network/mixed-content policies apply to **both local and cloud AI endpoints**. All model discovery, Test Connection requests, generation and streaming run **from the actual browser origin**, not an alternate server-side privileged network path; testing should reflect real request reachability and fail with actionable guidance. Users may configure a compatible endpoint/gateway themselves, not receive an automatically provisioned proxy.
 - Profiles can name an unavailable model or endpoint without silently mutating saved story content.
 
 ## Open questions
@@ -63,6 +69,8 @@ Automatic model discovery makes well-supported APIs easier to use but may be una
 - How should a profile handle multiple endpoint URLs or provider-specific authentication schemes?
 
 ## Draft acceptance criteria
+- [ ] Connection tests, discovery and generation originate directly in browser TypeScript and surface CORS/private-network/API security failures without silently invoking a Go/Node proxy.
+- [ ] The provider choices include the four reduced cloud families plus all four named local servers and configurable compatible endpoints, without promising other direct cloud integrations.
 - [ ] A user can create, edit, name, save, select and reuse several independent provider connection profiles.
 - [ ] Profiles support custom base URLs, model IDs, credentials/authentication, optional headers, timeouts and configurable retry preferences where relevant.
 - [ ] Supported providers/servers may expose discoverable models, which the UI can list without requiring discovery on every connection.
@@ -84,6 +92,7 @@ Automatic model discovery makes well-supported APIs easier to use but may be una
 - Accepted for staging and refinement only; not approved for production or implemented.
 
 ## Decisions and review history
+- 2026-10-18 — **Accepted IDEA-0012/0013 provider/networking revision:** Four native cloud profiles (OpenAI, Anthropic, Gemini and OpenRouter gateway), all four local servers and custom compatible endpoints remain. Every AI HTTP request, including tests/discovery, is browser-origin with **no Go/Node proxy fallback**. Browser-access issues require user-configured CORS/compatible gateway. Secret-at-rest design remains open but server-side AI credential forwarding/networking is not approved. Staging only.
 - 2026-10-18 — **Accepted IDEA-0001 integration:** No AI profile is required to use Lorebound. When AI is requested but unconfigured, provide clear setup guidance; when a model is configured, attempt the API and report actual failures without globally disabling local/manual features or overwriting canon. No mandatory prior connection test. Staging only.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
