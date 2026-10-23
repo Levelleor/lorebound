@@ -16,7 +16,7 @@ This is a **working cross-idea consistency and decision audit** for the 52 accep
 
 Classify evidence as (a) an established shared assumption, (b) a resolved/superseded earlier direction, (c) a genuine incompatible requirement needing explicit player decision, or (d) an open design/interface question suitable for Pass B/C. Historical `Decisions and review history` entries remain as audit history even when later decisions supersede them; the most recent **accepted direction** governs. Never convert a deferred implementation detail into a settled user decision.
 
-**State:** Review batches 1 through 3 are documented; **the 52-idea cross-cutting audit is not yet complete**. A-03 to A-06 and A-09/A-10 have explicit user clarifications/acceptances dated 2026-10-19. **A-11 through A-15 were explicitly reviewed on 2026-10-23**, including new choices for A-12/A-13/A-15 and agreement with A-11/A-14. A-01/A-02 and A-07/A-08 remain source-confirmed without standalone closure-audit sign-off. Remaining idea clusters require review before final closure.
+**State:** Review batches 1 through 4 are documented; **the 52-idea cross-cutting audit is not yet complete**. A-03 to A-06 and A-09/A-10 have explicit user clarifications/acceptances dated 2026-10-19. **A-11 through A-20 were reviewed/accepted 2026-10-23**, with new behavior decisions in A-12/A-13/A-15/A-18/A-19/A-20. A-01/A-02 and A-07/A-08 remain source-confirmed without separate batch sign-off. Remaining cross-idea clusters require review before final closure.
 
 ## Review batch 1 — findings
 
@@ -41,7 +41,7 @@ Classify evidence as (a) an established shared assumption, (b) a resolved/supers
 | Decision area | Questions still open | Recommended phase |
 |---|---|---|
 | Character manual/automatic reconciliation | Version checks; representation of manual events; validation of arbitrary qualitative fields; concurrent edits | Pass B interface contract and Pass C detailed schema |
-| AI consistency and movement | Bounded repair fallback, strict travel default, discovery permission for newly established passages, hidden-state disclosures and handling incomplete maps | Pass B policy boundaries; Pass C behavior/test cases |
+| AI consistency and movement | Bounded repair fallback, strict travel default, discovery permissions and AI fictional-knowledge handling. **Settled:** Undiscovered nodes may remain named/visible/editable on the player's map; discovery state does not prohibit map inspection or imply character knowledge. Map clicks never trigger travel. | Pass B policy boundaries; Pass C behavior/test cases |
 | Browser/Go credential interface | Authorised Go API and origin controls; CSRF/DNS-rebinding; tab change invalidation; lock/unlock behaviour; failure and redaction | Pass B security boundary; Pass C implementation details |
 | Historical edit reconciliation | **User decision settled:** Keep Later Turns retains later narrative/outcomes even when earlier fictional premises disappear; no AI inference/automatic repairs, player may manually correct missing state. **Engineering boundary still open:** technically unrepresentable event payloads, atomic replay/commit checks, derived cache invalidation and recovery from truncation. | Pass B timeline/integrity contract; Pass C detailed algorithms |
 
@@ -73,9 +73,36 @@ Classify evidence as (a) an established shared assumption, (b) a resolved/supers
 - **A-14:** Atomic, adventure-scoped copy/identity references and proper behavior when optional plugins are absent. Product-level Duplicate/Fork/Template differences are **already settled**.
 - **A-15:** Pick and document a stable assembly order and context-window omission handling. **Do not** build creative-instruction conflict inference, precedence arbitration or contradiction warnings.
 
+## Review batch 4 — findings A-16 through A-20
+
+| ID | Sources | Classification | Finding and authoritative direction | Review state / next step |
+|---|---|---|---|---|
+| **A-16** | IDEA-0007, 0026, 0034 | **Established and accepted** | One universal character entity type, stable IDs, no forced protagonist or PC/NPC category. Nullable Settings `Playing As` selects the Do/Say actor but does not move characters or possessions. Story/Continue stay available without a selected character. A viewpoint cut is not travel or time lapse. | **User agreed 2026-10-23.** No new behavior or code; foundational interface details deferred. |
+| **A-17** | IDEA-0029, 0030, 0044 | **Established and accepted** | The same unique item ID is used for physical custody, equipped slot and optional ownership claims. Legal/fictional ownership need not equal possession. Explicit player-authored Story may establish unusual transfers but may not create duplicate physical placements or corrupt stable references. | **User agreed 2026-10-23.** Exact optional capacity/layering/containers deferred. |
+| **A-18** | IDEA-0027, 0030, 0031, 0064 | **User-resolved conditional auto-reconciliation** | A confirmed character-anatomy edit may invalidate an equipped slot. **Let the subsequent validation pass automatically move/unequip/reassign the affected item** where a grounded valid disposition is available; this is not forbidden teleportation. No automatic duplicate/deletion, invented remote location, partial state mutation, mandatory player clean-up or needless obstruction of anatomy authorship. Distinguish removing a description field from an in-world lost limb. | **Explicit user decision 2026-10-23.** IDEA-0030/0031 updated. Exact destination precedence, fallback if no grounded placement exists and event types go to Pass B/C. |
+| **A-19** | IDEA-0002, 0037, 0044, 0047, 0050 | **User-resolved map interaction authority** | **Map clicks and node selection never issue Do/Say/Story inputs, movement attempts, AI narration or turns.** The map is a **reflection/editor of recorded world state**; the player may deliberately add locations or inspect/fix/edit their recorded facts and connections through validated manual world edits. Pure pan/zoom/drag/layout are presentation only. Other optional typed UI actions such as Equip/Drop remain separate; Story authorial authority is unchanged. | **Explicit user decision 2026-10-23.** IDEA-0037/0050 updated. Precise editor forms and nonmap action semantics go to refinement. |
+| **A-20** | IDEA-0033, 0035, 0036, 0037, 0046 | **User-resolved discovered-state versus editor-visibility boundary** | Locations may carry `undiscovered` or `discovered` status; a validated story discovery may change the status. **Even an `undiscovered` node may be visible on the player's map with its recorded name/details, selectable and editable.** Status describes fictional character/AI knowledge, **not** player permission to view/edit stored map facts. Any truly separately restricted information needs its own explicit policy; the `undiscovered` flag is not mandatory fog of war. A recorded node or map click does not establish in-world knowledge or valid travel. | **Explicit user decision 2026-10-23.** IDEA-0033/0036/0037 updated; old automatic concealment of all undiscovered nodes superseded. AI context/validator knowledge filtering remains Pass B. |
+
+### Remaining technical details after batch 4
+
+- **A-18:** Which grounded destination is used for displaced gear after an anatomy edit, including when no valid destination can be identified; preserve a single item identity and atomic state.
+- **A-19:** UX for manually editing/adding recorded locations and their known links, and separate execution behavior for any optional nonmap gameplay buttons. **No map-click travel design is permitted.**
+- **A-20:** Distinct persisted discovery status and AI character-knowledge context; editable `undiscovered` nodes are **not** to be auto-hidden from the player. Any separate genuinely restricted/private data needs explicit authorization and policy.
+- **A-16/A-17:** Stable actor/ownership/custody APIs and optional inventory/equipment validators, with no new mandatory universal game rule.
+
 ## Remaining review work
 
-Review remaining 52-idea cross-subsystem clusters, separating stale chronology references from genuine incompatible accepted decisions. Batches 1–3 addressed canonical history/player agency, optional plugin removal, Lorebook authority, Turn-0 generation/extraction, provider networking, model task routing, active sampling settings, creative instruction assembly and adventure duplication/fork/template boundaries. Continue with **character/world/item identity, structured UI actions versus direct Story authority, state-update consistency, privileged service boundaries, and any unreviewed cross-idea assumptions or deferred technical risks**. Obtain user review of genuinely unresolved architectural choices before declaring Pass A closed.
+Review remaining 52-idea cross-subsystem clusters, separating stale chronology references from real incompatible accepted decisions. Batches 1–4 cover canonical history/player agency, no-migration plugin policy, Lorebook/Turn-0, provider networking, model routing and one current settings record, predictable notes, adventure lifecycle, universal characters, item/equipment integrity, anatomy adjustment, player-map editing and editable undiscovered locations. Continue with **other storage/privileged-service boundaries, multi-tab/draft concurrency, lifecycle failure semantics, AI turn commit/cancellation, optional modules and any residual cross-idea dependencies** before declaring the entire Pass A closure audit complete. Where the desired product behavior is established, only hand precise engineering contracts to Pass B/C rather than soliciting unnecessary reapproval.
+
+## Documents updated during batch 4 review (2026-10-23)
+
+- `planning/staging/Configurable Anatomy and Transformations.md` and `planning/staging/Slot-Based Equipment and Body Diagram.md` (A-18)
+- `planning/staging/Zoomable Node Map Canvas.md` and `planning/staging/Structured UI Game Actions.md` (A-19/A-20)
+- `planning/staging/AI World Discovery and Expansion.md` and `planning/staging/Hierarchical World Locations.md` (A-20)
+- `planning/staging/Shared PC and NPC Character Entities.md`, `planning/staging/Character Presence and Current Scene.md`, `planning/staging/Persistent Items and Inventory Transfers.md`, `planning/staging/Persistent Location State and Travel Interactions.md` (chronology-only acceptance reference corrections)
+- `planning/architecture/Consolidated Subsystem Architecture.md` (S04/S06/S10/S11 boundaries and system-wide invariants)
+
+**No staging-to-production promotion or application code change.** Original Pass A register and mappings remain authoritative and unchanged. Historic note decisions are preserved; only active wording/acceptance chronology was aligned to explicit later human choices.
 
 ## Documents updated during batch 3 review (2026-10-23)
 
