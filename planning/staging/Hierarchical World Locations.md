@@ -25,6 +25,7 @@ Allows a rich setting with intuitive zoom levels and local scene context.
 - **Durable identity and information:** Give each location a stable unique ID, name, description, optional type, parent reference (where applicable) and children. Renaming or reorganising a location must preserve its identity and relevant references.
 - **Customisable location types:** Type labels such as world, region, settlement, building, room, wilderness site, vehicle or other custom classifications may help display/search, but no rigid taxonomy is mandatory.
 - **Sparse/unknown-friendly records:** Locations may be created with minimal known details or without all descendants mapped. Missing information must not be silently invented or treated as a known empty world.
+- **Independent, editable discovery status (2026-10-23):** A recorded location can be `undiscovered` or `discovered` for in-story purposes while **remaining visible, named and editable** on the player's map editor (IDEA-0037). The discovery marker is separate from hierarchy, identity and any actual travel permission. A manual edit to a location does not necessarily mean a character discovered or visited it.
 - **Acyclic containment:** Reject or prevent parent/child links that form cycles, including a location becoming its own direct or indirect ancestor.
 - **Containment is distinct from traversal:** Nesting indicates that a place is situated within a larger place. **Do not treat parent/child relations as automatically passable travel connections**, or sibling locations as directly connected. Route/adjacency/travel constraints belong to separately reviewed ideas such as [[Configurable Travel Graph Rules]] (IDEA-0035).
 - **Local scene context and discoverability:** The hierarchy can supply broad-to-specific place context, e.g. room → building → settlement → region, to a current scene or navigation interface without requiring the entire world to be supplied every time.
@@ -55,7 +56,7 @@ A strict World → Region → Settlement → Building → Room chain makes some 
 - How should merge, deletion, relocation and renaming preserve IDs and backlinks to characters, items and Lorebook entries?
 - Should root worlds/realms be top-level locations, with parallel settings or dimensions allowed?
 - Which optional type labels and metadata are useful as defaults without forcing a rigid taxonomy?
-- Can an unknown/undiscovered child exist privately in world state but be hidden from the player?
+- **Resolved 2026-10-23:** An `undiscovered` child location may exist in world state and still be visible/named/editable on the player's map. The `undiscovered` flag does **not** itself hide the node. Any truly confidential attributes require a different explicit policy.
 - How do location hierarchy, travel adjacency, range of visibility and co-location in large spaces interact?
 - Which ancestor descriptions should be provided to the context builder, and what happens when the context budget is constrained?
 
@@ -82,6 +83,8 @@ A strict World → Region → Settlement → Building → Room chain makes some 
 - This is **not yet refined or approved for production**, and the document makes no claim of implementation.
 
 ## Decisions and review history
+
+- 2026-10-23 — **User resolved A-20:** Store explicit discovered/undiscovered location state independently of stable location records. The user can still view and edit recorded undiscovered node names/details on the map; don't turn discovery state into player-editor invisibility. Normal AI character-knowledge/route validation boundaries still apply. Staging only.
 
 - 2026-10-19 — **Pass A audit reference correction:** IDEA-0035, IDEA-0036, IDEA-0037 and IDEA-0038 are now independently accepted staging ideas. Earlier descriptions as separate candidates reflected their former status. No implicit production approval or scope expansion.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
