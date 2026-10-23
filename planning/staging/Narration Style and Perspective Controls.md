@@ -28,6 +28,7 @@ Different stories need different narrator behaviour.
 - **Response length:** Offer preferences for brief or detailed generations.
 - **Custom instructions:** Permit freeform user-authored writing and stylistic instructions rather than only fixed options.
 - **No reusable narration-style presets (explicit user revision, 2026-10-18):** Do **not** build or require a separate saved narration-style preset library, picker, sharing/import/export, or live preset linkage. Story direction instead comes from **optional scenario-template-provided starting inputs, the adventure's current narration settings, and persistent author notes/instructions**.
+- **Predictable creative instruction assembly (user decision 2026-10-23):** Combine current style settings, applicable global/adventure/scene author notes and any adventure-owned template-derived directions in a consistent documented order. Do **not** attempt to identify or resolve contradictions among creative instructions. Model adherence is best-effort; authoritative accepted world-state checks remain a separate hard boundary.
 - **Future-only application:** Changing current settings or author notes influences **subsequent AI generation turns**; it does **not** automatically rewrite existing committed passages or mutate canonical world state.
 
 Narration controls steer the model's presentation. They are not authoritative game-state mutations, and they are distinct from provider-level decoding parameters such as temperature and Top-P.
@@ -36,7 +37,7 @@ Narration controls steer the model's presentation. They are not authoritative ga
 Expose optional current narration preferences and freeform instruction/author-note fields. **A scenario template may supply the starting creative instructions or settings for the new adventure**, as its ordinary instantiation input (IDEA-0008), but there is **no separate narration-style preset manager**. The context builder assembles **applicable author notes and the current effective narration settings on every AI-generated narrative turn**, without requiring players to paste them into each input. Keep changes future-facing: existing prose and authoritative events, character locations, equipment and other world state remain unchanged merely because instructions or settings are edited. Respect model context limits and make any unavoidable omission visible instead of falsely implying notes were transmitted.
 
 ## Alternatives and trade-offs
-A single author-note field is flexible; dedicated perspective, tense, tone and length controls are more discoverable. **Both current controls and editable instruction notes remain accepted**, with optional scenario templates supplying initial values. A separate style-preset manager is **explicitly removed from the accepted scope**. Exact control layout, layering of inherited/global/adventure/scene instructions, and optional one-turn overrides remain future refinements.
+A single author-note field is flexible; dedicated perspective, tense, tone and length controls are more discoverable. **Both current controls and editable instruction notes remain accepted**, with optional scenario templates supplying initial values. A separate style-preset manager is **explicitly removed from the accepted scope**. Exact control layout and the **fixed predictable concatenation order** remain engineering refinements, not approval for conflict-solving, preference precedence or a style-preset manager. Optional one-turn overrides remain outside settled design.
 
 ## Perspective without a mandatory protagonist
 - **Accepted IDEA-0007/0026 flexibility:** First-, second- or third-person narration settings and optional character focus must **not require a permanently defined player-character entity**. Lorebound supports stories with **no characters**, no single protagonist or an ensemble cast.
@@ -80,9 +81,9 @@ A single author-note field is flexible; dedicated perspective, tense, tone and l
 
 ## Open questions
 - Which preferences are implemented entirely as prompt instructions, and which may map to provider-supported decoding or output-limit controls?
-- **Preset precedence question superseded:** There is no narration-style preset. How should **template-supplied initial directions, current adventure/global settings, and layered author notes** combine when their instructions conflict? Current in-adventure edits must not be silently overwritten by later source-template changes.
+- **Resolved creative-conflict policy 2026-10-23:** Template-derived directions belong to the adventure's initial editable configuration, not a live link. Current style and author-note layers are assembled in a predictable order, without detecting or resolving contradictory instructions. The exact concatenation sequence is a technical detail; later edits to the source template must never overwrite the adventure's current values.
 - Can players temporarily switch narration styles for a single continuation without changing the saved default?
-- How should conflicting preferences such as short responses plus elaborate descriptive pacing be handled?
+- **Resolved:** Send both applicable creative preferences in a stable order and let the model interpret the tension. Lorebound does not need a conflict-repair workflow or automatic rewriting of preferences.
 - **Resolved (2026-10-18):** Do **not** include narration-style preset saving, sharing, import/export or management. Optional reusable **scenario templates** (IDEA-0008) and **model sampling-parameter presets** (IDEA-0016) are distinct features.
 
 ## Draft acceptance criteria
@@ -108,6 +109,8 @@ A single author-note field is flexible; dedicated perspective, tense, tone and l
 - Accepted for staging and refinement only; this does not mean that controls have been implemented or approved for production.
 
 ## Decisions and review history
+
+- 2026-10-23 — **User resolved A-15:** Contradictory creative instructions are not an engine problem to solve. Applicable current style settings and author notes are deterministically ordered into the generation context; no semantic conflict detection, auto-precedence selection or resolution UI. Keep existing limits/omission inspection and world-rule validation. Staging only.
 - 2026-10-18 — **User explicitly removed reusable narration-style presets from accepted scope**, superseding that part of the 2026-10-16 decision. Direct story steering now uses optional scenario-template-provided setup, current narration settings and persistent author notes that the context builder incorporates on each AI narrative turn (with transparent token-budget limits). No style-preset gallery, live-linked preset inheritance or separate sharing/import/export. Dedicated narration controls and provider/model sampling presets remain distinct. Staging only, no code changes or promotion.
 - 2026-10-18 — **Accepted IDEA-0062 interface refinement:** Info and Settings share two tabs in the information panel; `Playing As` is in Settings while Info reflects the selected actor, and Lorebook is reached from a composer-left icon. Narration style remains separate from player actor identity. Staging only.
 - 2026-10-18 — **Explicit user acceptance:** `Playing As` switching is a narrative cut; the next Do/Say follows the chosen character in their existing circumstances. Switching causes no physical travel, time passage or item movement. Staging only.
