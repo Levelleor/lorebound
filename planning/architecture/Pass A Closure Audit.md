@@ -2,7 +2,7 @@
 type: architecture
 status: evolving
 created: "2026-10-19"
-updated: "2026-10-19"
+updated: "2026-10-23"
 tags:
   - planning/architecture
   - pass-a
@@ -16,7 +16,7 @@ This is a **working cross-idea consistency and decision audit** for the 52 accep
 
 Classify evidence as (a) an established shared assumption, (b) a resolved/superseded earlier direction, (c) a genuine incompatible requirement needing explicit player decision, or (d) an open design/interface question suitable for Pass B/C. Historical `Decisions and review history` entries remain as audit history even when later decisions supersede them; the most recent **accepted direction** governs. Never convert a deferred implementation detail into a settled user decision.
 
-**State:** Review batches 1 and 2 are documented; **the 52-idea cross-cutting audit is not yet complete**. A-03 to A-06 and A-09/A-10 have explicit user clarifications/acceptances dated 2026-10-19. A-01/A-02 and A-07/A-08 are source-confirmed without a separate explicit audit sign-off. Additional clusters remain to review before final closure.
+**State:** Review batches 1 through 3 are documented; **the 52-idea cross-cutting audit is not yet complete**. A-03 to A-06 and A-09/A-10 have explicit user clarifications/acceptances dated 2026-10-19. **A-11 through A-15 were explicitly reviewed on 2026-10-23**, including new choices for A-12/A-13/A-15 and agreement with A-11/A-14. A-01/A-02 and A-07/A-08 remain source-confirmed without standalone closure-audit sign-off. Remaining idea clusters require review before final closure.
 
 ## Review batch 1 — findings
 
@@ -55,9 +55,38 @@ Classify evidence as (a) an established shared assumption, (b) a resolved/supers
 | **A-09** | IDEA-0020, 0021, 0022, 0023, 0024, plus related IDEA-0033 and 0045 | Established Lorebook/current-state authority; **documentation chronology corrected** | Freeform manual descriptions need not be automatically semantically reconciled against typed game state; current validated world state remains authoritative for actual gameplay. Explicit Lorebook exclusions outrank automatic activation and derived memories never override canon. Former 'unaccepted' cross-references were corrected: IDEA-0021, 0023, 0024, 0035/0036/0037/0038 and 0046 were independently accepted in **staging**. **IDEA-0063 embedding/RAG remains unaccepted in Inbox.** Historical review logs remain intact. | **User instructed reference correction 2026-10-19.** Updated active accepted-direction/dependency references in six staging docs; no feature promotion or changed stage approvals. |
 | **A-10** | IDEA-0039, 0042, 0044, 0047, 0055 | **Explicitly superseded old plugin-removal guarantee** | Accepted plugin changes are recorded normally while the capability is present. If the player removes a plugin, play **continues without its mechanics and plugin-supplied AI context**, with potentially unpredictable future narrative outcomes. **No automatic migration, emulation, reinstallation or reconstruction/replay of the absent plugin's custom historical state is required.** Preserve surviving story records and core identity/transaction integrity; removal is not permission to corrupt unrelated state. This supersedes previous unconditional historical-replay claims for unavailable plugin code. | **Explicit user decision 2026-10-19.** Updated IDEA-0047/0055/0042 and the consolidated architecture. No plugin-removal migration or extra AI context obligations. |
 
+## Review batch 3 — findings A-11 through A-15
+
+| ID | Sources | Classification | Finding and authoritative direction | Review state / next step |
+|---|---|---|---|---|
+| **A-11** | IDEA-0012, 0013, 0014, 0053 | **Accepted network boundary, implementation feasibility risk** | Four accepted cloud connectors (OpenAI, Anthropic, Gemini, OpenRouter) and named local model servers (Ollama, LM Studio, vLLM, llama.cpp) use **direct browser TypeScript HTTP requests**. Go does not proxy inference. Browser CORS/private-network compatibility must be tested for each supported endpoint; report unsupported browser-origin configurations honestly rather than inventing a Go/Node fallback. | **User agreed 2026-10-23.** Provider-by-provider browser-feasibility testing is Pass B/C engineering/release work. |
+| **A-12** | IDEA-0017, 0018, 0019; providers 0012/0013 | **User-resolved failure policy** | Single-model and multi-model task routing remain equally first-class. When the selected model/provider response fails or assigned model is unavailable, **fail the interaction**, report the error and preserve prior canon/recoverable input. **No automatic alternate-model/provider fallback, rerouting or substitution.** Deliberate user retry/change is separate, as is bounded narrative validation/repair of a *successfully obtained* response. Unassigned tasks may inherit a chosen primary model; this is not a fallback after failure. | **Explicit user decision 2026-10-23.** IDEA-0017 updated; no new fallback approval. |
+| **A-13** | IDEA-0015, 0016, 0017, 0024 | **User-resolved single-setting scope** | Persist **one current generation-parameter settings entry** across providers/models/tasks, not automatic separate model/profile settings. On model/provider switch the **frontend reevaluates** which controls are supported/unsupported/ignored/unknown, visibly disables/annotates unsupported controls, and derives the effective request without deleting saved preferred values. Named technical sampling presets, where used, require **explicit user selection** and update this one active entry; they do not auto-switch by model. Request and context inspectors remain truthful about omitted values/material. Earlier model/provider-associated automatic current preferences are superseded. | **Explicit user decision 2026-10-23.** IDEA-0015/0016/0017 updated; remaining transport conversions/metadata and UI details are Pass B/C technical work. |
+| **A-14** | IDEA-0005, 0008, 0011, 0042, 0051 | **Established independent lifecycle operations** | **Duplicate** creates an independent saved adventure with all currently committed narrative/state history. **Fork** creates an independent saved adventure with the accepted prefix through a chosen committed turn. **Scenario template instantiation** copies initial scenario/world/instructions into a fresh adventure **without any prior played turns**. No shared mutable canonical data, copied pending drafts, selectable in-story variant tree or single-adventure file export. Correct scoped references, atomicity and unavailable-plugin handling are implementation contracts, not new product questions. | **User agreed 2026-10-23.** Source-confirmed; no additional behaviour decided. |
+| **A-15** | IDEA-0008, 0010, 0024, 0025 | **User-resolved creative conflict policy** | When applicable global/adventure/scene author notes, template-derived starting directions and current style instructions contradict, Lorebound does **not** detect, reconcile, prioritize by semantic meaning, rewrite or arbitrate the conflict. It **predictably assembles the applicable segments in a stable documented order** and transmits what fits in the model context, preserving requested/selected/sent visibility and technical omission reporting. The model/player determines creative adherence. **Hard canonical world validation is unaffected**; story instructions never create an automatic world mutation. Exact fixed order is an implementation detail, not an AI conflict-resolution policy. | **Explicit user decision 2026-10-23.** IDEA-0010/0025 updated; no style-preset manager, conflict solver or extra review UX is authorised. |
+
+### Pass B/C details still open after batch 3
+
+- **A-11:** Browser-origin CORS/auth/private-network feasibility matrix for each named cloud and local model endpoint.
+- **A-12:** Concise failed-stage diagnostics and recoverable input; no automatic model fallback is to be designed.
+- **A-13:** Capability metadata sourcing and exact provider field translations. Current parameter settings storage scope and on-switch reevaluation are **already settled**.
+- **A-14:** Atomic, adventure-scoped copy/identity references and proper behavior when optional plugins are absent. Product-level Duplicate/Fork/Template differences are **already settled**.
+- **A-15:** Pick and document a stable assembly order and context-window omission handling. **Do not** build creative-instruction conflict inference, precedence arbitration or contradiction warnings.
+
 ## Remaining review work
 
-Review remaining 52-idea cross-subsystem clusters, separating stale chronology references from real contradictory accepted directions. Batch 2 has addressed historical-edit player authority, Lorebook reference chronology, Turn-0 creation/extraction and **plugin removal without migration**. Continue with provider capability/context claims, adventure creation/fork/duplication semantics, other world-state and permission boundaries, plus any outstanding technical safety choices. Obtain explicit user review on genuinely unresolved architectural choices before declaring audit closure.
+Review remaining 52-idea cross-subsystem clusters, separating stale chronology references from genuine incompatible accepted decisions. Batches 1–3 addressed canonical history/player agency, optional plugin removal, Lorebook authority, Turn-0 generation/extraction, provider networking, model task routing, active sampling settings, creative instruction assembly and adventure duplication/fork/template boundaries. Continue with **character/world/item identity, structured UI actions versus direct Story authority, state-update consistency, privileged service boundaries, and any unreviewed cross-idea assumptions or deferred technical risks**. Obtain user review of genuinely unresolved architectural choices before declaring Pass A closed.
+
+## Documents updated during batch 3 review (2026-10-23)
+
+- `planning/staging/One-Model Task Routing.md` (A-12 and shared-setting integration)
+- `planning/staging/Model-Capability-Aware Controls.md` (A-13)
+- `planning/staging/Sampling Presets and Advanced Parameters.md` (A-13)
+- `planning/staging/Author Notes and Persistent Story Instructions.md` (A-15)
+- `planning/staging/Narration Style and Perspective Controls.md` (A-15)
+- `planning/architecture/Consolidated Subsystem Architecture.md` (A-12, A-13, A-15 integration)
+
+**No production promotion or code change.** User-agreed A-11/A-14 needed no staging behavior edits; legacy Pass A ownership history remains unchanged.
 
 ## Documents updated during batch 2 review (2026-10-19)
 
