@@ -27,13 +27,13 @@ Unsupported values may fail or be ignored silently.
 - **Ignored:** Explain that an endpoint may accept the parameter without applying it; do not present that value as reliably effective.
 - **Unknown:** Clearly mark unverified capability rather than claiming supported behaviour, and apply a conservative default policy to be refined.
 - **Advanced overrides:** Permit a deliberate, visibly warned expert override to try experimental or unsupported/unverified values for a selected connection/model. Never silently enable overrides for all providers.
-- **Context-aware UI and requests:** The active provider/model determines which options are available and what is included in effective requests. Changing models should not silently rewrite the player's saved preferred values.
+- **Context-aware UI and requests with one shared settings entry (2026-10-23):** The frontend dynamically reevaluates control availability and actual outgoing parameters whenever provider/model changes. Unsupported controls are visibly disabled/annotated and omitted in ordinary requests, while the **same single saved current parameter settings entry** remains unchanged across switches. Do not create per-provider/model copies of current values.
 - **Distinguish intent from effect:** Show or otherwise explain when a preferred setting is omitted, ignored, or overridden so the player can understand what was actually sent.
 
 These are accepted planning requirements; the sources of capability metadata, defaults for unknown/ignored settings, and probe rules are still open.
 
 ## Proposed behaviour
-Track parameter capability against the active provider/model profile using the four states above. Display disabled or annotated controls for values known not to work, and omit unsupported parameters from ordinary outgoing requests. When a user deliberately opts into an advanced override, include the requested experimental field only for the chosen scope and warn about errors or no-op behaviour. Preserve saved preset preferences separately from per-request effective parameters to avoid losing them when switching models. Offer a way to inspect the actual parameter set used by a request, subject to safe redaction of secrets.
+Track parameter capability against the active provider/model profile using the four states above. Display disabled or annotated controls for values known not to work, and omit unsupported parameters from ordinary outgoing requests. When a user deliberately opts into an advanced override, include the requested experimental field only for the chosen scope and warn about errors or no-op behaviour. Preserve the single shared saved parameter-preferences entry separately from each request's derived effective parameters. Explicitly saved technical presets, if selected by the user, write into this same entry rather than being applied automatically per model. Offer a way to inspect the actual parameter set used by a request, subject to safe redaction of secrets.
 
 ## Alternatives and trade-offs
 Blindly sending every configured value risks hard API errors and silent no-ops, and is not the accepted normal behaviour. A fixed conservative intersection of settings is simpler but hides valid model-specific features. Capability-aware controls with an opt-in advanced override provide flexibility while keeping ordinary requests predictable. Automatic capability probing versus curated metadata and user-maintained profiles remains a refinement choice.
@@ -45,7 +45,7 @@ Blindly sending every configured value risks hard API errors and silent no-ops, 
 - A parameter may be accepted syntactically but ignored semantically. Do not equate HTTP success with confirmed effect.
 - Advanced overrides must be explicit and scoped, and an API failure from an unsupported override must not commit incomplete narrative output or world-state changes.
 - Request previews and diagnostics must redact API credentials, authentication headers and other secrets.
-- A preserved user preference does not imply that its value is actually transmitted to a different model.
+- A preserved setting in the **single shared current parameter record** does not imply transmission to every model. Derive supported controls/effective parameters anew on provider/model switch and redact secrets in inspections.
 
 ## Open questions
 - How are model capability definitions sourced, versioned, updated and invalidated over time?
@@ -62,7 +62,7 @@ Blindly sending every configured value risks hard API errors and silent no-ops, 
 - [ ] Ignored or unverified values are identified to the user instead of misrepresented as effective.
 - [ ] Explicit expert overrides can attempt experimental/unsupported settings for a selected scope with a clear warning.
 - [ ] A parameter override or failure for one model does not silently affect other profiles or commit incomplete story/world-state data.
-- [ ] Model switching preserves preferred preset values while adapting the transmitted parameters to the active model's known capabilities.
+- [ ] Model/provider switching reevaluates the frontend controls and request parameters against current capabilities while retaining **one unchanged shared saved current-settings entry**, with no automatic model-scoped preference switch.
 - [ ] An effective-request view or diagnostic explains omitted/overridden parameters without revealing secrets.
 
 ## Refinement checklist
@@ -77,5 +77,7 @@ Blindly sending every configured value risks hard API errors and silent no-ops, 
 - Accepted by the requesting user for **staging/refinement**, not production or implementation.
 
 ## Decisions and review history
+
+- 2026-10-23 — **User clarified A-13:** Active sampling/advanced parameter preferences are one saved entry across models/providers/tasks. The frontend dynamically toggles unsupported controls when switching models and omits known-unsupported settings from ordinary effective requests. Capability states, warnings and explicit expert overrides remain as accepted. Staging only.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Four parameter states (supported, unsupported, ignored, unknown); capability-aware controls; omission of unsupported values from normal requests; and explicit advanced overrides for experimental settings. Moved to staging for refinement, not production.
