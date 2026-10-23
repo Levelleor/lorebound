@@ -26,7 +26,7 @@ Scenes should remember locked doors, depleted chests and destroyed structures.
 - Reconcile related changes across items, containers, character locations, travel permissions and scene descriptions. Incompatible or rejected operations must not leave partial or duplicate state.
 - Route conditions affect future legal travel according to accepted [[Configurable Travel Graph Rules]] (IDEA-0035), while completed committed journeys are never retroactively undone.
 - Preserve stable world identities from [[Hierarchical World Locations]] (IDEA-0033) and coherent characters and items from IDEA-0034 and IDEA-0029.
-- Leave detailed environmental mechanics, rules/plugins, disruption of ongoing journeys, and the event-storage architecture undecided. [[Event-Sourced World History]] (IDEA-0039) is separately unaccepted.
+- Leave detailed environmental mechanics, plugins and disruption of ongoing journeys for refinement. [[Event-Sourced World History]] (IDEA-0039) was **subsequently accepted independently in staging**; no new event schema is implied by this location/environment idea.
 
 ## Proposed behaviour
 Model current facts on persistent places and world objects. Proposed unlock, empty, block, damage or repair actions are validated against existing state. Commit related effects consistently, update route accessibility and future narration, and preserve prior committed travel history. Rejected or failed proposals leave no state mutation.
@@ -76,6 +76,8 @@ Start with simple mutable facts and validated events; optional environmental sim
 - Origin: **mixed**. Explicitly accepted for staging refinement, not approved for production or implemented.
 
 ## Decisions and review history
+
+- 2026-10-23 — **Pass A batch 4 reference correction:** IDEA-0039 event-sourced history is already accepted separately in staging, not unaccepted. The exact environmental event schema and in-transit effects still need refinement. No new feature approval.
 - 2026-10-18 — **Accepted IDEA-0002 environmental effects alignment:** Player-authored Story outcomes may supersede in-fiction access/route restrictions as direct world declarations, with coherent validated state and provenance. Do/Say and AI/Continue remain subject to gameplay rules; safe transaction integrity remains mandatory. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Persist mutable state for locations, doors, containers, routes and environmental conditions; validated unlocking, emptying, blocking, destroying/restoring links; coherence with items, locations and travel rules; no retroactive invalidation of committed travel. Environmental mechanics, route disruption and event-storage architecture remain open. Moved to staging, not production.
