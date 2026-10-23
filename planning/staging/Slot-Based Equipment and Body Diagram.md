@@ -28,9 +28,10 @@ Makes equipped gear legible and available to AI context.
 - **Flexible for nonstandard anatomy:** The slots and diagram must be extensible enough to represent characters with different bodies or unusual available appendages; do not hardcode a mandatory two-armed human template for every character.
 - **Layering support:** Represent worn items sharing a body region in appropriate layers rather than assuming only one possible item per location. Actual ordering and compatibility rules remain for refinement.
 - **AI context visibility:** Relevant current equipment/slot state should be available to the narrator via the context builder when selected; distinguish equipped from merely carried gear and respect token-budget/manual context controls.
-- **Keep mechanical rules open:** Exact slot definitions, two-handed item semantics, equip conflicts/incompatibilities, allowed combinations, consequences of limb loss and detailed anatomy changes are **not yet decided**.
+- **Validated effects of anatomy changes (user decision 2026-10-23):** If accepted anatomy changes invalidate an equipment assignment, a subsequent validation pass **may automatically unequip, move or reassign the same stable item** to a grounded valid placement, without requiring a separate routine player confirmation. This consequence must be reflected consistently in item custody, equipment and recorded state. Exact destination preference and behavior when no valid destination is known are technical refinements.
+- **Other mechanics remain open:** Exact slot catalogue, layering, two-handed item semantics and equipment incompatibility rules remain to refine.
 - **Art is optional and separate:** Start with a legible schematic. Generated character images or illustrated equipment portraits are not required or approved as part of this acceptance.
-- **Respect independent approval gates:** [[Configurable Anatomy and Transformations]] (IDEA-0031) and [[Optional Story Images and Equipment Art]] (IDEA-0057) remain separate unaccepted candidates; this idea accepts *compatibility with* variable anatomy, not a complete transformation system.
+- **Separate feature scopes:** [[Configurable Anatomy and Transformations]] (IDEA-0031) is **already independently accepted in staging** and now permits validated equipment consequences from anatomy changes. [[Optional Story Images and Equipment Art]] (IDEA-0057) remains **unaccepted in Inbox**; images are not necessary.
 
 ## Proposed behaviour
 For each character, expose a labelled schematic and equipment-slot list whose slots can be customised or extended. Bind equipped item instances to stable IDs from the inventory/item model. The equipped assignment indicates how a physically possessed item is worn or held without creating a second copy of it. Allow the user or validated gameplay outcomes to equip, unequip or transfer items, and keep both the character's equipment view and underlying item holder/placement consistent. Support layered occupancy where the later-defined rules allow it. Build the equipment context from current accepted state, not guessed narration. Keep anatomical fit, stacking, two-handed rules and advanced art as refinement or separately gated decisions.
@@ -46,7 +47,7 @@ A text-labelled, static diagram is inexpensive, understandable and does not requ
 - The diagram must remain useful without accepting or implementing the separate detailed anatomy-and-transformation feature [[Configurable Anatomy and Transformations]] (IDEA-0031).
 - Equipping cannot silently make a duplicate item or allow simultaneous incompatible physical placements. Removing or transferring an equipped object should make its prior equipment assignment consistent with its new placement.
 - Current gear is authoritative mutable state, not merely a descriptive paragraph. AI-generated or provisional text cannot independently establish a new equip event without validation.
-- The exact slot rules, limb compatibility, two-hand rules and response to body transformations remain open rather than assumed approved by this concept.
+- Slot compatibility and destination-selection algorithms remain open. The broader policy to permit **automatic validated relocation after anatomy changes** is settled; no artificial requirement for player-by-player unequip steps.
 - Story images/equipment artwork and image-generation dependencies are separate, unaccepted future decisions. A simple text-backed diagram remains sufficient for this accepted direction.
 - Equipment data made available in AI context follows model-aware budgeting and the requested/selected/transmitted distinctions of accepted [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024).
 
@@ -55,7 +56,7 @@ A text-labelled, static diagram is inexpensive, understandable and does not requ
 - Which slots and layer categories should be available initially, and how should players add/remove/rearrange them?
 - Can items be equipped across multiple slots, such as two-handed weapons, and what conflict checks are required?
 - How should clothing layers, accessories and worn/held item positions interact with inventory and item possession?
-- What happens to equipment when a character loses a limb, gains an appendage or undergoes a temporary transformation? This intersects with separate IDEA-0031.
+- **Resolved policy 2026-10-23:** The validator may move/reassign gear attached to a changed body feature. Which valid disposition is chosen when alternatives exist or none is grounded still needs implementation design.
 - How should incompatible equipment be handled: reject an attempted equip, move item back to inventory, mark unresolved or allow a special exception?
 - What minimal schematic is readable on mobile and supports both typical and unusual body configurations?
 - Can manually edited equipment assignments be reconciled with automatically validated gameplay events and historical undo/revision?
@@ -71,7 +72,7 @@ A text-labelled, static diagram is inexpensive, understandable and does not requ
 - [ ] More than one garment/item may occupy a body region when the configured layering rules allow it.
 - [ ] Equipment slot definitions can be extended to characters with nonstandard bodies without requiring the detailed anatomy feature to be approved first.
 - [ ] The context builder can include selected up-to-date equipment assignments and accurately display whether they were actually transmitted.
-- [ ] Exact two-handed/incompatibility logic, full anatomy transformations and AI-generated artwork remain outside the approved scope until separately refined or accepted.
+- [ ] Anatomy-triggered automatic equipment adjustment is permitted where validated, preserving coherent item custody/history. Exact destination logic remains open. Anatomy IDEA-0031 is separately accepted in staging; optional generated equipment artwork IDEA-0057 is unaccepted.
 
 ## Refinement checklist
 - [ ] Behaviour and scope are clear
@@ -85,6 +86,8 @@ A text-labelled, static diagram is inexpensive, understandable and does not requ
 - Staging is **not** approval for production or proof of implementation; the slot schema and compatibility algorithm still need refinement.
 
 ## Decisions and review history
+
+- 2026-10-23 — **User resolved A-18:** Let validation automatically move/reassign gear whose hand or attached body part was removed, without an obligatory separate player fix. Preserve unique item identity and atomic coherent location/equipment state; do not invent a destination where none is established. Detailed rules remain a technical refinement. IDEA-0031 is separately accepted in staging.
 - 2026-10-18 — **Accepted character-unification dependency:** Equipment applies to all characters equally, with no PC/NPC/Playable split and no change merely from `Playing As` selection. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Slot-based equipment with a simple body-slot diagram; left/right hands, head, torso, feet, accessories, clothing layers and custom slots; separation of equipped from carried inventory; coherent validated equip/unequip/transfer linked to unique item IDs; and flexibility for nonstandard anatomy. Exact slots, two-handed/incompatibility mechanics, artwork and full anatomy transformations deliberately deferred to refinement or separate decisions. Moved to staging only.
