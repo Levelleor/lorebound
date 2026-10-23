@@ -54,16 +54,16 @@ A nested graph canvas is flexible for non-geographic worlds and supports travers
 - How should automatic layout and overlap avoidance cooperate with user-positioned nodes and pinned layouts?
 - How are cross-group edges, nested building entrances and large clusters displayed legibly?
 - How should selection expose details for a location, its parent chain, current known routes and scene participants?
-- Should node discovery dynamically update the canvas, and how should secret details be withheld without revealing their existence through layout gaps?
+- How should node discovery change visible status indicators and the AI's in-story knowledge without altering the player's ability to see/edit the node's stored name/details? Any genuinely restricted secret field needs a separate explicit mechanism, not blanket suppression of `undiscovered` nodes.
 - What virtualisation, grouping or rendering strategies are needed for very large worlds?
 - What navigation and accessibility alternatives should support keyboard, touch, screen readers and mobile layouts?
 - How should edits to location hierarchy and travel links differ from purely visual arrangement actions?
 
 ## Draft acceptance criteria
-- [ ] A player can pan and zoom a node-based map of known world locations.
+- [ ] A player can pan and zoom a node-based map of recorded world locations, including nodes marked `undiscovered`.
 - [ ] Locations are represented by stable-ID nodes that may appear inside nested parent-location groups.
 - [ ] Existing travel graph edges are visually distinguishable from location containment; parent/child grouping is not misrepresented as traversability.
-- [ ] Selecting a node shows relevant known location information.
+- [ ] Selecting a node displays its recorded name, discovery state and editable details, including when `undiscovered`, without generating a travel action.
 - [ ] A player can adjust the visual arrangement without modifying canonical hierarchy or travel connections.
 - [ ] A selected layout approach avoids unnecessary obscuring overlaps and maintains legible nodes and labels.
 - [ ] Locations with an `undiscovered` state may remain visible, named, inspectable and editable in the **player's map editor**. Their discovered/undiscovered state remains distinguishable for narration/character knowledge; no blanket hiding rule is derived from the flag.
