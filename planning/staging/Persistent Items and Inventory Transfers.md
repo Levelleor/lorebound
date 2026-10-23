@@ -64,9 +64,9 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - **Normal action rules unchanged:** Do/Say attempts and autonomous AI/Continue claims still use ordinary rules for possession, accessibility and transfers. A Story-authored world fact still requires safe typed event validation and atomic SQLite storage.
 
 ## Dependencies and constraints
-- Uses accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) for durable character ownership/custody references; integrates with future world-location data without presuming that separate candidate is approved.
+- Uses independently accepted [[Shared PC and NPC Character Entities]] (IDEA-0026) and **accepted staging** [[Hierarchical World Locations]] (IDEA-0033) for character/location identity and custody references. The two were accepted separately and remain distinct data responsibilities.
 - Item create/move/delete actions must be validated against committed canonical state and must not follow uncommitted, rejected or failed narrative generation as if authoritative.
-- Equipment state from unaccepted [[Slot-Based Equipment and Body Diagram]] (IDEA-0030) may later refer to the same item identities, but slot layout/equip rules have not been accepted here.
+- Equipment state from separately **accepted staging** [[Slot-Based Equipment and Body Diagram]] (IDEA-0030) refers to the **same item identities**. IDEA-0030 was approved independently, not by the original item-tracking approval. Validated automatic equipment adjustments when anatomy changes are now accepted via IDEA-0030/0031.
 - The event and historical-edit/version systems (IDEA-0039 onward) remain separately gated; item tracking should be designed with undo, branch, revision and rollback safety in mind without claiming those systems already exist.
 - Avoid the same uniquely identified item appearing simultaneously in two incompatible inventories or locations. A nested container can be physically held and have contents, but rules for containment, stacking and cycles need refinement.
 - A player's manual corrections should not be silently reversed by conflicting speculative AI proposals; provenance and conflict resolution need refinement.
@@ -113,6 +113,8 @@ Unique instance IDs improve continuity and item histories but can add bookkeepin
 - Accepted into **staging for refinement only**, not production. The precise model for stacking, capacity, item categories and ownership rules remains undecided; no implementation is claimed.
 
 ## Decisions and review history
+
+- 2026-10-23 — **Pass A batch 4 reference correction:** IDEA-0030 equipment and IDEA-0033 world hierarchy are separately accepted staging features, not outstanding unaccepted candidates. Item IDs, custody uniqueness and independent approval gates unchanged.
 - 2026-10-18 — **Accepted IDEA-0002 authorial inventory distinction:** A player-written Story declaration can establish an extraordinary possession/transfer while keeping unique item identity and placement coherent; normal Do/Say/Continue actions still obey fictional restrictions. No unvalidated partial state. Staging only.
 - 2026-10-18 — **Explicitly accepted selected-character Info display:** The Info tab in a two-tab Info/Settings panel presents the selected character's **existing inventory**, while Settings holds `Playing As` and Lorebook is available at the composer-left icon. Switching only changes presentation, not custody. Staging only.
 - 2026-10-18 — **Explicit user acceptance:** `Playing As` switching is a narrative cut; the next Do/Say follows the chosen character in their existing circumstances. Switching causes no physical travel, time passage or item movement. Staging only.
