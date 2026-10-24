@@ -45,7 +45,7 @@ Editing temporary prose may offer a finite undo stack; running out of it does no
 
 ## Dependencies and constraints
 - Depends on turn/passage-level source revisions (IDEA-0003/0040), coherent committed events (IDEA-0039), complete deterministic reconstruction (IDEA-0042), independent forks (IDEA-0011), draft-versus-canonical persistence (IDEA-0005/0051), and typed coordinator transactions (IDEA-0044).
-- **Replacement generations are provisional:** A stale/failed/partial retry never mutates canonical text, event history or game state. Only one accepted current continuation contributes to canon.
+- **Replacement generations are provisional:** A stale/failed/partial retry never mutates canonical text, event history or game state. Starting Retry invalidates the preceding candidate and **aborts its browser-side API request/stream where supported**. Closing/reloading the tab likewise abandons any uncommitted candidate; late responses cannot commit. Only one successfully validated, still-active continuation may contribute to canon. Already accepted committed turns require separate Undo.
 - **Rollback is canonical:** Go/SQLite must atomically reject an outdated expected-version request from another tab. Undo must not leave half-reverted inventory, location, Lorebook, status, summary or plugin state.
 - Any caches/snapshots dependent on now-inactive turns must be invalidated or rebuilt; a replay after Undo must match replay of the surviving active committed prefix.
 - **Undoing active head versus editing history:** A head rollback removes the most recent committed turn from the active story. Historical prose modifications with later turns still present follow IDEA-0041's explicit choice workflow; no silent downstream rewriting or automatic new branch.
@@ -84,6 +84,8 @@ Editing temporary prose may offer a finite undo stack; running out of it does no
 - The direction is accepted for **staging and refinement**, not approved for production or implemented.
 
 ## Decisions and review history
+
+- 2026-10-23 — **User reaffirmed A-23:** Failure, Stop, Retry and tab closure discard unfinished AI results and state proposals. Abort browser-origin requests/streams where supported; late responses and Go-side persistence cannot revive invalidated attempts. The existing committed Undo boundary is unchanged.
 - 2026-10-18 — **Explicit user clarification and accepted committed Undo Option B, superseding the 2026-10-16 alternatives design:** **No persisted/selected AI response variants within one adventure**; each Retry replaces the prior uncommitted candidate, only the latest may continue. Uncommitted editing undo is bounded and exhaustible. **Committed Undo rolls back the single active canonical head** one turn at a time, deterministically restoring state and allowing **new continuation in the same adventure**. Old undone futures are not selectable versions; a **separate Fork** is used only when the player wants both futures playable. Keep strict Go/SQLite expected-version, coherent event provenance and atomic rollback; Quick Start auto-commit unchanged. The older retained variants and persistent canonical Redo proposal are superseded. Staging only, no code or production promotion.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user**: Retry, Undo, Redo and retained alternative continuations, linked to corresponding world-state events, with no automatic downstream rewrites. Promoted to staging for refinement, not to production.
