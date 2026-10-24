@@ -202,3 +202,18 @@ No staging-to-production movement and no code changes. Staged source decisions r
 - `planning/architecture/Consolidated Subsystem Architecture.md`
 
 The original Pass A register was **not** modified. No staging document was promoted, and no code changes were made.
+
+## Independent Pass A verification sign-off — 2026-10-24
+
+**Independent review result: PASS.** Pass A's documentation, coverage and traceability are validated for transition to Pass B detailed architecture planning. This is a validation of planning artefacts, not a new human approval, implementation authorisation, tested runtime/security guarantee or staging-to-production promotion.
+
+- Checked all **52** staging Markdown files individually for idea ID, `type: idea`, `status: staging` and recorded `accepted_at`.
+- Cross-checked **52 unique mapped staging ideas** against **52 original register entries** and the consolidated ownership table: titles, original primary owners, linked staging paths and ownership counts agree; there are no unmapped or duplicate entries.
+- Verified the **30 legacy subsystem labels** each translate exactly once to the consolidated **12** owners.
+- Verified **30 distinct A-01 through A-30** audit findings and the existing explicitly recorded 2026-10-24 user closure decision.
+- Verified no production idea or implemented specification has been created; original Pass A register blob `48b38d898da7906bbb49aea2d779d5de70f68863` remains unmodified.
+- Spot-checked active staging scope for Wails v3/browser TypeScript/Go-SQLite, whole-library backup/restore, historical edits, no automatic model fallback, plugin removal, and simplified app-auth scope; no contradiction in those sampled directions.
+
+**Non-blocking hygiene:** Some staging `updated` frontmatter values predate later decision-history entries, and the unchanged historical mapping register still has `status: evolving`. Neither is a blocker to Pass A closure; cleaning metadata requires a distinct documentation edit.
+
+**Handoff:** Initial 12-subsystem Pass B ownership consolidation is already accepted. Remaining Pass B work is detailed authority, domain and interface contracts, ADRs and technical feasibility checks. All implementation and production promotions still require their separate gates.
