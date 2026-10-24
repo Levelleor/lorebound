@@ -22,11 +22,11 @@ Long local inference needs responsive feedback.
 
 ## Accepted direction
 - **Streaming output:** Display incrementally received narrative prose where the active model/provider supports streaming, instead of always waiting until the full response is complete.
-- **Generation cancellation:** Give players a clear way to stop a pending or actively streaming generation request. Handle local and cloud provider cancellation according to their real capabilities, without assuming server-side processing always stops immediately.
+- **Generation cancellation:** Give players a clear Stop action for pending or active requests, including streaming and remaining workflow stages. **Abort direct browser-to-provider requests/streams where possible**, invalidate the attempt so late output cannot commit, and treat tab closure/navigation as abandonment of uncommitted work. Provider processing may continue remotely despite the abort; do not imply guaranteed remote termination.
 - **Generation and stage status:** Distinguish request lifecycle states such as waiting, generating/streaming, validating, auditing/repairing (where applicable), completed, cancelled and failed. Multi-stage pipeline status should make clear which phase is active.
 - **Inspectable diagnostics:** Expose the active model/provider and connection identification, relevant inference/effective settings, generation errors, token/usage information when available, and per-request/stage timing. Distinguish measured data from unavailable or estimated data.
 - **Provisional versus committed text:** Streamed text is an explicitly provisional draft; it is not canonical story prose until the selected generation pipeline finishes required checks and commits it.
-- **Safe cancellation and failure:** Cancelling, losing a connection, or encountering validation/repair failure must not silently persist incomplete prose or proposed world-state events as authoritative, or leave a partially applied state change.
+- **Discard on cancel, failure, retry or browser closure (user clarification 2026-10-23):** An unfinished request and **all its proposed prose, operations and state changes are invalidated**, never committed, if the player cancels, any required stage fails, Retry supersedes the attempt, or the owning browser tab closes/reloads/disconnects before accepted commit. The browser must attempt to **abort every active direct provider request and stream** for that attempt, stop remaining stages and disregard late packets; no headless Go inference process continues after browser closure. Provider-side work or billing might continue despite abort, but it cannot become canon. Already completed atomic commits are not retroactively canceled: use committed Undo instead. Saved player-input drafts are governed separately by IDEA-0005.
 - **Secret redaction:** Diagnostic views, saved logs and exported artifacts must not disclose API credentials, bearer tokens, secret headers, or other sensitive connection information.
 - **Single-/multi-model compatibility:** Show statuses and diagnostics for the active task/stage whether configured for one local/cloud model or multiple task-specific models; align with [[One-Model Task Routing]] and [[Configurable Generation Pipeline Strategies]].
 
@@ -39,7 +39,7 @@ The accepted direction favours streaming **provisional** drafts early for respon
 ## Architecture integration (2026-10-17)
 - Streaming generation, status and cancellation run through the shared client-side TypeScript coordinator/provider adapters in the Wails v3 headless localhost server runtime, played through the normal browser, not through a required Node/SvelteKit server.
 - Long generations, context retrieval and replay should not block the Svelte interface. Go/SQLite commits only complete accepted outcomes atomically after validation; streamed or cancelled drafts are not automatically authoritative.
-- Browser fetch/CORS and optional native transports can differ by provider; preserve truthful cancellation and timing diagnostics across both runtime modes.
+- Provider browser-fetch/CORS and AbortController/streaming support vary by endpoint. **Only the accepted direct browser-to-model transport applies**; report actual cancellation/usage capabilities without implying a native/Go AI HTTP fallback.
 
 ## Difference between player drafts and model preview
 - IDEA-0005 now accepts debounced SQLite autosaving of **player-authored** pending input/prose edits as noncanonical drafts.
@@ -83,7 +83,7 @@ The accepted direction favours streaming **provisional** drafts early for respon
 
 ## Open questions
 - How exactly should pending streamed prose be represented and optionally recovered after stopping a request?
-- Should cancellation mean aborting all pipeline stages immediately, or allowing a stage to finish while discarding pending changes?
+- **Resolved 2026-10-23:** Cancellation invalidates the whole uncommitted attempt immediately and aborts active browser HTTP/streaming where supported; no remaining stages or final commit. A provider may finish remotely, but its result is discarded.
 - What is the commit boundary for narrative prose and associated validated state events across each generation strategy?
 - How should provider billing/usage be communicated when an aborted cloud request continues server-side?
 - What diagnostic information should persist across sessions, and for how long?
@@ -98,11 +98,11 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - [ ] A failed Quick Start request does not create a blank fallback adventure or commit partial narrative/state; a valid successful opening still commits automatically.
 - [ ] A player-authored draft may be overwritten by a later shared autosave on the same target without requiring a conflict popup; **AI streaming preview text** is not thereby automatically autosaved or committed.
 - [ ] A supported generation shows prose incrementally without representing interim text as committed story canon.
-- [ ] A user can cancel an in-progress generation, including one running a multi-stage pipeline.
+- [ ] Stop invalidates and aborts every active browser-owned request/stream of the uncommitted generation where supported, stops further stages, and prevents any of its proposed events/prose/state from committing.
 - [ ] The interface reports waiting, generation/streaming, validation/repair, completed, cancelled and failed states as applicable.
 - [ ] A selected generation's active provider/model and pipeline stage are visible or inspectable.
 - [ ] Diagnostics show effective generation settings, actionable errors, observed timing and any provider-reported usage while acknowledging missing data.
-- [ ] Failed or cancelled work cannot commit provisional prose or associated unvalidated world-state effects; previously committed state remains intact.
+- [ ] Failed, stopped, replaced-by-Retry, or tab-closed uncommitted work never commits its provisional prose or associated state/events. A late result is ineligible; only an already-accepted atomic commit is durable and requires Undo to reverse.
 - [ ] Late provider responses after cancellation do not become authoritative story content.
 - [ ] Credential, auth token and secret header values are redacted from all diagnostics/logging views.
 - [ ] The workflow operates with a single model and with configured task-specific models.
@@ -119,6 +119,8 @@ The accepted direction favours streaming **provisional** drafts early for respon
 - Accepted for **staging/refinement** only; not production-approved or implemented.
 
 ## Decisions and review history
+
+- 2026-10-23 — **User resolved A-23:** Cancel/failed generation/Retry discards all uncommitted AI data and proposed state, including if the browser tab closes during generation. Cancel direct provider streams/requests where possible and ignore late responses; Go never runs independent background inference to finish them. No promise to stop remote provider billing/computation instantly. If the completed atomic commit already won the race, later Stop is not Undo. Existing player-input draft persistence remains distinct. Staging only.
 - 2026-10-18 — **Accepted IDEA-0004 generation semantics:** Retry overwrites the current provisional AI candidate without preserving a response gallery, while committed turns require deterministic canonical Undo to roll back. Late/failing generations must not mutate canon. Quick Start automatic accepted opening and missing-model failure path remain unchanged. Staging only.
 - 2026-10-18 — **Accepted IDEA-0006 failure UX:** When Quick Start generation fails, is cancelled or invalid, stay in setup, retain the premise, offer Retry or deliberate Custom Opening and make errors understandable. Do not generate an automatic blank saved adventure or partial canon as fallback. Successful validated generation remains automatically committed. Staging only.
 - 2026-10-18 — **Accepted IDEA-0005 Option B cross-reference:** Player-written noncanonical drafts are latest-only shared records per logical editing target with clean overwrite across tabs. This does not include a new promise to autosave streamed AI previews and never relaxes canonical expected-version validation. Staging only.
