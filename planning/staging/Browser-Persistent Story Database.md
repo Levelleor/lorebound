@@ -147,7 +147,7 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - [ ] Canonical commits continue to reject stale versions transactionally even where provisional drafts last-write-wins.
 - [ ] Two tabs can edit the same adventure. If A commits first, Go/SQLite rejects B's stale expected-version transaction, with **no partial canonical turn, text, events or world data overwrite**.
 - [ ] The conflicting tab receives a conflict result and retains its work for explicit user reconciliation; the accepted state remains intact with no implicit merge.
-- [ ] Two tab draft-autosaves cannot quietly replace each other's in-progress text. Draft identity/conditional write details are deferred; draft records remain noncanonical.
+- [ ] Outside global backup/restore maintenance, noncanonical autosaves from different tabs may **replace the same logical target's latest saved draft** without conditional version checks, by explicit user choice; drafts never alter canonical history. During maintenance, the Go write fence blocks draft saves regardless of tab.
 - [ ] Go/SQLite platform persistence is documented as supporting **Lore Engine** functionality, while the coordinator and gameplay operations remain browser-side TypeScript and no new independent engine/SQL server is required.
 - [ ] **Settings → Quit Lorebound** initiates an authorised server/SQLite shutdown and releases resources cleanly without corrupting or partially committing authoritative state.
 - [ ] Last-tab closure leaves the shared library available to the running server; all successfully persisted data survives a subsequent explicit Quit/relaunch.
