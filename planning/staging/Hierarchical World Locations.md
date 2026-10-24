@@ -41,7 +41,7 @@ A strict World → Region → Settlement → Building → Room chain makes some 
 
 ## Dependencies and constraints
 - Compatible with accepted [[Shared PC and NPC Character Entities]] (IDEA-0026), [[Persistent Items and Inventory Transfers]] (IDEA-0029), and [[Entity-Based Lorebook]] (IDEA-0020), whose records may reference location IDs.
-- Character position and scene presence are a separate candidate [[Character Presence and Current Scene]] (IDEA-0034), not automatically accepted here.
+- Character position/scene presence are a separate, **independently accepted staging** feature in [[Character Presence and Current Scene]] (IDEA-0034). Accepting location hierarchy alone did not approve presence, and the two retain distinct implementation/refinement gates.
 - Valid connections and traversal policies have been accepted separately in staging through [[Configurable Travel Graph Rules]] (IDEA-0035). Graph visualisation (IDEA-0037), AI discovery (IDEA-0036) and persistent environmental/route effects (IDEA-0038) are also separately accepted in staging, not unaccepted proposals. None is automatically implemented or in scope merely because the hierarchy was accepted.
 - Parent/child nesting must be acyclic and references remain valid across renaming or subtree reorganisation.
 - Moving or reorganising location containers must not silently teleport their occupants in violation of movement rules. Whether a ship and its interior occupants share mobile containment versus physical world location requires explicit design.
@@ -83,6 +83,8 @@ A strict World → Region → Settlement → Building → Room chain makes some 
 - This is **not yet refined or approved for production**, and the document makes no claim of implementation.
 
 ## Decisions and review history
+
+- 2026-10-23 — **Pass A final chronology correction:** IDEA-0034 character presence was accepted independently in staging; the older 'candidate' description is obsolete. No scope expansion or production promotion.
 
 - 2026-10-23 — **User resolved A-20:** Store explicit discovered/undiscovered location state independently of stable location records. The user can still view and edit recorded undiscovered node names/details on the map; don't turn discovery state into player-editor invisibility. Normal AI character-knowledge/route validation boundaries still apply. Staging only.
 
