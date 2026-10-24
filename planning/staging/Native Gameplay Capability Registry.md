@@ -84,7 +84,7 @@ Hard-coding every gameplay operation in the core may simplify the first implemen
 - [ ] The coordinator can discover/invoke permitted operations without delegating canonical authority to an LLM or a mod.
 - [ ] A registered operation can update shared persistent entities without duplicating or contradicting other canonical state.
 - [ ] Failed or invalid operations do not leave partial authoritative world-state mutations.
-- [ ] All accepted effects are durably recorded and support full deterministic reconstruction at arbitrary historical turns.
+- [ ] While a capability is present/supported, its accepted effects are durably recorded and support the defined deterministic reconstruction contract. **After that plugin is removed, no migration, emulation or replay of unavailable plugin-specific historical state is required**; preserve existing story/history and core transaction integrity (A-10).
 - [ ] Native gameplay works without installing or connecting MCP servers.
 - [ ] Capability contracts and coordinator dispatch do not depend on a particular wire protocol, model provider or runtime transport; a future MCP adapter could map tools into this single capability authority.
 - [ ] The registry's contract can distinguish replayable accepted internal state changes from potentially irreversible external effects so historical reconstruction need not reinvoke those effects.
@@ -103,6 +103,8 @@ Hard-coding every gameplay operation in the core may simplify the first implemen
 - This is **accepted for refinement**, not approved for production or implemented.
 
 ## Decisions and review history
+
+- 2026-10-23 — **Pass A final consistency correction (A-30):** Refined acceptance criterion to preserve full replay only for supported/installed capabilities, with explicit user-approved removed-plugin exception. Does not add migrations, recovery shims, or MCP approval. Staging only.
 
 - 2026-10-19 — **User accepted simple plugin-removal semantics:** No automatic migration or guaranteed interpretation/reconstruction of removed plugin-specific state. The story continues without the plugin; that plugin no longer contributes its context or mechanics to future model requests, and subsequent fictional outcomes can be unpredictable. Preserve recorded history and base data safety rather than erasing other canonical content. Supersedes prior unqualified reconstructibility promises for unavailable plugin logic. Staging only.
 - 2026-10-18 — **Accepted IDEA-0061 clarification:** User renamed the conceptual non-UI side to **Lore Engine**, including this browser-side TypeScript capability registry and supporting Go platform/SQLite functions. No new gameplay engine/runtime or independent package. Staging only.
