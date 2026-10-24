@@ -40,7 +40,7 @@ Represent editable prose using stable **story turn/passage identities** and vers
 ## Architecture integration (2026-10-17)
 - Accepted story text blocks and revisions persist in host-filesystem SQLite via Wails/Go services. Browser editing drafts/memory are not canonical saved history.
 - In both headless localhost/normal-browser mode, the shared client-side TypeScript engine tracks block/revision provenance; Go atomically commits validated revisions and related accepted events, rejecting stale revisions.
-- Export/import must preserve precise revision ancestry and identifiers; choosing the archive format remains a separate storage/backup refinement.
+- **Whole-library SQLite backup/restore is already selected:** A consistent SQLite snapshot includes the accepted passage/revision ancestry and stable event provenance for the **entire adventure library** (IDEA-0005/0051/0052). Restore replaces the whole library; there is **no separate per-adventure export/import or undecided archive format**. Correct revision copying for Duplicate/Fork remains a distinct in-library operation.
 
 ## Draft autosave and accepted revisions
 - Player-authored, unfinished prose is autosaved after a brief idle pause into the **same SQLite library**, but is **noncanonical**. A saved draft is not an accepted revision, source of event provenance, or reason to rebuild world state.
@@ -80,7 +80,7 @@ Represent editable prose using stable **story turn/passage identities** and vers
 
 ## Dependencies and constraints
 - Works with accepted [[Event-Sourced World History]] (IDEA-0039), whose event records need stable source turn and revision references.
-- Historical editing confirmation and deletion UX belong to separate unaccepted [[Historical Edit Confirmation and Bulk Truncation]] (IDEA-0041). Checkpoint design and undo safety are independently unaccepted (IDEA-0042, IDEA-0043).
+- **Current acceptance status:** [[Historical Edit Confirmation and Bulk Truncation]] (IDEA-0041) and [[Snapshots and Incremental State Rebuild]] (IDEA-0042) are **independently accepted in staging**. Their workflows and reconstruction boundaries are not newly approved by this revision-ID idea. The separate [[Undo-Safe State Rollback and Provenance]] (IDEA-0043) candidate remains **unaccepted in Inbox**; accepted canonical Undo is already covered by IDEA-0004.
 - Existing validated events retain traceable origin even when their text source is changed or no longer active.
 - A new text revision is not automatically proof that old world-state changes remain valid; any invalidation/replay must respect the event-sourcing and authoritative-state validation boundaries.
 - Generated prose and user-authored edits must remain distinguishable where provenance requires it.
@@ -127,6 +127,8 @@ Represent editable prose using stable **story turn/passage identities** and vers
 - Design remains unrefined, not production-approved or implemented.
 
 ## Decisions and review history
+
+- 2026-10-23 — **Pass A final cross-reference correction (A-30):** IDEA-0041 and IDEA-0042 are independently accepted staging features, not unaccepted. IDEA-0043 stays an Inbox candidate. Whole-library SQLite backup/restore format is already selected by IDEA-0005/0051/0052, so former 'archive format open' text is superseded. No new approval and no per-adventure export.
 - 2026-10-18 — **Accepted IDEA-0004 turn/revision dependency:** Committed Undo moves the active narrative head backward and deactivates the undone turn's canonical effects while retaining sound provenance and expected-version atomic consistency. The same adventure may continue with a new active turn, without a response-alternative stack. Staging only.
 - 2026-10-18 — **User explicitly chose Option A:** Canonical narrative revision identity is at **turn/passage** level rather than per paragraph. Paragraphs remain freely editable; events retain turn/passage revision provenance. Whole-passage split/merge rules remain open, and existing historical confirmation and atomic write safety apply. Staging only.
 - 2026-10-18 — **Accepted IDEA-0011 revision dependency:** A manually created separate adventure fork may start at any committed turn and must retain the complete accepted text-revision lineage/provenance through that point, while excluding later and uncommitted revisions. No shared mutable source links or in-chat branch UI. Staging only.
