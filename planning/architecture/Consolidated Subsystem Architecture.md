@@ -2,7 +2,7 @@
 type: architecture
 status: accepted-consolidation
 created: "2026-10-19"
-updated: "2026-10-19"
+updated: "2026-10-24"
 tags:
   - planning/architecture
   - pass-b
@@ -12,7 +12,7 @@ tags:
 
 ## Status, scope, and source of authority
 
-**Pass B consolidation accepted 2026-10-19.** Lorebound's 52 accepted staging ideas are grouped into **12 logical top-level subsystems**. The source [Pass A Subsystem Mapping Register](./Subsystem%20Mapping%20Register.md) remains **unchanged** and preserves each originally accepted primary/secondary subsystem, idea-specific boundary, dependency and deferral.
+**Pass B consolidation accepted 2026-10-19. Pass A audit formally closed by explicit user approval 2026-10-24.** Lorebound's 52 accepted staging ideas are grouped into **12 logical top-level subsystems**. The source [Pass A Subsystem Mapping Register](./Subsystem%20Mapping%20Register.md) remains **unchanged** and preserves each originally accepted primary/secondary subsystem, idea-specific boundary, dependency and deferral.
 
 This document consolidates **architectural ownership only**. It does not promote ideas out of `planning/staging/`, authorise production implementation, fix runtime module/folder boundaries, require 12 packages/processes, or supersede individual idea-specific accepted directions. In a disagreement, retain the source idea's accepted behaviour and record the discrepancy for explicit refinement instead of quietly altering product scope.
 
@@ -325,6 +325,8 @@ These are **open design items**, not additional approved implementation choices.
 7. **Internal module interfaces vs. package layout:** decide which of the 30 original labels merit independent TypeScript/Go modules without re-inflating top-level subsystem vocabulary. A subsystem boundary does not mandate a build artifact or separately launched service.
 
 ## 8. Change control and verification
+
+- **2026-10-24 formal Pass A audit closure:** User explicitly signed off A-01/A-02/A-07/A-08/A-26/A-28/A-29, closing all 30 recorded closure-audit findings. The original Pass A mapping is unchanged; 52 staged ideas remain grouped under 12 subsystems. This formal audit milestone **does not move ideas into production, approve implementation, or settle Pass B/C detailed contracts**. See [Pass A Closure Audit](./Pass%20A%20Closure%20Audit.md).
 
 - **2026-10-23 audit batch 6 (partial explicit feedback):** A-27 user decision excludes application authentication/account/login/session machinery this initial local iteration, retaining narrow Go loopback methods and at-rest credential choices while flagging local-client risks as unverified. A-30 outdated active cross-references corrected in IDEA-0040, 0018, 0047, 0055, 0023 and 0033; previously approved no-migration plugin removal and whole-library backup format remain. A-26/A-28/A-29 are source-confirmed, not explicitly signed off in this reply. No production promotion or implementation.
 
