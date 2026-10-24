@@ -39,8 +39,8 @@ Hard-wiring combat, dice, experience, magic or survival into the core would make
 
 ## Architecture integration (2026-10-17)
 - Optional RPG modules use the **client-side TypeScript capability registry** alongside the Svelte UI and coordinator. Core gameplay effects are not replicated in a Go plugin engine.
-- Module-specific persistent records/events are saved into **Go-managed SQLite** through the same atomic history and persistence contracts as built-in mechanics, ensuring complete replay after module upgrades or disablement.
-- Client-loadable code must not acquire unrestricted Go/database/filesystem permissions simply by being installed; executable plugin packaging, sandboxing and version migrations remain separate refinement decisions.
+- Module-specific persistent records/events are saved into **Go-managed SQLite** through the same atomic history and persistence contracts as built-in mechanics **while that module remains present/supported**. After a module is disabled/removed, continue the story without its mechanics and model context; old custom state need not be replayed, decoded or migrated to maintain play. Supported upgrades may have their own optional compatibility design, but removal alone creates no migration requirement.
+- Client-loadable code must not acquire unrestricted Go/database/filesystem access simply by being installed; executable plugin packaging and practical permission boundaries remain separate refinement decisions. **Do not require migrations to keep removed/disabled plugin-specific past state playable**. Compatibility across intentionally supported upgrades remains optional future refinement.
 
 ## Dependencies and constraints
 - [[Native Gameplay Capability Registry]] (IDEA-0047) defines the accepted universal protocol-neutral operations, permissions, stable IDs and state-effects framework. RPG modules extend this registry rather than creating a new executor.
@@ -84,6 +84,8 @@ Hard-wiring combat, dice, experience, magic or survival into the core would make
 - This is an accepted **unrefined staging** idea, not a production implementation specification or evidence any plugins are built.
 
 ## Decisions and review history
+
+- 2026-10-23 — **Pass A final A-30 correction:** Superseded older promise of complete replay after plugin disablement/removal; no migration or unavailable-plugin reconstruction is required per explicit A-10 decision. Historical records and base-world integrity are retained, without implying a new gameplay/plugin engine. Staging only.
 
 - 2026-10-19 — **Explicit user policy for removed plugins:** No migrations. If a plugin is removed, the adventure simply continues without that module; its rules and plugin-supplied AI context stop applying, and resulting story behaviour may be unpredictable. Retain surviving story history and basic system integrity; no guarantee to replay/reconstruct absent plugin's own custom state. This supersedes earlier unconditional plugin historical-replay language. Staging only.
 - 2026-10-17 — **Runtime dependency correction:** The approved IDEA-0053 direction is a **single Wails v3 headless localhost Go server**, packaged for Windows/macOS/Linux and used through the normal browser. The earlier combined WebView-desktop plus headless interpretation has been explicitly superseded. Docker is a separate, unaccepted candidate (IDEA-0065); staging status is unchanged.
