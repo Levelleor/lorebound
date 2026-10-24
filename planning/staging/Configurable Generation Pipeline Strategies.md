@@ -53,7 +53,7 @@ Single-pass typically has fewer inference requests and lower latency, but its co
 
 ## Dependencies and constraints
 - Task routing and selected model(s) come from [[One-Model Task Routing]] (IDEA-0017); a strategy cannot force users to load more than one model.
-- State proposals and validation must eventually integrate with the coordinator, structured operations, typed rejection and event/state provenance (see IDEA-0044, IDEA-0045, IDEA-0046 and IDEA-0039 candidates). Those ideas are separate and not implicitly approved here.
+- State proposals and validated outcomes integrate with **separately accepted staging ideas** IDEA-0044 (coordinator), IDEA-0045 (state interpreter), IDEA-0046 (typed rejection/repair) and IDEA-0039 (event history). Their independent acceptance is already established; **this pipeline idea does not expand their accepted scope**. As clarified in audit A-24, the selected strategy plus its established validators and bounded repair are the **only gameplay validation cycle**; do not add another independent AI review pass.
 - Proposed narrative changes cannot silently mutate canonical inventory, locations, NPCs or other tracked facts before authoritative validation.
 - Multi-stage calls may fail independently. A partial draft, interpretation or audit result must remain provisional until a coherent, validated commit is possible.
 - Repair and retries require safeguards against infinite loops, repeated side effects and unexpectedly high provider costs.
@@ -91,6 +91,8 @@ Single-pass typically has fewer inference requests and lower latency, but its co
 - Accepted for **staging/refinement** only. Deterministic validators, pipeline implementations and production approval have not been claimed.
 
 ## Decisions and review history
+
+- 2026-10-23 — **Pass A cross-reference correction (A-30):** IDEA-0044/0045/0046/0039 are separately accepted in staging, not candidate ideas. A-24 preserves only the already accepted validation stages of the selected pipeline, with no additional AI review pass. No stage promotion.
 - 2026-10-17 — **Accepted IDEA-0006 source-grounding dependency:** Regardless of configured generation strategy, first-turn structured extraction may persist only **source-supported** initial facts, never additional unwritten worldbuilding lore. Commit accepted text/events atomically after validation; unknowns remain unknown. Staging unchanged.
 - 2026-10-17 — **Accepted IDEA-0006 opening dependency:** Every selected generation strategy must support automatic **first-scene finalisation after successful full validation** for Quick Start, with atomic Go/SQLite commit and no manual scene-review gate. Failed/partial/invalid output is not canonical. No strategy default is selected; staging unchanged.
 - 2026-10-17 — **Runtime dependency correction:** IDEA-0053 now selects Wails v3 headless localhost Go server **only**, served to the normal browser by a Windows/macOS/Linux executable. No separate native desktop WebView or npm player runtime. Docker is a distinct unaccepted candidate (IDEA-0065). No further feature approval is implied.
