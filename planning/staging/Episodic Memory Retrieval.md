@@ -40,7 +40,7 @@ A text and entity inverted index can efficiently search **across the entire adve
 
 ## Dependencies and constraints
 - The underlying chronological narrative and accepted events remain canonical; retrieval, optional tags and context selection are derived aids, not authoritative world-state modifications.
-- Stable scene/turn/source-revision tracking and edit invalidation are needed; coordination with accepted [[Automatic Long-Term Story Summaries]] (IDEA-0022) and future story revision/event features must not assume those separate candidate mechanics are already implemented.
+- Stable scene/turn/source-revision tracking and edit invalidation coordinate with **separately accepted staging** [[Automatic Long-Term Story Summaries]] (IDEA-0022), [[Versioned Text Blocks and Revision IDs]] (IDEA-0040) and [[Event-Sourced World History]] (IDEA-0039). Their accepted scope is **not implemented merely because staging approved it**, and cached memories remain derived rather than authoritative.
 - Must work with one local/cloud model, with no mandatory embedding model or additional inference call for indexing or lookup.
 - RAG/vector embeddings in [[Embedding-Based Lore Retrieval and RAG Context Selection]] (IDEA-0063) remain unaccepted. Accepting this concept does not promote that candidate.
 - Relevant excerpts are subject to context-budget policies, player lore selection and the separately **accepted staging** [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024). Its model-budget settings and algorithms still require refinement.
@@ -82,6 +82,8 @@ A text and entity inverted index can efficiently search **across the entire adve
 - Accepted into **staging for refinement only**. No particular ranking/query algorithm or benchmark result has been approved or demonstrated.
 
 ## Decisions and review history
+
+- 2026-10-23 — **Pass A final chronology correction:** IDEA-0039/0040 and IDEA-0022 are separately accepted in staging, not unaccepted candidates or implemented components. Preserve independent gates and the unaccepted IDEA-0063 RAG candidate.
 
 - 2026-10-19 — **Pass A reference correction:** IDEA-0024 (token-budgeted context and inspector) is accepted independently in staging, not merely an unaccepted proposal. Embedding-based RAG IDEA-0063 remains unaccepted; no new feature approval.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
