@@ -12,7 +12,7 @@ tags:
 
 # Pass B1 — Architecture Foundations (Draft)
 
-> **Review status:** **Partially accepted architecture review.** The requesting user explicitly accepted **B1-D01, B1-D02 and B1-D03 on 2026-10-25**. **B1-D04, B1-D05 and B1-D06 remain proposed and unapproved.** Other technical feasibility gates and illustrative contracts in this document are not automatically approved by these three decisions. The 12-subsystem ownership consolidation was approved previously. No staging idea is promoted by this document.
+> **Review status:** **All six B1 design decisions accepted**, in two explicit user review batches on **2026-10-25**. See the linked individual ADRs in §9. **B1 is not yet technically verified or formally closed:** the feasibility gates in §8 remain unexecuted, the separate plugin-trust question is unresolved and the inherited `auth` wording should be clarified. Illustrative contracts and implementation details outside the six ADRs are not approved by implication. The 12-subsystem ownership consolidation was accepted previously. No staging idea is promoted by this document.
 
 ## 1. Source of authority and scope
 
@@ -145,9 +145,9 @@ Exact types, idempotency tokens, revision selection, expected-version conflict c
 | **B1-D01** | Should built-in domain rules/reducers be independent of Svelte and Wails imports? | **Yes**, plain TypeScript domain logic with interfaces at application/platform boundaries; this supports deterministic replay and isolated tests. | **Accepted 2026-10-25**; [ADR](./decisions/B1-D01%20-%20Framework-Independent%20Domain%20Logic.md) |
 | **B1-D02** | What is the dependency direction between coordinator, AI workflow and domain services? | Make S06 the gameplay authority and use application composition/service contracts to avoid circular module dependencies; S07 returns data, never commits. | **Accepted 2026-10-25**; [ADR](./decisions/B1-D02%20-%20Coordinator%20and%20Service%20Dependency%20Direction.md) |
 | **B1-D03** | Which side may decide the outcome of a canonical write? | S06 decides fictional/domain acceptance; S12/Go alone decides durable transaction success, expected-version and epoch checks. | **Accepted 2026-10-25**; [ADR](./decisions/B1-D03%20-%20Gameplay%20and%20Durable%20Commit%20Authority.md) |
-| **B1-D04** | How should cross-tab updates be treated? | Notifications are invalidation hints; clients refetch server versions. No shared-tab mutable authority and no optimistic assumption that a notification means commit. | Proposed, not approved |
-| **B1-D05** | How wide should the browser↔Go method surface be? | Use a **small set of task-oriented storage/credential/maintenance operations**, not arbitrary SQL, filesystem-path access or general script execution; exact endpoints in B3. | Proposed, not approved |
-| **B1-D06** | Where should event replay execute? | Browser TypeScript S05 using pure deterministic reducers; Go stores/paginates required history and optional checkpoints, without reimplementing gameplay reducers. | Proposed, not approved |
+| **B1-D04** | How should cross-tab updates be treated? | Notifications are invalidation hints; clients refetch server versions. No shared-tab mutable authority and no optimistic assumption that a notification means commit. | **Accepted 2026-10-25**; [ADR](./decisions/B1-D04%20-%20Cross-Tab%20Invalidation%20and%20Refetch.md) |
+| **B1-D05** | How wide should the browser↔Go method surface be? | Use a **small set of task-oriented storage/credential/maintenance operations**, not arbitrary SQL, filesystem-path access or general script execution; exact endpoints in B3. | **Accepted 2026-10-25**; [ADR](./decisions/B1-D05%20-%20Narrow%20Browser-to-Go%20Service%20Surface.md) |
+| **B1-D06** | Where should event replay execute? | Browser TypeScript S05 using pure deterministic reducers; Go stores/paginates required history and optional checkpoints, without reimplementing gameplay reducers. | **Accepted 2026-10-25**; [ADR](./decisions/B1-D06%20-%20Browser%20TypeScript%20Event%20Replay.md) |
 
 ### Explicit risks and small source-wording correction to review
 
@@ -158,11 +158,12 @@ Exact types, idempotency tokens, revision selection, expected-version conflict c
 ## 10. B1 review completion checklist
 
 - [x] Review **B1-D01 through B1-D03**; each explicitly accepted 2026-10-25 with its own ADR.
-- [ ] Review **B1-D04 through B1-D06**; all remain proposals requiring separate decisions.
+- [x] Review **B1-D04 through B1-D06**; each explicitly accepted on 2026-10-25 and recorded in an individual ADR.
 - [ ] Clarify the consolidated document’s ambiguous `auth` phrase consistently with A-27.
 - [ ] Confirm whether design should treat browser-side native plugins as trusted code initially or defer isolation to a separate scope decision.
 - [ ] Agree on F-B1-01–F-B1-06 owners and proof expectations. Feasibility is **not** marked passed without running checks.
-- [ ] Publish accepted ADRs / updated architecture boundaries *only after explicit review*. Preserve source IDEA IDs and the staging/production gate.
+- [x] Record **all six** accepted decisions as individual ADRs after explicit human approval, preserving source IDEA IDs and the staging/production gate.
+- [ ] Complete B1 feasibility evidence review and resolve or expressly defer residual architectural risks before formally closing B1.
 - [ ] Begin B2 and B3 together: canonical revisions/events/replay, turn commit envelope, version/epoch conflict behaviour and historical edits.
 
 ## 11. Change history
@@ -170,3 +171,5 @@ Exact types, idempotency tokens, revision selection, expected-version conflict c
 - **2026-10-24 — Initial B1 proposal only.** Established a reviewable draft from previously accepted Pass A/Pass B consolidation. No executable code, production promotion, new model pipeline, auth mechanism or new approved architecture decision is claimed.
 
 - **2026-10-25 — Batch 1 human acceptance:** The requesting user explicitly accepted **B1-D01, B1-D02 and B1-D03**. Each approved rule is preserved as a standalone ADR under `planning/architecture/decisions/`. Unreviewed **B1-D04–D06 remain unapproved**. No other proposal, feasibility gate, software implementation, staging promotion, application authentication framework or additional AI validation stage was approved by this batch.
+
+- **2026-10-25 — Batch 2 human acceptance:** Requesting user explicitly accepted **B1-D04, B1-D05 and B1-D06** without modifications ("Agreed on all"). Three new ADRs preserve rationale, alternatives, source scope and history. **All B1-D01–D06 are now accepted.** B1 remains **open for feasibility verification and bounded risk/wording review**, not implementation. No B2/B3 design work or staging promotion was authorised by this update.
