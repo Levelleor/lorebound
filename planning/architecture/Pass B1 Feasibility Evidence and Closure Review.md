@@ -1,6 +1,6 @@
 ---
 type: architecture
-status: evidence-reviewed-closure-pending
+status: closed-design-only
 phase: "B1"
 created: "2026-10-25"
 updated: "2026-10-25"
@@ -13,7 +13,7 @@ tags:
 
 # Pass B1 — Feasibility Evidence and Closure Review
 
-> **Assessment as of 2026-10-25:** Research and an isolated SQLite mechanism exercise are complete. The architecture is **plausible with identifiable constraints**, but **no Lorebound Wails/Go build, provider-authenticated browser run, or integrated end-to-end test has passed**. Therefore this is **not technical sign-off for a working application** or a final B1 closure. The user must decide the **initial plugin trust model**; integrated smoke tests remain necessary. The six [B1 ADRs](./decisions/) remain accepted and unchanged.
+> **B1 design formally closed on 2026-10-25 by explicit user decisions [P-B1-01](./decisions/P-B1-01%20-%20Trusted%20Locally%20Installed%20Plugins.md) and [P-B1-02](./decisions/P-B1-02%20-%20Design%20Closure%20with%20Deferred%20Integration%20Gates.md).** The selected initial plugin policy is **trusted locally installed executable plugins with explicit player trust**. B1 architectural feasibility research is complete, but **no Lorebound Wails/Go build, provider-authenticated browser run, or integrated end-to-end test has passed**. Such checks remain mandatory implementation/release verification gates, not accepted functionality. The six B1-D01–D06 ADRs remain accepted and unchanged.
 
 ## Scope and evidence standard
 
@@ -129,7 +129,7 @@ Official [SQLite Online Backup API](https://www.sqlite.org/backup.html) provides
 
 **Disposition:** the core **SQLite approach is mechanically demonstrated**; go-backed service/concurrency/maintenance implementation still requires integration tests. No fabricated game-level or server-level test success is claimed.
 
-## F-B1-06: Plugin trust decision requiring explicit user approval
+## F-B1-06: Plugin trust decision, approved trusted-code policy
 
 The accepted IDEA-0047/0055 provides typed capability registration and optional mechanics without an automatic external/MCP integration. It has **not** determined whether plugin executables must be isolated from hostile third-party code.
 
@@ -141,15 +141,17 @@ The accepted IDEA-0047/0055 provides typed capability registration and optional 
 | **B. Sandboxed untrusted third-party plugins at initial launch** | Treat installed plugins as hostile by default; require a designed worker/isolated-origin/process mediation boundary with capabilities, credential isolation, code loading policy and tests. This is **significant new architectural/security work** and cannot be asserted to exist by using registry permissions. |
 | **C. Defer executable external plugins initially** | Keep the accepted optional mechanics architecture and capability-registry interface, but only ship built-in mechanics until a later separately approved third-party loading/security policy. **This modifies sequencing, not the original acceptance that optional mods belong to the envisioned product**. |
 
-**Pending:** User approval of one option, or a modified alternative. The current evidence does **not** justify automatically choosing A/B/C.
+**Accepted 2026-10-25:** The user explicitly selected **A**, trusted locally installed executable plugins with explicit player trust and risk disclosure. See [P-B1-01 ADR](./decisions/P-B1-01%20-%20Trusted%20Locally%20Installed%20Plugins.md). Sandboxed untrusted plugins are **not approved** for this initial scope, and neither registry permission metadata nor Go service filtering can guarantee containment of malicious same-origin executable plugin code. Implementation/UX details remain later design and verification work.
 
-## Closure determination
+## Closure determination — approved 2026-10-25
 
-- **Six B1 architecture decisions:** ACCEPTED and individually recorded as ADRs B1-D01–D06.
-- **Research review:** COMPLETE. Wails server and browser-provider paths are documented as plausible, SQLite optimistic-commit/snapshot mechanics exercised, local security limitations characterised.
-- **Runtime proof:** **NOT COMPLETE**. No Wails binary could be built with current Go 1.23 toolchain and blocked package download. No live API/model keys/servers or actual Lorebound browser-to-Go integration existed. Mark F-B1-01/02/03/04/05 as **conditional/evidence-pending**, not passed.
-- **Product decision:** **P-B1-01 plugin trust policy pending human approval**.
-- **B1 formal architecture closure:** **PENDING**. If user selects a plugin trust option and explicitly permits deferral of *implementation-stage integration smoke tests* as release/implementation gates, B1 design and feasibility research could be marked **closed for design only**, with those tests visibly carried forward. Otherwise B1 remains open until the runnable integrated evidence is produced. This is not permission to implement from staged ideas or to promote them.
+- **B1 architectural decision review: CLOSED FOR DESIGN.** User approved six B1-D01–D06 ADRs on 2026-10-25, then explicitly chose initial **trusted executable plugins (P-B1-01 option A)** and **design-only closure with mandatory later integration smoke testing (P-B1-02 option A)**.
+- **Research: COMPLETE at documented/mechanism level.** Wails server and browser-provider paths are researched, isolated SQLite exercise passed 11 checks, and local security limitations are characterised.
+- **Live integrated runtime proof: NOT COMPLETE.** F-B1-01–F-B1-05 retain their researched status, not a pass. F-B1-06's **policy choice is accepted**, but implementation-specific plugin risk controls are not verified. No Wails binary or authenticated live provider integration was tested.
+- **Deferred, mandatory gates:** Before individual features can be claimed implemented/verified or released, run and record the applicable Wails/browser provider/localhost/Go-SQLite/trusted-plugin integration checks listed below. Failure requiring a changed product architecture returns for explicit approval.
+- **No collateral approval:** This sign-off does not move any of the 52 staged ideas to production or specs, authorise code implementation from staging, add account/session authentication, proxy inference through Go, or introduce another AI validation gate.
+
+See [P-B1-01](./decisions/P-B1-01%20-%20Trusted%20Locally%20Installed%20Plugins.md) and [P-B1-02](./decisions/P-B1-02%20-%20Design%20Closure%20with%20Deferred%20Integration%20Gates.md). The next architecture design pass may proceed under these constraints.
 
 ## Suggested acceptance criteria for a later integrated smoke pass
 
@@ -163,3 +165,5 @@ The accepted IDEA-0047/0055 provides typed capability registration and optional 
 ## Change history
 
 - **2026-10-25:** Initial evidence review produced from current upstream documentation, independent dated CORS tests and an isolated SQLite mechanism exercise. No application was implemented or staging approval inferred; user input pending for plugin trust and closure risk disposition.
+
+- **2026-10-25 — Explicit user B1 closure:** User replied `1 A` (trusted installed plugins) and `2 A` (close B1 at design level while carrying mandatory live integration checks). Recorded as P-B1-01 and P-B1-02 ADRs. Research statuses and no-live-integration limitations remain unchanged.
