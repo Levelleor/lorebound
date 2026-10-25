@@ -2,7 +2,7 @@
 type: architecture
 status: accepted-consolidation
 created: "2026-10-19"
-updated: "2026-10-24"
+updated: "2026-10-25"
 tags:
   - planning/architecture
   - pass-b
@@ -249,7 +249,7 @@ These are **conceptual contracts for refinement**, not approved TypeScript type 
 | **S06 ↔ S11** | Item custody/equipment, validated manual map edits, location travel/discovery and environment operations | Stable IDs, unique custody and distinct containment/traversal are validated. **The map is a player-facing world editor/view, never a travel command**; recorded `undiscovered` locations can still display names/details and be directly edited, while fictional discovery/AI knowledge remains distinct. Strict Do/Say/AI travel attempts use grounded bounded repair, not invented bypasses; user Story authorial exceptions and validated anatomy-related item relocations still obey data integrity. |
 | **S06 → S05** | Approved turn/passage revisions, ordered accepted events, history-head transitions and invalidation requests | Changes retain exact source provenance; active canon is distinct from append-only superseded audit records. |
 | **S05 ↔ S10 / S11 / S09** | Point-in-time reconstruction and derived-index/summary invalidation | Deterministic replay of core and supported installed-module records; caches and summaries are secondary projections. No model calls during replay. **Removed plugin custom state is exempt from compatibility migrations/replay guarantees**, without deleting recorded history. |
-| **S06 / S05 / S02 → S12** | Existing validated commit payloads, expected adventure/library versions, draft writes, reads and lifecycle operations | Go/SQLite enforces atomicity, auth and stale-version conflicts, **not another gameplay/narrative validation pass**. While maintenance is engaged, **all library writes including drafts** are fenced from every tab, irrespective of browser cancellation cooperation. A replaced library rejects prior library-session/epoch writes after maintenance. |
+| **S06 / S05 / S02 → S12** | Existing validated commit payloads, expected adventure/library versions, draft writes, reads and lifecycle operations | Go/SQLite enforces atomicity, structural/storage integrity, limited request filtering, maintenance fencing and expected-version/library-epoch conflicts, **not Lorebound application login/session authentication or another gameplay/narrative validation pass**. While maintenance is engaged, **all library writes including drafts** are fenced from every tab, irrespective of browser cancellation cooperation. A replaced library rejects prior library-session/epoch writes after maintenance. |
 | **S08 ↔ S01** | Two-way credential load/create/update/delete via **narrow Go loopback methods without a new Lorebound login/session-authentication feature** | Go is persistent credential authority; the browser caches secrets **in memory only** for direct requests, not localStorage/sessionStorage/IndexedDB, logs or SQLite. Cross-tab cache invalidation and basic request filtering remain engineering details; **origin/loopback checks do not authenticate arbitrary local processes**. Stronger credential-service access security is deferred under A-27 rather than promised. No Go AI proxy. |
 | **S12 → S01** | Privileged filesystem/database, exclusive Backup/Restore maintenance fence and active library replacement | Before Backup/Restore, Go fences new state writes, notifies clients to abort provider fetch/streams, and quiesces already accepted SQLite transactions. Restore closes/replaces/reopens the library safely and **invalidates stale library epochs from all tabs**. Go remains responsible even if another tab is closed/nonresponsive; remote provider abort is best effort. Existing loopback origin/CSRF/host protections remain. |
 | **S04 → S02 / S09 / S07 / S12** | Library selection, context inspector, attempt/status diagnostics, backup/restore and settings displays | UI renders responses and surfaces omission/failure; neither visual layout nor provisional streamed text becomes a canonical event. |
@@ -325,6 +325,9 @@ These are **open design items**, not additional approved implementation choices.
 7. **Internal module interfaces vs. package layout:** decide which of the 30 original labels merit independent TypeScript/Go modules without re-inflating top-level subsystem vocabulary. A subsystem boundary does not mandate a build artifact or separately launched service.
 
 ## 8. Change control and verification
+
+- **2026-10-25 editorial A-27 consistency clarification:** §5 previously abbreviated Go checks as `auth`, which could imply application authentication contrary to user-approved A-27. Clarified to storage integrity, limited request filtering, maintenance/version/epoch checks, with **no application login/session framework**. This is not a new security-feature decision; see [B1 Feasibility Evidence and Closure Review](./Pass%20B1%20Feasibility%20Evidence%20and%20Closure%20Review.md).
+
 
 - **2026-10-24 formal Pass A audit closure:** User explicitly signed off A-01/A-02/A-07/A-08/A-26/A-28/A-29, closing all 30 recorded closure-audit findings. The original Pass A mapping is unchanged; 52 staged ideas remain grouped under 12 subsystems. This formal audit milestone **does not move ideas into production, approve implementation, or settle Pass B/C detailed contracts**. See [Pass A Closure Audit](./Pass%20A%20Closure%20Audit.md).
 
