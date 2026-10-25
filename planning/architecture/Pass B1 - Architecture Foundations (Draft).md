@@ -12,7 +12,7 @@ tags:
 
 # Pass B1 — Architecture Foundations (Draft)
 
-> **Review status:** **All six B1 design decisions accepted**, in two explicit user review batches on **2026-10-25**. See the linked individual ADRs in §9. **B1 is not yet technically verified or formally closed:** the feasibility gates in §8 remain unexecuted, the separate plugin-trust question is unresolved and the inherited `auth` wording should be clarified. Illustrative contracts and implementation details outside the six ADRs are not approved by implication. The 12-subsystem ownership consolidation was accepted previously. No staging idea is promoted by this document.
+> **Review status:** **All six B1 design decisions accepted**, in two explicit user review batches on **2026-10-25**. See the linked individual ADRs in §9. **B1 is not yet technically verified or formally closed:** research and an isolated SQLite mechanism test are now recorded in the [B1 feasibility review](./Pass%20B1%20Feasibility%20Evidence%20and%20Closure%20Review.md), but real Wails/provider/browser integration tests remain outstanding and the plugin trust policy requires a human decision. The inherited `auth` wording has been clarified in the consolidated architecture. Illustrative contracts and implementation details outside the six ADRs are not approved by implication. The 12-subsystem ownership consolidation was accepted previously. No staging idea is promoted by this document.
 
 ## 1. Source of authority and scope
 
@@ -125,7 +125,7 @@ This diagram is a **responsibility/dataflow sketch**, not a module dependency gr
 
 Exact types, idempotency tokens, revision selection, expected-version conflict codes and write ordering belong to B2/B3.
 
-## 8. Technical feasibility gates, not yet executed
+## 8. Technical feasibility gates: research reviewed, integration outstanding
 
 | Gate | Verification / evidence required | Result |
 | --- | --- | --- |
@@ -136,7 +136,7 @@ Exact types, idempotency tokens, revision selection, expected-version conflict c
 | **F-B1-05 Database lifecycle** | Test SQLite transaction failure/retry, WAL-consistent full-library backup, maintenance fencing, restore rollback/reopen and draft write rejection during maintenance. | **Not tested** |
 | **F-B1-06 Plugin trust** | Assess whether plugin loading is first-party-only or arbitrary executable third-party JavaScript; a registry-level permission field cannot on its own isolate untrusted code running same-origin. | **Unresolved scope/implementation detail** |
 
-**External feasibility evidence reviewed, not code-tested:** Wails v3 [server-build documentation](https://v3.wails.io/guides/server-build/) describes a `server` build tag, same-origin browser service bindings, browser-tab events and headless operation; [Wails v3 project home](https://v3.wails.io/) identifies the v3 framework as beta. These establish documented support, **not** an executed Lorebound proof.
+**Research and isolated SQLite tests are documented in the [B1 Feasibility Evidence and Closure Review](./Pass%20B1%20Feasibility%20Evidence%20and%20Closure%20Review.md). No complete Lorebound/Wails integration has been exercised.** Original gate definitions above remain the pre-review checklist. **Earlier external feasibility evidence:** Wails v3 [server-build documentation](https://v3.wails.io/guides/server-build/) describes a `server` build tag, same-origin browser service bindings, browser-tab events and headless operation; [Wails v3 project home](https://v3.wails.io/) identifies the v3 framework as beta. These establish documented support, **not** an executed Lorebound proof.
 
 ## 9. Proposed B1 decisions for human review
 
@@ -159,9 +159,9 @@ Exact types, idempotency tokens, revision selection, expected-version conflict c
 
 - [x] Review **B1-D01 through B1-D03**; each explicitly accepted 2026-10-25 with its own ADR.
 - [x] Review **B1-D04 through B1-D06**; each explicitly accepted on 2026-10-25 and recorded in an individual ADR.
-- [ ] Clarify the consolidated document’s ambiguous `auth` phrase consistently with A-27.
-- [ ] Confirm whether design should treat browser-side native plugins as trusted code initially or defer isolation to a separate scope decision.
-- [ ] Agree on F-B1-01–F-B1-06 owners and proof expectations. Feasibility is **not** marked passed without running checks.
+- [x] Clarify the consolidated document’s ambiguous `auth` phrase consistently with A-27; editorial-only correction 2026-10-25.
+- [ ] Obtain explicit **P-B1-01** plugin trust decision (trusted installed plugins, sandboxed untrusted code or built-in-only initial delivery); see feasibility review.
+- [ ] Agree on **deferral versus required integrated smoke proof** for F-B1-01–F-B1-05. Research and isolated SQLite results are recorded; **no Wails/provider integration pass** is claimed. F-B1-06 requires the plugin trust choice.
 - [x] Record **all six** accepted decisions as individual ADRs after explicit human approval, preserving source IDEA IDs and the staging/production gate.
 - [ ] Complete B1 feasibility evidence review and resolve or expressly defer residual architectural risks before formally closing B1.
 - [ ] Begin B2 and B3 together: canonical revisions/events/replay, turn commit envelope, version/epoch conflict behaviour and historical edits.
@@ -173,3 +173,5 @@ Exact types, idempotency tokens, revision selection, expected-version conflict c
 - **2026-10-25 — Batch 1 human acceptance:** The requesting user explicitly accepted **B1-D01, B1-D02 and B1-D03**. Each approved rule is preserved as a standalone ADR under `planning/architecture/decisions/`. Unreviewed **B1-D04–D06 remain unapproved**. No other proposal, feasibility gate, software implementation, staging promotion, application authentication framework or additional AI validation stage was approved by this batch.
 
 - **2026-10-25 — Batch 2 human acceptance:** Requesting user explicitly accepted **B1-D04, B1-D05 and B1-D06** without modifications ("Agreed on all"). Three new ADRs preserve rationale, alternatives, source scope and history. **All B1-D01–D06 are now accepted.** B1 remains **open for feasibility verification and bounded risk/wording review**, not implementation. No B2/B3 design work or staging promotion was authorised by this update.
+
+- **2026-10-25 — B1 feasibility review initiated/completed at research level:** Added [B1 Feasibility Evidence and Closure Review](./Pass%20B1%20Feasibility%20Evidence%20and%20Closure%20Review.md). Maintainer documentation supports Wails browser-server mechanism, provider CORS is conditional, isolated SQLite exercise passed 11 checks, and trusted-code plugin policy remains undecided. **B1 formal closure pending** plugin policy and a decision on whether live integration tests are deferred beyond architecture design. Editorially clarified `auth` language in consolidated architecture without adding login/security features.
