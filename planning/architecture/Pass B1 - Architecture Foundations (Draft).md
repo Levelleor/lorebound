@@ -3,7 +3,7 @@ type: architecture
 status: draft-for-review
 phase: "B1"
 created: "2026-10-24"
-updated: "2026-10-24"
+updated: "2026-10-25"
 tags:
   - planning/architecture
   - pass-b
@@ -12,7 +12,7 @@ tags:
 
 # Pass B1 — Architecture Foundations (Draft)
 
-> **Review status:** Engineering architecture proposal, **not** a newly accepted decision or an implementation specification. This document begins the remaining detailed Pass B work. The 12-subsystem *ownership consolidation* has already been approved; this B1 design has **not**. No staging idea is promoted by creating it.
+> **Review status:** **Partially accepted architecture review.** The requesting user explicitly accepted **B1-D01, B1-D02 and B1-D03 on 2026-10-25**. **B1-D04, B1-D05 and B1-D06 remain proposed and unapproved.** Other technical feasibility gates and illustrative contracts in this document are not automatically approved by these three decisions. The 12-subsystem ownership consolidation was approved previously. No staging idea is promoted by this document.
 
 ## 1. Source of authority and scope
 
@@ -142,9 +142,9 @@ Exact types, idempotency tokens, revision selection, expected-version conflict c
 
 | Proposal ID | Decision to make | Working recommendation | Status |
 | --- | --- | --- | --- |
-| **B1-D01** | Should built-in domain rules/reducers be independent of Svelte and Wails imports? | **Yes**, plain TypeScript domain logic with interfaces at application/platform boundaries; this supports deterministic replay and isolated tests. | Proposed, not approved |
-| **B1-D02** | What is the dependency direction between coordinator, AI workflow and domain services? | Make S06 the gameplay authority and use application composition/service contracts to avoid circular module dependencies; S07 returns data, never commits. | Proposed, not approved |
-| **B1-D03** | Which side may decide the outcome of a canonical write? | S06 decides fictional/domain acceptance; S12/Go alone decides durable transaction success, expected-version and epoch checks. | Proposed refinement of accepted direction |
+| **B1-D01** | Should built-in domain rules/reducers be independent of Svelte and Wails imports? | **Yes**, plain TypeScript domain logic with interfaces at application/platform boundaries; this supports deterministic replay and isolated tests. | **Accepted 2026-10-25**; [ADR](./decisions/B1-D01%20-%20Framework-Independent%20Domain%20Logic.md) |
+| **B1-D02** | What is the dependency direction between coordinator, AI workflow and domain services? | Make S06 the gameplay authority and use application composition/service contracts to avoid circular module dependencies; S07 returns data, never commits. | **Accepted 2026-10-25**; [ADR](./decisions/B1-D02%20-%20Coordinator%20and%20Service%20Dependency%20Direction.md) |
+| **B1-D03** | Which side may decide the outcome of a canonical write? | S06 decides fictional/domain acceptance; S12/Go alone decides durable transaction success, expected-version and epoch checks. | **Accepted 2026-10-25**; [ADR](./decisions/B1-D03%20-%20Gameplay%20and%20Durable%20Commit%20Authority.md) |
 | **B1-D04** | How should cross-tab updates be treated? | Notifications are invalidation hints; clients refetch server versions. No shared-tab mutable authority and no optimistic assumption that a notification means commit. | Proposed, not approved |
 | **B1-D05** | How wide should the browser↔Go method surface be? | Use a **small set of task-oriented storage/credential/maintenance operations**, not arbitrary SQL, filesystem-path access or general script execution; exact endpoints in B3. | Proposed, not approved |
 | **B1-D06** | Where should event replay execute? | Browser TypeScript S05 using pure deterministic reducers; Go stores/paginates required history and optional checkpoints, without reimplementing gameplay reducers. | Proposed, not approved |
@@ -157,7 +157,8 @@ Exact types, idempotency tokens, revision selection, expected-version conflict c
 
 ## 10. B1 review completion checklist
 
-- [ ] Review B1-D01 through B1-D06 and record accepted/rejected alternatives or requested amendments.
+- [x] Review **B1-D01 through B1-D03**; each explicitly accepted 2026-10-25 with its own ADR.
+- [ ] Review **B1-D04 through B1-D06**; all remain proposals requiring separate decisions.
 - [ ] Clarify the consolidated document’s ambiguous `auth` phrase consistently with A-27.
 - [ ] Confirm whether design should treat browser-side native plugins as trusted code initially or defer isolation to a separate scope decision.
 - [ ] Agree on F-B1-01–F-B1-06 owners and proof expectations. Feasibility is **not** marked passed without running checks.
@@ -167,3 +168,5 @@ Exact types, idempotency tokens, revision selection, expected-version conflict c
 ## 11. Change history
 
 - **2026-10-24 — Initial B1 proposal only.** Established a reviewable draft from previously accepted Pass A/Pass B consolidation. No executable code, production promotion, new model pipeline, auth mechanism or new approved architecture decision is claimed.
+
+- **2026-10-25 — Batch 1 human acceptance:** The requesting user explicitly accepted **B1-D01, B1-D02 and B1-D03**. Each approved rule is preserved as a standalone ADR under `planning/architecture/decisions/`. Unreviewed **B1-D04–D06 remain unapproved**. No other proposal, feasibility gate, software implementation, staging promotion, application authentication framework or additional AI validation stage was approved by this batch.
