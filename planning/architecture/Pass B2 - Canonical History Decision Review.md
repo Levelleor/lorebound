@@ -3,7 +3,7 @@ type: architecture
 status: in-review
 phase: "B2"
 created: "2026-10-25"
-updated: "2026-10-25"
+updated: "2026-10-26"
 tags:
   - planning/architecture
   - pass-b
@@ -36,11 +36,13 @@ The older IDEA-0042 staging direction allows *optional* snapshots but does not m
 ## Batch 2 — questions proposed for review, not yet accepted
 
 - **B2-D04:** How to represent retained later outcomes when an earlier edited passage removes a technically necessary entity/reference. Suggested alternatives: deterministic integrity-preserving suspended event effect with explicit visible status (preferred for preserving later story/outcome audit), atomic rejection of entire Keep operation, or synthetic repair (disallowed by Pass A's no-inference repair rule). Needs careful distinction between fictional contradictions and unrepresentable data.
-- **B2-D05:** Passage split/merge/reorder lineage and event provenance. Suggested primary approach: preserve IDs for unchanged logical passages, create new IDs for newly split-off or merged passages, keep explicit predecessor/revision links and require review of provenance where attribution changes. No paragraph IDs.
+- **B2-D05: ACCEPTED 2026-10-26.** [B2-D05 ADR](./decisions/B2-D05%20-%20Canonical%20Structured%20Passage%20Documents.md). One message/AI response creates one stable logical passage, and each accepted revision stores a **single schema-versioned structured JSON document in Go/SQLite**. Browser HTML/DOM is a view; model text is deterministic serialized output; noncanonical drafts are separate; events reference passage/revision IDs. **The original split/merge lineage proposal is superseded**, and explicit whole-passage split/merge semantics remain open rather than approved.
 - **B2-D06:** Event schema/reducer evolution. Suggested approach: versioned event schemas with deterministic pure reducers and explicitly versioned compatibility/upcast handling for *supported core/installed modules*, without enforcing plugin-removal migration/replay. Reject unsupported ambiguous payloads rather than silently reinterpreting them.
 
-The topics above have **not** been accepted and are not new staging features.
+**D04 and D06 remain proposed and unapproved; D05 is explicitly approved by the requesting user.** No staging ideas are promoted.
 
 ## Decision history
 
 - **2026-10-25:** User accepted B2-D01 and B2-D02, requested B2-D03 revision towards full Turn-0 rebuilding. Accepted choices stored in individual ADRs; D03 remains under review. Batch 2 topics listed for later human decision.
+
+- **2026-10-26:** User explicitly accepted the **revised D05** proposal, replacing original ancestry-first recommendation with **structured, schema-versioned passage JSON as the sole canonical content**. Recorded [B2-D05 ADR](./decisions/B2-D05%20-%20Canonical%20Structured%20Passage%20Documents.md). D03 remains revision pending; D04 and D06 remain unapproved. No implementation or production promotion.
