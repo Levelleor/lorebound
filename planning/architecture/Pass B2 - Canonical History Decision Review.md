@@ -35,14 +35,16 @@ The older IDEA-0042 staging direction allows *optional* snapshots but does not m
 
 ## Batch 2 — questions proposed for review, not yet accepted
 
-- **B2-D04:** How to represent retained later outcomes when an earlier edited passage removes a technically necessary entity/reference. Suggested alternatives: deterministic integrity-preserving suspended event effect with explicit visible status (preferred for preserving later story/outcome audit), atomic rejection of entire Keep operation, or synthetic repair (disallowed by Pass A's no-inference repair rule). Needs careful distinction between fictional contradictions and unrepresentable data.
+- **B2-D04: ACCEPTED 2026-10-26.** [B2-D04 ADR](./decisions/B2-D04%20-%20Retained%20History%20and%20Suspended%20Unrepresentable%20Effects.md). Under Keep Later Turns preserve the later accepted story and original audit events; visibly suspend only state effects technically unrepresentable after the earlier edit, without inventing repairs. Details of later reinstatement remain open.
 - **B2-D05: ACCEPTED 2026-10-26.** [B2-D05 ADR](./decisions/B2-D05%20-%20Canonical%20Structured%20Passage%20Documents.md). One message/AI response creates one stable logical passage, and each accepted revision stores a **single schema-versioned structured JSON document in Go/SQLite**. Browser HTML/DOM is a view; model text is deterministic serialized output; noncanonical drafts are separate; events reference passage/revision IDs. **The original split/merge lineage proposal is superseded**, and explicit whole-passage split/merge semantics remain open rather than approved.
-- **B2-D06:** Event schema/reducer evolution. Suggested approach: versioned event schemas with deterministic pure reducers and explicitly versioned compatibility/upcast handling for *supported core/installed modules*, without enforcing plugin-removal migration/replay. Reject unsupported ambiguous payloads rather than silently reinterpreting them.
+- **B2-D06: ACCEPTED 2026-10-26.** [B2-D06 ADR](./decisions/B2-D06%20-%20Versioned%20Event%20Contracts%20and%20Deterministic%20Compatibility.md). Explicit immutable event schema versions and deterministic compatibility handling for supported core/installed modules, preserving removed-plugin exception and reporting unrecognised core formats.
 
-**D04 and D06 remain proposed and unapproved; D05 is explicitly approved by the requesting user.** No staging ideas are promoted.
+**B2-D04, B2-D05 and B2-D06 are accepted and recorded separately.** The original D05 split/merge ancestry proposal remains superseded by the independently approved structured passage document contract. **B2-D03 is still under revision and unapproved.** No staging ideas are promoted.
 
 ## Decision history
 
 - **2026-10-25:** User accepted B2-D01 and B2-D02, requested B2-D03 revision towards full Turn-0 rebuilding. Accepted choices stored in individual ADRs; D03 remains under review. Batch 2 topics listed for later human decision.
 
 - **2026-10-26:** User explicitly accepted the **revised D05** proposal, replacing original ancestry-first recommendation with **structured, schema-versioned passage JSON as the sole canonical content**. Recorded [B2-D05 ADR](./decisions/B2-D05%20-%20Canonical%20Structured%20Passage%20Documents.md). D03 remains revision pending; D04 and D06 remain unapproved. No implementation or production promotion.
+
+- **2026-10-26:** User confirmed D05 was already separately approved in the repository and selected **D04 Option A** and **D06 Option A**. Confirmed the prior B2-D05 structured-document ADR without altering it; recorded two new ADRs for D04 and D06. D03 remains revised/unapproved.
