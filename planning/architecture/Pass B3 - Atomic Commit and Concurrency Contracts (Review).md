@@ -101,7 +101,7 @@ The user explicitly rejected retaining passage/event revision archives and confi
 
 [Accepted ADR](./decisions/B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md): Whenever a player-resolvable pending canonical commit exists, cover the **entire chat composer** with a semi-transparent overlay identifying uncommitted changes. No typing, editing or Send until the player uses **Approve/Commit** or **Discard**. Reuse this visual/interaction pattern for all pending-commit workflows; retain specialised confirmation choices such as historical **Keep Later Turns** vs **Delete All After Point**. Do **not** introduce a new manual gate for ordinary turns or Quick Start that already have their own accepted finalisation semantics.
 
-## B3 Batch 3 — proposed, unapproved
+## B3 Batch 3 — Option A accepted for D08–D10 (2026-10-27; original options retained)
 
 ### B3-D08 — Persistence of pending change sets
 
@@ -121,7 +121,29 @@ The user explicitly rejected retaining passage/event revision archives and confi
 - **Option B:** Discard the pending changes on any failed commit. **Trade-off:** Simpler UI, but loses player work.
 - **Option C:** Automatically rebase and resubmit failed/stale commits. **Trade-off:** Minimises prompts but bypasses the accepted fresh-decision rule in B3-D05.
 
-**Batch 3 has not been accepted.** Exact modal positioning, focus management, accessibility, navigation and the distinct historical-edit choices remain later interface design.
+**Batch 3 accepted 2026-10-27:** [D08 noncanonical pending persistence](./decisions/B3-D08%20-%20Persistent%20Noncanonical%20Pending%20Change%20Sets.md), [D09 one pending set](./decisions/B3-D09%20-%20Single%20Pending%20Change%20Set%20Per%20Editing%20Context.md), and [D10 pending failure recovery](./decisions/B3-D10%20-%20Pending%20Commit%20Failure%20Recovery.md) each approved **Option A** separately. Exact modal positioning, focus, accessibility, cross-tab draft ownership and schema details remain for engineering refinement.
+
+## B3 design closure assessment — 2026-10-27
+
+**Assessment only: B3 is ready for a separate user-approved *design-level* closure, but has not been formally closed.** All ten numbered decisions (B3-D01 through B3-D10) now have separately accepted ADRs. B3-D04 represents the user's **replacement, revision-free current-canon decision**, not acceptance of the initial versioned-history Option A. D06 and D07 have the subsequent explicit pending manual Commit gate and shared full-composer overlay. The B2 closure record and older ADR approvals remain as historical provenance, but the latest B3-D04 supersession governs storage design.
+
+### B3 outcomes
+
+- **D01** one typed atomic Go/SQLite prepared commit; **D02** durable idempotent attempt IDs and receipts; **D03** coherent atomic historical edits/Undo (as modified by later revision-free D04).
+- **D04** one current story/current ordered events; no retained passage revisions or inactive audit; **D05** stale canonical commits rejected and refetched.
+- **D06** player edits accumulate noncanonical corrections and only an explicit Commit adds replayable outcome events; **D07** full translucent composer overlay with approve/discard blocks typing/send while pending.
+- **D08** SQLite persistence of noncanonical pending changes across reload; **D09** one compatible pending batch per adventure/session editing context; **D10** preserve pending work and overlay on invalid/stale/uncertain commits until safe resolution.
+
+### Deferred design and executable verification gates
+
+- Exact SQLite/Go/TypeScript schemas, request envelopes, payload fingerprints, idempotency receipt retention/epoch scope, error/status-query APIs, event ordering/provenance, and current-only passage/event mutation semantics.
+- Cross-tab ownership of pending drafts and overlaps, composer overlay accessibility/focus, persistence on navigation and crash, handling adventure switches, cleanup and validation details.
+- Precise Undo boundaries for state-only corrections, conflict resolution and historical editing; structural integrity checks; lost-response status when Go cannot be contacted.
+- Whole-library backup/restore maintenance and stale-epoch fencing; Wails/Go integration, multi-tab race tests, provider/host tests, full Turn-0 replay tests, and supported event schema compatibility. All B1 deferred integration gates remain unverified.
+- Repo staging source idea documents contain older revision/append-only wording. B3-D04's later approved ADR governs **architecture planning**, but staged feature text needs a **separate explicit, provenance-preserving reconciliation** before implementation. Do not silently promote staged ideas or declare old historical claims implemented.
+- Optional AI-assisted downstream narrative repair remains **unaccepted Inbox IDEA-0067**, not part of B3.
+
+**No** code, integration tests, staged-to-production promotion, implementation, or release sign-off is claimed by these decisions. Formal B3 design closure requires an explicit user instruction, as with P-B2-01.
 
 ## Decision history
 
@@ -134,3 +156,5 @@ The user explicitly rejected retaining passage/event revision archives and confi
 - **2026-10-27 — B3-D06 explicit approval with refinement:** User accepted manual correction outcome events (Option A), **but only after edits are staged as a pending change set and the player presses a visible bottom-area Commit button**. Automatic state commits from editing controls are not approved. User tentatively suggested blocking the chat box while changes are pending; this UX lock remains a separate unapproved choice. [B3-D06 ADR](./decisions/B3-D06%20-%20Pending%20Manual%20State%20Corrections%20and%20Explicit%20Commit.md).
 
 - **2026-10-27 — Approved composer overlay:** User explicitly required the same semi-transparent full-composer overlay across all pending-commit workflows, with Approve/Commit and Discard; typing and sending remain unavailable while pending. [B3-D07 accepted](./decisions/B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md). Prepared unapproved Batch 3 D08–D10 about pending persistence, batching and recovery. No promotion or implementation.
+
+- **2026-10-27 — Batch 3 approvals and closure assessment:** User explicitly accepted **B3-D08 Option A, B3-D09 Option A, B3-D10 Option A** and requested ADR recording and B3 closure assessment. Three separate ADRs were created with original proposal alternatives and human approval history preserved. All D01–D10 now have accepted dispositions. **B3 assessed ready for formal design-only closure, but not formally closed** without a separate explicit approval. No code, tests or staging promotion.
