@@ -1,6 +1,6 @@
 ---
 type: architecture
-status: in-review
+status: closed-design-only
 phase: "B3"
 created: "2026-10-27"
 updated: "2026-10-27"
@@ -10,6 +10,8 @@ tags:
   - transaction-contracts
 ---
 # Pass B3 — Atomic Commit and Concurrency Contracts (Review)
+
+> **Formally closed at design level on 2026-10-27** by the requesting user's explicit agreement. [P-B3-01 closure ADR](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md). All ten numbered B3 decisions accepted, with **D04's user-directed revision-free replacement** controlling over older immutable-audit/revision designs. This is not software implementation, integration verification, or staging-to-production promotion.
 
 > **B3 Batch 1 approved on 2026-10-27:** D01, D02 and D03 each accepted **Option A** in separate ADRs. Original alternatives below are preserved for approval history. Batch 2: **D04 user-directed revision-free replacement accepted; D05 Option A accepted; D06 Option A accepted with explicit pending manual Commit gate**. B2 was closed at design level under [P-B2-01](./decisions/P-B2-01%20-%20Design%20Closure%20and%20Deferred%20Transaction%20Contracts.md).
 
@@ -125,7 +127,7 @@ The user explicitly rejected retaining passage/event revision archives and confi
 
 ## B3 design closure assessment — 2026-10-27
 
-**Assessment only: B3 is ready for a separate user-approved *design-level* closure, but has not been formally closed.** All ten numbered decisions (B3-D01 through B3-D10) now have separately accepted ADRs. B3-D04 represents the user's **replacement, revision-free current-canon decision**, not acceptance of the initial versioned-history Option A. D06 and D07 have the subsequent explicit pending manual Commit gate and shared full-composer overlay. The B2 closure record and older ADR approvals remain as historical provenance, but the latest B3-D04 supersession governs storage design.
+**Assessment completed and formally closed at *design level* on 2026-10-27,** pursuant to explicit user approval and [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md). All ten numbered decisions (B3-D01 through B3-D10) now have separately accepted ADRs. B3-D04 represents the user's **replacement, revision-free current-canon decision**, not acceptance of the initial versioned-history Option A. D06 and D07 have the subsequent explicit pending manual Commit gate and shared full-composer overlay. The B2 closure record and older ADR approvals remain as historical provenance, but the latest B3-D04 supersession governs storage design.
 
 ### B3 outcomes
 
@@ -143,7 +145,7 @@ The user explicitly rejected retaining passage/event revision archives and confi
 - Repo staging source idea documents contain older revision/append-only wording. B3-D04's later approved ADR governs **architecture planning**, but staged feature text needs a **separate explicit, provenance-preserving reconciliation** before implementation. Do not silently promote staged ideas or declare old historical claims implemented.
 - Optional AI-assisted downstream narrative repair remains **unaccepted Inbox IDEA-0067**, not part of B3.
 
-**No** code, integration tests, staged-to-production promotion, implementation, or release sign-off is claimed by these decisions. Formal B3 design closure requires an explicit user instruction, as with P-B2-01.
+**No** code, integration tests, staged-to-production promotion, implementation, or release sign-off is claimed by these decisions. Formal B3 design closure was separately approved and recorded as [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md).
 
 ## Decision history
 
@@ -158,3 +160,5 @@ The user explicitly rejected retaining passage/event revision archives and confi
 - **2026-10-27 — Approved composer overlay:** User explicitly required the same semi-transparent full-composer overlay across all pending-commit workflows, with Approve/Commit and Discard; typing and sending remain unavailable while pending. [B3-D07 accepted](./decisions/B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md). Prepared unapproved Batch 3 D08–D10 about pending persistence, batching and recovery. No promotion or implementation.
 
 - **2026-10-27 — Batch 3 approvals and closure assessment:** User explicitly accepted **B3-D08 Option A, B3-D09 Option A, B3-D10 Option A** and requested ADR recording and B3 closure assessment. Three separate ADRs were created with original proposal alternatives and human approval history preserved. All D01–D10 now have accepted dispositions. **B3 assessed ready for formal design-only closure, but not formally closed** without a separate explicit approval. No code, tests or staging promotion.
+
+- **2026-10-27 — Formal B3 design closure:** After the complete D01–D10 approval register and closure assessment, user expressly answered **“yes”** to closing B3 and beginning the next architecture pass. Recorded [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md). B4 options remain proposals until individually approved; inherited unexecuted integration gates and staging reconciliation are not waived.
