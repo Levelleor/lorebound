@@ -11,7 +11,7 @@ tags:
 ---
 # Pass B3 — Atomic Commit and Concurrency Contracts (Review)
 
-> **B3 Batch 1 approved on 2026-10-27:** D01, D02 and D03 each accepted **Option A** in separate ADRs. Original alternatives below are preserved for approval history. Batch 2: **D04 user-directed revision-free replacement accepted; D05 Option A accepted; D06 unapproved**. B2 was closed at design level under [P-B2-01](./decisions/P-B2-01%20-%20Design%20Closure%20and%20Deferred%20Transaction%20Contracts.md).
+> **B3 Batch 1 approved on 2026-10-27:** D01, D02 and D03 each accepted **Option A** in separate ADRs. Original alternatives below are preserved for approval history. Batch 2: **D04 user-directed revision-free replacement accepted; D05 Option A accepted; D06 Option A accepted with explicit pending manual Commit gate**. B2 was closed at design level under [P-B2-01](./decisions/P-B2-01%20-%20Design%20Closure%20and%20Deferred%20Transaction%20Contracts.md).
 
 ## Scope and inherited authority
 
@@ -53,7 +53,7 @@ S05 canonical history and S06 gameplay validation execute in browser TypeScript;
 - **B3-D02:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B3-D02%20-%20Idempotent%20Canonical%20Commit%20Attempts.md).
 - **B3-D03:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B3-D03%20-%20Atomic%20Historical%20Selection%20and%20Undo.md).
 
-## B3 Batch 2 — original proposals (D04 replaced, D05 accepted, D06 pending)
+## B3 Batch 2 — original proposals (all three resolved; D04 replaced, D06 refined)
 
 The next three questions refine implementation-facing behaviour without reopening B1/B2 decisions. **These options are not ADRs until explicitly accepted.**
 
@@ -91,11 +91,11 @@ The next three questions refine implementation-facing behaviour without reopenin
 
 - **B3-D04:** **Accepted revised user-directed no-revisions model, 2026-10-27** (original A/B/C superseded, not chosen). [ADR](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md).
 - **B3-D05:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B3-D05%20-%20Reject%20Stale%20Canonical%20Submissions%20and%20Refetch.md).
-- **B3-D06:** Proposed A/B/C, **not approved**.
+- **B3-D06:** **Accepted Option A with explicit player Commit gate, 2026-10-27.** Manual world-state changes accumulate in a pending noncanonical change set; only a visible bottom-area **Commit** action validates and atomically records replayable correction events. Blocking the chat composer is **tentative and unapproved**. [ADR](./decisions/B3-D06%20-%20Pending%20Manual%20State%20Corrections%20and%20Explicit%20Commit.md).
 
 ## Current direction superseding original Batch 2 D04 options
 
-The user explicitly rejected retaining passage/event revision archives and confirmed a **single mutable current story and current ordered events**. Confirmed passage edits overwrite their current body; Keep retains existing current events; Delete/Undo remove affected current passages/events atomically. Stable passage/event IDs, structured JSON, event-format versions, Turn-0 deterministic replay, adventure-version optimistic concurrency, library epoch, typed atomic commits and operation-ID receipts remain. Old B2/B3 ADRs retain approval provenance but the superseded immutable audit/selection requirements no longer direct new design. **D06 is still unapproved**; its original options above must be reconsidered against the new current-only model.
+The user explicitly rejected retaining passage/event revision archives and confirmed a **single mutable current story and current ordered events**. Confirmed passage edits overwrite their current body; Keep retains existing current events; Delete/Undo remove affected current passages/events atomically. Stable passage/event IDs, structured JSON, event-format versions, Turn-0 deterministic replay, adventure-version optimistic concurrency, library epoch, typed atomic commits and operation-ID receipts remain. Old B2/B3 ADRs retain approval provenance but the superseded immutable audit/selection requirements no longer direct new design. **D06 is now accepted with an explicit manual Commit gate** and reconciled with the current-only model; its original alternatives above remain for approval history.
 
 ## Decision history
 
@@ -104,3 +104,5 @@ The user explicitly rejected retaining passage/event revision archives and confi
 - **2026-10-27:** Requesting user explicitly selected **B3-D01: A, B3-D02: A, B3-D03: A**. Created separate accepted ADRs for all three and preserved original alternatives. Prepared **B3-D04 through B3-D06 as unapproved Batch 2 proposals**; no implementation, staging promotion or approval of the new proposals implied.
 
 - **2026-10-27 — B3-D04 replacement and B3-D05 approval:** User explicitly confirmed no retained passage/event revisions or immutable audit selection, superseding the original B3-D04 Option A proposal and relevant B2/B3 design assumptions; separately approved **B3-D05 Option A**. Recorded [D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) and [D05](./decisions/B3-D05%20-%20Reject%20Stale%20Canonical%20Submissions%20and%20Refetch.md) as accepted ADRs. **D06 not accepted.**
+
+- **2026-10-27 — B3-D06 explicit approval with refinement:** User accepted manual correction outcome events (Option A), **but only after edits are staged as a pending change set and the player presses a visible bottom-area Commit button**. Automatic state commits from editing controls are not approved. User tentatively suggested blocking the chat box while changes are pending; this UX lock remains a separate unapproved choice. [B3-D06 ADR](./decisions/B3-D06%20-%20Pending%20Manual%20State%20Corrections%20and%20Explicit%20Commit.md).
