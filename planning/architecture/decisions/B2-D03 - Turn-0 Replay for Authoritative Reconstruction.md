@@ -3,7 +3,7 @@ type: architecture-decision
 status: accepted
 decision_id: "B2-D03"
 created: "2026-10-26"
-updated: "2026-10-26"
+updated: "2026-10-27"
 approved_at: "2026-10-26"
 approved_by: "requesting user (explicit chat approval)"
 tags:
@@ -34,7 +34,7 @@ B2-D01 accepts immutable structured outcome events; B2-D02 accepts a single sele
 - Reconstruct from Turn 0 on opening an adventure, reconstructing a historical view/selected point, after confirmed historical edits or Undo when a full authoritative rebuild is required, and after any other operation that explicitly requires authoritative reconstruction. **This does not mean replay on each UI render, keypress or passive display.**
 - For a normal new committed turn or historied manual state change, an already valid current-version in-memory projection **may be updated incrementally** with newly accepted outcomes, rather than automatically replaying the entire adventure. It must remain equivalent to a full Turn-0 replay of the same selected canonical history, and be discarded/invalidated when stale. Commit acceptance still occurs solely through the atomic Go/SQLite boundary.
 - An already reconstructed in-memory state may be reused for displaying the **same committed adventure version**; this is a noncanonical view/projection, **not a new persisted authoritative snapshot**. Persistent changes that matter to history must be recorded through accepted source/event records.
-- Preserve the [B2-D04](./B2-D04%20-%20Retained%20History%20and%20Suspended%20Unrepresentable%20Effects.md) suspension policy and the accepted removed-plugin historical custom-state replay exception.
+- Preserve the **current** [B2-D04](./B2-D04%20-%20Retained%20History%20and%20Suspended%20Unrepresentable%20Effects.md) historical-edit semantics: Keep Later Turns retains existing accepted events even when passage prose changes, and Delete All After Point excludes later turns/events from active replay. The former D04 ordinary suspension policy was superseded by explicit user clarification after this ADR's original approval. The removed-plugin historical custom-state replay exception remains.
 - Go serves version-consistent ordered records and enforces durable version/epoch/transaction integrity; Go does not replay gameplay rules.
 
 ## Alternatives considered
@@ -59,3 +59,5 @@ S05, S06, S10, S11, S12; [IDEA-0039](../../staging/Event-Sourced%20World%20Histo
 - **2026-10-25:** Initial proposal offered deterministic replay with optional persisted checkpoints; user marked **D03: revise**, requesting entire state rebuilt from Turn 0 instead.
 - **2026-10-26:** Revised B2 Batch 3 explicitly compared **A**, Turn-0 replay for authoritative reconstruction with normal incremental commits permitted, with **B**, full Turn-0 replay after every commit. User explicitly selected **Option A**.
 - **2026-10-26:** Accepted ADR recorded; B2-D07 and B2-D08 remain under review.
+
+- **2026-10-27 — Editorial cross-reference alignment:** Corrected the D04 reference to point to the user-clarified Keep/Truncate event policy rather than the superseded original suspension rule. B2-D03's accepted Turn-0 replay choice is unchanged.
