@@ -1,6 +1,6 @@
 ---
 type: architecture
-status: in-review
+status: closed-design-only
 phase: "B2"
 created: "2026-10-25"
 updated: "2026-10-27"
@@ -10,6 +10,8 @@ tags:
   - canonical-history
 ---
 # Pass B2 — Canonical History Decision Review
+
+> **Formally closed at design level on 2026-10-27 by explicit user approval.** [P-B2-01 closure ADR](./decisions/P-B2-01%20-%20Design%20Closure%20and%20Deferred%20Transaction%20Contracts.md). Seven accepted decisions (D01–D06, D08), D07 withdrawn; D04's later user-approved clarification supersedes its original suspension workflow. This is **not** implementation, testing, staging promotion or release approval.
 
 ## Scope and authority
 
@@ -52,7 +54,7 @@ The older IDEA-0042 staging direction allows *optional* snapshots but does not m
 
 **Assessment: the eight numbered review questions have reached a documented disposition**, not eight independent approvals: B2-D01 through D06 and D08 are accepted; D07 was deliberately withdrawn when the factual assumption underlying suspension was corrected. The accepted D04 clarification is authoritative over its initial suspended-effect proposal.
 
-**Ready for final *design-level* sign-off if the user approves it.** No separate user statement has yet explicitly declared B2 closed. No runnable game, schema integration, API contract, tests or staging-to-production promotion is claimed.
+**Formally closed at design level on 2026-10-27** following explicit user approval. The closure authority is [P-B2-01](./decisions/P-B2-01%20-%20Design%20Closure%20and%20Deferred%20Transaction%20Contracts.md). No runnable game, schema integration, API contract, tests or staging-to-production promotion is claimed.
 
 **Co-design contracts still for B3 and later refinement**, not reasons to invent further B2 product decisions:
 
@@ -79,3 +81,5 @@ The older IDEA-0042 staging direction allows *optional* snapshots but does not m
 - **2026-10-26 — Final historical-edit clarification:** Requesting user confirmed that **Keep Later Turns leaves all pre-existing selected events intact**, including those originally sourced from the revised passage, while **Delete All After Point removes all subsequent passage/event effects from active canon**. Confirmed that replay is deterministic reconstruction from recorded events, not AI re-evaluation. Previously approved B2-D04 Option A suspension semantics were narrowed/superseded in the D04 ADR with history preserved; suggested B2-D07 suspended-event reinstatement is **no longer needed** for ordinary history editing, and **B2-D08 remains unapproved**. Separately requested future downstream semantic evaluation/repair stored as **unaccepted Inbox IDEA-0067**; no stage promotion or model repair step approved.
 
 - **2026-10-27 — D08 explicit acceptance and B2 closure assessment:** User selected **B2-D08 Option A** and requested recording plus closure review. Added [D08 ADR](./decisions/B2-D08%20-%20Fail-Closed%20Unsupported%20Core%20Event%20Replay.md), preserved D07's withdrawn status and D04's superseded original suspension decision. Seven ADRs accepted (D01–D06 and D08); **B2 ready for human design-level sign-off**, but not yet formally closed by the user; remaining B3 implementation/interface contracts explicitly listed above.
+
+- **2026-10-27 — Formal design-only closure:** User explicitly approved closing B2 and proceeding to the first three B3 architectural decisions. [P-B2-01 closure ADR](./decisions/P-B2-01%20-%20Design%20Closure%20and%20Deferred%20Transaction%20Contracts.md) records closure, scope, deferred engineering and unexecuted integration gates. No B3 decision has been approved or implemented by this sign-off.
