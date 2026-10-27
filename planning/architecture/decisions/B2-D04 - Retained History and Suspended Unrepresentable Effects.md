@@ -13,7 +13,7 @@ tags:
   - architecture-decision
 ---
 
-# B2-D04 — Retained history and suspended unrepresentable effects
+# B2-D04 — Historical edit event preservation and structural integrity
 
 ## Approval and provenance
 
@@ -21,37 +21,32 @@ tags:
 
 This is an accepted architecture rule, not proof of code, implementation approval or a staging-to-production promotion.
 
-## Context
+## Context and clarification
 
-IDEA-0041 and A-06 explicitly permit players to revise an earlier story passage and choose **Keep Later Turns** even if later narrative/outcomes no longer follow from the changed fiction. The player, not a model or automatic repair system, owns fictional continuity repairs. B2-D01 records immutable accepted outcome events; B2-D02 keeps one active selection over immutable history.
+**Original approval (2026-10-26):** D04 Option A was originally recorded as retaining later historical audit events while suspending state effects that could not be represented after an earlier edit. The example assumed that replacing Turn 8's prose automatically deactivated an item-creation event attributed to its former revision. The requesting user subsequently clarified that this assumption was **incorrect** for the accepted **Keep Later Turns** action.
 
-A narrowly different issue occurs when a retained later outcome cannot be **structurally represented** under the edited active history. Example: a retained transfer of item ID `key-7` now refers to a missing entity after an earlier item-creation event is no longer active. The problem is referential/structural integrity, **not merely implausible storytelling**.
+**User-approved clarification (2026-10-26):** Existing canonical events are *not* invalidated merely because their source passage's prose is rewritten. The user explicitly agreed to replacing the ordinary suspension/reinstatement concept with preservation under Keep and deletion from active canon under Delete All After Point. See the dated decision history below. This revised clarification supersedes the initial D04 suspension *workflow*, without erasing the fact that it was previously approved.
 
-## Accepted decision: Option A
+## Current accepted decision
 
-**Preserve the later accepted story and the original outcome/audit event records; deterministically suspend only the state effects that cannot be safely applied to the reconstructed state.**
+**For confirmed historical prose edits, keep existing accepted event outcomes unless the selected action explicitly removes history or the player performs a separate canonical state-edit operation.**
 
-- Distinguish **fictional discontinuity** (permitted by Keep Later Turns) from **actual technical nonrepresentability** (invalid required IDs, incompatible unique placement/containment, unsupported or structurally incoherent core state). Do not suspend an event solely because its fiction is surprising or no longer explained.
-- Preserve the original **immutable** accepted event, payload, order, exact source passage/revision and original successful acceptance provenance. It remains historical fact about what was previously accepted; it must **not** falsely appear as an effect currently applied to active world state.
-- For the **current selected active history and reconstructed state**, record or compute a deterministic, auditable **unapplied/suspended effect status with a concrete structural reason**. Display a clear, nonblocking technical indication so the player knows what state effect is missing without inventing an AI contradiction-warning or story-repair workflow.
-- Continue replaying other **independently representable** accepted effects when safe. If a later effect also requires an unavailable prerequisite, it too must be handled deterministically instead of silently applying invalid data. Never partially apply a multi-entity event or compromise stable IDs/unique custody and referential integrity.
-- Never fabricate missing items, people, facts or event outcomes; never rerun AI, rewrite later prose, invoke a second gameplay-review stage or automatically repair the story.
-- A player can issue a **separate, explicit, validated and historied manual correction** that can make the world state representable. Whether previously suspended effects become eligible for deterministic replay after such a correction, and the exact UI/action for reinstatement, remain later contract details; no surprise automatic state-changing repair is approved.
-- The history-selection change and any persisted suspension/derived-state metadata must be committed or invalidated coherently under the accepted Go atomic expected-version/library-epoch rules. The active projection must never report a suspended transfer as applied.
-- The separate approved removed-plugin exception remains: absent plugin-specific historical state need not be reconstructed/migrated.
+- **Keep Later Turns:** Commit the new structured passage revision but **retain that passage's already accepted linked outcome events** and the later retained passages **and their existing accepted events**. A new revision of passage text does not automatically revoke, reinterpret, rerun or reattribute older accepted outcome events. Preserve immutable provenance linking each event to the **actual original passage revision** from which it was accepted, even when the current displayed revision says something else.
+- **Intentional fictional contradictions are allowed.** If the new Turn 8 prose says Mara did not pick up a key, but the older accepted Turn 8 event created it, that event **remains selected and applies**. The player chose to retain the pre-existing state history. Do not infer a missing key or invent any repair.
+- **Delete All After Point:** Confirm the edited passage, retain its existing event outcomes **unless the player explicitly changes them**, and remove **all subsequent passages and their associated events** from the **active selected history**. They have **no subsequent active gameplay effect**. Previously committed immutable records may remain internally for audit and provenance, consistent with B2-D01 and B2-D02; this is not a selectable alternate-story feature.
+- **Explicit world-state or event edits/removal** are distinct from editing prose. Validated intentional state changes use a separate accepted outcome/history change and must respect identities, referential integrity, event dependencies, unique custody and Go's atomic expected-version/epoch checks. If an explicitly requested removal creates an unresolved structural conflict with still-active events, **reject/report that incompatible transaction** rather than silently deleting unrelated retained events, fabricating replacements or automatically suspending/reinstating gameplay effects. Exact user resolution controls belong to later B2/B3 contract design.
+- **Continue Editing/Discard:** Canonical active selection/events remain unchanged.
+- **Replay:** B2-D03 recomputes authoritative world state from the Turn-0 baseline and the selected accepted events as needed. Replay means applying recorded outcomes, **not** asking AI to reevaluate fictional logic. Do not add AI continuity checks, new event extraction from edited prose, or a new model-based repair pass in these existing actions.
+- **No ordinary suspension/reinstatement system:** The previous D04 suspended-effect mechanism and proposed B2-D07 reinstatement decision are **superseded for this history-editing workflow**. Preserve correct technical failure reporting for genuinely invalid direct state operations; this is not permission to publish an invalid world state.
+- **Potential future downstream reinterpretation** was separately captured as an **unaccepted Inbox candidate** [IDEA-0067](../../inbox/AI-Assisted%20Downstream%20Story%20Re-Evaluation%20After%20Historical%20Edits.md). Neither automatic reevaluation nor a new third historical-editing action is approved.
 
-## Alternatives considered
+## Alternatives and consequences
 
-1. **Option A, accepted:** Retain later prose and events; visibly suspend only structurally unrepresentable effects in the current reconstructed state.
-2. **Option B, not selected:** Reject the entire confirmed Keep Later Turns operation whenever a later effect cannot currently replay. This blocks already approved authorial freedom for avoidable structural edge cases.
-3. **Option C, not eligible under existing acceptance:** Automatically invent missing prerequisites or infer repairs with AI.
+1. **Accepted current clarification:** Retain all existing accepted event outcomes under Keep; remove future passages/events from the *active* selection under Delete All After Point; report conflicts from separately requested structural changes.
+2. **Previously accepted, now superseded original D04 Option A:** General suspended-effect status and subsequent reinstatement logic based on an incorrect assumption that rewritten prose revokes its original associated events.
+3. **Not approved:** Automatic semantic reevaluation or regeneration of all subsequent passages, background repair, inferred inventory correction, wholesale physical destruction of immutable audit history, or a full branch/redo menu.
 
-## Consequences and unresolved engineering details
-
-- **Benefits:** preserves user-selected later story and accepted historical provenance, without corrupting current canonical state or inferring compensating facts.
-- **Costs:** needs explicit status/provenance for unapplied effects, deterministic dependency/error propagation and informative user messaging.
-- **Still open:** status encoding (persisted vs reproducibly derived), dependency traversal, exactly when a subsequent explicit manual edit permits reapplication, bulk-event granularity, and consistent Go commit envelope/validation (B2/B3).
-- **Not settled:** the B2-D03 replay-from-Turn-0 policy; it is a separately revised proposal and is **not accepted** by D04.
+This reduces state/status complexity and stays within accepted Story authorial freedom. **Open engineering details** include explicit event/state-edit UX and atomic dependency checks, passage-to-event membership encoding, truncation boundaries and recovery from accidental Delete All After Point. No implementation, new feature-stage acceptance or promotion is claimed.
 
 ## Traceability
 
@@ -61,3 +56,5 @@ Related owners S03, S05, S06, S10, S11, S12. Sources: [IDEA-0039](../../staging/
 
 - **2026-10-25:** D04 proposed for review: choose an integrity-preserving deterministic fallback for technically unrepresentable retained later events, not fictional continuity disagreements.
 - **2026-10-26:** User explicitly approved **D04 Option A**. No additional AI repairs, stage promotion or implementation were approved.
+
+- **2026-10-26 — Explicit subsequent user clarification (supersedes original D04 suspension workflow):** User clarified that **Keep Later Turns keeps all existing events, including those attached to the newly rewritten passage**, even if the passage now fictionally contradicts them. User agreed the simpler policy: **Delete All After Point removes all future passage/events from active canon; otherwise Keep leaves recorded events as-is**, with structural failures from separately requested event deletions rejected rather than silently repaired. Optional downstream reevaluation was requested as an **unaccepted** idea, not adopted now. See [IDEA-0067](../../inbox/AI-Assisted%20Downstream%20Story%20Re-Evaluation%20After%20Historical%20Edits.md). The former D04 suspension example is superseded and B2-D07 is unnecessary for this workflow.
