@@ -91,11 +91,37 @@ The next three questions refine implementation-facing behaviour without reopenin
 
 - **B3-D04:** **Accepted revised user-directed no-revisions model, 2026-10-27** (original A/B/C superseded, not chosen). [ADR](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md).
 - **B3-D05:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B3-D05%20-%20Reject%20Stale%20Canonical%20Submissions%20and%20Refetch.md).
-- **B3-D06:** **Accepted Option A with explicit player Commit gate, 2026-10-27.** Manual world-state changes accumulate in a pending noncanonical change set; only a visible bottom-area **Commit** action validates and atomically records replayable correction events. Blocking the chat composer is **tentative and unapproved**. [ADR](./decisions/B3-D06%20-%20Pending%20Manual%20State%20Corrections%20and%20Explicit%20Commit.md).
+- **B3-D06:** **Accepted Option A with explicit player Commit gate, 2026-10-27.** Manual world-state changes accumulate in a pending noncanonical change set; only a visible bottom-area **Commit** action validates and atomically records replayable correction events. Full-composer overlay subsequently **approved as B3-D07**. [ADR](./decisions/B3-D06%20-%20Pending%20Manual%20State%20Corrections%20and%20Explicit%20Commit.md).
 
 ## Current direction superseding original Batch 2 D04 options
 
 The user explicitly rejected retaining passage/event revision archives and confirmed a **single mutable current story and current ordered events**. Confirmed passage edits overwrite their current body; Keep retains existing current events; Delete/Undo remove affected current passages/events atomically. Stable passage/event IDs, structured JSON, event-format versions, Turn-0 deterministic replay, adventure-version optimistic concurrency, library epoch, typed atomic commits and operation-ID receipts remain. Old B2/B3 ADRs retain approval provenance but the superseded immutable audit/selection requirements no longer direct new design. **D06 is now accepted with an explicit manual Commit gate** and reconciled with the current-only model; its original alternatives above remain for approval history.
+
+## B3-D07 — Accepted shared pending-commit chat overlay (2026-10-27)
+
+[Accepted ADR](./decisions/B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md): Whenever a player-resolvable pending canonical commit exists, cover the **entire chat composer** with a semi-transparent overlay identifying uncommitted changes. No typing, editing or Send until the player uses **Approve/Commit** or **Discard**. Reuse this visual/interaction pattern for all pending-commit workflows; retain specialised confirmation choices such as historical **Keep Later Turns** vs **Delete All After Point**. Do **not** introduce a new manual gate for ordinary turns or Quick Start that already have their own accepted finalisation semantics.
+
+## B3 Batch 3 — proposed, unapproved
+
+### B3-D08 — Persistence of pending change sets
+
+- **Option A (recommended):** Save the most recent pending manual change set as a **noncanonical draft in Go/SQLite**, associated with adventure and base expected version; restore it on reload but revalidate/refetch before approving it. Dismiss/discard clears the pending set; no implicit canonical write. **Trade-off:** Better resilience to crashes/reloads, some draft lifecycle/schema complexity.
+- **Option B:** Pending changes exist only in tab memory and are lost on refresh/restart. **Trade-off:** Least storage complexity, but easy accidental loss of multi-field corrections.
+- **Option C:** Automatically commit pending changes when leaving/reloading. **Trade-off:** Less lost work, but directly contradicts the explicit Commit-only rule.
+
+### B3-D09 — Multiple pending change sets in one adventure
+
+- **Option A (recommended):** Use **one pending canonical change set per adventure/session editing context**, folding additional compatible changes into that set until approved/discarded; do not create a hidden queue of separately committable batches. Surface any incompatible action and require resolution first. **Trade-off:** Simple player mental model but cannot stage multiple independent alternative edits.
+- **Option B:** Allow many independently pending batches and a queue/selector. **Trade-off:** Flexible, but complicates composition, version checks, approval order and what the composer overlay is blocking.
+- **Option C:** Automatically approve the current pending batch when another edit starts. **Trade-off:** Faster but violates user-controlled approval.
+
+### B3-D10 — Pending approval, rejection and error recovery
+
+- **Option A (recommended):** Keep the overlay active while the Commit outcome is uncertain or the pending set is rejected. On validation failure, show the exact problem and keep editable pending changes. On stale adventure version, refetch canon and require the player to review/reapply pending changes before a fresh Commit. Resolve lost responses via B3-D02 operation identity before deciding success/failure. **Discard** deliberately clears pending state without changing canon. **Trade-off:** More explicit recovery UI, but no accidental losses or duplicate writes.
+- **Option B:** Discard the pending changes on any failed commit. **Trade-off:** Simpler UI, but loses player work.
+- **Option C:** Automatically rebase and resubmit failed/stale commits. **Trade-off:** Minimises prompts but bypasses the accepted fresh-decision rule in B3-D05.
+
+**Batch 3 has not been accepted.** Exact modal positioning, focus management, accessibility, navigation and the distinct historical-edit choices remain later interface design.
 
 ## Decision history
 
@@ -106,3 +132,5 @@ The user explicitly rejected retaining passage/event revision archives and confi
 - **2026-10-27 — B3-D04 replacement and B3-D05 approval:** User explicitly confirmed no retained passage/event revisions or immutable audit selection, superseding the original B3-D04 Option A proposal and relevant B2/B3 design assumptions; separately approved **B3-D05 Option A**. Recorded [D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) and [D05](./decisions/B3-D05%20-%20Reject%20Stale%20Canonical%20Submissions%20and%20Refetch.md) as accepted ADRs. **D06 not accepted.**
 
 - **2026-10-27 — B3-D06 explicit approval with refinement:** User accepted manual correction outcome events (Option A), **but only after edits are staged as a pending change set and the player presses a visible bottom-area Commit button**. Automatic state commits from editing controls are not approved. User tentatively suggested blocking the chat box while changes are pending; this UX lock remains a separate unapproved choice. [B3-D06 ADR](./decisions/B3-D06%20-%20Pending%20Manual%20State%20Corrections%20and%20Explicit%20Commit.md).
+
+- **2026-10-27 — Approved composer overlay:** User explicitly required the same semi-transparent full-composer overlay across all pending-commit workflows, with Approve/Commit and Discard; typing and sending remain unavailable while pending. [B3-D07 accepted](./decisions/B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md). Prepared unapproved Batch 3 D08–D10 about pending persistence, batching and recovery. No promotion or implementation.
