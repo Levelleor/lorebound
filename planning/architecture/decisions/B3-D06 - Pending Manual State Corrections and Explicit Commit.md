@@ -46,7 +46,7 @@ Under [B3-D04](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.m
 
 **Accepted:** A prominent bottom-area Commit control appears when noncanonical manual changes are pending; they are never committed automatically.
 
-**Still under consideration:** Whether to temporarily disable **chat submission** (or the entire chat composer) while manual changes are pending, versus allowing continued composition with a persistent warning. The user floated blocking the chat box as a possibility, *not* as a final selection. No hard blocking requirement is approved yet.
+**Superseded by explicit later approval (2026-10-27):** [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md) requires a semi-transparent overlay over the **entire chat composer**, disabling all typing and sending while any player-resolvable pending commit exists, with Approve/Commit and Discard actions. This also applies to other pending-commit workflows; it does not introduce a new approval gate for already automatically finalised turns.
 
 **Unresolved implementation details:** Whether/how pending manual changes persist through reload/navigation, explicit Discard/Revert UX, keyboard shortcuts, how conflicts are displayed and resolved, multiple pending correction scopes, fine-grained event types, correction ordering around committed Undo, and manual event deletion/editor controls. Do not assume noncanonical pending manual changes inherit prose draft autosave behaviour without another decision.
 
@@ -56,7 +56,7 @@ Under [B3-D04](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.m
 2. **Original Option A without a pending gate — modified before approval:** Immediate canonical correction after each field change. Not accepted for manual state edits.
 3. **Option B — not accepted:** Automatically cascade through existing current events, changing or disabling them to accommodate a correction. Undermines control and may change intended history.
 4. **Option C — not accepted:** Directly mutate world-state projection without recording an outcome event. Loses the correction on Turn-0 replay.
-5. **Provisional UI suggestion, not approved:** Blocking the chat composer while the pending set exists. Requires a separate explicit UX choice.
+5. **Subsequently accepted separately:** Full-composer overlay and hard block while pending, [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md). Its earlier tentative status is retained in original approval history.
 
 ## Traceability
 
@@ -67,3 +67,5 @@ Under [B3-D04](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.m
 - **2026-10-27 — Unaccepted first proposal:** B3-D06 Option A offered event-based validated corrections; Option B offered automatic dependent-history changes; Option C offered projection-only mutation.
 - **2026-10-27 — User explanatory request:** Asked why corrections must be replayable and whether they can be attributed to a story turn. Assistant explained that manual changes need deterministic events and can have a position without inventing narrative turns; explicitly marked A not yet recorded.
 - **2026-10-27 — Explicit user approval with refinement:** User approved **Option A** and added **stage deviations, then commit only when the player presses a bottom-area Commit button**. Chat-box blocking mentioned tentatively. All original approval context and new conditions preserved.
+
+- **2026-10-27 — Subsequent explicit UX approval:** User required a semi-transparent overlay over the entire chat box while pending changes exist, with Approve/Commit or Discard; no chatting, typing or sending until resolved. The shared pattern is captured by [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md). The original tentative proposal above remains as history, not current design.
