@@ -11,13 +11,13 @@ tags:
 ---
 # Pass B3 — Atomic Commit and Concurrency Contracts (Review)
 
-> **Review proposals only, not accepted ADRs.** B2 was formally closed at design level on 2026-10-27 by [P-B2-01](./decisions/P-B2-01%20-%20Design%20Closure%20and%20Deferred%20Transaction%20Contracts.md). This document stages the first three B3 questions for explicit user decision; it approves none of them.
+> **B3 Batch 1 approved on 2026-10-27:** D01, D02 and D03 each accepted **Option A** in separate ADRs. Original alternatives below are preserved for approval history. Batch 2 below remains **unapproved**. B2 was closed at design level under [P-B2-01](./decisions/P-B2-01%20-%20Design%20Closure%20and%20Deferred%20Transaction%20Contracts.md).
 
 ## Scope and inherited authority
 
 S05 canonical history and S06 gameplay validation execute in browser TypeScript; Go S12 owns the single SQLite library and durable transaction acceptance, expected adventure version, library epoch and global maintenance fence. No second Go gameplay rule engine, browser-generic SQL, model proxy or unapproved AI review stage. B2-D01–D06/D08 define immutable outcome events, structured passage JSON, single active history, full Turn-0 reconstruction and fail-closed unsupported required core events. Current historical-edit behaviour: Keep Later Turns preserves edited passage events and retained future events; Delete All After Point removes later passages/events from active canon; drafts are not canon.
 
-## B3 Batch 1 — proposed, not approved
+## B3 Batch 1 — accepted Option A on 2026-10-27 (original proposal preserved)
 
 ### B3-D01 — Prepared canonical commit envelope and narrow Go service
 
@@ -49,10 +49,52 @@ S05 canonical history and S06 gameplay validation execute in browser TypeScript;
 
 ## Review status
 
-- **B3-D01:** Proposed Option A, unapproved.
-- **B3-D02:** Proposed Option A, unapproved.
-- **B3-D03:** Proposed Option A, unapproved.
+- **B3-D01:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B3-D01%20-%20Prepared%20Atomic%20Canonical%20Commit%20Envelope.md).
+- **B3-D02:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B3-D02%20-%20Idempotent%20Canonical%20Commit%20Attempts.md).
+- **B3-D03:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B3-D03%20-%20Atomic%20Historical%20Selection%20and%20Undo.md).
+
+## B3 Batch 2 — new proposals, not approved
+
+The next three questions refine implementation-facing behaviour without reopening B1/B2 decisions. **These options are not ADRs until explicitly accepted.**
+
+### B3-D04 — Active-history selection persistence and read consistency
+
+**Question:** How should Go store and return the one active canon for an adventure without accidentally exposing old inactive audit records as current state?
+
+- **A (recommended):** Store **explicit, durable, adventure-scoped selected passage-revision and event-membership records plus a selected head/order**. Read a coherent, version-tagged active-history view from a single consistent SQLite read transaction. S05 deterministically reconstructs world state from the selected events; Go does not run the gameplay reducer. Historical inactive revisions/events stay queryable only as audit, not as playable alternatives. **Trade-off:** Additional membership data and referential/ordering checks; easiest to audit.
+- **B:** Store only an active-head pointer and derive membership from immutable history and revision ancestry on every read. **Trade-off:** Smaller selection data, but ambiguous membership for retained events of rewritten passages and for manual corrections; derivation becomes more complex and may require hidden rules.
+- **C:** Persist a mutable materialised current-world-state record as the primary authority for reads, with events treated mainly as audit. **Trade-off:** Faster reads, but conflicts with the B2 Turn-0 authoritative reconstruction and creates two competing canonical state representations.
+
+**Not settled by this question:** Exact SQLite table layout, ID representation, schema migration and query indexes.
+
+### B3-D05 — Handling stale browser tabs and conflicting canonical submissions
+
+**Question:** When a tab tries to commit against an outdated adventure version, should the app try to merge/rebase it automatically?
+
+- **A (recommended):** **Reject the stale canonical attempt atomically, refetch authoritative adventure/version/epoch and require a fresh player/coordinator decision** before any new attempt. Preserve uncommitted input/draft when still available. Cross-tab notifications are invalidation hints, not source-of-truth updates. Never auto-apply stale history edits or delete newer turns. **Trade-off:** Player may need to retry/review; strongest predictability and aligns with B1-D04.
+- **B:** Automatically rebase prepared canonical changes against the latest history, rerun relevant deterministic checks and attempt commit without a new player confirmation. **Trade-off:** Fewer interruptions, but changes the premise of a previously accepted proposal and is risky for Delete/Undo/manual state edits.
+- **C:** Queue stale attempts in Go and serialise them in arrival order regardless of their original expected versions. **Trade-off:** Simpler optimistic caller UX but violates expected-version acceptance and may apply a story action to a different canon than intended.
+
+**Not settled:** Specific conflict dialog text, autosave debounce, cross-tab notification transport or request cancellation implementation. Same-operation idempotency under D02 remains distinct from retrying a rejected stale request.
+
+### B3-D06 — Validated manual state corrections and dependent event integrity
+
+**Question:** When a player explicitly changes an existing world-state fact (e.g. inventory or entity identity), how should the change enter accepted history if later active events depend on it?
+
+- **A (recommended):** Treat the player's correction as a **new, validated, provenance-bearing canonical outcome** in a B3-D01 atomic commit. S05/S06 preflight its impact against applicable structural invariants and selected event dependencies. If the change would leave an unrepresentable active state, **reject/report the conflicting correction** for player revision instead of silently altering other accepted events. **Trade-off:** May require the player to resolve dependencies explicitly; keeps original accepted history and gameplay state deterministic.
+- **B:** Automatically cascade through dependent active events, rewriting their effects or deactivating them until the correction can apply. **Trade-off:** Less player effort but contradicts the accepted non-suspension/no-unapproved-auto-repair history policy and obscures player intent.
+- **C:** Mutate the current world-state projection directly without recording a new outcome event. **Trade-off:** Quick to implement but breaks deterministic replay and audit provenance.
+
+**Not settled:** Concrete correction command types, whether event-removal is a separate approved action, conflict presentation, or specific reducer/dependency algorithms. This is **not** permission for AI to rewrite downstream prose; [IDEA-0067](../inbox/AI-Assisted%20Downstream%20Story%20Re-Evaluation%20After%20Historical%20Edits.md) remains unaccepted.
+
+## Batch 2 review status
+
+- **B3-D04:** Proposed A/B/C, **not approved**.
+- **B3-D05:** Proposed A/B/C, **not approved**.
+- **B3-D06:** Proposed A/B/C, **not approved**.
 
 ## Decision history
 
 - **2026-10-27:** B2 formally closed by explicit user approval. B3 first three decisions prepared for user review; no acceptance or implementation yet.
+
+- **2026-10-27:** Requesting user explicitly selected **B3-D01: A, B3-D02: A, B3-D03: A**. Created separate accepted ADRs for all three and preserved original alternatives. Prepared **B3-D04 through B3-D06 as unapproved Batch 2 proposals**; no implementation, staging promotion or approval of the new proposals implied.
