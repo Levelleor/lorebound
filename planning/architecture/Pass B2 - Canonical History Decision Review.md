@@ -3,7 +3,7 @@ type: architecture
 status: in-review
 phase: "B2"
 created: "2026-10-25"
-updated: "2026-10-26"
+updated: "2026-10-27"
 tags:
   - planning/architecture
   - pass-b
@@ -41,6 +41,31 @@ The older IDEA-0042 staging direction allows *optional* snapshots but does not m
 
 **B2-D04, B2-D05 and B2-D06 are accepted and recorded separately.** The original D05 split/merge ancestry proposal remains superseded by the independently approved structured passage document contract. **B2-D03 was subsequently approved on 2026-10-26 as revised Option A.** No staging ideas are promoted.
 
+## Batch 3 — final decisions and closure assessment (2026-10-27)
+
+| Decision | Review outcome | Source |
+| --- | --- | --- |
+| **B2-D07** Suspended event reinstatement | **Withdrawn as unnecessary; never accepted.** Later human clarification of D04 means Keep preserves existing accepted events (including those from the edited passage), while Delete All After Point excludes later passage/events from active canon. There is no ordinary automatic suspension/reinstatement feature. | [B2-D04 revised ADR](./decisions/B2-D04%20-%20Retained%20History%20and%20Suspended%20Unrepresentable%20Effects.md) |
+| **B2-D08** Unsupported required core event replay | **Accepted, Option A, 2026-10-27.** Stop unsafe authoritative reconstruction/commits for affected adventure, preserve immutable history, allow safe read-only narrative diagnostics where feasible and leave unrelated adventures usable. | [B2-D08 ADR](./decisions/B2-D08%20-%20Fail-Closed%20Unsupported%20Core%20Event%20Replay.md) |
+
+### B2 design closure assessment
+
+**Assessment: the eight numbered review questions have reached a documented disposition**, not eight independent approvals: B2-D01 through D06 and D08 are accepted; D07 was deliberately withdrawn when the factual assumption underlying suspension was corrected. The accepted D04 clarification is authoritative over its initial suspended-effect proposal.
+
+**Ready for final *design-level* sign-off if the user approves it.** No separate user statement has yet explicitly declared B2 closed. No runnable game, schema integration, API contract, tests or staging-to-production promotion is claimed.
+
+**Co-design contracts still for B3 and later refinement**, not reasons to invent further B2 product decisions:
+
+- Exact event and passage JSON/SQL shapes, active-history membership and ordering, source revision provenance and commit envelope.
+- Atomically selecting/truncating active history under expected adventure version/library epoch, Undo, independent Fork, multi-tab stale conflicts, failure/cancellation and backup maintenance fencing.
+- Explicit event/state edit dependency and preflight integrity checks, together with non-destructive treatment of immutable audit history.
+- Typed core-event-format compatibility errors, adventure-scoped fail-closed read-only response, and covered replay fixtures; continue honoring missing/removed-plugin exception.
+- Exact structured passage editor schema/serialization, source links, whole-passage split/merge/reorder behaviour (not approved by D05).
+- Full Turn-0 replay performance testing; no persisted replay checkpoints under D03.
+- Integration gates deferred under [B1 design-only signoff](./Pass%20B1%20Feasibility%20Evidence%20and%20Closure%20Review.md).
+
+**Scope expressly excluded:** speculative AI-driven downstream re-evaluation after historical editing remains [unaccepted Inbox IDEA-0067](../inbox/AI-Assisted%20Downstream%20Story%20Re-Evaluation%20After%20Historical%20Edits.md), not part of selected replay. Any later acceptance follows separate idea gates.
+
 ## Decision history
 
 - **2026-10-25:** User accepted B2-D01 and B2-D02, requested B2-D03 revision towards full Turn-0 rebuilding. Accepted choices stored in individual ADRs; D03 remains under review. Batch 2 topics listed for later human decision.
@@ -52,3 +77,5 @@ The older IDEA-0042 staging direction allows *optional* snapshots but does not m
 - **2026-10-26 — Revised D03 accepted:** User explicitly selected **B2-D03 Option A**, full Turn-0 replay when authoritative reconstruction is needed, while allowing incremental updates for normal new turns; no persisted checkpoints. Recorded [ADR](./decisions/B2-D03%20-%20Turn-0%20Replay%20for%20Authoritative%20Reconstruction.md). User requested further explanation of **B2-D07**, so D07 and D08 remain unapproved.
 
 - **2026-10-26 — Final historical-edit clarification:** Requesting user confirmed that **Keep Later Turns leaves all pre-existing selected events intact**, including those originally sourced from the revised passage, while **Delete All After Point removes all subsequent passage/event effects from active canon**. Confirmed that replay is deterministic reconstruction from recorded events, not AI re-evaluation. Previously approved B2-D04 Option A suspension semantics were narrowed/superseded in the D04 ADR with history preserved; suggested B2-D07 suspended-event reinstatement is **no longer needed** for ordinary history editing, and **B2-D08 remains unapproved**. Separately requested future downstream semantic evaluation/repair stored as **unaccepted Inbox IDEA-0067**; no stage promotion or model repair step approved.
+
+- **2026-10-27 — D08 explicit acceptance and B2 closure assessment:** User selected **B2-D08 Option A** and requested recording plus closure review. Added [D08 ADR](./decisions/B2-D08%20-%20Fail-Closed%20Unsupported%20Core%20Event%20Replay.md), preserved D07's withdrawn status and D04's superseded original suspension decision. Seven ADRs accepted (D01–D06 and D08); **B2 ready for human design-level sign-off**, but not yet formally closed by the user; remaining B3 implementation/interface contracts explicitly listed above.
