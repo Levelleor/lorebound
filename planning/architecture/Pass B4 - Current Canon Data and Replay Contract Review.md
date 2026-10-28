@@ -1,6 +1,6 @@
 ---
 type: architecture
-status: in-review
+status: closed-design-only
 phase: "B4"
 created: "2026-10-27"
 updated: "2026-10-28"
@@ -12,6 +12,8 @@ tags:
 ---
 
 # Pass B4 — Current Canon Data and Replay Contract Review
+
+> **Formally closed at design level on 2026-10-28 by explicit user approval.** [P-B4-01 closure ADR](./decisions/P-B4-01%20-%20Design%20Closure%20and%20Deferred%20Initialization%20Contracts.md). Nine decisions accepted with B4-D04 **B** and B4-D08 **B**, all other D01–D09 **A**. No code, verification or staging promotion approved.
 
 > **Batch 1 accepted on 2026-10-27:** B4-D01, D02 and D03 each approved **Option A** in separate ADRs. The original alternatives below remain for provenance. Batch 2 accepted: **D04 Option B**, **D05 Option A**, **D06 Option A**. Batch 3 approved: **D07 A, D08 B, D09 A**. Closure assessment below; formal sign-off remains pending. B3 is closed design-only under [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md).
 
@@ -113,7 +115,7 @@ After [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20R
 
 ## B4 design closure assessment — 2026-10-28
 
-**Nine of nine B4 architectural decision questions have accepted dispositions. B4 is ready for explicit design-only closure, but is not formally closed yet.** User asked for an **assessment**, not a closure sign-off. Decisions D01–D03 are A/A/A; D04–D06 are B/A/A; D07–D09 are A/B/A.
+**B4 was formally closed at the design level on 2026-10-28 by a subsequent explicit user approval**, recorded as [P-B4-01](./decisions/P-B4-01%20-%20Design%20Closure%20and%20Deferred%20Initialization%20Contracts.md). Nine of nine B4 architectural questions have accepted dispositions; this assessment originally preceded formal sign-off. Decisions D01–D03 are A/A/A; D04–D06 are B/A/A; D07–D09 are A/B/A.
 
 ### Current combined design
 - One current-only story/event history per adventure, with stable event order and story-boundary attachment for independent manual corrections. Deterministic TypeScript replay from Turn 0; consistent, version-tagged Go/SQLite reads.
@@ -129,7 +131,7 @@ After [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20R
 - All B1 deferred integration gates (real Wails/Go, browser provider connectivity, global library maintenance/restore and epoch, multi-tab canonical safety, plugin loading and backup) remain unverified.
 - Optional AI-assisted downstream story re-evaluation stays unaccepted Inbox IDEA-0067, not part of current replay.
 
-**Not implied:** New code, production-ready design, staging promotion, formal B4 sign-off, comprehensive migration recovery tooling, automatic backups, or application release approval.
+**Not implied:** New code, production-ready design, staging promotion, comprehensive migration recovery tooling, automatic backups, or application release approval.
 
 ## Deferred evidence and reconciliation
 
@@ -144,3 +146,5 @@ B4 design review does not implement SQLite tables or TypeScript reducers, approv
 - **2026-10-27 — Batch 2 explicit approval:** User selected **B4-D04 Option B** (coordinated upgrade-time migration of current event records), **B4-D05 Option A** (independent atomic Fork), **B4-D06 Option A** (preflight and reject structural replay conflicts). Separate ADRs record each decision and earlier options. D04 supersedes the prior B2-D06 in-place historical-interpretation default for supported current-event upgrades, **not** its deterministic compatibility safeguards. D07–D09 are unapproved Batch 3 proposals; no implementation or B4 closure implied.
 
 - **2026-10-28 — Batch 3 acceptance and closure assessment:** User chose **B4-D07 A, B4-D08 B, B4-D09 A**, clarifying that normal use should be single-tab without overengineering multi-tab UX, while accidental extra tabs must not break canonical safety. Three separate ADRs capture the choices. D08 B narrowly supersedes earlier B3 pending-draft preservation after an externally verified canonical advance, but does not discard uncertain/in-flight commit proposals. Assessed B4 design **ready for formal closure**; no user authorization to mark it closed yet.
+
+- **2026-10-28 — Formal closure:** After receiving the nine-of-nine closure assessment, the requesting user answered **“yes”** to formal B4 design closure and opening the next architecture pass. [P-B4-01](./decisions/P-B4-01%20-%20Design%20Closure%20and%20Deferred%20Initialization%20Contracts.md) preserves the closure authority and deferred integration gates. No next-pass decision, implementation or staging-to-production promotion was approved.
