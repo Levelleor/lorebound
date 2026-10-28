@@ -1,6 +1,6 @@
 ---
 type: architecture
-status: in-review
+status: closed-design-only
 phase: "B5"
 created: "2026-10-28"
 updated: "2026-10-28"
@@ -10,6 +10,8 @@ tags:
   - initialization
 ---
 # Pass B5 — Starting World and First Turn Contracts Review
+
+> **Formally closed at design level on 2026-10-28** by explicit user approval: [P-B5-01 closure ADR](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md). Nine B5 decisions accepted (all Option A). No implementation, verification or stage promotion.
 
 > **Batch 1 accepted on 2026-10-28:** B5-D01, D02 and D03 each approved **Option A**. Their original options remain below for provenance. Batch 2 is now accepted: B5-D04, D05 and D06 each Option A. Batch 3 accepted: D07 A, D08 A, D09 A; design closure assessed below, not formally approved. [P-B4-01](./decisions/P-B4-01%20-%20Design%20Closure%20and%20Deferred%20Initialization%20Contracts.md) records B4 design-only closure. B5 opens the previously deferred S02/S06/S09 starting-world boundary for explicit review; no B5 selection, code, tests or staged-idea promotion is implied.
 
@@ -105,7 +107,7 @@ This is **distinct from B5-D02's grounded fact extraction** and B5-D03's approve
 
 ## B5 design closure assessment — 2026-10-28
 
-**All nine B5 decisions D01–D09 have accepted Option A dispositions. B5 is ready for separate, explicitly approved design-level closure, but remains in-review.** This is an assessment, not formal closure or implementation approval.
+**Nine of nine B5 decisions were accepted; B5 subsequently received explicit formal design-only closure on 2026-10-28**, recorded in [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md). This section preserves the earlier assessment and its deferred gates; neither assessment nor closure constitutes implementation approval.
 
 - **Creation:** Durable empty/characterless Turn-0 baseline and adventure identity, no forced wizard; source-grounded structured initial facts only. Unsupported descriptions remain legitimate prose, not invented structured facts.
 - **Quick Start:** Fully successful validated generated opening and supported factual events automatically commit together; no additional approval gate.
@@ -121,7 +123,7 @@ This is **distinct from B5-D02's grounded fact extraction** and B5-D03's approve
 - Older staged idea text and B2 ADRs still mention revisions/immutable audit; later B3-D04 governs current planning. Reconcile original prose with preserved approval provenance only under a separate explicit planning gate. No staging-to-production promotion.
 - B1 real Wails/Go, provider connectivity, database backup/restore, library epoch, and integrated end-to-end tests remain unverified. This closure assessment does not claim readiness to ship.
 
-**Formal sign-off remains pending:** A separate user instruction is required before recording a P-B5-01 closure ADR and opening B6.
+**Formal sign-off subsequently granted:** The user explicitly approved B5 design closure and beginning B6; see [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md). No B6 option was approved by that reply.
 
 ## Decision history
 
@@ -132,3 +134,5 @@ This is **distinct from B5-D02's grounded fact extraction** and B5-D03's approve
 - **2026-10-28 — Batch 2 explicit approval:** Requesting user accepted **B5-D04 A**, **B5-D05 A**, **B5-D06 A**. Created three individual ADRs retaining original alternatives and approval history. Proposed B5-D07–D09 for Batch 3; these are unapproved, and no implementation, staging promotion or B5 closure was authorized.
 
 - **2026-10-28 — Batch 3 acceptance and design closure assessment:** User explicitly accepted **B5-D07 A, B5-D08 A, B5-D09 A** and requested ADR recording and an assessment of B5 closure. Created separate accepted ADRs; retained prior alternatives. Nine of nine design choices resolved. Assessed B5 ready for user-approved design-only closure; **not formally closed**. No implementation, staged idea promotion, or release authorization.
+
+- **2026-10-28 — Formal B5 design closure:** After receiving the nine-of-nine closure assessment, the requesting user replied **“yes”** to explicit design closure and the next architectural pass. Recorded as [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md). Engineering gates still open; no stage promotion or new-pass acceptance.
