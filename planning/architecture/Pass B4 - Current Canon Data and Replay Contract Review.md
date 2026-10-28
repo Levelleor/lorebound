@@ -13,13 +13,13 @@ tags:
 
 # Pass B4 — Current Canon Data and Replay Contract Review
 
-> **Proposal only.** B3 is formally closed at design level under [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md); **no B4 decision has been accepted**. Each numbered question below requires distinct human approval.
+> **Batch 1 accepted on 2026-10-27:** B4-D01, D02 and D03 each approved **Option A** in separate ADRs. The original alternatives below remain for provenance. Batch 2 remains unapproved. B3 is closed design-only under [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md).
 
 ## Scope and inherited decisions
 
 After [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md), there is one current passage body per logical passage and one current ordered event history per adventure, not a retained passage/event revision archive. Deterministic replay from Turn 0, Go/SQLite atomic transaction authority, expected-adventure-version and library-epoch checking, idempotent commits, pending manual edits and the composer overlay remain. The pre-B3 source documents retain original historical approval wording; do not silently treat obsolete revisions/audit expectations as current implementation requirements.
 
-## Batch 1 — proposed decisions, not accepted
+## Batch 1 — accepted Option A (original proposals retained)
 
 ### B4-D01 — Canonical event ordering when manual corrections occur between turns
 
@@ -53,9 +53,41 @@ After [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20R
 
 ## Decision status
 
-- **B4-D01:** proposed A/B/C; unapproved.
-- **B4-D02:** proposed A/B/C; unapproved.
-- **B4-D03:** proposed A/B/C; unapproved.
+- **B4-D01:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B4-D01%20-%20Total%20Ordering%20of%20Current%20Outcome%20Events.md).
+- **B4-D02:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B4-D02%20-%20Undo%20and%20Truncation%20Boundaries%20for%20Independent%20Corrections.md).
+- **B4-D03:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B4-D03%20-%20Consistent%20Version%20Tagged%20Canonical%20Reads.md).
+
+## Batch 2 — proposed decisions, not approved
+
+### B4-D04 — How should a current event's format change during application upgrades?
+
+- **A (recommended):** Interpret supported older event schema versions through explicit deterministic TypeScript upcasters/reducers **without rewriting stored current events just to upgrade them**. On an ordinary accepted player correction, write the new current event format; on unsupported required core data, fail closed. No obsolete event archive is maintained. **Trade-off:** Maintain compatibility code for supported versions, but avoid broad risky in-place data transformations.
+- **B:** Rewrite every current stored event to the latest schema as part of application upgrade, in one coordinated migration transaction. **Trade-off:** Simpler readers eventually, but larger failure/rollback surface and risk of accidental semantic changes.
+- **C:** Read all old payloads using the latest reducer without explicit version handling. **Trade-off:** Fewer adapters, but accepted past outcomes might silently change meaning.
+
+**Not approved:** indefinite backwards compatibility, exact format support policy, automatic payload migration or custom plugin migration; retain the removed-plugin exception.
+
+### B4-D05 — How should an independent Fork copy the current adventure?
+
+- **A (recommended):** Create a **new, independently owned adventure** from the chosen committed story-turn boundary, copying surviving current passage bodies and exactly the ordered events (including applicable manual corrections) within that boundary. Use atomic Go/SQLite storage and coherent ID/reference mapping; no reference back to mutable source adventure records. **Trade-off:** Requires a safe copy operation and ID mapping, but makes each fork independently editable.
+- **B:** Fork by referencing the original adventure's live records and overlaying only later differences. **Trade-off:** Storage efficient, but risks cross-adventure mutation coupling and hidden branch complexity.
+- **C:** Copy only prose and reconstructed world state at fork time, dropping historical events. **Trade-off:** Simpler, but loses future Turn-0 deterministic replay and event history.
+
+**Not approved:** automatic historical snapshots, per-adventure import/export, or parallel in-story variant browsing.
+
+### B4-D06 — How should invalid dependent events be handled after deliberate current-history mutations?
+
+- **A (recommended):** Before accepting a manual event edit, history truncation, committed Undo or current-only deletion, run a **deterministic structural integrity check** of the intended resulting event sequence (TypeScript domain validation; Go storage safety). If it cannot replay safely because of a genuine missing referenced entity/invariant, **reject the proposed change with an actionable conflict**, keeping existing canon intact. Never silently change surviving events or call AI to repair. **Trade-off:** Some deliberate edits may require a second corrective action; predictable integrity.
+- **B:** Automatically cascade deletes or rewrite dependent events to make the proposed mutation work. **Trade-off:** Less player work, but changes historical accepted outcomes without specific player intent.
+- **C:** Commit the proposed removal regardless and show an error only later if replay fails. **Trade-off:** Fewer immediate blocks, but risks leaving the active adventure unusable.
+
+**Clarification:** Fictional inconsistencies from **Keep Later Turns** do not count as structural failures; supported event-format incompatibility has the separately accepted B2-D08 fail-closed handling. Exact reducer/validation algorithms remain later engineering work.
+
+### Batch 2 status
+
+- **B4-D04:** proposed A/B/C; unapproved.
+- **B4-D05:** proposed A/B/C; unapproved.
+- **B4-D06:** proposed A/B/C; unapproved.
 
 ## Deferred evidence and reconciliation
 
@@ -64,3 +96,5 @@ B4 design review does not implement SQLite tables or TypeScript reducers, approv
 ## Decision history
 
 - **2026-10-27:** User explicitly signed off B3 design closure and asked to proceed with the next architecture pass. First three B4 proposals opened; **no B4 approval inferred**.
+
+- **2026-10-27 — Batch 1 explicit approval:** User accepted **B4-D01 Option A**, **B4-D02 Option A**, and **B4-D03 Option A**, with a request to record only approved choices and continue review. Created three separate ADRs with original proposals, rejected alternatives and individual approval provenance. Proposed D04–D06 as **unaccepted Batch 2**; no implementation, release test, staging promotion or B4 closure is implied.
