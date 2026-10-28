@@ -3,7 +3,7 @@ type: architecture
 status: in-review
 phase: "B4"
 created: "2026-10-27"
-updated: "2026-10-27"
+updated: "2026-10-28"
 tags:
   - planning/architecture
   - pass-b
@@ -13,7 +13,7 @@ tags:
 
 # Pass B4 — Current Canon Data and Replay Contract Review
 
-> **Batch 1 accepted on 2026-10-27:** B4-D01, D02 and D03 each approved **Option A** in separate ADRs. The original alternatives below remain for provenance. Batch 2 accepted: **D04 Option B**, **D05 Option A**, **D06 Option A**. Batch 3 proposals below remain unapproved. B3 is closed design-only under [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md).
+> **Batch 1 accepted on 2026-10-27:** B4-D01, D02 and D03 each approved **Option A** in separate ADRs. The original alternatives below remain for provenance. Batch 2 accepted: **D04 Option B**, **D05 Option A**, **D06 Option A**. Batch 3 approved: **D07 A, D08 B, D09 A**. Closure assessment below; formal sign-off remains pending. B3 is closed design-only under [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md).
 
 ## Scope and inherited decisions
 
@@ -89,7 +89,7 @@ After [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20R
 - **B4-D05:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B4-D05%20-%20Independent%20Fork%20from%20Current%20Adventure%20Prefix.md).
 - **B4-D06:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B4-D06%20-%20Preflight%20Structural%20Integrity%20of%20Current%20History%20Mutations.md).
 
-## Batch 3 — proposals, not approved
+## Batch 3 — accepted decisions (original proposals preserved)
 
 ### B4-D07 — Upgrade failure or unsupported event format
 
@@ -109,7 +109,27 @@ After [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20R
 - **B:** Retain a separate persistent pending manual batch for each browser tab. **Trade-off:** Preserves individual work, but adds duplicate pending sets, tab identity, and conflicts.
 - **C:** Give a tab an exclusive editing lease whenever pending manual changes exist. **Trade-off:** Prevents some overlap, but conflicts with the accepted multi-tab/no-exclusive-edit-lock direction.
 
-**Batch 3 remains unapproved.** It proposes details not inferred from approval of D04–D06.
+**Batch 3 accepted 2026-10-28:** [D07 A — atomic failed migration](./decisions/B4-D07%20-%20Fail%20Safe%20Atomic%20Event%20Migration.md); [D08 B — discard externally stale uncommitted manual drafts](./decisions/B4-D08%20-%20Discard%20Stale%20Pending%20Manual%20Drafts.md); [D09 A — shared latest pending draft](./decisions/B4-D09%20-%20Shared%20Latest%20Pending%20Draft%20Without%20Tab%20Locks.md). The user's preference is normal single-tab use, with minimal safety if additional tabs occur; **no exclusive lock**. D08 B takes precedence over B3-D08/D10 only for drafts proven obsolete due to another context's canonical advance. Uncertain prior commits still require B3-D02 receipt resolution.
+
+## B4 design closure assessment — 2026-10-28
+
+**Nine of nine B4 architectural decision questions have accepted dispositions. B4 is ready for explicit design-only closure, but is not formally closed yet.** User asked for an **assessment**, not a closure sign-off. Decisions D01–D03 are A/A/A; D04–D06 are B/A/A; D07–D09 are A/B/A.
+
+### Current combined design
+- One current-only story/event history per adventure, with stable event order and story-boundary attachment for independent manual corrections. Deterministic TypeScript replay from Turn 0; consistent, version-tagged Go/SQLite reads.
+- Coordinated format upgrades **rewrite the currently stored supported event payloads** safely and atomically (D04 B), fail without partial data modification on unsupported required core records (D07 A), and preserve the removed-plugin exception. Explicit event-schema versions and meaning-preserving conversion rules remain.
+- Fork atomically copies the selected current history prefix as an independent adventure. Structural preflight rejects truly invalid event-history changes; fictional inconsistency under Keep Later Turns remains allowed.
+- Explicit manual Commit, pending composer overlay and current-only correction events remain. Pending drafts persist as noncanonical SQLite values until resolved. **D08 B expressly permits discarding a previously uncommitted manual draft after verified external canonical advance**, superseding B3-D08/D10 stale-draft preservation *in that case*. Uncertain commit outcomes first need durable idempotency/status resolution and cannot be mistaken for merely stale drafts. D09 A selects latest-successfully-saved shared drafts, without tab locks or multiple queued branches. Single-tab is the expected use case; accidental second-tab use must not corrupt canon.
+
+### Deferred contracts and verification
+- Actual Go/SQLite table layout, migration schema+payload transaction, compatibility/conversion fixtures, failure/retry after crash, old/new binary and backup/restore compatibility. No integrated upgrade test has been run.
+- Exact event ordering keys, correction boundaries on target turn, Undo/truncation edge cases, Fork ID mapping, dependency preflight API, plugin-state ownership and browser projection invalidation.
+- Cross-tab draft-save races, latest-only shared draft lifecycle, confirmed external staleness detection, pending overlay accessibility and uncertain-response status. These are engineering resilience concerns, **not** reasons to build a sophisticated multi-tab collaboration feature.
+- Original staging sources and older B1/B2 decision text contain superseded immutable revision/append-only assumptions. Preserve provenance while reconciling those documents **under a separately approved stage gate** before production implementation.
+- All B1 deferred integration gates (real Wails/Go, browser provider connectivity, global library maintenance/restore and epoch, multi-tab canonical safety, plugin loading and backup) remain unverified.
+- Optional AI-assisted downstream story re-evaluation stays unaccepted Inbox IDEA-0067, not part of current replay.
+
+**Not implied:** New code, production-ready design, staging promotion, formal B4 sign-off, comprehensive migration recovery tooling, automatic backups, or application release approval.
 
 ## Deferred evidence and reconciliation
 
@@ -122,3 +142,5 @@ B4 design review does not implement SQLite tables or TypeScript reducers, approv
 - **2026-10-27 — Batch 1 explicit approval:** User accepted **B4-D01 Option A**, **B4-D02 Option A**, and **B4-D03 Option A**, with a request to record only approved choices and continue review. Created three separate ADRs with original proposals, rejected alternatives and individual approval provenance. Proposed D04–D06 as **unaccepted Batch 2**; no implementation, release test, staging promotion or B4 closure is implied.
 
 - **2026-10-27 — Batch 2 explicit approval:** User selected **B4-D04 Option B** (coordinated upgrade-time migration of current event records), **B4-D05 Option A** (independent atomic Fork), **B4-D06 Option A** (preflight and reject structural replay conflicts). Separate ADRs record each decision and earlier options. D04 supersedes the prior B2-D06 in-place historical-interpretation default for supported current-event upgrades, **not** its deterministic compatibility safeguards. D07–D09 are unapproved Batch 3 proposals; no implementation or B4 closure implied.
+
+- **2026-10-28 — Batch 3 acceptance and closure assessment:** User chose **B4-D07 A, B4-D08 B, B4-D09 A**, clarifying that normal use should be single-tab without overengineering multi-tab UX, while accidental extra tabs must not break canonical safety. Three separate ADRs capture the choices. D08 B narrowly supersedes earlier B3 pending-draft preservation after an externally verified canonical advance, but does not discard uncertain/in-flight commit proposals. Assessed B4 design **ready for formal closure**; no user authorization to mark it closed yet.
