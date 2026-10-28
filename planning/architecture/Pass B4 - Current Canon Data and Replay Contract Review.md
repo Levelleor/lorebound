@@ -13,7 +13,7 @@ tags:
 
 # Pass B4 — Current Canon Data and Replay Contract Review
 
-> **Batch 1 accepted on 2026-10-27:** B4-D01, D02 and D03 each approved **Option A** in separate ADRs. The original alternatives below remain for provenance. Batch 2 remains unapproved. B3 is closed design-only under [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md).
+> **Batch 1 accepted on 2026-10-27:** B4-D01, D02 and D03 each approved **Option A** in separate ADRs. The original alternatives below remain for provenance. Batch 2 accepted: **D04 Option B**, **D05 Option A**, **D06 Option A**. Batch 3 proposals below remain unapproved. B3 is closed design-only under [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md).
 
 ## Scope and inherited decisions
 
@@ -57,7 +57,7 @@ After [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20R
 - **B4-D02:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B4-D02%20-%20Undo%20and%20Truncation%20Boundaries%20for%20Independent%20Corrections.md).
 - **B4-D03:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B4-D03%20-%20Consistent%20Version%20Tagged%20Canonical%20Reads.md).
 
-## Batch 2 — proposed decisions, not approved
+## Batch 2 — accepted (original alternatives retained)
 
 ### B4-D04 — How should a current event's format change during application upgrades?
 
@@ -85,9 +85,31 @@ After [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20R
 
 ### Batch 2 status
 
-- **B4-D04:** proposed A/B/C; unapproved.
-- **B4-D05:** proposed A/B/C; unapproved.
-- **B4-D06:** proposed A/B/C; unapproved.
+- **B4-D04:** **Accepted Option B, 2026-10-27.** [ADR](./decisions/B4-D04%20-%20Coordinated%20Migration%20of%20Current%20Event%20Schemas.md). Supersedes B2-D06's earlier no-bulk-rewrite default for supported current events; preserves deterministic outcome safety and removed-plugin exception.
+- **B4-D05:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B4-D05%20-%20Independent%20Fork%20from%20Current%20Adventure%20Prefix.md).
+- **B4-D06:** **Accepted Option A, 2026-10-27.** [ADR](./decisions/B4-D06%20-%20Preflight%20Structural%20Integrity%20of%20Current%20History%20Mutations.md).
+
+## Batch 3 — proposals, not approved
+
+### B4-D07 — Upgrade failure or unsupported event format
+
+- **A (recommended):** Treat library schema/event migration as an all-or-nothing fenced operation. If a required current core event cannot be converted safely, stop that upgrade without partially rewriting accepted data; provide actionable diagnostics and a safe retry after compatible software or supported repair. Do not silently delete unsupported events. **Trade-off:** Some upgrades remain blocked until compatibility is available, but preserve canon.
+- **B:** Upgrade convertible adventures but leave others at mixed per-adventure event formats. **Trade-off:** Greater partial usability, but creates long-lived mixed-schema complexity in the shared SQLite library.
+- **C:** Drop unknown event fields/types or substitute neutral effects and finish upgrade. **Trade-off:** Seems convenient but risks silent corruption.
+
+### B4-D08 — How should the pending manual draft react to a changed adventure?
+
+- **A (recommended):** Keep the noncanonical pending proposal for inspection, mark it **stale** when its base adventure version/library epoch no longer matches, and preserve the full composer overlay until the player deliberately reviews and reapplies or discards it. Never auto-rebase or auto-commit. **Trade-off:** Some additional review UI, consistent with B3-D05/D08/D10.
+- **B:** Automatically discard a pending draft when another tab commits. **Trade-off:** Less conflict UI, but player work is lost.
+- **C:** Automatically apply the proposed edits against the new current world state. **Trade-off:** Easier immediate continuation, but risks silently changing intent or references.
+
+### B4-D09 — How should pending manual corrections behave across tabs?
+
+- **A (recommended):** Treat the latest saved pending **noncanonical** change set for the same adventure/editing context as a shared last-successful-save draft in SQLite. Other tabs may replace the draft; make the player recheck what is pending on restore/focus, and guard every canonical Commit against its expected adventure version. No exclusive tab lock or revision history. **Trade-off:** Consistent with accepted latest-only prose draft behaviour, but an unsaved/overwritten prior draft cannot be recovered.
+- **B:** Retain a separate persistent pending manual batch for each browser tab. **Trade-off:** Preserves individual work, but adds duplicate pending sets, tab identity, and conflicts.
+- **C:** Give a tab an exclusive editing lease whenever pending manual changes exist. **Trade-off:** Prevents some overlap, but conflicts with the accepted multi-tab/no-exclusive-edit-lock direction.
+
+**Batch 3 remains unapproved.** It proposes details not inferred from approval of D04–D06.
 
 ## Deferred evidence and reconciliation
 
@@ -98,3 +120,5 @@ B4 design review does not implement SQLite tables or TypeScript reducers, approv
 - **2026-10-27:** User explicitly signed off B3 design closure and asked to proceed with the next architecture pass. First three B4 proposals opened; **no B4 approval inferred**.
 
 - **2026-10-27 — Batch 1 explicit approval:** User accepted **B4-D01 Option A**, **B4-D02 Option A**, and **B4-D03 Option A**, with a request to record only approved choices and continue review. Created three separate ADRs with original proposals, rejected alternatives and individual approval provenance. Proposed D04–D06 as **unaccepted Batch 2**; no implementation, release test, staging promotion or B4 closure is implied.
+
+- **2026-10-27 — Batch 2 explicit approval:** User selected **B4-D04 Option B** (coordinated upgrade-time migration of current event records), **B4-D05 Option A** (independent atomic Fork), **B4-D06 Option A** (preflight and reject structural replay conflicts). Separate ADRs record each decision and earlier options. D04 supersedes the prior B2-D06 in-place historical-interpretation default for supported current-event upgrades, **not** its deterministic compatibility safeguards. D07–D09 are unapproved Batch 3 proposals; no implementation or B4 closure implied.
