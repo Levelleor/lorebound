@@ -11,7 +11,7 @@ tags:
 ---
 # Pass B5 — Starting World and First Turn Contracts Review
 
-> **Batch 1 accepted on 2026-10-28:** B5-D01, D02 and D03 each approved **Option A**. Their original options remain below for provenance. Batch 2 is still unapproved. [P-B4-01](./decisions/P-B4-01%20-%20Design%20Closure%20and%20Deferred%20Initialization%20Contracts.md) records B4 design-only closure. B5 opens the previously deferred S02/S06/S09 starting-world boundary for explicit review; no B5 selection, code, tests or staged-idea promotion is implied.
+> **Batch 1 accepted on 2026-10-28:** B5-D01, D02 and D03 each approved **Option A**. Their original options remain below for provenance. Batch 2 is now accepted: B5-D04, D05 and D06 each Option A. Batch 3 below remains unapproved. [P-B4-01](./decisions/P-B4-01%20-%20Design%20Closure%20and%20Deferred%20Initialization%20Contracts.md) records B4 design-only closure. B5 opens the previously deferred S02/S06/S09 starting-world boundary for explicit review; no B5 selection, code, tests or staged-idea promotion is implied.
 
 ## Inherited architecture
 
@@ -51,7 +51,7 @@ Current adventure history has one current structured passage body per committed 
 
 No implementation or runtime verification. Later B5 batches may refine optional AI-created Turn-0 Lorebook, initializer failure/recovery and user editor/context boundaries. Existing B1 integration tests and the staging/source documentation reconciliation remain deferred, separately gated.
 
-## Batch 2 — proposals, unapproved
+## Batch 2 — accepted Option A (original proposals retained)
 
 ### B5-D04 — Optional AI-generated starting Lorebook acceptance
 
@@ -79,10 +79,34 @@ This is **distinct from B5-D02's grounded fact extraction** and B5-D03's approve
 - **B:** Commit each prose edit to the canonical story immediately as the player types. **Trade-off:** No confirmation but difficult to keep extracted state coherent and contradicts draft-first editing.
 - **C:** Commit opening prose and defer its grounded state extraction to a future story turn. **Trade-off:** Fast prose acceptance but breaks text/event atomicity.
 
-**Batch 2 status:** D04, D05 and D06 are proposed only and have not been accepted. Exact UI labels, generation budgets, world scope, failure messages and initial data schemas remain further contract work.
+**Batch 2 accepted on 2026-10-28:** [D04 Optional Lorebook approval](./decisions/B5-D04%20-%20Approved%20Optional%20AI%20Starting%20Lorebook.md), [D05 preserve baseline on failed setup](./decisions/B5-D05%20-%20Preserve%20Baseline%20on%20Setup%20Failure%20and%20Cancellation.md), [D06 explicit Custom Opening commit](./decisions/B5-D06%20-%20Explicit%20Commit%20of%20Player%20Authored%20Custom%20Opening.md), each **Option A**. Exact UI labels, generation budgets, world scope, failure messages and initial data schemas remain further contract work.
+
+## Batch 3 — proposed, not approved
+
+### B5-D07 — Persistence and recovery of unapproved generated Lorebook proposals
+
+- **Option A (recommended):** Persist the latest complete, validated-but-unapproved generated Lorebook proposal as a **noncanonical adventure-scoped pending draft** in Go/SQLite, so reload restores it to the shared Approve/Discard overlay. A partially generated/failed proposal is not saved as ready for acceptance. Check adventure version/epoch again before Commit; don't silently apply stale generated lore. **Trade-off:** Recovery after refresh, with a small persistent proposal representation and cleanup rules.
+- **Option B:** Keep completed pending generated Lorebook proposals only in current browser memory. **Trade-off:** Simpler storage but refresh loses a potentially costly generated world.
+- **Option C:** Auto-approve a completed proposal on reload. **Trade-off:** Avoids lost work but violates the explicitly approved player acceptance gate.
+
+### B5-D08 — How to handle unsupported extracted facts in an otherwise valid opening
+
+- **Option A (recommended):** Distinguish representable supported facts from unsupported/unset descriptive details. Keep unsupported material as *narrative only* without silently promoting it to structured state. **Reject the opening commit only for a genuine invalid supported operation or required structural conflict**, not merely because a passage mentions an unsupported descriptive fact. **Trade-off:** Preserves frictionless story writing while making clear what is tracked.
+- **Option B:** Reject any opening containing a fact outside the current structured-world schema. **Trade-off:** Complete structured coverage of accepted prose, but blocks harmless creativity and optional-system use.
+- **Option C:** Invent fallback entities/fields so every extracted claim can be stored. **Trade-off:** May create misleading canonical facts and violates strict source-grounding.
+
+### B5-D09 — Reopening a blank or partially configured adventure
+
+- **Option A (recommended):** Treat an adventure with a durable Turn-0 baseline but **no first narrative turn** as an ordinary resumable adventure. On reopen, show its current blank/custom/guided setup and available draft without generating a story automatically. Optional worldbuilding or Quick Start remains a deliberate action; do not require a protagonist or mandatory initialization wizard. **Trade-off:** Simple consistent save/resume, with clear empty-state UI.
+- **Option B:** Force a first AI-generated story turn automatically when reopening a no-turn adventure. **Trade-off:** May feel less empty, but forces unwanted model calls and invents canon.
+- **Option C:** Hide zero-turn adventures from the library until a first narrative turn is committed. **Trade-off:** Simpler library listing, but makes saved blank adventures hard to resume.
+
+**Batch 3 is unapproved.** Original options will remain in review; no additional ADR will be created until explicit user approval.
 
 ## Decision history
 
 - **2026-10-28:** User explicitly approved closing B4 design-only and beginning the next architecture pass. Batch 1 B5-D01–D03 prepared as unapproved options; no selections inferred.
 
 - **2026-10-28 — Batch 1 explicit acceptance:** User accepted **B5-D01 A, B5-D02 A, B5-D03 A** and requested only accepted decisions be documented as separate ADRs with approval history. Three ADRs added. B5-D04–D06 proposed for next review, **not accepted**, with no software implementation or staging promotion.
+
+- **2026-10-28 — Batch 2 explicit approval:** Requesting user accepted **B5-D04 A**, **B5-D05 A**, **B5-D06 A**. Created three individual ADRs retaining original alternatives and approval history. Proposed B5-D07–D09 for Batch 3; these are unapproved, and no implementation, staging promotion or B5 closure was authorized.
