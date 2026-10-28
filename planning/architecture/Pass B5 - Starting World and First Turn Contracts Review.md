@@ -11,7 +11,7 @@ tags:
 ---
 # Pass B5 — Starting World and First Turn Contracts Review
 
-> **Batch 1 accepted on 2026-10-28:** B5-D01, D02 and D03 each approved **Option A**. Their original options remain below for provenance. Batch 2 is now accepted: B5-D04, D05 and D06 each Option A. Batch 3 below remains unapproved. [P-B4-01](./decisions/P-B4-01%20-%20Design%20Closure%20and%20Deferred%20Initialization%20Contracts.md) records B4 design-only closure. B5 opens the previously deferred S02/S06/S09 starting-world boundary for explicit review; no B5 selection, code, tests or staged-idea promotion is implied.
+> **Batch 1 accepted on 2026-10-28:** B5-D01, D02 and D03 each approved **Option A**. Their original options remain below for provenance. Batch 2 is now accepted: B5-D04, D05 and D06 each Option A. Batch 3 accepted: D07 A, D08 A, D09 A; design closure assessed below, not formally approved. [P-B4-01](./decisions/P-B4-01%20-%20Design%20Closure%20and%20Deferred%20Initialization%20Contracts.md) records B4 design-only closure. B5 opens the previously deferred S02/S06/S09 starting-world boundary for explicit review; no B5 selection, code, tests or staged-idea promotion is implied.
 
 ## Inherited architecture
 
@@ -81,7 +81,7 @@ This is **distinct from B5-D02's grounded fact extraction** and B5-D03's approve
 
 **Batch 2 accepted on 2026-10-28:** [D04 Optional Lorebook approval](./decisions/B5-D04%20-%20Approved%20Optional%20AI%20Starting%20Lorebook.md), [D05 preserve baseline on failed setup](./decisions/B5-D05%20-%20Preserve%20Baseline%20on%20Setup%20Failure%20and%20Cancellation.md), [D06 explicit Custom Opening commit](./decisions/B5-D06%20-%20Explicit%20Commit%20of%20Player%20Authored%20Custom%20Opening.md), each **Option A**. Exact UI labels, generation budgets, world scope, failure messages and initial data schemas remain further contract work.
 
-## Batch 3 — proposed, not approved
+## Batch 3 — accepted Option A (original proposals retained)
 
 ### B5-D07 — Persistence and recovery of unapproved generated Lorebook proposals
 
@@ -101,7 +101,27 @@ This is **distinct from B5-D02's grounded fact extraction** and B5-D03's approve
 - **Option B:** Force a first AI-generated story turn automatically when reopening a no-turn adventure. **Trade-off:** May feel less empty, but forces unwanted model calls and invents canon.
 - **Option C:** Hide zero-turn adventures from the library until a first narrative turn is committed. **Trade-off:** Simpler library listing, but makes saved blank adventures hard to resume.
 
-**Batch 3 is unapproved.** Original options will remain in review; no additional ADR will be created until explicit user approval.
+**Batch 3 accepted on 2026-10-28:** [D07](./decisions/B5-D07%20-%20Persistent%20Pending%20Generated%20Starting%20Lorebook.md), [D08](./decisions/B5-D08%20-%20Narrative%20Only%20Unsupported%20Opening%20Facts.md), [D09](./decisions/B5-D09%20-%20Resume%20Blank%20Adventures%20Without%20Automatic%20Generation.md), each Option A. Original alternative text retained.
+
+## B5 design closure assessment — 2026-10-28
+
+**All nine B5 decisions D01–D09 have accepted Option A dispositions. B5 is ready for separate, explicitly approved design-level closure, but remains in-review.** This is an assessment, not formal closure or implementation approval.
+
+- **Creation:** Durable empty/characterless Turn-0 baseline and adventure identity, no forced wizard; source-grounded structured initial facts only. Unsupported descriptions remain legitimate prose, not invented structured facts.
+- **Quick Start:** Fully successful validated generated opening and supported factual events automatically commit together; no additional approval gate.
+- **Player Custom Opening:** Noncanonical editable draft requires explicit player Commit; passage and grounded events are accepted together. Blank adventure needs no fake first turn.
+- **Optional AI-authored starting Lorebook:** May invent worldbuilding because explicitly requested; result requires explicit Approve/Discard and full chat-composer blocking overlay. A complete review-ready proposal is saved as noncanonical SQLite draft across reload; no automatic acceptance.
+- **Failure and resume:** Failed/cancelled provisional setup cannot alter existing accepted Turn-0/adventure. Zero-turn adventures remain normally saved/resumable, with no unrequested AI generation.
+
+### Open engineering/verification work (not B5 product choices)
+
+- Concrete Turn-0 and initial entity schemas, source span/provenance mapping, optional module compatibility, template instantiation, pre-first-turn setup mutations and correct current-only event ordering/replay.
+- Prompting and size budgets for generated Lorebooks, preview/edit UX, pending proposal lifecycle on stale versions, reload, library restore, cancellation, uncertain commit result and cleanup.
+- Quick Start cancellation/idempotency race tests, blank story and player-authored first-passage drafts, fail-closed core event handling, strict extraction examples and cross-module structural validation.
+- Older staged idea text and B2 ADRs still mention revisions/immutable audit; later B3-D04 governs current planning. Reconcile original prose with preserved approval provenance only under a separate explicit planning gate. No staging-to-production promotion.
+- B1 real Wails/Go, provider connectivity, database backup/restore, library epoch, and integrated end-to-end tests remain unverified. This closure assessment does not claim readiness to ship.
+
+**Formal sign-off remains pending:** A separate user instruction is required before recording a P-B5-01 closure ADR and opening B6.
 
 ## Decision history
 
@@ -110,3 +130,5 @@ This is **distinct from B5-D02's grounded fact extraction** and B5-D03's approve
 - **2026-10-28 — Batch 1 explicit acceptance:** User accepted **B5-D01 A, B5-D02 A, B5-D03 A** and requested only accepted decisions be documented as separate ADRs with approval history. Three ADRs added. B5-D04–D06 proposed for next review, **not accepted**, with no software implementation or staging promotion.
 
 - **2026-10-28 — Batch 2 explicit approval:** Requesting user accepted **B5-D04 A**, **B5-D05 A**, **B5-D06 A**. Created three individual ADRs retaining original alternatives and approval history. Proposed B5-D07–D09 for Batch 3; these are unapproved, and no implementation, staging promotion or B5 closure was authorized.
+
+- **2026-10-28 — Batch 3 acceptance and design closure assessment:** User explicitly accepted **B5-D07 A, B5-D08 A, B5-D09 A** and requested ADR recording and an assessment of B5 closure. Created separate accepted ADRs; retained prior alternatives. Nine of nine design choices resolved. Assessed B5 ready for user-approved design-only closure; **not formally closed**. No implementation, staged idea promotion, or release authorization.
