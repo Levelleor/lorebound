@@ -3,7 +3,7 @@ type: architecture-decision
 status: accepted
 decision_id: "B2-D04"
 created: "2026-10-26"
-updated: "2026-10-26"
+updated: "2026-10-28"
 approved_at: "2026-10-26"
 approved_by: "requesting user (explicit chat approval)"
 tags:
@@ -14,6 +14,12 @@ tags:
 ---
 
 # B2-D04 — Historical edit event preservation and structural integrity
+
+## Subsequent accepted architectural supersession — 2026-10-28
+
+**CURRENT AUTHORITY:** [B6-D01 — Narrative-first declarative outcome events](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), together with [B3-D04 — Single current history](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md), supersedes earlier simulation-style event preconditions and prior immutable passage/event audit assumptions in this ADR. The engine primarily **tracks the fictional facts established by accepted narration and player corrections**. Events are ordered typed **Create/Remove, Set/Clear and keyed relation Add/Remove assertions**, not procedural transfers or movement operations that must prove historic source possession, prior introduction, prior route or fictional causality. A later accepted reference may construct a **sparse stable identity** when its old introduction has been removed; unspecified fields remain unknown. Preserve technical typed/supported-format, deterministic folding, version/epoch, atomic transaction and one-current-property safety. Only a **technically unprocessable** event fails closed; narrative contradiction does not. The original earlier approval and alternatives below are **historical provenance**, not permission to reinstate rejected prerequisites or old revision archives. Actual implementation remains unapproved.
+
+
 
 ## Approval and provenance
 
@@ -51,6 +57,11 @@ This reduces state/status complexity and stays within accepted Story authorial f
 ## Traceability
 
 Related owners S03, S05, S06, S10, S11, S12. Sources: [IDEA-0039](../../staging/Event-Sourced%20World%20History.md), [IDEA-0041](../../staging/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md), [IDEA-0042](../../staging/Snapshots%20and%20Incremental%20State%20Rebuild.md), [B2-D01](./B2-D01%20-%20Immutable%20Outcome%20Events%20and%20Atomic%20Commits.md), [B2-D02](./B2-D02%20-%20Immutable%20History%20and%20Single%20Active%20Selection.md), [B2-D05](./B2-D05%20-%20Canonical%20Structured%20Passage%20Documents.md), Pass A A-06 and A-10.
+
+
+### Historical validity narrowed
+
+Earlier text about suspending later events due to deleted introductions is **superseded**. Keep Later Turns retains later typed assertions even without prior fictional causes; the current-only model has no suspended-event revision archive. The player can correct current facts with a separate pending manual Commit; no AI cascading story repair.
 
 ## Decision history
 
