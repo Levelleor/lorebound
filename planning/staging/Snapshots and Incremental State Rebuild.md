@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Local First Storage and Deployment Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Snapshots and Incremental State Rebuild
+
+## Current accepted architecture after 2026-10-28 redirection
+
+**Latest accepted reconstruction model:** [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), B2-D03 and B3-D04 govern. Store **one current replayable event sequence**, **no persisted checkpoints/snapshots and no passage/event revision archive**. In-memory projections/caches may accelerate reads but are not canonical. Replay **declarative Set/Clear/Create/Remove/keyed relation assertions** in order from Turn 0; do not resimulate ability, custody transfer, route feasibility or prior fiction. Missing old item introduction may yield sparse identity with unknown details, not a fatal dependency. Historic Keep retains later accepted facts.
+
 
 ## Idea
 Maintain **complete, incrementally saved canonical state** so the entire adventure/world state can be reconstructed at any story turn or revision. After a confirmed historical edit, rebuild from the earliest affected point, using an already available valid preceding state or rebuilding that preceding state from incremental history as needed. Periodic snapshots/checkpoints are optional accelerators, **not the definition or prerequisite of incremental saves**.
@@ -91,13 +96,13 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - [ ] Repeated Undo traverses committed turns down to baseline independently of finite temporary editor history, and no stale checkpoint/summary from removed turns survives as active truth.
 - [ ] A new continuation from the rolled-back head remains the single active timeline of that adventure, with no inactive response selectable as an alternative.
 - [ ] A confirmed paragraph edit creates a new **passage revision**, and dependent state can be reconstructed correctly through passage-level provenance without stable paragraph IDs or paragraph-specific snapshots.
-- [ ] A confirmed modification of one paragraph produces a new accepted **passage revision** and correct dependent state replay without requiring paragraph-level IDs or snapshots.
+- [ ] A confirmed passage edit **overwrites its one current structured passage body**, retaining its stable passage ID. Replay current events without creating prior passage revisions or requiring paragraph-level IDs.
 - [ ] Derived state remains consistent with accepted passage/event provenance following historical edits, forks and duplication even when finer span-level tracking is absent.
 - [ ] All committed turns remain eligible fork points, including turns with no materialised snapshot; replay produces the same authoritative state at the boundary.
 - [ ] The fork's accepted prefix reconstructs through the selected turn only and remains independently mutable; no later source event, stale checkpoint or provisional draft influences the fork.
-- [ ] Replaying accepted incremental records reconstructs every supported core and active-module world-state category plus applicable story revisions at an arbitrary supported point, **without requiring removed plugin-specific legacy state**.
+- [ ] Replaying **current accepted assertion records** reconstructs all supported core and active-module current state from Turn 0, **without old passage revisions or requiring removed plugin-specific legacy state**.
 - [ ] No accepted persistent mutation is stored only in an unreplayable materialised projection or an unlogged mutable field.
-- [ ] A confirmed edit at Turn 47 can reuse valid state through Turn 46 and recompute only what is necessary afterward, with older replay/checkpoints only if the prior state is unavailable.
+- [ ] A confirmed edit at Turn 47 can invalidate in-memory derived state; reconstruct from current ordered assertions (Turn 0 when necessary), **without relying on persisted checkpoints or historical revisions**.
 - [ ] The output of historical reconstruction agrees with deterministic replay of the same valid event/text-revision history.
 - [ ] AI generation is never required merely to replay previously accepted outcomes.
 - [ ] Affected summaries, snapshots and projections are invalidated or refreshed, but unmodified pre-edit history remains valid.
@@ -135,3 +140,5 @@ A complete per-turn stored state may allow fast random access but duplicates unc
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **User clarification during review (not acceptance):** Incremental saving must record all canonical persistent state changes, enabling full reconstruction of the adventure/world at any point; the goal is not partial event replay plus mandatory older checkpoints. The candidate now puts complete incremental coverage and rebuilding from the affected edit boundary first, with snapshots only as optional speed-ups. At that point the note remained unaccepted in Inbox.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Complete incremental recording of **all** persistent adventure and world-state changes; deterministic reconstruction of **full canonical state at any turn**; efficient rebuilding from the earliest affected point after confirmed historical edits, with reuse of valid preceding state; checkpoints permitted only as optional performance accelerators. Storage structures, dependency algorithms, checkpoint cadence and detailed invalidation rules remain open. Promoted to staging for refinement, not production.
+
+- 2026-10-28 — **User-approved supersession:** Narrative-first declarative fact assertions and the revision-free current-story model now govern this document. Former contradictory original direction is historical approval context, not active implementation guidance. No stage promotion or software implementation.
