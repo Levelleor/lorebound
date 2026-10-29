@@ -4,7 +4,7 @@ status: accepted
 decision_id: "B3-D04"
 phase: "B3"
 created: "2026-10-27"
-updated: "2026-10-27"
+updated: "2026-10-28"
 approved_at: "2026-10-27"
 approved_by: "requesting user (explicit chat approval)"
 supersedes_in_part:
@@ -24,6 +24,11 @@ tags:
 ---
 
 # B3-D04 — One current story and event history; no retained revisions
+
+## Later accepted event interpretation — 2026-10-28
+
+[B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) refines the content of the **current** event history: records are replayable, narrative-first **assertions about what the accepted story/world now establishes**, not commands with fictional preconditions. Editing an earlier passage or deleting a former item-introduction event does **not** make later accepted use/placement assertions illegal; sparse stable identities can represent remaining facts with unspecified details unknown. Current-only overwrite/delete, event order, and no revision archive **remain accepted**.
+
 
 ## Approval and provenance
 
