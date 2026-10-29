@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-18"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-18"
 accepted_by: "requesting user (explicit chat direction)"
 source_brainstorms: []
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # AI-Generated Starting Lorebook and World
+
+## Later accepted narrative-first world-memory rule — 2026-10-28
+
+**Latest world-event semantics ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Optional deliberate worldbuilding may author new initial facts, and its approved results are typed **Turn-0 world assertions**, not a fabricated playable story or procedurally validated game actions. Sparse identities and unknown details are valid. Technical representability, atomic commit and explicit player approval for generated world proposals (B5-D04/D07) survive. The narrator's later grounded extracted facts are also assertions, not mechanically constrained history.
+
 
 ## Idea
 Offer an **optional AI-assisted way to generate a substantial, coherent Lorebook for a new adventure's game world before any narrative/story turn has been played**, so a player can immediately begin inside an already populated setting rather than waiting for locations, people, factions and other lore to arise during play.
@@ -81,3 +86,5 @@ This is a separate intentional generation operation. After the world is created,
 
 ## Decisions and review history
 - 2026-10-18 — **Explicitly accepted upon proposal by requesting user:** Add a way to ask AI to create the **entire starting Lorebook/world for an adventure before playing even one turn**, so the player begins in a game already populated with lore and things to explore. **Refine implementation and UX later.** This is intentional, optionally requested **AI worldbuilding**, distinct from the newly reaffirmed **source-facts-only** extraction of normal opening prose. Created directly in staging because the user explicitly called for an accepted idea, rather than implying a prior unapproved Inbox history. No production approval.
+
+- 2026-10-28 — **Explicit architecture update:** B6-D01 narrative-first declarative event rules override prior mechanical-precondition language in this staged note; original acceptance/alternative history preserved, no stage promotion/implementation.
