@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Memory Lorebook and Context Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Token-Budgeted Context Builder and Inspector
+
+## Latest accepted event and narrative authority — 2026-10-28
+
+**Current narrative-first context semantics ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Include current **derived state assertions** to aid consistent narration; their job is to **remember the accepted story**, not to retroactively judge it. Earlier accepted events or prose might no longer explain a later item/location fact after historical editing; the latest factual assertion still governs current tracked state. Older retrieved narrative can be labelled contextual/inconsistent but not promoted into overwrite authority. Do not require mechanically “legal” causal chains to include a fact in context.
+
 
 ## Idea
 Allocate context among instructions, scene, lore, state, memories and recent prose, and let the player inspect it.
@@ -94,3 +99,5 @@ Automatic priority-based selection can reduce repetitive setup, while manual inc
 - 2026-10-18 — **Accepted IDEA-0010/0025 instruction-context refinement:** Every AI narrative turn assembles current narration settings and applicable persistent author notes, including directions originally provided by an optional scenario template. No reusable narration-style preset manager. Respect finite context budgets and clearly expose material omissions. Staging only.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Token-budgeted context assembly, model-aware capacity limits, priorities, requested/selected/actually-transmitted inspector, omission explanations, source references, manual inclusion/exclusion, and preserving broad full-history retrieval as an upstream option while only relevant excerpts enter the final prompt. Moved to staging for refinement only, not production.
+
+- 2026-10-28 — Explicit user-approved narrative-first declaration in B6-D01 governs any older contradictory mechanical/simulation prose in this staged note. Original decision provenance preserved; no implementation or stage promotion.
