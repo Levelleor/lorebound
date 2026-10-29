@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-29"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Memory Lorebook and Context Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Token-Budgeted Context Builder and Inspector
+
+## Current narrator-safe context contract — 2026-10-29
+
+**Accepted architectural refinement:** [B6-D04 — narrator-safe entity identities](../architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md). The **actual prompt assembled for a roleplay prose-producing stage** must include human-readable names, descriptions, relationships, status and scene facts **without internal stable IDs, ID↔alias mapping tables or database operation identifiers**. A model might copy those tokens into narrative prose even when instructed not to. Strip private identifiers from **all** narrator-facing context sources (Lorebook entries, memories, retrieved passages, state projections, tool results and prompt metadata). A **separate internal entity-resolution/interpretation context** may include IDs, but must never be reused as narrator context, even when the same model is used sequentially. The inspector should distinguish these different stage prompts; narrator-facing content must remain ID-free. The single-pass narrative+events option resolves natural-language references to IDs **after** model generation, in the engine. No second model is required.
+
+
 
 ## Latest accepted event and narrative authority — 2026-10-28
 
@@ -26,7 +32,7 @@ Allocate context among instructions, scene, lore, state, memories and recent pro
 Overlong prompts harm model quality and can exceed limits.
 
 ## Accepted direction
-- **Token-budgeted context assembly:** Build the generation prompt from instructions, current scene and authoritative state, relevant Lorebook entries, recent narrative prose, long-term summaries, and retrieved episodic memories while respecting a finite input-token budget.
+- **Token-budgeted narrator-safe context assembly:** Build prose-generation prompts from instructions, current scene and authoritative state, Lorebook names/descriptions, recent prose, summaries and retrieved memories **without internal stable IDs or raw identity mappings**; retain a separate restricted internal mapping for non-narrating resolution. Respect the selected model's token budget.
 - **Model-aware capacity:** Account for the selected model/endpoint's known context limit and reserve space for expected output, required wrappers, tool/response framing or other overhead where applicable. Distinguish reliable known limits from estimates.
 - **Configurable priorities:** Allow different sources or categories of information to have priorities or allocations. Preserve essential instructions and authoritative state over lower-priority optional background while clearly reporting any material omission.
 - **Three inspectable stages of inclusion:** Explicitly distinguish **requested** material (player/automatic retrieval wants included), **selected** material (the builder chooses within its budget), and **actually transmitted** content (the final provider request after provider-specific transformations and omissions). Do not claim a piece of lore was sent merely because it was requested or initially selected.
@@ -101,3 +107,5 @@ Automatic priority-based selection can reduce repetitive setup, while manual inc
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Token-budgeted context assembly, model-aware capacity limits, priorities, requested/selected/actually-transmitted inspector, omission explanations, source references, manual inclusion/exclusion, and preserving broad full-history retrieval as an upstream option while only relevant excerpts enter the final prompt. Moved to staging for refinement only, not production.
 
 - 2026-10-28 — Explicit user-approved narrative-first declaration in B6-D01 governs any older contradictory mechanical/simulation prose in this staged note. Original decision provenance preserved; no implementation or stage promotion.
+
+- **2026-10-29 — Later user-requested documentation refinement:** [B6-D04](../architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) protects prose-producing narrator contexts from internal IDs while keeping internal reference resolution, same-model role reuse and single-pass generation. Earlier approvals preserved; no implementation asserted.
