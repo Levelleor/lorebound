@@ -2,7 +2,7 @@
 type: guide
 status: current
 created: 2026-10-16
-updated: 2026-10-16
+updated: 2026-10-28
 tags:
   - planning/guide
 ---
@@ -33,6 +33,11 @@ production/            Refined and approved, awaiting implementation
 ```
 
 **Inbox is not accepted; staging is accepted but unrefined; production is approved but unimplemented; specs describe verified implemented truth.** These stages are not interchangeable.
+
+## Current approved engine principle (2026-10-28)
+
+The accepted architecture now prioritises **narrative-first declarative world state**. [B6-D01](architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) supersedes older procedural transfer/strict historic-dependency language: story/player assertions update the tracked world directly using typed ordered Set/Clear, Create/Remove and keyed relation events. A missing original key-acquisition, entity introduction, route or fictional cause does **not** by itself make a later grounded assertion invalid. The tracker exists primarily for narration, context and player editing, not RPG simulation. Technical event interpretability, deterministic replay, coherent single-valued placement, Go/SQLite atomicity and explicit pending manual Commit still apply. Under [B3-D04](architecture/decisions/B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) there are no retained story/event revision archives. **When reading older ADRs or staged ideas, apply these later explicitly approved supersessions while preserving original acceptance history**; staging and architecture decisions are not implemented specs.
+
 
 ## Working with an idea
 
