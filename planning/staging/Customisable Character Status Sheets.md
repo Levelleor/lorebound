@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Memory Lorebook and Context Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Customisable Character Status Sheets
+
+## Later accepted narrative-first world-memory rule — 2026-10-28
+
+**Updated semantics ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Typed status fields are **current narrative assertions** with last-set/clear semantics. A status may be set from accepted story or manual correction without proving a prior game mechanic inflicted it. Unknown/unset remains distinct from zero/none; do not auto-complete unspecified fields. Manual edits require the approved pending-Commit overlay and atomic replayable assertions; no automatic permission or state-precondition veto for final accepted facts.
+
 
 ## Idea
 Store editable current stats, conditions, identity details, goals and status for every character.
@@ -101,3 +106,5 @@ A universal predefined RPG sheet can make validation and UI simpler but forces g
 - 2026-10-18 — **Accepted character-control dependency:** An adventure may have no characters or no main character, while status and inventory remain anchored to actual character entity IDs. Multi-character focus/actor switches do not modify status records or create dummy player sheets. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Editable, customisable status sheets for PCs and NPCs; arbitrary fields for stats, conditions, identity, goals and current state; optional inclusion of current values in generation context; optional typed fields and validation; preservation of unknown values versus explicitly empty ones. Exact schema and automatic state-update rules remain for refinement and IDEA-0028. Moved to staging, not production.
+
+- 2026-10-28 — **Explicit architecture update:** B6-D01 narrative-first declarative event rules override prior mechanical-precondition language in this staged note; original acceptance/alternative history preserved, no stage promotion/implementation.
