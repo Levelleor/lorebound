@@ -3,7 +3,7 @@ type: architecture-decision
 status: accepted
 decision_id: "B2-D03"
 created: "2026-10-26"
-updated: "2026-10-27"
+updated: "2026-10-28"
 approved_at: "2026-10-26"
 approved_by: "requesting user (explicit chat approval)"
 tags:
@@ -14,6 +14,12 @@ tags:
 ---
 
 # B2-D03 — Turn-0 replay for authoritative reconstruction
+
+## Subsequent accepted architectural supersession — 2026-10-28
+
+**CURRENT AUTHORITY:** [B6-D01 — Narrative-first declarative outcome events](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), together with [B3-D04 — Single current history](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md), supersedes earlier simulation-style event preconditions and prior immutable passage/event audit assumptions in this ADR. The engine primarily **tracks the fictional facts established by accepted narration and player corrections**. Events are ordered typed **Create/Remove, Set/Clear and keyed relation Add/Remove assertions**, not procedural transfers or movement operations that must prove historic source possession, prior introduction, prior route or fictional causality. A later accepted reference may construct a **sparse stable identity** when its old introduction has been removed; unspecified fields remain unknown. Preserve technical typed/supported-format, deterministic folding, version/epoch, atomic transaction and one-current-property safety. Only a **technically unprocessable** event fails closed; narrative contradiction does not. The original earlier approval and alternatives below are **historical provenance**, not permission to reinstate rejected prerequisites or old revision archives. Actual implementation remains unapproved.
+
+
 
 ## Approval and provenance
 
@@ -53,6 +59,11 @@ B2-D01 accepts immutable structured outcome events; B2-D02 accepts a single sele
 ## Traceability
 
 S05, S06, S10, S11, S12; [IDEA-0039](../../staging/Event-Sourced%20World%20History.md), [IDEA-0041](../../staging/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md), [IDEA-0042](../../staging/Snapshots%20and%20Incremental%20State%20Rebuild.md); B1-D01, B1-D03, [B1-D06](./B1-D06%20-%20Browser%20TypeScript%20Event%20Replay.md), B2-D01, B2-D02 and B2-D04.
+
+
+### Deterministic assertion folding
+
+Replay applies surviving ordered assertions using latest-value/clear semantics per stable ID and property. An earlier deleted creation event need not be replayed for later supported SetItemHolder/SetCharacterLocation assertions to apply: sparse records with unknown history suffice. Do **not** re-run fictional action validation during replay. No persisted checkpoints.
 
 ## Decision history
 
