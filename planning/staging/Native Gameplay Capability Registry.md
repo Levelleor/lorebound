@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Native Gameplay Capability Registry
+
+## Later accepted narrative-first world-memory rule — 2026-10-28
+
+**Current coordinator contract ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Capabilities may expose convenient action intents (transfer, move, equip) and optional **pre-narration attempted-action** mechanics, but committed game/world state is **declarative grounded outcome assertions**. The registry must not impose a blanket “was the old holder holding it?” or “was there a legal route earlier?” precondition before tracking accepted story facts. Maintain typed capability identity, permissions for real side effects, technical storage/version fences, stable IDs, consistent projections and removed-plugin exception.
+
 
 ## Idea
 Let mods register discoverable validated operations against a shared entity/world state.
@@ -25,7 +30,7 @@ New mechanics should integrate without teaching every RP model each implementati
 - **Stable capability identities:** Each registered operation has a stable identifier suitable for dispatch and traceability, distinct from transient model wording. Exact namespace/version format remains open.
 - **Typed contracts:** Registered capabilities declare typed input and output schemas, their required arguments/results and meaningful validation failures. The choice of contract format and schema tooling is open.
 - **Explicit permissions:** Each capability declares what it may access or change. A registration does not grant unrestricted access to canonical state, external systems, other mods or privileged actions; the permission model and enforcement architecture still need refinement.
-- **Validation and preparation:** Provide defined validation and preparation stages so proposed operations can be checked against world rules, available entities and related side effects before a commit. Exact lifecycle/order, conflict checking and staging of effects remain open.
+- **Validation and preparation:** Check grounded **assertion representation** and coherent current projections for persistent events; optional world rules apply to uncommitted action attempts, while external side effects retain their own permission checks. Do not mechanically veto already accepted story facts. Exact lifecycle/order, conflict checking and staging of effects remain open.
 - **Event-producing execution:** Successful native operations produce validated, accepted changes/events affecting the shared authoritative entity and world state; they do not directly replace or maintain conflicting private canonical worlds.
 - **Deterministic coordinator authority:** The accepted [[Deterministic Adventure Coordinator]] (IDEA-0044) retains control of dispatch, validation, sequencing and authoritative finalisation. Neither a mod nor an LLM can bypass its world-state integrity rules.
 - **Historical provenance while a capability is installed:** Accepted persistent changes from a participating capability integrate with [[Event-Sourced World History]] (IDEA-0039) and [[Snapshots and Incremental State Rebuild]] (IDEA-0042). **Later plugin removal is an accepted exception to full plugin-specific replay**: old recorded history must not be silently deleted, but Lorebound does **not** have to migrate, emulate, restore or interpret removed-plugin logic/state to allow the adventure to continue. The game proceeds without that capability's rules and supplied AI context; its future narrative results may be unpredictable, as the player accepts. Core character/world/SQLite identity and atomic integrity must still hold.
@@ -113,3 +118,5 @@ Hard-coding every gameplay operation in the core may simplify the first implemen
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Native discoverable registry for built-in and mod-provided gameplay operations, with stable IDs, typed input/output schemas, declared permissions, validation/preparation and event-producing execution against shared canonical entity/world state. Modules remain under deterministic coordinator authority, are compatible with complete incremental reconstruction, and do **not** depend on MCP for core gameplay. Schema versioning, permissions, isolation, unloading and replay with updated/removed mods are open. Moved to staging, not production.
 - 2026-10-16 — **Additional requesting-user clarification after IDEA-0048 skip:** Preserve universal, protocol-neutral capability contracts and an adapter boundary in this already-accepted registry so MCP could be integrated *later* without a second gameplay system. Do not implement/accept MCP connectivity now. Keep coordinator validation, shared permissions, external-side-effect boundaries and complete incremental replay consistent across any future connector. This is a refinement of IDEA-0047's accepted scope, not a promotion of IDEA-0048.
+
+- 2026-10-28 — **Explicit architecture update:** B6-D01 narrative-first declarative event rules override prior mechanical-precondition language in this staged note; original acceptance/alternative history preserved, no stage promotion/implementation.
