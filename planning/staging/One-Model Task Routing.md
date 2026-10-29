@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-29"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[LLM Providers and Generation Brainstorm]]", "[[Lorebound Vision Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # One-Model Task Routing
+
+## Narrator/identity privacy regardless of model routing — 2026-10-29
+
+[B6-D04 — narrator-safe entity identities](../architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) refines **prompt boundaries, not model-selection policy**. Narrator and interpreter can use the **same single loaded model**, or different selected models, but receive separately assembled **role-appropriate contexts**. Any call that may produce a roleplay passage sees human-language world descriptions **without internal ID mappings**. A non-narrating interpreter may receive candidate IDs strictly for resolving references into structured engine-owned records; do not preserve that internal mapping in a later narrator prompt/conversation. A combined single-pass prose+events strategy remains permitted with natural-language reference proposals bound to IDs by the engine after generation. No mandatory second model, second pass or automatic model fallback is added.
+
+
 
 ## Idea
 Route narration, state interpretation and summaries to freely selected models. **Using one model and using several models are equally normal, first-class configurations.** A single locally loaded model must remain sufficient, but multi-model assignments must be straightforward, not hidden in an expert-only mode.
@@ -80,3 +86,5 @@ A single-model setup saves hardware memory and setup effort but may incur latenc
 - 2026-10-23 — **User resolved A-12 and A-13:** A failed selected-model/provider request fails the interaction, with no alternate model fallback. Ordinary task assignments remain selectable but do not retry on a different model automatically. Sampling parameter preferences use one shared saved current-settings entry, not separate per-provider/model/task values; effective request compatibility is reevaluated on model switch. Bounded validation/narrative repair after a successful response is a separate accepted concern. Staging only.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Accepted with user clarification:** "the idea of using other models is just as normal here as just using 1 model". The user specifically described one or several models through one OpenRouter connection, or different models through an OpenAI provider connection for writing versus other tasks. The accepted direction makes single-model sufficiency and flexible multi-model task routing **equally first-class**. Moved to staging for refinement, not approved for production.
+
+- **2026-10-29 — Later user-requested documentation refinement:** [B6-D04](../architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) protects prose-producing narrator contexts from internal IDs while keeping internal reference resolution, same-model role reuse and single-pass generation. Earlier approvals preserved; no implementation asserted.
