@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Local First Storage and Deployment Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Adventure Save and Export Management
+
+## Current accepted architecture after 2026-10-28 redirection
+
+**Latest current-only adventure save semantics:** [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), B3-D04 and B4-D05. An adventure stores one current passage/event history as **declarative fact assertions** and deterministic Turn-0 replay; forks/duplicates copy that **current** history prefix independently, not a lineage of old narrative revisions. Do not reject a saved assertion for lack of prior fictional custody, route or item-introduction proof; sparse IDs are allowed. Preserve whole-library SQLite backup/restore and atomicity; staging never implies a shipped export/import feature.
+
 
 ## Idea
 Create, autosave, resume, rename, duplicate and delete individual adventures **within one SQLite library**; provide **Backup Database** and **Restore Database** as the only file-based data transfer operations, covering all adventures together.
@@ -210,3 +215,5 @@ Provide an adventure library with Create, Resume, Rename, **full-history Duplica
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user** for staging: multiple independent adventures, autosave, resume, rename, duplicate, import, full-fidelity export, confirmed deletion and no credential export. This acceptance authorises refinement, not production or implementation.
+
+- 2026-10-28 — **User-approved supersession:** Narrative-first declarative fact assertions and the revision-free current-story model now govern this document. Former contradictory original direction is historical approval context, not active implementation guidance. No stage promotion or software implementation.
