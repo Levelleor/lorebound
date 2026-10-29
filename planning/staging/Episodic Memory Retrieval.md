@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Memory Lorebook and Context Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Episodic Memory Retrieval
+
+## Latest accepted event and narrative authority — 2026-10-28
+
+**Current replay/context contract ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Retrieval is a **story-memory aid**, not a game-precondition proof. Current world facts come from replaying accepted state assertions, while memories may contain fictional contradictions after an earlier edit; do not “invalidate” a later accepted fact because its earlier cause is absent. Current-only passage/event history (B3-D04) has **no retained passage revisions**; invalidate/rebuild memory indexes for overwritten/deleted current text.
+
 
 ## Idea
 Retrieve detailed old incidents when they become relevant again.
@@ -88,3 +93,5 @@ A text and entity inverted index can efficiently search **across the entire adve
 - 2026-10-19 — **Pass A reference correction:** IDEA-0024 (token-budgeted context and inspector) is accepted independently in staging, not merely an unaccepted proposal. Embedding-based RAG IDEA-0063 remains unaccepted; no new feature approval.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — After reviewing limitations of BM25 query-term selection, the requesting user **explicitly accepted** episodic memory retrieval and added: "lets not ignore a possibility that we may want to search across all history in case that would be quick enough for us to have more useful context for smaller price (context window)." Thus leave query/ranking open, evaluate broad searches of all committed history (indexed or exhaustive) against targeted lookup, and transmit only useful excerpts to save context. IDEA-0063 embeddings/RAG remains a separate **unaccepted** Inbox idea. Moved to staging, not production.
+
+- 2026-10-28 — Explicit user-approved narrative-first declaration in B6-D01 governs any older contradictory mechanical/simulation prose in this staged note. Original decision provenance preserved; no implementation or stage promotion.
