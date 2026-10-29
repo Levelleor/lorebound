@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Freeform Player Action Modes
+
+## Current accepted narrative-first scope — 2026-10-28
+
+**Latest user-approved narrative-first interpretation:** [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) applies to **all accepted final story outcomes**, not only player Story-mode authorial overrides. Do/Say/Continue may use optional gameplay rules to guide **uncommitted action attempts** or provisional AI wording; once a fact is actually established in accepted narration, record the corresponding declarative state assertion without requiring proof of a mechanically plausible prior history. Story's stronger authorial override still applies; a mere attempted action does not assert a successful world change. Technical formats, stable IDs and atomicity remain mandatory.
+
 
 ## Idea
 Provide Do, Say, Story and Continue as distinct ways of interacting with the AI.
@@ -91,7 +96,7 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 
 ## Draft acceptance criteria
 - [ ] With strict adjacent-only travel enabled, a **player-authored Story declaration** that a known character is now on the other side of the kingdom is accepted as an authorial outcome, with the character's authoritative location changed coherently and provenance recorded **without inventing a route or spell**; no unrelated characters/items move.
-- [ ] The same unsupported shortcut proposed as a **Do attempt** still receives ordinary gameplay validation; an impossible event invented by **Continue/AI** does not automatically gain Story's player override authority.
+- [ ] Optional strict rules can reject or narrate an **uncommitted Do attempt** and guide provisional Continue output. But if final accepted narration actually establishes the result, emit its **grounded declarative state assertion** rather than withholding recorded state for lack of prior mechanical prerequisites.
 - [ ] Story authorship may relax fictional movement/eligibility rules but cannot bypass entity/reference integrity, concurrent version guards, accepted history lineage or atomic persistence. A failure leaves canon unchanged, not half-updated.
 - [ ] Editing earlier Story prose still requires the previously accepted historical-edit confirmation/rebuild workflow.
 - [ ] An unnamed/unknown-name Lorebook character appears in `Playing As` with a non-invented descriptive or neutral fallback label; selecting it enables Do/Say bound to the immutable character ID.
@@ -138,3 +143,5 @@ After selecting any Lorebook character in `Playing As`, **the next Do/Say takes 
 - 2026-10-18 — **Accepted IDEA-0007/0026 flexible-character integration:** Do, Say, Story and Continue must work with zero or many characters, optional narrative focus and per-turn actor identification. Actions and inventory cannot silently default to a made-up permanent protagonist; ambiguous first-person input remains unresolved or requires clarification. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user** for staging: all four modes (Do, Say, Story, Continue), with shared world-state validation for enabled simulation/tracking features. Staging signifies accepted direction, **not** approval for production or implementation.
+
+- 2026-10-28 — **Explicit user-approved B6-D01 reconciliation:** Narrative-first declarative events govern current behaviour; any earlier simulation-style validity statements in historical proposals/old acceptance text are subordinate. Original approval provenance retained; staging only, not implemented or promoted.
