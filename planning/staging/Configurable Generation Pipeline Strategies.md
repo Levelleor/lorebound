@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[LLM Providers and Generation Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Configurable Generation Pipeline Strategies
+
+## Latest accepted event and narrative authority — 2026-10-28
+
+**Current narrative-first semantics ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** A generation strategy can use optional **pre-acceptance attempted-action guidance** and repair provisional text, but final accepted story facts become **declarative Set/Clear/Create/Remove assertions**, not procedural actions whose historic prerequisites must be proven. An accepted event may update current holder/location even if the old story did not establish acquisition, route or cause. Validation still means grounded interpretation, supported typed payloads, coherent one-current-value projections and atomic storage. No new LLM validation pass.
+
 
 ## Idea
 Compare one-pass prose+events, plan-validate-narrate and draft-audit strategies.
@@ -23,7 +28,7 @@ RP narrators can invent untracked state changes; a second pass is not a complete
 ## Accepted direction
 - **Configurable pipeline strategies:** Support a selectable **single-pass prose-and-events** strategy, **plan → validate → narrate**, and **draft → audit → repair**. These are three distinct generation workflows, not separate permanently loaded model requirements.
 - **Single pass:** One model response may propose both narrative prose and structured world-state events. Generated events must still pass deterministic validation before becoming authoritative.
-- **Plan → validate → narrate:** Propose intended game events, validate or reject them against the current authoritative state, and only then generate narrative prose consistent with the validated outcome.
+- **Plan → check → narrate:** Propose candidate results, apply optional *provisional attempted-action* rules if selected, and narrate consistent with those attempts. **When text is accepted**, record its grounded state facts as declarative assertions without later veto for missing fictional prerequisites.
 - **Draft → audit → repair:** Draft a scene, examine it and its state proposals for contradictions or unsupported changes, and attempt a **bounded** repair when necessary. An LLM auditor can assist but is not an independent guarantee of correctness.
 - **Authoritative deterministic validation:** Regardless of strategy, the coordinator validates proposed state operations against actual world rules. An LLM's prose or self-assessment cannot overrule deterministic constraints.
 - **Bounded repair and explicit failure:** Limit retries/repair cycles to prevent loops, excessive model costs and unexplained delays. On failure or exhausted retries, communicate the problem rather than silently committing invalid events or misleading narration.
@@ -99,3 +104,5 @@ Single-pass typically has fewer inference requests and lower latency, but its co
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Configurable single-pass prose/events, plan-validate-narrate and draft-audit-repair strategies; authoritative deterministic state validation; bounded repair attempts; and compatibility with equally first-class single-model and multi-model routing. Accepted for staging refinement only, not production or implementation.
+
+- 2026-10-28 — Explicit user-approved narrative-first declaration in B6-D01 governs any older contradictory mechanical/simulation prose in this staged note. Original decision provenance preserved; no implementation or stage promotion.
