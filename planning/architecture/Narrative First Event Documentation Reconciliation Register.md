@@ -2,7 +2,7 @@
 type: architecture
 status: current
 created: "2026-10-28"
-updated: "2026-10-28"
+updated: "2026-10-29"
 tags:
   - planning/architecture
   - event-model
@@ -110,6 +110,17 @@ The staged ideas remain **staging**, not promoted into production or claimed imp
 ## Historical/non-operative material deliberately not rewritten as present-tense policy
 
 Brainstorm session transcripts, unaccepted Inbox candidates and original date-stamped quotations of past proposal/approval decisions are historical records. Their old possibilities are **not** current implementation instructions, even when they discuss simulation, retained revisions or inverse events. This register and B6-D01 establish current authoritative semantics; do not re-label candidate ideas as accepted or edit past quotes to fabricate retroactive approval.
+
+## Later accepted identity resolution refinement — 2026-10-29
+
+Following the explicit original narrative-first change, the user raised a risk of internal stable entity IDs appearing in roleplay passages if passed to the same model. The user then requested that the recommended narrator/identity separation be documented for future adherence. [B6-D04 — Narrator-safe entity references and internal identity resolution](./decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) is the accepted follow-up.
+
+- **Prose-generating narrator contexts contain no internal IDs or ID↔name mapping tables.**
+- Narrative refers to natural names/descriptions; engine-side resolution determines stable IDs based on context, or leaves ambiguous facts unresolved.
+- Only isolated non-narrating interpretation/resolution may receive internal candidate IDs, even when sharing a selected model with narration.
+- Single-pass prose+event generation remains supported with natural-language candidate references; no mandatory second model/pass.
+- Relevant updated operational notes: context builder, interpreter, pipeline strategies, task routing, coordinator, Lorebook, consolidated architecture, planning instructions, B6-D01 and active B6 review.
+- B6-D02/D03 remain **unapproved**; this documented identity boundary does not approve their schema/placement/presence choices.
 
 ## Follow-up contracts still open (NOT approved by this reconciliation)
 
