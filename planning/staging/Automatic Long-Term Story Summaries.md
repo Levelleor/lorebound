@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Memory Lorebook and Context Brainstorm]]", "[[Story Editing and Event Timeline Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Automatic Long-Term Story Summaries
+
+## Latest accepted event and narrative authority — 2026-10-28
+
+**Current narration-first memory semantics ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Summaries reflect **accepted story prose and the present declarative world tracker**; they may acknowledge fictional contradictions left by historical edits. Do not turn the old absence of a possession/travel event into a reason to call a later accepted fact invalid. Rebuild from **current** story passages and event assertions after editing, not retained passage revision histories. Drafts and rejected model proposals are not canonical.
+
 
 ## Idea
 Independently summarise older history into persistent, rebuildable memory.
@@ -81,3 +86,5 @@ A rolling summary is straightforward and relatively cheap to maintain but may ac
 - 2026-10-19 — **Pass A audit reference correction:** IDEA-0023 and IDEA-0024 were accepted as separate staging ideas after the original summary note. Their detailed functionality is not automatically in IDEA-0022; IDEA-0063 RAG remains unaccepted. No new approval.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Automatic persistent long-term story summaries, source turn/revision tracking, invalidation and rebuilding after historical edits, consistency with authoritative narrative and world state, support for either one model or dedicated task-specific models. Rolling versus hierarchical summaries deliberately left open for refinement. Moved to staging only, not production.
+
+- 2026-10-28 — Explicit user-approved narrative-first declaration in B6-D01 governs any older contradictory mechanical/simulation prose in this staged note. Original decision provenance preserved; no implementation or stage promotion.
