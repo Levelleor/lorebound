@@ -11,6 +11,11 @@ tags:
 ---
 # Pass B5 — Starting World and First Turn Contracts Review
 
+## Current narrative-first architectural authority — 2026-10-28
+
+**Current event meaning after B6 user direction (2026-10-28):** [B6-D01](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Grounded facts extracted from accepted Quick Start/Custom Opening and approved optional starting Lorebook content are **declarative state assertions**. A missing fictional prerequisite never alone blocks a representable accepted fact. Unsupported description stays prose; sparse identity and unknown details are allowed. The automatic Quick Start vs explicit Custom Opening/AI-world approval distinction remains unchanged. B5 remains formally closed at design level; this does not revise its approval history.
+
+
 > **Formally closed at design level on 2026-10-28** by explicit user approval: [P-B5-01 closure ADR](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md). Nine B5 decisions accepted (all Option A). No implementation, verification or stage promotion.
 
 > **Batch 1 accepted on 2026-10-28:** B5-D01, D02 and D03 each approved **Option A**. Their original options remain below for provenance. Batch 2 is now accepted: B5-D04, D05 and D06 each Option A. Batch 3 accepted: D07 A, D08 A, D09 A; design closure assessed below, not formally approved. [P-B4-01](./decisions/P-B4-01%20-%20Design%20Closure%20and%20Deferred%20Initialization%20Contracts.md) records B4 design-only closure. B5 opens the previously deferred S02/S06/S09 starting-world boundary for explicit review; no B5 selection, code, tests or staged-idea promotion is implied.
