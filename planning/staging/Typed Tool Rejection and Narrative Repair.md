@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[World Map and Location Rules Brainstorm]]"]
@@ -14,11 +14,16 @@ tags:
 ---
 # Typed Tool Rejection and Narrative Repair
 
+## Latest accepted governing architecture — 2026-10-28
+
+**Later accepted scope:** [B6-D01 — narrative-first declarative outcome events](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Typed rejection and bounded repair remain useful for **malformed/unrepresentable events, failed tool/provider operations, or optional pre-acceptance Do/Say action simulations**, but must **not** reject **already accepted story narration** because a key's former acquisition, item's source holder, movement route or causal setup is absent. A grounded accepted state assertion records the latest fact; the previous narrative can remain inconsistent. Only **provisional** AI text can be repaired by selected guardrails; never rewrite accepted prose to satisfy a mechanical validator. The original restrictive examples below are historical, subordinate to this current scope.
+
+
 ## Idea
 Reject invalid operations with structured reasons and let the narrator reflect or correct the failed action.
 
 ## Why this idea matters
-An overweight pickup or illegal movement cannot be committed as success.
+An unresolved simulated pickup or movement attempt may receive optional pre-narration guardrails; an **accepted narrative fact** is not vetoed for lacking its former fictional prerequisite.
 
 ## Accepted direction
 - **Structured typed rejection:** When a proposed world-state operation or tool action fails validation, return an intelligible, typed rejection with machine-readable reason/code and relevant context rather than only a generic failure. Actual code/schema choices remain for refinement.
@@ -26,7 +31,7 @@ An overweight pickup or illegal movement cannot be committed as success.
 - **Player-first bounded refinement (user clarification 2026-10-19):** Rejection/repair protects the integrity of **AI narration for the player's chosen premise**, rather than policing what the player may author. Where a selected movement rule finds a contradiction in a Do/Say or AI-proposed success, aim for a coherent in-story result with modest bounded repair, not unnecessary blocking or a fictitious loophole. Freeform play may turn off route enforcement while retaining the map as reference; direct user Story authorship has its already accepted separate authority (IDEA-0002).
 - **Narrate legitimate failed attempts:** A rejected proposal may produce a coherent in-story failure (for example a locked door remaining closed or an invalid pickup failing), provided narration accurately reflects the authoritative outcome. Invalid actions must not be described as completed successes.
 - **Bounded narrative repair:** If a provisional narrative draft has already claimed an invalid action succeeded, the coordinator may request a bounded revision or correction of the prose, using the rejection and actual state. Repair can revise *provisional* output but cannot bypass validators or retroactively rewrite unrelated committed turns.
-- **No contradictory final prose:** A finalised turn should not affirm a world-state outcome that deterministic validation rejected. If consistency cannot be achieved, return a clear failure instead of committing misleading prose.
+- **Accepted narration is not rejected for simulated impossibility:** Provisional AI output may be refined to honor optional action rules, but once an authorial/story outcome is accepted, valid grounded assertions track that outcome even if earlier fiction contradicts it. Fail safely for malformed/technically unrepresentable data only.
 - **Preserve coherent prior state:** When repairs fail or a model repeats invalid claims, leave the previously accepted canonical story and world state intact. Do not commit invalid operations, speculative side effects or an inconsistent partial turn.
 - **Coordinator authority:** Integrate with the accepted [[Deterministic Adventure Coordinator]] (IDEA-0044) and [[LLM State Interpreter and Proposed Operations]] (IDEA-0045); validators determine outcomes and LLMs may only incorporate the rejection or propose bounded corrections.
 - **Fit the selected generation strategy:** Under a plan-validate-narrate pipeline, send rejection information before final narration; under draft-audit-repair, revise or reject a provisional draft. Do not force a particular workflow or separate permanently loaded repair model.
@@ -34,7 +39,7 @@ An overweight pickup or illegal movement cannot be committed as success.
 - **Detailed recovery policy remains open:** Keep reason schemas, retry limits, fallback/repair mechanisms, escalation, and exact player-facing presentation open for staging refinement.
 
 ## Proposed behaviour
-Validate typed candidate operations against current authoritative state and the selected adventure rules. For a rejected operation, produce a structured result identifying the reason, relevant targets and reliably known allowable next actions when applicable. The deterministic coordinator passes the outcome to narration, which can either present the attempted action as an in-story failure or revise a provisional draft that falsely asserted success. Limit correction attempts and revalidate any changed operations. Commit only coherent prose and accepted world-state events together; if no valid, consistent result can be obtained, preserve the previous committed state and report an actionable failure. Retry budgets, exact rejection shape and presentation remain to be designed.
+For a **provisional attempted action**, optional selected rules may guide failure narration; for an **accepted fact**, validate grounding, typed representation and deterministic projection, not source-possession or fictional feasibility. For a rejected operation, produce a structured result identifying the reason, relevant targets and reliably known allowable next actions when applicable. The deterministic coordinator passes the outcome to narration, which can either present the attempted action as an in-story failure or revise a provisional draft that falsely asserted success. Limit correction attempts and revalidate any changed operations. Commit accepted prose and its representable state assertions together; fictional contradictions alone are permitted, while technically unprocessable required event payloads fail safely. Retry budgets, exact rejection shape and presentation remain to be designed.
 
 ## Alternatives and trade-offs
 A failed operation does not always require discarding a whole story turn: describing the failed attempt may be more natural, cheaper and more faithful to player intent. A draft that already asserted impossible success may instead need repair before finalisation. Attempting several revisions can increase cost and latency, while immediately aborting may be less fluid. Select reasonable bounded fallback behaviour in refinement. Structured errors support code-based handling but require consistent taxonomy and careful suppression of hidden-state spoilers; accessible alternatives should only be suggested when grounded and permitted.
@@ -77,7 +82,7 @@ For an attempted Do action such as *"I walk into the treasury"*, a provisional A
 - [ ] A rejected action can be represented as an in-story failed attempt without committing an impossible world-state change.
 - [ ] A provisional draft that asserts an invalid success can undergo bounded repair using the validation result.
 - [ ] All repaired proposals or changed world-state claims must pass validation before finalisation.
-- [ ] No committed final prose asserts an outcome the game rejected as invalid.
+- [ ] Accepted final prose may establish a fact whose fictional prerequisite is missing; replayable assertions track it. Only **unprocessable** payloads or unsafe atomic writes block canon.
 - [ ] Unrepairable or repeated-invalid results retain the last coherent accepted world/story state and produce an understandable failure.
 - [ ] Tool rejection and repair behaviour works with selected generation pipelines and can reuse one model sequentially.
 - [ ] Exact rejection schema, repair budgets, fallback and user-facing presentation remain refinement questions.
@@ -99,3 +104,5 @@ For an attempted Do action such as *"I walk into the treasury"*, a provisional A
 - 2026-10-18 — **Accepted IDEA-0002 interaction:** The existing typed rejection/repair path still handles impossible gameplay attempts, but explicit player-authored Story declarations may override ordinary fictional restrictions instead of being rejected. Technical integrity and version/safe commit checks remain non-negotiable; the AI does not get independent override authority. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Structured rejection reasons for invalid proposed world-state or tool operations; known permissible/reachable alternatives; in-story failures or bounded narrative repair of inconsistent drafts; no invalid operations or contradictory final prose; retain coherent prior state if repair fails. Rejection schemas, retry limits, fallback handling and player-facing presentation remain open. Moved to staging for refinement, not production.
+
+- 2026-10-28 — **Explicit user-directed supersession:** Narrative-first declarative assertions adopted by user and reconciled here under [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Earlier action-precondition wording is preserved only as approval history where still quoted; **the latest governing section overrides it**. No staging promotion or implementation.
