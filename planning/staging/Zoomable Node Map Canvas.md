@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Zoomable Node Map Canvas
+
+## Latest accepted event and narrative authority — 2026-10-28
+
+**Current map world-memory semantics ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Map nodes/links and discoverability are grounded **current declarative location/relationship assertions**. Player editing them is a **pending noncanonical change set until explicit Commit**, with the shared full-composer blocking overlay. Renaming, moving layout or stating a new location must not require old fictional travel-proof; source-grounded acceptance, stable IDs and technically coherent hierarchy still apply. Pan/zoom/layout remain presentation-only.
+
 
 ## Idea
 Display the world as a pannable, zoomable non-overlapping graph canvas with nested groups.
@@ -87,3 +92,5 @@ A nested graph canvas is flexible for non-geographic worlds and supports travers
 - 2026-10-23 — **User resolved A-19/A-20:** The world map is only a representation and player editor of recorded game-world state, not an input form for travel/actions. Selecting a node never moves a character; player map interaction is for inspecting/fixing/changing location records or adding locations. Nodes may carry a visible `undiscovered` status and still display their recorded names/details for player editing; accepted discoveries switch the status to `discovered`. In-story AI knowledge is separate from player access to the editor. Earlier blanket hiding of undiscovered nodes is superseded. No production promotion.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Interactive pannable and zoomable node-based world map; nested location groups; visual travel connections distinct from containment; selection and details; adjustable layout; legible non-overlapping nodes; and hidden/discovered-location visibility. Group-collapse thresholds, layout persistence, collision algorithms, performance details and frontend graph framework left open for refinement. Moved to staging only, not production.
+
+- 2026-10-28 — Explicit user-approved narrative-first declaration in B6-D01 governs any older contradictory mechanical/simulation prose in this staged note. Original decision provenance preserved; no implementation or stage promotion.
