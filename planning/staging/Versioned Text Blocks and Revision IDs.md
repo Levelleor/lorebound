@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Versioned Text Blocks and Revision IDs
+
+## Current accepted architecture after 2026-10-28 redirection
+
+**Superseded original feature assumptions:** Under B3-D04 and [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), this note's old proposal to retain accepted **passage revision IDs/history** is **not current Lorebound architecture**. Keep a stable logical passage ID and **only its latest/current structured body**; confirmation overwrites it. Current typed outcome assertions track accepted facts with total event order; a later fact does not require a surviving earlier fictional cause or introduction. The document title, original scope, alternatives and user approval history remain intact for provenance; they do **not** authorise a revision archive. Event **schema versions** and adventure concurrency counter remain, distinct from old passage revision copies.
+
 
 ## Idea
 Assign stable IDs and revisions to editable prose blocks and link derived state changes to them.
@@ -140,3 +145,5 @@ Represent editable prose using stable **story turn/passage identities** and vers
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Stable IDs and revision IDs for editable story blocks; provenance connecting source text revisions, generated turns and derived validated world-state events; preservation of edit lineage. Paragraph versus turn-range granularity and split/merge provenance rules deliberately left for refinement. Promoted from Inbox to staging, not production.
+
+- 2026-10-28 — **User-approved supersession:** Narrative-first declarative fact assertions and the revision-free current-story model now govern this document. Former contradictory original direction is historical approval context, not active implementation guidance. No stage promotion or software implementation.
