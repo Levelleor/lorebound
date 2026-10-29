@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Configurable Travel Graph Rules
+
+## Latest approved narrative-first event semantics — 2026-10-28
+
+**Narration-first supersession ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Strict travel modes remain **optional guardrails for ordinary unresolved Do/Say attempts or provisional AI narration**, not proof obligations for **accepted** world assertions. The tracker records `SetCharacterLocation(character, destination)` when accepted story/player authorship establishes arrival, even if no older recorded route or movement event justified it. A mere mention, memory or remote call does **not** establish arrival; location identity may be sparse and its unknown fields left unknown. Current physical location is a single derived property; hierarchy does not imply a traversable edge. Do not rewrite or veto previously accepted prose to enforce strict geography.
+
 
 ## Idea
 Allow strict movement rules requiring valid connections between locations.
@@ -25,12 +30,12 @@ Prevents AI teleportation when the world is meant to be spatially constrained.
 - **Player-first purpose of travel guardrails (user clarification 2026-10-19):** The optional movement/route system exists to help the **AI honour the player's chosen story and established geography**, not to police what the player is allowed to imagine or author. In a freeform adventure the map can remain a **reference/visualisation only**, without enforced pathfinding. In a strict adventure, ordinary Do/Say **attempts** and AI/Continue-generated movements should be checked and, when inconsistent, narrated or lightly revised into a coherent outcome. Explicit **player-authored Story** assertions retain their existing authorial override under IDEA-0002; technical identity/history/atomic-integrity checks still apply. Do not impose unnecessary gameplay bureaucracy, route invention or mandatory player confirmations just to satisfy a mechanical restriction.
 - **Three supported policy directions:** Provide **freeform travel**, **strict adjacent-only movement**, and **valid multi-hop routing**. Exact UI, defaults, and edge-case policies remain for refinement.
 - **Separate graph from containment:** Location parent/child hierarchy from [[Hierarchical World Locations]] (IDEA-0033) describes where locations reside. Travel connections represent **possible traversal** and must not be inferred automatically from shared parents or common ancestors.
-- **Strict mode validation:** When a strict policy is active, a proposed location change must satisfy the applicable route/adjacency and movement restrictions before becoming authoritative. An ordinary attempted move cannot succeed merely because Do/Say text or AI narration says it did; explicitly player-authored Story declarations are a separately accepted authorial override, not ordinary movement attempts.
+- **Strict-mode attempted-action guidance (latest scope):** When strict policy is selected, evaluate unresolved Do/Say travel **attempts before narrative acceptance**, allowing coherent failed attempts or bounded provisional narration refinement. An **accepted** player/AI story fact asserting a character's new place is represented by a `SetCharacterLocation` event even without a retained route/earlier movement; no retroactive veto of established story.
 - **Adjacent-only movement:** A strict option may require each validated movement to cross only a directly available graph edge rather than skipping intermediate places in one turn.
 - **Multi-hop legal routing:** Another strict option allows travel across multiple connected places when a valid permitted path exists; actual route resolution, elapsed time, narrative treatment and intermediate event handling remain open.
 - **Optional conditional connections:** Route edges may carry access conditions such as locked doors, keys, permissions, blocked passages or other setting-specific constraints. An adventure may also impose optional movement granularity, for example a one-hop-per-turn limit.
-- **Coherent character presence:** Movement events update persistent character position/state under [[Character Presence and Current Scene]] (IDEA-0034) only if their outcome is accepted and validated; rejected movements do not silently teleport characters into a new scene.
-- **Narrative obstacles stay visible:** If travel is blocked under strict rules, the generation pipeline should preserve canonical location and give the player an understandable indication of the obstacle rather than inventing a bypass or silently altering the travel graph.
+- **Coherent character presence:** Only **actually established accepted arrival** or explicit correction yields a typed location/presence assertion. Incidental mention, remote contact and uncompleted travel attempts do not. A missing fictional path doesn't invalidate a final accepted location assertion.
+- **Provisional travel obstacles:** When selected strict rules show an **attempted**, not completed, action is blocked, guide pre-acceptance narration accordingly without inventing bypasses. When canon **already establishes** arrival, record its present location rather than suppressing it on mechanical grounds.
 - **Freeform does not mean state corruption:** The freeform policy relaxes adjacency restrictions for narrative movement but still requires coherent location identities, accepted state transitions and validation appropriate to the selected adventure. It is not license for unvalidated world-state mutations.
 - **Deliberate open decisions:** Do **not** preselect the default travel mode, exact graph-edge schema, permission/key evaluator, vague-destination resolution, travel-time model, or mandatory travel limits without further refinement.
 
@@ -117,3 +122,5 @@ All three travel policy directions are **accepted as configurable alternatives**
 - 2026-10-18 — **Accepted scene-cut dependency:** `Playing As` switching is a narrative cut and not travel, so no route or movement validation is triggered by switching between far-apart characters. Actual travel still follows normal selected policy. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Configurable travel graph separately from the location hierarchy, supporting freeform movement, strict adjacent-only movement and valid multi-hop routes; validated location changes and optional conditional edges such as locked doors, permissions and one-hop limits; no invalid travel under strict rules. Default policy, route resolution and precise restrictions remain open. Moved to staging for refinement only.
+
+- 2026-10-28 — **User-directed architecture supersession:** Explicitly adopted narrative-first declarative state assertions, replacing simulation-style event preconditions; see [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Prior contrary statements remain only as original decision history; not current operative guidance. Still staging; no implementation/promotion.
