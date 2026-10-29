@@ -4,7 +4,7 @@ status: accepted
 decision_id: "B6-D01"
 phase: "B6"
 created: "2026-10-28"
-updated: "2026-10-28"
+updated: "2026-10-29"
 approved_at: "2026-10-28"
 approved_by: "requesting user (explicit chat acceptance and document-reconciliation instruction)"
 supersedes_in_part:
@@ -19,6 +19,12 @@ tags:
 ---
 
 # B6-D01 — Narrative-first declarative outcome events, not a simulation engine
+
+## Later accepted narrator/identity refinement — 2026-10-29
+
+[B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) establishes that **system stable IDs never belong in prose-producing model prompts or user-visible roleplay output**. The narrator receives human-readable world context; an internal non-narrating resolver alone may receive candidate ID/name mappings. Separate roles require isolated prompt contexts even if they reuse the same selected model. Combined single-pass output uses natural references, with engine-side ID binding afterward. Clearly new entities receive engine-owned IDs; truly ambiguous existing references remain unresolved instead of guessed or used as grounds for rejecting fiction. The current narrative-first assertion/replay rules remain unchanged.
+
+
 
 ## Approval and context
 
@@ -69,3 +75,5 @@ No automatic writing of narrative repairs, no guarantee of fictional consistency
 - **2026-10-27:** B4-D06 accepted Option A for “structural integrity preflight,” with ambiguous phrasing that could reject later events after historical source deletion.
 - **2026-10-28 — B6 Batch 1 originally proposed, unapproved:** D01 A reject dangling historical entity references, B name-based retarget, C cascade delete; D02 A atomic item custody and equipment; D03 A validated movement/presence. No B6 approvals yet.
 - **2026-10-28 — User rejected simulation framing and explicitly adopted replacement:** User reasoned that the world tracker primarily serves story narration and that replay should not refuse a later key event when earlier origin is gone; proposed add/remove-style simpler assertions. Assistant explained declarative Set/Clear and keyed add/remove, not requiring source-state prerequisites. User approved and explicitly instructed updating all meaningful documents. **This B6-D01 is the first accepted B6 decision, replacing the earlier unapproved D01 proposal rather than accepting its old Option A.**
+
+- **2026-10-29 — Later user-requested documentation refinement:** [B6-D04](./decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) protects prose-producing narrator contexts from internal IDs while keeping internal reference resolution, same-model role reuse and single-pass generation. Earlier approvals preserved; no implementation asserted.
