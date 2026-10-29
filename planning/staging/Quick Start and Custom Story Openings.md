@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Quick Start and Custom Story Openings
+
+## Later accepted narrative-first world-memory rule — 2026-10-28
+
+**Latest world-event semantics ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** After accepted Quick Start or explicitly committed Custom Opening prose, extract only **source-grounded** facts and commit them as declarative current-state assertions. No event requires proof of an earlier pickup, travel route, fictional entity introduction or causal action. Unsupported details remain prose. Normal Quick Start still automatically commits its validated completed opening, while Custom Opening retains explicit player approval; pending manual changes retain their overlay.
+
 
 ## Idea
 Let a player start an adventure immediately through Quick Start, Custom Opening or fully optional Guided Setup, **without mandatory character/world setup, initial prose or an adventure title**.
@@ -114,3 +119,5 @@ From the new-adventure interface, a player chooses Quick Start, Custom Opening o
 - 2026-10-17 — **Explicit minimal-start refinement accepted by the requesting user:** **No mandatory setup data or title** to create an adventure. Quick Start asks for only a short premise to generate an opening; Custom Opening may begin with authored prose **or completely blank** without an AI request; **all Guided Setup fields are optional/skippable**. Without an entered title, the adventure starts as **`Untitled Adventure`**, with a separate stable ID and an ordinary rename action later. This aligns with accepted IDEA-0005 and IDEA-0007 but does not decide generated-opening preview/commit details. Remains **staging**, not production or implementation approval.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user**: Quick Start, Custom Opening and optional Guided Setup, with no mandatory setup steps. Moved to staging for refinement; not approved for production or implemented.
+
+- 2026-10-28 — **Explicit architecture update:** B6-D01 narrative-first declarative event rules override prior mechanical-precondition language in this staged note; original acceptance/alternative history preserved, no stage promotion/implementation.
