@@ -3,7 +3,7 @@ type: architecture-decision
 status: accepted
 decision_id: "B1-D06"
 created: "2026-10-25"
-updated: "2026-10-25"
+updated: "2026-10-28"
 approved_at: "2026-10-25"
 approved_by: "requesting user (explicit chat approval)"
 tags:
@@ -13,6 +13,12 @@ tags:
 ---
 
 # B1-D06 — Browser TypeScript event replay
+
+## Subsequent accepted architectural supersession — 2026-10-28
+
+**CURRENT AUTHORITY:** [B6-D01 — Narrative-first declarative outcome events](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), together with [B3-D04 — Single current history](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md), supersedes earlier simulation-style event preconditions and prior immutable passage/event audit assumptions in this ADR. The engine primarily **tracks the fictional facts established by accepted narration and player corrections**. Events are ordered typed **Create/Remove, Set/Clear and keyed relation Add/Remove assertions**, not procedural transfers or movement operations that must prove historic source possession, prior introduction, prior route or fictional causality. A later accepted reference may construct a **sparse stable identity** when its old introduction has been removed; unspecified fields remain unknown. Preserve technical typed/supported-format, deterministic folding, version/epoch, atomic transaction and one-current-property safety. Only a **technically unprocessable** event fails closed; narrative contradiction does not. The original earlier approval and alternatives below are **historical provenance**, not permission to reinstate rejected prerequisites or old revision archives. Actual implementation remains unapproved.
+
+
 
 ## Decision status and provenance
 
@@ -49,6 +55,7 @@ Lorebound uses an append-only record of accepted operations and revisions and re
 ## Traceability
 
 Logical owners S05, S06, S10, S11 and S12; staging IDEA-0039, IDEA-0040, IDEA-0041, IDEA-0042, IDEA-0044, IDEA-0047, IDEA-0051, IDEA-0055. Pass A audit A-06, A-07 and A-10. [Consolidated architecture](../Consolidated%20Subsystem%20Architecture.md).
+
 
 ## Decision history
 
