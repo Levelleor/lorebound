@@ -3,13 +3,18 @@ type: architecture
 status: closed-design-only
 phase: "B2"
 created: "2026-10-25"
-updated: "2026-10-27"
+updated: "2026-10-28"
 tags:
   - planning/architecture
   - pass-b
   - canonical-history
 ---
 # Pass B2 — Canonical History Decision Review
+
+## Current narrative-first architectural authority — 2026-10-28
+
+**Later approved design controls current implementation (2026-10-28):** [B6-D01](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) plus [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) supersede original B2 immutable audit/revision selection and procedural event validity expectations. Current canon stores **one ordered sequence of declarative fact assertions**, no past passage/event revision archive and no mandatory proof of historic action prerequisites. Keep Later Turns retains contradictions; missing entity introduction can leave a sparse identity. Original B2 alternatives below are **approval history only**; technical event format/version, typed replay, required-core fail-closed errors and atomic Go storage survive.
+
 
 > **Formally closed at design level on 2026-10-27 by explicit user approval.** [P-B2-01 closure ADR](./decisions/P-B2-01%20-%20Design%20Closure%20and%20Deferred%20Transaction%20Contracts.md). Seven accepted decisions (D01–D06, D08), D07 withdrawn; D04's later user-approved clarification supersedes its original suspension workflow. This is **not** implementation, testing, staging promotion or release approval.
 
