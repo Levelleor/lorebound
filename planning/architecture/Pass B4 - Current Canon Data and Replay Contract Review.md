@@ -13,6 +13,11 @@ tags:
 
 # Pass B4 — Current Canon Data and Replay Contract Review
 
+## Current narrative-first architectural authority — 2026-10-28
+
+**Post-closure user-approved supersession (2026-10-28):** [B6-D01](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) replaces the broad “reject a surviving later event if earlier item/character creation was removed” interpretation of B4-D06. Replay is **declarative and narrative-first**: a later grounded assertion may reconstruct a sparse identity and update its current holder/location with prior fiction unknown. Only malformed/unsupported core data, non-deterministic projection and unsafe commits fail. **The original B4 proposals and approvals below are preserved as history**, not a requirement to reject mechanical contradictions; B4 remains design-closed.
+
+
 > **Formally closed at design level on 2026-10-28 by explicit user approval.** [P-B4-01 closure ADR](./decisions/P-B4-01%20-%20Design%20Closure%20and%20Deferred%20Initialization%20Contracts.md). Nine decisions accepted with B4-D04 **B** and B4-D08 **B**, all other D01–D09 **A**. No code, verification or staging promotion approved.
 
 > **Batch 1 accepted on 2026-10-27:** B4-D01, D02 and D03 each approved **Option A** in separate ADRs. The original alternatives below remain for provenance. Batch 2 accepted: **D04 Option B**, **D05 Option A**, **D06 Option A**. Batch 3 approved: **D07 A, D08 B, D09 A**. Closure assessment below; formal sign-off remains pending. B3 is closed design-only under [P-B3-01](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md).
@@ -79,7 +84,7 @@ After [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20R
 
 ### B4-D06 — How should invalid dependent events be handled after deliberate current-history mutations?
 
-- **A (recommended):** Before accepting a manual event edit, history truncation, committed Undo or current-only deletion, run a **deterministic structural integrity check** of the intended resulting event sequence (TypeScript domain validation; Go storage safety). If it cannot replay safely because of a genuine missing referenced entity/invariant, **reject the proposed change with an actionable conflict**, keeping existing canon intact. Never silently change surviving events or call AI to repair. **Trade-off:** Some deliberate edits may require a second corrective action; predictable integrity.
+- **A (original 2026-10-27 proposal, partly superseded):** Preflight deterministic structural integrity and reject failures. **Current B6-D01 scope:** only unrepresentable/unsupported typed event data and unsafe current projections fail; deletion of an earlier entity introduction is **not** grounds to reject later grounded assertions, which can use a sparse stable identity. Never silently change surviving events or call AI to repair. **Trade-off:** Some deliberate edits may require a second corrective action; predictable integrity.
 - **B:** Automatically cascade deletes or rewrite dependent events to make the proposed mutation work. **Trade-off:** Less player work, but changes historical accepted outcomes without specific player intent.
 - **C:** Commit the proposed removal regardless and show an error only later if replay fails. **Trade-off:** Fewer immediate blocks, but risks leaving the active adventure unusable.
 
