@@ -2,13 +2,18 @@
 type: architecture
 status: accepted-consolidation
 created: "2026-10-19"
-updated: "2026-10-25"
+updated: "2026-10-28"
 tags:
   - planning/architecture
   - pass-b
   - subsystem-consolidation
 ---
 # Consolidated Subsystem Architecture
+
+## Current narrative-first architectural authority — 2026-10-28
+
+**CURRENT OPERATIVE ENGINE PURPOSE (explicit user approval, 2026-10-28):** Lorebound is **a narrative/world-memory companion, not a mechanically authoritative RPG simulation**. [B6-D01](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) governs all S05/S06/S10/S11/S12 event contracts: persist the latest accepted fictional facts as ordered declarative `Set/Clear`, `Create/Remove` and keyed `Add/Remove` assertions; derive status, character presence, inventory and equipment. Do **not** reject an accepted story assertion because an earlier acquisition, item creation, travel route, prior location, ability or causality is missing. Sparse stable identities keep unspecified details unknown. Reject only unreadable/technically unrepresentable typed data, projection non-determinism and unsafe transaction/version failures. Optional mechanics may guide **provisional action attempts**, never rewrite accepted narration. This later explicit user decision supersedes simulation-first, append-only revision-archive and broad structural-preflight wordings elsewhere in this pre-existing consolidation. No new code/feature promotion.
+
 
 ## Status, scope, and source of authority
 
@@ -24,7 +29,7 @@ This document consolidates **architectural ownership only**. It does not promote
 - **After:** 12 top-level logical subsystems retaining 30 legacy responsibilities as internal domains/modules.
 - **Coverage:** 52/52 source staging ideas, each with one consolidated primary owner and deduplicated consolidated secondary touchpoints.
 - **Storage/runtime:** One Wails v3 headless Go localhost host serves the ordinary-browser SvelteKit UI; gameplay coordinator, rules and model clients are browser TypeScript; Go protects SQLite/filesystem/credential services. One shared SQLite database; only whole-database backup/restore files.
-- **Canonical authority:** AI offers provisional narrative/typed operations; deterministic TypeScript coordinator and world validators approve; Go/SQLite enforces atomic durable/expected-version writes. Accepted versioned history permits complete deterministic replay without rerunning model outcomes.
+- **Canonical authority (2026-10-28):** Accepted narration/player corrections are source-grounded, declarative current-fact assertions in **one current ordered event history**, replayable without AI; TypeScript checks typed/structurally representable events (not fictional feasibility), and Go/SQLite enforces atomic version/epoch-safe writes. No retained passage/event revision archive.
 
 ## 1. Consolidated subsystem register
 
@@ -320,7 +325,7 @@ These are **open design items**, not additional approved implementation choices.
 2. **Supported replay coverage and optional plugin removal (S05 ↔ S10 / S11 / S09):** event/reducer versions for core and available mechanics, manual edits, history head selection, checkpoint invalidation and derived memory rebuilding. The accepted exception is **no migration or replay requirement for missing plugin-specific logic/state**; its future AI context and rules are omitted after removal. Retain historical records non-destructively where feasible without forcing legacy plugin compatibility.
 3. **Simple browser/Go credential boundary (S01 ↔ S08 ↔ S12):** implement **two-way Go credential sync with memory-only browser caching** and narrow loopback service operations. **Do not introduce a Lorebound authentication/session/login framework this iteration**. Basic Host/Origin request filtering, tab cache invalidation and vault/sidecar behavior are engineering concerns, not guarantees against hostile local programs. Stronger service security is explicitly deferred under A-27; no Go model proxy or persistent raw browser-token cache.
 4. **Starting-world transaction (S02 ↔ S06 ↔ S09):** blank valid baseline, automatic validated Quick Start first-turn commit, text-grounded fact-only extraction and optional AI-authored Turn-0 Lorebook, including failure and optional review semantics.
-5. **World invariants across modules (S06 ↔ S10 / S11):** stable entity references, equipment/custody consistency, valid travel versus hierarchy, presence, mutable environment, plugin effects and unknowns. Retain **player Story authorial overrides**, validated **automatic equipment relocation following anatomy changes**, no map-click travel input, player-editable `undiscovered` world nodes with separate fictional discovery, bounded grounded AI movement repair and historied manual sheet changes. Precise equipment disposition/error handling and status/edit APIs still need design.
+5. **Narrative-first world projections across modules (S06 ↔ S10 / S11):** stable and optionally sparse entity IDs, last-asserted item holder/equipment, location and presence, mutable environment, plugin effects and unknowns. Validity means typed/replayable/coherent *current projection*, not historically demonstrated possession, travel or fictional cause. Retain **player Story authorial overrides**, validated **automatic equipment relocation following anatomy changes**, no map-click travel input, player-editable `undiscovered` world nodes with separate fictional discovery, bounded grounded AI movement repair and historied manual sheet changes. Precise equipment disposition/error handling and status/edit APIs still need design.
 6. **Context and model contracts (S07 ↔ S08 ↔ S09):** implement the already accepted **no model fallback on failed requests**, one **shared current** sampling-settings entry with per-switch capability reevaluation, stable **creative instruction concatenation without semantic conflict solving**, plus transparent requested/selected/transmitted inspection, budget estimation, secret redaction, retrieval consistency and source revision staleness. Exact metadata probes, ordering and UI remain engineering refinements.
 7. **Internal module interfaces vs. package layout:** decide which of the 30 original labels merit independent TypeScript/Go modules without re-inflating top-level subsystem vocabulary. A subsystem boundary does not mandate a build artifact or separately launched service.
 
