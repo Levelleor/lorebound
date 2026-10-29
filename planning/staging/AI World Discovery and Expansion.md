@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # AI World Discovery and Expansion
+
+## Current accepted narrative-first scope — 2026-10-28
+
+**Current narrative-first world memory ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** AI-proposed location/lore facts remain provisional until source-grounded accepted narration or explicitly approved world-authoring establishes them. Record **declarative location/entity/route assertions**, not a mechanically validated procedural travel chain. An accepted assertion may establish an unexpected place or new physical location even when an old route/creation event is gone; its origin may remain unknown. Optional strict travel can steer **attempted** actions and provisional narration, not rewrite final accepted story; mere mention never establishes travel/discovery.
+
 
 ## Idea
 Allow the narrator/interpreter to propose discovering named locations and graph connections as play unfolds.
@@ -30,7 +35,7 @@ Exploration should grow a persistent world, not just prose descriptions.
 - **Coherent batch operations:** Where a discovery needs a location, parent, connection and arrival together, validate the coordinated operation before committing so partial failures do not leave an orphaned place, a contradictory route, or an impossible character destination. Atomic/transactional or explicitly consistent failure semantics should be refined.
 - **Aliases and duplicate safeguards:** Match or resolve named locations, alternative spellings and descriptive references against existing stable locations. Never silently create duplicates when a place may already exist; retain stable IDs and aliases on renames or re-identification.
 - **Explicit node discovery state, distinct from player map editing (user decision 2026-10-23):** Established locations can have a persisted **`undiscovered` or `discovered`** state. A validated narrative discovery may switch `undiscovered` to `discovered` without creating a duplicate location. **Undiscovered recorded nodes may still appear on the player's map with stored names/details available for inspection and correction**; this flag tracks in-story discovery, not authority to hide a node from its player-author world editor. The AI must not assume characters know a place merely because the player can edit it. Truly restricted content, if any, needs a separate explicit policy, not blanket `undiscovered` suppression.
-- **Authoritative validation first:** The AI supplies candidate events; deterministic rules and accepted canonical state decide which world, graph and location changes may be committed. No AI prose automatically bypasses route restrictions or established locked access.
+- **Grounded assertions and technical checks:** The AI supplies provisional typed assertions; accepted narration or intentional player worldbuilding determines which facts become canonical, and TypeScript checks type/identity/projection representability. No AI prose automatically bypasses route restrictions or established locked access.
 - **Keep expansion controls open:** Whether to offer separate settings for AI world expansion versus strict travel adjacency, how they default, and whether new places are pre-existing hidden entities or generated on encounter remain **open for refinement**, not fixed by this acceptance.
 - **Separate visualisation:** The zoomable map UI and saved layout are a separately accepted **staging** feature ([[Zoomable Node Map Canvas]], IDEA-0037); neither map rendering nor enabling discovery automatically enables strict movement rules.
 
@@ -88,7 +93,7 @@ One approach is to allow AI-created locations on discovery; another is to predef
 - [ ] A coordinated discovery containing multiple operations cannot leave inconsistent partial state when validation fails.
 - [ ] Existing places with renamed/aliased references can be matched or marked uncertain to avoid accidental duplicate locations.
 - [ ] Recorded `undiscovered` nodes can remain **visible/inspectable/editable for the player on the map**, including saved names/details, while AI in-story narration respects actual discovery knowledge. If a secret field is separately protected, do not conflate that with `undiscovered` status.
-- [ ] Authoritative game-state validation may reject unsafe or impossible AI-proposed world expansion without letting generated prose override it.
+- [ ] Unsupported or malformed typed world data fails safely, while **grounded accepted** new locations/facts are recorded as assertions even if fiction lacks prior mechanics/route proof.
 - [ ] Separate controls for expansion versus travel strictness, discovery-versus-creation policy and map presentation remain open for refinement.
 - [ ] Proposed world expansions do not independently approve the zoomable map or mutable environmental simulation candidates.
 
@@ -112,3 +117,5 @@ One approach is to allow AI-created locations on discovery; another is to predef
 - 2026-10-17 — **Accepted IDEA-0006 source-grounding dependency:** Quick Start initial entity/location extraction automatically records supported **explicitly established** facts but may not fabricate unstated geographical connections, hidden lore, history or settlement details. Unspecified world properties remain unknown; source/revision provenance, domain validation and an atomic opening-turn commit still apply. This does not enable a separate lore-generating expansion pass. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by requesting user:** AI-assisted discovery/expansion of persistent locations and travel links; validated proposals for location creation, parent placement, graph connections and character arrival; duplicate/alias safeguards, hidden-location awareness and coherent commits consistent with accepted travel rules. Automatic expansion controls and discovery-versus-creation details deliberately left open. Promoted the existing Inbox idea to staging for refinement only.
+
+- 2026-10-28 — **Explicit user-approved B6-D01 reconciliation:** Narrative-first declarative events govern current behaviour; any earlier simulation-style validity statements in historical proposals/old acceptance text are subordinate. Original approval provenance retained; staging only, not implemented or promoted.
