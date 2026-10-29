@@ -3,13 +3,18 @@ type: architecture
 status: closed-design-only
 phase: "B3"
 created: "2026-10-27"
-updated: "2026-10-27"
+updated: "2026-10-28"
 tags:
   - planning/architecture
   - pass-b
   - transaction-contracts
 ---
 # Pass B3 — Atomic Commit and Concurrency Contracts (Review)
+
+## Current narrative-first architectural authority — 2026-10-28
+
+**Later governing event semantics (2026-10-28):** [B6-D01](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) confirms that manual corrections and generated outcome events are **declarative assertions**, not source-state-preconditioned transfers/commands. Keep the explicit pending player Commit, full composer overlay, typed atomic Go boundary and one current revision-free event history. A key recorded in a chest does **not** need proof Mara had it previously; accepted facts override prior current values. Original proposed B3 validation language below is historical where it implies mechanical legality; only technically uninterpretable/unsafe records fail.
+
 
 > **Formally closed at design level on 2026-10-27** by the requesting user's explicit agreement. [P-B3-01 closure ADR](./decisions/P-B3-01%20-%20Design%20Closure%20and%20Deferred%20Data%20Contracts.md). All ten numbered B3 decisions accepted, with **D04's user-directed revision-free replacement** controlling over older immutable-audit/revision designs. This is not software implementation, integration verification, or staging-to-production promotion.
 
