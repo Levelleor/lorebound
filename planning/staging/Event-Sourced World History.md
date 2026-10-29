@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Lorebound Vision Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -14,32 +14,37 @@ tags:
 ---
 # Event-Sourced World History
 
+## Latest accepted governing architecture — 2026-10-28
+
+This **latest explicit user-approved architecture** replaces the earlier append-only/immutable event-audit and action-simulation wording in the original staged history below. [B6-D01 — narrative-first declarative outcome events](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) makes the tracker a **narration/context aid**: keep **one current ordered replayable set of typed state assertions** (Create/Remove entity, Set/Clear property, keyed Add/Remove relationship), **not procedural transfer/move commands with prior-possession or fictional-causality checks**. The latest assertion establishes current facts even when earlier fictional setup is deleted; a missing introduction yields a sparse identity with unknown details. Keep Later Turns may retain contradictions. Replay rejects only actually unprocessable/technically inconsistent event data, never merely unsupported prior fictional action. No historical passage/event revision archive or checkpoint persistence; manual corrections still require explicit player Commit.
+
+
 ## Idea
-Persist accepted changes as append-only events rather than duplicating full world state every turn.
+Persist one current ordered series of accepted declarative state assertions without duplicating world state every turn.
 
 ## Why this idea matters
 Makes undo, historical reconstruction and multi-entity consistency possible.
 
 ## Accepted direction
-- **Append-only history of accepted state changes:** Record validated, committed changes to persistent world state as ordered events instead of duplicating the entire world record for every story turn. Preserve historical events and their provenance even when current story revisions later supersede their effects.
+- **Current-only ordered assertion events (2026-10-28 supersession):** Record accepted facts as ordered typed Set/Clear, Create/Remove and keyed Add/Remove outcome assertions. Current history is replayable from Turn 0; prior passage/event revisions and inactive audit records are **not** retained. Assertions need no fictional transfer/source/route precondition.
 - **Traceable event records:** Each committed event identifies its source story turn and/or text revision, affected stable entity IDs, event type, deterministic ordering, and the relevant validation/acceptance information. Exact event ID, schema and payload shapes require refinement.
 - **Deterministic current-state reconstruction:** A defined reducer/projection can apply the active valid event sequence to rebuild character, item, location, equipment, environmental and other supported canonical state consistently.
-- **History and current truth are distinct:** Append-only recording does not require obsolete events to stay active in the current story. The system must support eventual invalidation, supersession or branch-aware selection of events derived from revised/undone narrative, with precise algorithms still open.
-- **Foundation for undo and historical editing:** Retain relationships between events, originating story revisions and affected entities so changed earlier passages can be deterministically tracked without losing auditability. **Keep Later Turns** preserves later accepted story/outcomes even if the edited earlier passage removes their fictional premise; the player, not new AI inference, owns optional narrative/manual-state repairs. No fabricated missing item, automatic downstream prose change or inference-based reconciliation is authorised. Technical integrity of IDs, event provenance and transactions remains required; irreplayable-event representation is a Pass B design question (IDEA-0041/0042).
-- **Cross-entity coherence:** Events affecting multiple connected entities must be validated and applied consistently; replay cannot generate duplicated items, contradictory character positions, or impossible travel outcomes.
+- **One current story/event history:** Editing overwrites the current passage body; Undo/Delete remove the selected current event suffix as approved; Keep retains later accepted assertions even when earlier origin disappears. No branch-aware selector or inactive event archive.
+- **History edits and replay:** Current accepted events have stable IDs, ordered positions and optional current source-turn provenance; **Keep Later Turns** retains later assertions without their former fictional premise. A later reference can establish a sparse item/character/location identity with unknown missing attributes. Do not rewrite prose or invent causal steps. Undo/Delete remove current events at the approved boundary, with atomicity and deterministic replay.
+- **Projection coherence, not simulated feasibility:** Apply state assertions deterministically; each item's currently recorded physical placement is a single derived value shared by inventory/equipment/location views. Do **not** reject a location or holder assertion merely because an earlier route, source holder or fictional origin is absent. Unsupported/malformed typed core payloads remain failures.
 - **Validation boundary:** Failed, rejected or uncommitted AI-proposed operations must not enter the active authoritative history as accepted world-state changes. Diagnostic/proposed operations may be recorded separately if refined later.
-- **Optional periodic snapshots:** Permit materialised state snapshots or checkpoints to accelerate restoration/replay. They are optimisations derived from authoritative accepted history, not independent competing sources of truth. Frequency and invalidation policies are left open.
+- **No persisted checkpoints:** Reconstruct the current world from the Turn-0 baseline and ordered current assertions; derived in-memory projections/caches are not competing canonical records. Full replay remains available.
 - **Storage and schema future-proofing:** Record enough version/provenance information for safe replay and later migrations without committing today to a fixed schema-versioning or dependency-resolution mechanism.
 - **Not a shipped implementation:** This note records an accepted staging direction and does not approve production or claim an event system exists.
 
 ## Proposed behaviour
-After the generation pipeline has validated a world-state operation, persist its accepted event and associated source turn/story revision in authoritative history in the defined order. State projections/reducers apply only events belonging to the selected valid history to reconstruct current locations, possessions, status and other records. When earlier prose is edited or undone, preserve historical traceability while allowing invalidated event effects to be excluded or reconciled; exact branching and dependency policies remain for refinement. Use optional snapshots/checkpoints to reduce replay work, ensuring a checkpoint cannot remain authoritative after its supporting event history has changed.
+After accepting a supported narrative fact or explicit player correction, commit the corresponding **declarative outcome assertion** with stable IDs, optional source turn and total order, without simulation-style prior-state prerequisites. State projections/reducers apply only events belonging to the selected valid history to reconstruct current locations, possessions, status and other records. When earlier prose is edited or undone, preserve historical traceability while allowing invalidated event effects to be excluded or reconciled; exact branching and dependency policies remain for refinement. Use optional snapshots/checkpoints to reduce replay work, ensuring a checkpoint cannot remain authoritative after its supporting event history has changed.
 
 ## Alternatives and trade-offs
-Full world snapshots each turn can be simpler for point-in-time reads but duplicate unchanged data and weaken per-change provenance. Event sourcing gives ordered, explainable world changes and revision reconstruction at the cost of deterministic reducers, migration discipline and complex historical invalidation. A **hybrid event log plus periodic derived snapshots** is allowed as a performance optimisation, but its checkpoint cadence and replay algorithm are deliberately undecided.
+Full world snapshots each turn can be simpler for point-in-time reads but duplicate unchanged data and weaken per-change provenance. Event sourcing gives ordered, explainable world changes and revision reconstruction at the cost of deterministic reducers, migration discipline and complex historical invalidation. The later approved Turn-0 replay design **does not persist checkpoints**. Cached in-memory derived projections may be discarded and rebuilt.
 
 ## Architecture integration (2026-10-17)
-- The authoritative event journal and necessary associated story revisions now persist through **Go-managed filesystem SQLite** (IDEA-0051). The **TypeScript client-side** coordinator and rule validators (IDEA-0044) still determine which provisional actions are accepted.
+- The authoritative event journal and necessary associated story revisions now persist through **Go-managed filesystem SQLite** (IDEA-0051). The **TypeScript client-side** coordinator (IDEA-0044) interprets grounded accepted facts and applies deterministic typed assertion/format checks, not broad mechanical event-precondition rejection.
 - Go is responsible for **atomic writes, expected-revision/concurrency checks and durable data consistency** when applying a prepared accepted turn, including from multiple headless browser tabs. This does not create an independent Go narrative/gameplay rule engine.
 - Events should carry stable IDs and schema/provenance metadata sufficient for full replay and safe SQLite-backed export/import.
 
@@ -129,3 +134,5 @@ Full world snapshots each turn can be simpler for point-in-time reads but duplic
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Append-only event-sourced history for validated world-state changes, with source turns, stable entity IDs, event types, ordering, validation, story revisions, deterministic reconstruction and provenance compatible with undo and historical edits. Periodic snapshots allowed as an optimisation. Event invalidation, branching, schema evolution, dependencies and checkpoint policy remain open for refinement. Moved to staging, not production.
+
+- 2026-10-28 — **Explicit user-directed supersession:** Narrative-first declarative assertions adopted by user and reconciled here under [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Earlier action-precondition wording is preserved only as approval history where still quoted; **the latest governing section overrides it**. No staging promotion or implementation.
