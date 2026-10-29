@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[World Map and Location Rules Brainstorm]]", "[[Characters Inventory Equipment and Anatomy Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Structured UI Game Actions
+
+## Current accepted narrative-first scope — 2026-10-28
+
+**Current semantics ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** A structured UI click can express an **intent** (such as “Transfer Sword”), but canonical world history records **accepted declarative outcomes** (such as `SetItemHolder(sword, chest)`) rather than requiring a source-holder precondition. UI and prose use the same typed representable event/atomic commit boundary. Optional action mechanics may guide an uncommitted attempted action, but no interface may veto a coherent already accepted narrative fact because its earlier fictional cause is missing.
+
 
 ## Idea
 Use direct UI actions such as map clicks and Equip buttons to generate typed commands without language parsing.
@@ -23,7 +28,7 @@ Typed actions save LLM calls and avoid destination/entity ambiguity.
 ## Accepted direction
 - **Optional direct gameplay UI, excluding map travel (user decision 2026-10-23):** Offer structured controls for appropriate enabled actions, such as **Equip/Drop**, as alternatives to their prose equivalents. **The location map does not provide travel or player-action commands.** Clicking a map node only inspects/focuses it; deliberate map **add/edit/correct location** tools are authoritative *world editing*, not Do/Say movement.
 - **Typed commands and stable references:** UI actions supply capability IDs, typed arguments and stable entity/item/location identifiers directly to the deterministic coordinator. Do not require an LLM interpretation pass merely to determine the referenced item or destination already selected by the UI.
-- **One rules engine for all inputs:** UI commands enter the **same** capability registry, permissions, world-rule validation and authoritative commit pipeline as operations proposed from natural language. UI selection is not a shortcut around validation.
+- **One declarative result pipeline for all inputs:** UI commands and prose can express different intentions, but accepted results enter the same grounded typed **state-assertion** and atomic commit pipeline. Optional permission/world-rule checks apply to provisional attempts or external side effects, **not to the historical feasibility of already accepted story facts**. UI selection is not a shortcut around validation.
 - **Coherent narration and state:** When an action is accepted or rejected, the coordinator ensures the resulting story prose and incrementally recorded canonical state agree. Narration may use the selected model and configured generation strategy; a typed UI action does not guarantee that narration itself is model-free.
 - **Controls respect enabled systems:** Expose UI affordances only for enabled, relevant and permitted registered gameplay capabilities. If an optional plugin or system is disabled (for example inventory equipment), do not show controls dependent on that mechanic.
 - **Natural-language input remains supported:** Direct controls supplement player prose, not replace it. The player can still describe travel, equipment and interactions freely through the accepted LLM interpreter when preferred.
@@ -89,3 +94,5 @@ A prose-only interface is simpler and preserves flexibility but may spend extra 
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Optional structured UI gameplay commands (such as map selection and Equip/Drop) using stable entity IDs and typed operations, bypassing unnecessary LLM interpretation while remaining under deterministic validation and coherent narration/state finalisation. Show controls only for enabled, applicable capabilities; preserve freeform language input. Leave immediate action versus confirmation, narration timing and specific controls open for refinement. Moved to staging, not production.
+
+- 2026-10-28 — **Explicit user-approved B6-D01 reconciliation:** Narrative-first declarative events govern current behaviour; any earlier simulation-style validity statements in historical proposals/old acceptance text are subordinate. Original approval provenance retained; staging only, not implemented or promoted.
