@@ -3,7 +3,7 @@ type: architecture
 status: closed-design-only
 phase: "B1"
 created: "2026-10-25"
-updated: "2026-10-25"
+updated: "2026-10-28"
 tags:
   - planning/architecture
   - pass-b
@@ -12,6 +12,12 @@ tags:
 ---
 
 # Pass B1 — Feasibility Evidence and Closure Review
+
+## Later accepted architectural clarification — 2026-10-28
+
+**Do not use this historical review as authority to restore simulation-style event validation or retained event/passage revisions.** [B6-D01 — Narrative-first declarative outcome events](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) is the newer **explicitly user-approved** current contract: world-state events record accepted fiction and player corrections as ordered typed Set/Clear, Create/Remove and keyed relation assertions, with stable/sparse IDs and unknown details when earlier introductions disappear. A missing prior holder, route, item introduction or fictional cause **does not invalidate a later grounded fact**. Preserve actual technical format/replay errors, single-valued projections, atomicity, adventure versions, explicit manual Commit and pending overlays. [B3-D04](./decisions/B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) also superseded earlier immutable revision/audit storage. Original dated approvals and design closures remain **historically true and closed design-only**, not evidence of implementation.
+
+
 
 > **B1 design formally closed on 2026-10-25 by explicit user decisions [P-B1-01](./decisions/P-B1-01%20-%20Trusted%20Locally%20Installed%20Plugins.md) and [P-B1-02](./decisions/P-B1-02%20-%20Design%20Closure%20with%20Deferred%20Integration%20Gates.md).** The selected initial plugin policy is **trusted locally installed executable plugins with explicit player trust**. B1 architectural feasibility research is complete, but **no Lorebound Wails/Go build, provider-authenticated browser run, or integrated end-to-end test has passed**. Such checks remain mandatory implementation/release verification gates, not accepted functionality. The six B1-D01–D06 ADRs remain accepted and unchanged.
 
