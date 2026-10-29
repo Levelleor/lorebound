@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-19"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Local First Storage and Deployment Brainstorm]]", "[[Story Editing and Event Timeline Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Browser-Persistent Story Database
+
+## Current accepted architecture after 2026-10-28 redirection
+
+**Current canonical storage model:** [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) and B3-D04 govern the Go-managed SQLite library: one current structured passage body per passage and one current **ordered declarative outcome-event history**; no retained passage/event revision archive or materialized canonical gameplay state snapshots. A fact assertion needs typed/identity/atomic integrity but not fictional source-transfer or route feasibility. Pending drafts are noncanonical. Derived character/inventory/lorebook state is computed by TypeScript replay, not a second Go gameplay engine.
+
 
 ## Idea
 Choose and refine **one shared filesystem-backed SQLite database for the entire Lorebound adventure library**, accessed through Wails v3/Go services, as canonical persistent storage for the headless localhost server and normal-browser frontend. The earlier browser-only/server/hybrid comparison has been superseded by the user's 2026-10-17 explicit runtime/storage decision. Exact schema, platform-specific path resolution, snapshot implementation, safe database replacement mechanics and performance policies remain for refinement; **automatic directory migration, library management and sophisticated corruption recovery are not required**.
@@ -207,3 +212,5 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate** initially oriented toward browser-local databases.
 - 2026-10-16 — **User clarification during Inbox review, not acceptance:** Record localStorage, persistent browser storage, IndexedDB, SQLite WASM + OPFS and SvelteKit server-backed database possibilities, including an easy-to-host backend database if appropriate. The user specified **SvelteKit** as the application framework and does not want browser-only storage prematurely locked in. Expanded the candidate to compare browser-local, backend and optional hybrid models, keeping storage engine, primary source-of-truth and deployment open. **At that time**, the note remained a candidate in Inbox.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Stage IDEA-0051 as a **storage-options-first** design direction using SvelteKit, comparing browser `localStorage`, IndexedDB, SQLite WASM + OPFS, browser persistence permissions, SvelteKit server-side SQLite, hosted SQL and optionally hybrid persistence. Require deterministic **complete incremental reconstruction** and coherent transactional storage regardless of engine. **No** primary database, backend deployment, synchronisation model or hosting provider is selected. Moved to staging for further refinement; not production approval or implementation.
+
+- 2026-10-28 — **User-approved supersession:** Narrative-first declarative fact assertions and the revision-free current-story model now govern this document. Former contradictory original direction is historical approval context, not active implementation guidance. No stage promotion or software implementation.
