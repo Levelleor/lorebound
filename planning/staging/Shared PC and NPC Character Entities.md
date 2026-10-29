@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Lorebound Vision Brainstorm]]", "[[World Map and Location Rules Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Unified Character Entities (historical file: Shared PC and NPC Character Entities)
+
+## Latest accepted event and narrative authority — 2026-10-28
+
+**Current narrative-first character facts ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** A stable character ID and current location/holder/status are recorded by accepted **Set/Clear** assertions, not a mechanical move/transfer procedure that checks history. A character whose earlier introduction was removed can remain a **sparse identity** when later accepted narration still establishes them. Optional rules may guide attempted Do/Say actions; an accepted Story/Continue current-state fact must not be discarded solely for lacking a prior route or inventory prerequisite. Playing As remains a non-world-affecting perspective selection.
+
 
 ## Idea
 Use one unified character model for every character in an adventure, with a nullable per-adventure `Playing As` reference for temporary player actions; **no permanent PC/NPC or Playable classification**.
@@ -24,7 +29,7 @@ All characters can move, own items and change state.
 - **One universal character entity model (explicitly accepted):** Characters have **no PC versus NPC distinction**, no permanently player-controlled class, and **no Playable flag or role eligibility filter**. Every existing character in the adventure's Lorebook is a possible `Playing As` choice. Player interaction with a character is a temporary choice for Do/Say, not an intrinsic characteristic of the character.
 - **Stable character IDs:** Every character has a durable identifier used to connect profile, inventory, equipment, anatomy, relationships, current location and other records, even when its name or details change.
 - **Explicit optional `Playing As` actor selection (latest user refinement):** An adventure has **no mandatory or permanent protagonist**, but may save a **nullable, changeable selected character ID** in a Settings-sidebar `Playing As` selector populated from existing Lorebook character entities. **Do and Say use that selection as their player actor/speaker** and are disabled if it is unset. **Story and Continue always work without one** and may involve any grounded actor(s) or no actors. Switching the selected character never creates a new entity, changes their possessions/location, or rewrites history. This control's active Do/Say identity is conceptually separate from broader narrator perspective/viewpoint settings.
-- **Consistent mechanics for every character:** Every character can move, hold/transfer items, wear equipment, form relationships and change persistent state through the same systems, subject to game rules. The player may take turns acting/speaking **as any character** without reclassifying the entity or moving its inventory.
+- **Consistent current state for every character:** Every character has the same supported **declarative state-assertion** vocabulary for location, item holder, equipment, status and relationships; optional gameplay rules may shape attempted actions, but final accepted facts are not mechanically vetoed. The player may take turns acting/speaking **as any character** without reclassifying the entity or moving its inventory.
 - **Optional and lazily populated character details:** Minor characters can initially be represented by a stable ID and a few known properties. Other records and fields may be populated later as they become necessary without requiring full RPG sheets, equipment inventories or anatomy for every incidental character.
 - **Unknown is not a default:** Missing or unrecorded character values must remain **unknown/not recorded** rather than silently treated as zero, empty, absent, healthy, unequipped or any other definite in-world state. Distinguish deliberately known empty values from unknown values.
 - **Separate feature boundaries, with updated acceptance status:** Status sheets (IDEA-0027), automatic tracking (IDEA-0064), items (IDEA-0029), equipment (IDEA-0030), anatomy (IDEA-0031), location hierarchy (IDEA-0033) and presence (IDEA-0034) have **each been accepted separately in staging**. Their functionality was **not** approved merely through this universal character-model idea. Per-field tracking modes IDEA-0028 and optional mature-specific controls IDEA-0032 remain **unaccepted Inbox directions**.
@@ -100,7 +105,7 @@ When `Playing As` changes, the **next Do/Say follows the new character at their 
 - [ ] Switching `Playing As` updates the information display but does not mutate any character record, item placement, location, event or past turn.
 - [ ] Switching `Playing As` between two distant characters makes the next Do/Say follow the selected character at their **existing location**, without travel, teleportation, time passage, inventory transfer or a world-state event.
 - [ ] After switching `Playing As` from Mara (capital) to Theo (forest), the next Do/Say follows Theo at his **established forest location**; neither character's location, possessions, status or event history changes merely due to selection.
-- [ ] Switching `Playing As` produces **no travel event, elapsed travel time, new graph edge or automatic time passage**, and does not require actor/transition confirmation; real narrated movement remains subject to ordinary validation.
+- [ ] Switching `Playing As` produces **no travel event, elapsed travel time, new graph edge or automatic time passage**, and does not require actor/transition confirmation; accepted narrated movement emits a grounded current-location assertion; prior travel prerequisites are not required.
 - [ ] If the new actor's location is unknown, the system does not inherit the old scene or fabricate a location; Story/Continue remain actor-independent.- [ ] **Every character** uses one common identity/schema with stable IDs, and **no PC/NPC kind, playable designation or permanent-control category** is required or used to filter selection.
 - [ ] An adventure with **no characters and no `Playing As` selection** is valid and can use Story/Continue but **not Do/Say**. `Playing As` references only a valid existing Lorebook character ID for that adventure and can be changed/unset without modifying inventory/world state.
 - [ ] All characters link to the same types of profile, inventory, equipment, anatomy, relationships, status and location records when those features become available, with no category-specific rules.
@@ -140,3 +145,5 @@ When `Playing As` changes, the **next Do/Say follows the new character at their 
 - 2026-10-17 — **Accepted IDEA-0006 minimal fact extraction dependency:** In supported Quick Start openings, register characters and relationships only where **explicitly grounded in accepted narration or player setup**. Preserve missing fields as unknown; don't populate invented biographies, traits, motives, equipment ownership or other unspoken lore. Atomic validated first-turn commit; staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** One shared character entity model for PCs and NPCs, stable character IDs, a separate pointer to the player-controlled character, common links to profile, inventory, equipment, anatomy, relationships and location, and optional/lazily populated NPC details. Preserve unknown values without inventing defaults. Moved to staging for refinement only, not production.
+
+- 2026-10-28 — Explicit user-approved narrative-first declaration in B6-D01 governs any older contradictory mechanical/simulation prose in this staged note. Original decision provenance preserved; no implementation or stage promotion.
