@@ -17,9 +17,9 @@ tags:
 
 ## Status, scope, and source of authority
 
-**Pass B consolidation accepted 2026-10-19. Pass A audit formally closed by explicit user approval 2026-10-24.** Lorebound's 52 accepted staging ideas are grouped into **12 logical top-level subsystems**. The source [Pass A Subsystem Mapping Register](./Subsystem%20Mapping%20Register.md) remains **unchanged** and preserves each originally accepted primary/secondary subsystem, idea-specific boundary, dependency and deferral.
+**Pass B consolidation accepted 2026-10-19. Pass A audit formally closed by explicit user approval 2026-10-24.** Lorebound's 52 accepted staging ideas are grouped into **12 logical top-level subsystems**. The source [Pass A Subsystem Mapping Register](./Subsystem%20Mapping%20Register.md) preserves original primary/secondary mappings and approval provenance; a later **non-mapping** B6-D01 explanatory notice does not change those mappings.
 
-This document consolidates **architectural ownership only**. It does not promote ideas out of `planning/staging/`, authorise production implementation, fix runtime module/folder boundaries, require 12 packages/processes, or supersede individual idea-specific accepted directions. In a disagreement, retain the source idea's accepted behaviour and record the discrepancy for explicit refinement instead of quietly altering product scope.
+This document consolidates **architectural ownership only**. It does not promote ideas out of `planning/staging/`, authorise production implementation, fix runtime module/folder boundaries, require 12 packages/processes, or supersede individual idea-specific accepted directions. In a disagreement, respect **later explicit user-approved ADR supersessions** (notably B3-D04 and B6-D01) while preserving each source idea's dated approval history; do not quietly change unrelated scope or stage promotion.
 
 **Terminology:** *Lorebound* is one product. *Lore Engine* is the conceptual umbrella for non-UI functions spanning browser-resident TypeScript gameplay/model modules and supporting Go/Wails/SQLite platform services; it is **not** a second separately deployed game server. The **12 groups are responsibility boundaries**, not runtime partitions.
 
