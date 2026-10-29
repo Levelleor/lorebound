@@ -1,5 +1,11 @@
 # Planning vault rules
 
+## Identity separation for narrative generation — explicit 2026-10-29 user direction
+
+[B6-D04](architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) is now the **current operative boundary** for entity references: system-stable IDs and ID↔name maps stay **out of prose-generating model prompts**, including when one model is reused for narration and interpretation. Narrator-facing context must contain natural-language names, facts and descriptions. A separate non-narrating interpretation context may use internal IDs; in single-pass prose+events mode the model uses natural referents and the TypeScript engine binds IDs afterward. Do not guess among same-name entities or fabricate duplicates to satisfy event extraction; preserve ambiguous structured changes as unresolved without unnecessarily blocking narrative. This is documentation/architecture, not implementation or stage promotion.
+
+
+
 Read [Start Here.md](Start%20Here.md) and the repository [AGENTS.md](../AGENTS.md). This directory is an Obsidian vault and a collection of version-controlled Markdown files.
 
 ## Folder authority
@@ -41,3 +47,5 @@ Never silently rewrite human decisions or promote speculative content.
 
 **Explicit user approval on 2026-10-28:** The [B6-D01 narrative-first event decision](architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) is the **current operative policy** for event-producing systems. Persistent events are **declarative replayable assertions of accepted fictional facts**, not procedural transfers/movements that require historically proven source possession, routes or other fictional prerequisites. Later accepted facts remain even if a historical edit removes their earlier setup; represent stable/sparse identities with unknown fields as needed. Keep technical type/identity/representation checks, coherent current projections, optional *pre-narration* game rules, and atomic/version-safe commits; do not reject already accepted story facts for simulated impossibility. [B3-D04](architecture/decisions/B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) also eliminates stored passage/event revision archives. When earlier accepted staging notes or ADRs conflict, **preserve their dated approval provenance but update operative descriptions to these later user choices**. Do not treat documentation reconciliation as stage promotion or implementation.
  When sources conflict, show the disagreement and get a human decision. Requirements in specs should be observable or testable, have stable identifiers, and reference code/tests or an explicit manual check. Missing test coverage is a visible gap, not an invitation to claim it exists.
+
+- **2026-10-29 — Later user-requested documentation refinement:** [B6-D04](architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) protects prose-producing narrator contexts from internal IDs while keeping internal reference resolution, same-model role reuse and single-pass generation. Earlier approvals preserved; no implementation asserted.
