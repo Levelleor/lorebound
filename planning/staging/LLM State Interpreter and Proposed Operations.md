@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-29"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # LLM State Interpreter and Proposed Operations
+
+## Narration vs internal entity identity — latest accepted boundary (2026-10-29)
+
+[B6-D04 — narrator-safe entity identities](../architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) governs identity resolution. **The narrator uses only natural names/descriptions**, and its prompt must not contain database entity IDs or ID↔name mappings (including via context retrieval or the story/world summary). The TypeScript coordinator/resolver retains stable IDs internally. A **separate non-narrating interpretation call** can be given relevant candidate ID/name/location/alias records; if the same physical model handles both roles, it must receive **a separately assembled prompt**, not an inherited chat history with identifier mappings. When a single-pass output includes structured provisional events, request **natural-language entity references** and let engine code map them to stable IDs afterward. The model never owns the canonical ID assignment; new clearly grounded entities receive system-generated IDs. For ambiguous same-name references, **do not guess or invent another entity**, and don't block accepted prose just to force a state update. Preserve unresolved assertion separately from technically valid already accepted outcomes.
+
+
 
 ## Latest accepted governing architecture — 2026-10-28
 
@@ -28,7 +34,7 @@ Plain TypeScript cannot reliably infer meanings from unconstrained natural langu
 ## Accepted direction
 - **LLM interpretation is a proposal role:** Use an LLM to interpret arbitrary player language and draft or generated prose into **proposed typed world-state operations**, rather than relying on plain TypeScript to understand unrestricted natural language.
 - **Schema-checked fact proposals:** Produce declarative fact assertions in typed, parseable structures subject to grounding, schema and deterministic projection checks; no procedural prior-possession/route prerequisites. A valid schema alone does **not** demonstrate that the model understood the action correctly.
-- **Stable entity references:** Resolve locations, characters, items and other targets to existing stable entity IDs when supported by context. Preserve unresolved, ambiguous, unknown or incomplete references instead of guessing, inventing an identity or silently creating a new entity.
+- **Engine-owned stable entity resolution:** Prose-facing model context uses natural names/descriptions, **not internal IDs**. A separate internal resolver may use candidate IDs and aliases to bind grounded names to stable identities, using scene, holder and relationships. The system allocates IDs for clearly new entities; preserve ambiguous/unresolved references instead of guessing, cloning identities or blocking otherwise valid prose.
 - **Action meaning and certainty:** Distinguish completed actions from attempts, intentions, plans, remembered/historical descriptions, hypothetical events and figurative language. A proposed attempt must not silently become a successful canonical action.
 - **Deterministic assertion authority boundary:** Interpretation output remains provisional. The coordinator accepts **grounded facts established by final prose or explicit player input** and verifies typed event representability; it does not ask whether the fictional action was *possible* under prior state. Optional rules may guide unresolved attempted actions before narration. A valid JSON shape alone is not evidence that the claimed fact was actually established.
 - **Works with all accepted pipeline strategies:** Allow interpretation as a logical stage of the single-pass prose-and-events, plan-validate-narrate, or draft-audit-repair workflows accepted in [[Configurable Generation Pipeline Strategies]] (IDEA-0018), without requiring one universal call sequence.
@@ -158,3 +164,5 @@ For Do/Say, interpret the selected character's identity and **already establishe
 - 2026-10-16 — **Explicitly accepted by the requesting user:** LLM interpretation of unconstrained player language and draft prose into schema-checked proposed typed operations; stable entity IDs where resolvable, explicit ambiguity, and distinctions among attempts, intentions, memories and completed acts; no authoritative state change without coordinator validation; sequential use of narrator model supported; native function calling and constrained JSON extraction both kept available for evaluation. Extraction reliability, schemas, fallback and repair details remain open. Moved to staging only, not production.
 
 - 2026-10-28 — **Explicit user-directed supersession:** Narrative-first declarative assertions adopted by user and reconciled here under [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Earlier action-precondition wording is preserved only as approval history where still quoted; **the latest governing section overrides it**. No staging promotion or implementation.
+
+- **2026-10-29 — Later user-requested documentation refinement:** [B6-D04](../architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) protects prose-producing narrator contexts from internal IDs while keeping internal reference resolution, same-model role reuse and single-pass generation. Earlier approvals preserved; no implementation asserted.
