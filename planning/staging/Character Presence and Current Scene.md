@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]", "[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Memory Lorebook and Context Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Character Presence and Current Scene
+
+## Latest approved narrative-first event semantics — 2026-10-28
+
+Under [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), location and scene participation are **current narrative facts** represented by ordered `SetCharacterLocation`, `SetPresence` or `Clear` assertions. Derive one current physical place/transit condition per stable character identity; prior travel-route feasibility is **not** required for a place explicitly established by accepted narration or manual correction. A character mentioned in a story, remembered, discussed or reached remotely is **not automatically present**; only grounded accepted text asserts presence. Missing earlier introduction may result in a sparse stable character record with unknown details. Optional strict travel still guides provisional Do/Say attempts but never revises accepted story.
+
 
 ## Idea
 Attach all characters to actual places and distinguish those physically present from distant known characters.
@@ -25,7 +30,7 @@ A character may be mentioned in lore without materialising into the current scen
 - **Distinct presence categories:** Distinguish characters **physically present in the active scene**, known to be **elsewhere**, **in transit**, of **unknown location**, and **remotely participating** without being physically co-located. The exact storage representation for categories and movement-in-progress requires refinement.
 - **Scene participation follows real presence:** Use established co-location as the basis for determining which characters are eligible to interact in person in the current scene. A Lorebook entry, recalled incident, narration reference, character mention or conversation about a character does **not** make that character physically present.
 - **Remote participation does not imply travel:** A remote character may participate in communication when a suitable method is established (e.g., telephone, radio, magic or other setting-appropriate means). They remain at their actual location or in an unknown/in-transit state; remote speech does not silently move them into the scene. Exact communication permissions and media are not yet specified.
-- **No silent teleportation:** A change in canonical physical character location must arise from an accepted, validated movement or equivalent location-changing event, not incidental narration, a context entry or a character being named.
+- **No mention-based teleportation:** A change in tracked location requires an accepted **grounded SetCharacterLocation** assertion or explicit player correction, not an incidental name mention. Accepted movement assertions do **not** require fictional proof of a prior traversable path.
 - **Unknown stays unknown:** If a character's whereabouts are not recorded, do not default to the player's current room, assume absence from the story/world, or invent a location. A character known to be elsewhere should not be treated as present simply because the exact place isn't displayed.
 - **Separate participation from knowledge:** Characters may be known to the player or relevant to lore without participating in a scene. A character can be a remote participant, nearby observer, or physically co-located character without those concepts collapsing into one undifferentiated list.
 - **Context and UI coherence:** The active scene can identify physical participants and explicitly remote participants while preserving their source location references. Only relevant current presence/state should be included in narration context, subject to [[Token-Budgeted Context Builder and Inspector]] (IDEA-0024).
@@ -99,7 +104,7 @@ The **next Do/Say after a `Playing As` switch** follows the selected character *
 - [ ] Characters described in lore, named in a conversation or retrieved as memories do not thereby enter the scene or change canonical location.
 - [ ] In-person scene participation derives from known compatible physical presence rather than an arbitrary mention of the character.
 - [ ] A character can communicate remotely when the relevant setting rules establish a channel without becoming physically co-located.
-- [ ] Changes in character location require accepted valid movement/location events; rejected or provisional generated events do not silently teleport or move characters.
+- [ ] Changes in character location follow accepted grounded location assertions, even if prior story movement/route setup is missing; unaccepted attempts and name mentions do not mutate state.
 - [ ] Missing/unknown location data are preserved rather than defaulted to the current room or turned into an unsupported definite assertion.
 - [ ] Current participant and location information can be selected for narration context with explicit handling of physically present versus remote participants.
 - [ ] Location hierarchy and physical co-location do not automatically bypass separate travel-graph permissions.
@@ -127,3 +132,5 @@ The **next Do/Say after a `Playing As` switch** follows the selected character *
 - 2026-10-17 — **Accepted IDEA-0006 source-grounding dependency:** Initial presence/location extraction may store only **explicitly stated, validated** facts in the generated opening; do not invent an unstated room, route, character arrival or physical co-location. Unspecified whereabouts remain unknown and source provenance is retained. Staging only.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Persistent character location and current-scene presence linked to stable character and location IDs; distinct physical presence, elsewhere, in-transit, unknown and remote participation; in-person participation grounded in actual location rather than mere mentions; no silent teleportation. Large-space proximity, communication mechanics and detailed presence rules remain for refinement. Moved to staging, not production.
+
+- 2026-10-28 — **User-directed architecture supersession:** Explicitly adopted narrative-first declarative state assertions, replacing simulation-style event preconditions; see [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Prior contrary statements remain only as original decision history; not current operative guidance. Still staging; no implementation/promotion.
