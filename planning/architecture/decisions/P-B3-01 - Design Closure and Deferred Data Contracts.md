@@ -4,7 +4,7 @@ status: accepted
 decision_id: "P-B3-01"
 phase: "B3"
 created: "2026-10-27"
-updated: "2026-10-27"
+updated: "2026-10-28"
 approved_at: "2026-10-27"
 approved_by: "requesting user (explicit chat approval)"
 tags:
@@ -15,6 +15,12 @@ tags:
 ---
 
 # P-B3-01 — B3 design closure with deferred data and integration contracts
+
+## Later accepted architectural clarification — 2026-10-28
+
+**Do not use this historical closure record as authority to restore simulation-style event validation or retained event/passage revisions.** [B6-D01 — Narrative-first declarative outcome events](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) is the newer **explicitly user-approved** current contract: world-state events record accepted fiction and player corrections as ordered typed Set/Clear, Create/Remove and keyed relation assertions, with stable/sparse IDs and unknown details when earlier introductions disappear. A missing prior holder, route, item introduction or fictional cause **does not invalidate a later grounded fact**. Preserve actual technical format/replay errors, single-valued projections, atomicity, adventure versions, explicit manual Commit and pending overlays. [B3-D04](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) also superseded earlier immutable revision/audit storage. Original dated approvals and design closures remain **historically true and closed design-only**, not evidence of implementation.
+
+
 
 ## Approval, authority and boundary
 
