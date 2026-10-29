@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Configurable Anatomy and Transformations
+
+## Latest approved narrative-first event semantics — 2026-10-28
+
+The current engine ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)) treats anatomy changes and equipment as **accepted declarative facts**, not simulation proofs. A `SetAnatomyFeature` assertion records a changed limb/status even without earlier fictional change history; if the change invalidates an equipment assignment, the existing user-approved **automatic, grounded equipment disposition** may emit further assertions in that same coherent batch for the **same item ID**. If no placement is grounded, leave the holder unknown or otherwise explicitly unresolved; never fabricate a destination, duplicate gear or reject accepted story solely for a missing cause.
+
 
 ## Idea
 Track body parts, missing limbs, injuries, prosthetics and transformations for diverse species.
@@ -26,7 +31,7 @@ Physical changes should persist and affect equipment availability.
 - **Editable starter template, never mandatory:** Offer an optional basic set of body features as a convenience when starting a story/character. At story setup players can remove, replace or customise every suggested entry, choose a sparse or empty record, and continue editing anatomy later. The starter template must not silently assert anatomy not established for that character.
 - **Text-based baseline:** Each custom feature can at least hold a player-editable name and plain-language description/status. Do not require generated artwork, a complex hierarchical body graph, mandatory numerical values or a rigid reproductive/sex-specific schema merely to record anatomy. Optional structured metadata or links may later help enforce physical/equipment constraints but must preserve full text flexibility.
 - **Persistent physical state:** Track known body-part conditions, injuries, absent/missing limbs, prosthetics, additions/removals, transformations and relevant temporary or lasting changes across committed narrative history. Distinguish unknown/unrecorded anatomy from explicitly known absent or present features.
-- **Validated state-changing outcomes:** Physical changes proposed through generated narrative/event handling require authoritative validation before being committed. Player-authored anatomy edits remain possible; exact conflict, revision and update policies need refinement.
+- **Grounded declarative outcomes:** Record accepted narrative/player anatomy facts as typed `Set/Clear` assertions for stable character/anatomy IDs. Validate representable current fields and coherent equipment projections, not whether a preceding fictional transformation was mechanically possible. Player edits retain the explicit pending-commit gate.
 - **Shared stable identity across forms:** A character's ID persists through species differences, body changes and transformations; don't replace the character with a new identity merely due to anatomy edits.
 - **Validated automatic equipment consequences (user decision 2026-10-23):** After a confirmed anatomy change invalidates an equipped slot (for example, a sword held in a now-missing hand), the subsequent validator may **automatically unequip, reassign or move that same item** to a grounded and valid placement. This is a legitimate coherent response, not prohibited fictional teleportation. Do not demand routine manual equipment repair, duplicate/delete an item, invent a destination or partially commit mismatched anatomy/equipment. The exact default disposition if several or no placements are valid remains for refinement.
 - **No assumption of universal body parts:** Gender identity, character identity and physical anatomy must not be inferred from one another. Entry presence, absence and details are player/story-defined.
@@ -95,3 +100,5 @@ The user **selected free-form text as the baseline** rather than a required hier
 - 2026-10-18 — **Accepted one-character-kind dependency:** Optional anatomy belongs to any actual character regardless of temporary Do/Say selection, with no PC/NPC or Playable category. Staging unchanged.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user, with added requirements:** Accept configurable anatomy and physical transformations, and make the record **entirely free form and text-based**, with removable basic entries on story creation and the ability to add arbitrary anatomy features such as genitals, lips, hair and breasts when desired. Keep character and world-state validation and equipment links coherent. IDEA-0032 was identified as a separate unaccepted candidate for optional mature-specific content controls, not silently bundled into this acceptance. Moved to staging for refinement only.
+
+- 2026-10-28 — **User-directed architecture supersession:** Explicitly adopted narrative-first declarative state assertions, replacing simulation-style event preconditions; see [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Prior contrary statements remain only as original decision history; not current operative guidance. Still staging; no implementation/promotion.
