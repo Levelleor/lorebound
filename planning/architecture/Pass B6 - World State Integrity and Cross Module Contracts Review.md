@@ -12,7 +12,7 @@ tags:
 
 # Pass B6 — World State Integrity and Cross-Module Contracts Review
 
-> **B6-D01 accepted by explicit 2026-10-28 user redirection; B6-D02/D03 remain unapproved proposals.** [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. The next Pass B6 decisions below are unapproved pending separate user review. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
+> **B6-D01 accepted by explicit 2026-10-28 user redirection; B6-D02/D03 remain unapproved proposals.** [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. The remaining B6-D02/D03 detail proposals below are unapproved pending separate user review. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
 
 ## Scope and inherited decisions
 
