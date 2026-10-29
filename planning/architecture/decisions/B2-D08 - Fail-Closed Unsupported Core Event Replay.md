@@ -3,7 +3,7 @@ type: architecture-decision
 status: accepted
 decision_id: "B2-D08"
 created: "2026-10-27"
-updated: "2026-10-27"
+updated: "2026-10-28"
 approved_at: "2026-10-27"
 approved_by: "requesting user (explicit chat approval)"
 tags:
@@ -14,6 +14,12 @@ tags:
 ---
 
 # B2-D08 — Fail-closed handling of unsupported core events
+
+## Subsequent accepted architectural supersession — 2026-10-28
+
+**CURRENT AUTHORITY:** [B6-D01 — Narrative-first declarative outcome events](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), together with [B3-D04 — Single current history](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md), supersedes earlier simulation-style event preconditions and prior immutable passage/event audit assumptions in this ADR. The engine primarily **tracks the fictional facts established by accepted narration and player corrections**. Events are ordered typed **Create/Remove, Set/Clear and keyed relation Add/Remove assertions**, not procedural transfers or movement operations that must prove historic source possession, prior introduction, prior route or fictional causality. A later accepted reference may construct a **sparse stable identity** when its old introduction has been removed; unspecified fields remain unknown. Preserve technical typed/supported-format, deterministic folding, version/epoch, atomic transaction and one-current-property safety. Only a **technically unprocessable** event fails closed; narrative contradiction does not. The original earlier approval and alternatives below are **historical provenance**, not permission to reinstate rejected prerequisites or old revision archives. Actual implementation remains unapproved.
+
+
 
 ## Approval and provenance
 
@@ -57,6 +63,11 @@ This is a software/data-compatibility failure, **not** a fictional contradiction
 ## Traceability
 
 Logical owners S05, S06, S10, S11, S12. Relevant sources: [IDEA-0039](../../staging/Event-Sourced%20World%20History.md), [IDEA-0042](../../staging/Snapshots%20and%20Incremental%20State%20Rebuild.md); B1-D03/B1-D06; B2-D01, B2-D02, B2-D03, B2-D04, B2-D05 and B2-D06. Pass A A-07 and A-10.
+
+
+### Precise fail-closed boundary now in force
+
+Unsupported required **core schema/type** or malformed/uninterpretable payload remains fatal for safe replay. **Missing fictional creation/acquisition/route events are NOT unsupported required-core formats.** Use a sparse identity where a later accepted assertion has a stable, typed target. Never conflate narrative contradiction with structural decoding failure.
 
 ## Decision history
 
