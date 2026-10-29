@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Historical Edit Confirmation and Bulk Truncation
+
+## Current accepted architecture after 2026-10-28 redirection
+
+**Latest current-canon historical edit policy:** [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) plus B3-D04/B4-D02. **Keep Later Turns** retains later accepted declarative state assertions even if a historical edit removes their earlier fictional cause, an item introduction, a former holder, or a movement route. Such later assertions may maintain sparse identities with missing details unknown. **Do not reject them, suspend them, cascade-delete them or invent AI narrative repair** merely because of missing simulated prerequisites. Delete All After Point removes the selected current suffix; Undo removes its approved story-turn boundary, both atomically. One current passage body and event sequence, no immutable revision archive. Technical unprocessable/unsafe data still fails.
+
 
 ## Idea
 Delay expensive reconstruction until the player confirms whether later turns remain or are discarded.
@@ -55,7 +60,7 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 
 ## Historical prose confirmation acts on a turn or passage revision
 - **Accepted IDEA-0003 Option A (2026-10-18):** An unconfirmed edit to one or more **paragraphs within a logical story turn/passage body** remains a noncanonical passage-scoped draft. Only after the already accepted **Keep Later Turns** or **Delete All After Point** confirmation does that passage acquire a new **canonical passage revision** and the relevant derived event/state history get reconsidered. No canonical IDs or revisions are required for each paragraph.
-- **Dependent events:** Because world-event provenance identifies an **accepted source turn/passage revision**, any derived events from the revised passage may require review/invalidation/replay; do not assume events from the unchanged paragraphs automatically remain valid solely because their text was untouched. Exact targeted optimisation remains optional.
+- **Current events are factual assertions:** Event provenance can identify a current source passage ID and ordering. Editing earlier prose with **Keep Later Turns** preserves later accepted facts regardless of now-missing narrative prerequisites; a deleted earlier entity introduction does not invalidate a later assertion of that ID. Do not assume events from the unchanged paragraphs automatically remain valid solely because their text was untouched. Exact targeted optimisation remains optional.
 - **Other edit semantics remain open:** The handling of **whole-passage** splits, merges, moving content to another turn, and downstream provenance reassignment needs future refinement. Existing stale-version protection, latest-only draft autosave, explicit historical-edit choices and no automatic downstream prose regeneration remain unchanged.
 
 ## Confirm historical edits as passage revisions
@@ -131,3 +136,5 @@ Reconstructing after every keystroke may provide immediate preview feedback but 
 - 2026-10-17 — **Cross-idea autosave alignment with explicit user acceptance in IDEA-0005:** SQLite persists noncanonical player drafts after short typing pauses, separate from canonical story revisions and state. Committed turns/revisions and related events remain atomic; failed generation preserves canonical state and the last saved player input. This update does not promote this idea beyond staging.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by requesting user:** Draft-first historical editing; explicit confirmation before expensive reconstruction; four choices Keep Later Turns, Delete All After Point, Continue Editing and Discard; no wasted AI calls for history that may be deleted; no automatic downstream prose regeneration or contradiction flagging in this version. Accidental-truncation recovery, downstream state reconciliation and confirmation UX left open for refinement. Moved to staging only, not production.
+
+- 2026-10-28 — **User-approved supersession:** Narrative-first declarative fact assertions and the revision-free current-story model now govern this document. Former contradictory original direction is historical approval context, not active implementation guidance. No stage promotion or software implementation.
