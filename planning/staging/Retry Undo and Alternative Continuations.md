@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Story Editing and Event Timeline Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Retry Undo and Alternative Continuations
+
+## Current accepted architecture after 2026-10-28 redirection
+
+**Updated replay meaning ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Committed Undo removes the approved latest current story-turn suffix and replays **remaining declarative fact assertions**, not procedural commands requiring old source possession or routes. A later current assertion that survives a historical edit remains valid even if its former cause was removed; missing origin becomes unknown. No retained in-adventure passage/event revisions or inactive Redo selection; Fork remains a separate independently copied current prefix. Atomic Go/SQLite and idempotency remain.
+
 
 ## Idea
 Support **replace-on-retry generation**, a **bounded temporary undo history for uncommitted editing**, and **repeatable deterministic Undo of committed turns** within one active adventure timeline. **No selectable collection of alternative AI continuations or persistent variant stack is kept within an adventure.** The file's original title is retained for existing wiki links; its older retained-alternatives proposal is explicitly superseded.
@@ -89,3 +94,5 @@ Editing temporary prose may offer a finite undo stack; running out of it does no
 - 2026-10-18 — **Explicit user clarification and accepted committed Undo Option B, superseding the 2026-10-16 alternatives design:** **No persisted/selected AI response variants within one adventure**; each Retry replaces the prior uncommitted candidate, only the latest may continue. Uncommitted editing undo is bounded and exhaustible. **Committed Undo rolls back the single active canonical head** one turn at a time, deterministically restoring state and allowing **new continuation in the same adventure**. Old undone futures are not selectable versions; a **separate Fork** is used only when the player wants both futures playable. Keep strict Go/SQLite expected-version, coherent event provenance and atomic rollback; Quick Start auto-commit unchanged. The older retained variants and persistent canonical Redo proposal are superseded. Staging only, no code or production promotion.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user**: Retry, Undo, Redo and retained alternative continuations, linked to corresponding world-state events, with no automatic downstream rewrites. Promoted to staging for refinement, not to production.
+
+- 2026-10-28 — **User-approved supersession:** Narrative-first declarative fact assertions and the revision-free current-story model now govern this document. Former contradictory original direction is historical approval context, not active implementation guidance. No stage promotion or software implementation.
