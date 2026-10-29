@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Deterministic Adventure Coordinator
+
+## Latest approved narrative-first event semantics — 2026-10-28
+
+**Narration-first rule ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** This coordinator's first purpose is to carry accepted fiction into a faithful structured world memory for future narration. Treat accepted outcome events as typed **declarative state assertions**—not `TransferItem`, `MoveCharacter` or other procedural operations requiring old-state preconditions. A later fact may establish a sparse entity even if its earlier fictional origin was removed. Technical determinism/typing/one-current-property/atomicity and source grounding remain. Optional gameplay rules may guide an **uncommitted** Do/Say attempt and provisional narration, but must not veto the representable facts of **already accepted** story prose. Manual corrections remain pending until player Commit; Quick Start exceptions remain.
+
 
 ## Idea
 Use a non-LLM TypeScript coordinator to orchestrate interpretation, world validation and narrative generation.
@@ -25,9 +30,9 @@ Avoid requiring multiple loaded AI models or letting narration directly rewrite 
 - **Clear AI and rule boundaries:** LLMs may interpret player input, propose operations, help with narrative drafts or suggest repairs, but **cannot directly override canonical world state**. The coordinator and deterministic domain validators decide whether changes may commit.
 - **Orchestrate model calls:** Coordinate the configured generation strategy and task routing, passing validated results and appropriate context between stages. Support strategies accepted in [[Configurable Generation Pipeline Strategies]] (IDEA-0018) without assuming one universal call ordering.
 - **Proposed typed state operations:** Gather and validate operations inferred from player input and/or narrative prose, with stable entity references where available. The concrete LLM interpreter/schema details belong to separately reviewed [[LLM State Interpreter and Proposed Operations]] (IDEA-0045).
-- **Action batches and validation:** Coordinate multi-entity changes and applicable world constraints so accepted state, inventory, locations and travel rules remain coherent. Invalid or unsupported operations must not be silently accepted because narration sounds plausible.
+- **Assertion batches and technical validation:** Coordinate declarative current-fact updates so entity IDs, current inventory/locations and typed event projections remain deterministic. Do not reject an accepted assertion solely because prior possession, movement route or story setup was not established. Unreadable/unsupported required event payloads must fail safely because narration sounds plausible.
 - **Tool calls and side-effect control:** Schedule and check tool calls/results under explicit application control; any external side effects need appropriate validation, retry/failure safeguards and permissions. Exact tool transaction protocol is open.
-- **Typed errors and bounded repair:** Handle validation failures, rejected operations, unavailable tools, model errors and repair attempts. A repair workflow can produce revised provisional proposals, but not silently bypass a validator. Retry counts and strategies are open.
+- **Typed technical errors and optional pre-narration repair:** Handle unprocessable events, tool/provider failures and optional unresolved attempted-action guardrails. Bounded repair may revise only provisional narration; it may not change committed story or suppress a valid fact assertion for fictional impossibility. Retry counts and strategies are open.
 - **One established validation cycle, then atomic finalisation (user clarification 2026-10-23):** Follow **only the selected IDEA-0018 generation/validation strategy plus established deterministic domain validation and bounded repair** (IDEA-0045/0046). Once that cycle succeeds, submit one coherent text/event/state transaction. **Do not introduce an additional AI reviewer, extra story-consistency pass, secondary Go gameplay evaluator or speculative acceptance gate**. Go must still enforce expected-version, authorised service access, write fencing and SQLite atomicity: these are persistence safety, **not another creative validation pass**. Failure, cancellation or invalidated attempt before commit discards all provisional changes.
 - **Single-model-friendly orchestration:** Do not require several models to remain simultaneously loaded. Multiple sequential tasks may use a single configured model, or appropriately routed models when available, consistent with accepted [[One-Model Task Routing]] (IDEA-0017).
 - **Explicit failure rather than fictional success:** When an attempted state change cannot be validated or repaired, preserve canonical state and provide an understandable failed/blocked outcome rather than quietly narrating a successful invalid action.
@@ -209,3 +214,5 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Deterministic, non-LLM TypeScript coordinator for AI interpretation, proposed operations, validators, tools, errors/repair, generation and coherent atomic turn finalisation; AI may propose but may not override canonical state; no mandatory multiple simultaneously loaded models. Exact call ordering, implicit-state detection, retries, repair and transaction mechanics are open. Promoted to staging for refinement only, not production.
+
+- 2026-10-28 — **User-directed architecture supersession:** Explicitly adopted narrative-first declarative state assertions, replacing simulation-style event preconditions; see [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Prior contrary statements remain only as original decision history; not current operative guidance. Still staging; no implementation/promotion.
