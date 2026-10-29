@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Gameplay Feature Catalogue Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Direct Editable Prose Document
+
+## Current accepted architecture after 2026-10-28 redirection
+
+**Current approved editor/replay semantics:** A story passage has one current structured body (B3-D04); draft edits are noncanonical and confirmation atomically replaces the current body under adventure-version checks. [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) means **later accepted factual outcome assertions do not become invalid solely because earlier prose stops explaining them**. Keep Later Turns preserves those later events, including sparse item identities; no auto-cascading corrections, history revisions or retroactive prose rewrite. Manual state corrections still require separate explicit player Commit with composer overlay.
+
 
 ## Idea
 Allow editing, inserting and deleting text directly inside earlier story messages.
@@ -87,3 +92,5 @@ A ProseMirror/Tiptap-style document editor and individually editable turn bodies
 - 2026-10-18 — **Accepted IDEA-0005 Option B:** All player-authored provisional prose edits use latest-only shared draft slots per editing target; later autosaves may overwrite across tabs without draft history or merging. Canonical revisions and source provenance still require validated version-checked commits. Staging only.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Direct inline editing, stable text-block identities, and deferred world-state reconciliation. Moved to staging to refine the implementation details. No production approval.
+
+- 2026-10-28 — **User-approved supersession:** Narrative-first declarative fact assertions and the revision-free current-story model now govern this document. Former contradictory original direction is historical approval context, not active implementation guidance. No stage promotion or software implementation.
