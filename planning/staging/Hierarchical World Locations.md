@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Hierarchical World Locations
+
+## Current accepted narrative-first scope — 2026-10-28
+
+**Latest event model ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Location hierarchy, discovery markers and mutable properties are **current accepted state assertions**, keyed by stable/sparse IDs. A newly accepted location or changed parent/property does not require a prior story route or old location introduction, though a *current parent graph* must still be technically representable (e.g., no cycles). Hierarchy does not imply traversability; a place being mentioned is not necessarily a fictional arrival.
+
 
 ## Idea
 Organise places into nested worlds, regions, settlements, buildings and rooms.
@@ -91,3 +96,5 @@ A strict World → Region → Settlement → Building → Room chain makes some 
 - 2026-10-19 — **Pass A audit reference correction:** IDEA-0035, IDEA-0036, IDEA-0037 and IDEA-0038 are now independently accepted staging ideas. Earlier descriptions as separate candidates reflected their former status. No implicit production approval or scope expansion.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicit acceptance by the requesting user:** Flexible hierarchical world locations with stable IDs; optional types; names and descriptions; parent/child nesting; acyclic ancestry; preservation of identity when renaming/reorganising; strict separation between containment hierarchy and travel links; and support for sparse, unusual location structures. Moved to staging for refinement only, not production.
+
+- 2026-10-28 — **Explicit user-approved B6-D01 reconciliation:** Narrative-first declarative events govern current behaviour; any earlier simulation-style validity statements in historical proposals/old acceptance text are subordinate. Original approval provenance retained; staging only, not implemented or promoted.
