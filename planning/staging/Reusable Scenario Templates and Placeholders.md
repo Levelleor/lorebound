@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Memory Lorebook and Context Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Reusable Scenario Templates and Placeholders
+
+## Latest accepted event and narrative authority — 2026-10-28
+
+**Current starting-world representation ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Template-instantiated initial world facts become a separately owned, **declarative Turn-0 baseline**, not a simulated series of actions requiring earlier custody/travel prerequisites. Stable/sparse entity IDs, grounded defaults and technical consistency survive. New stories remain independent copies. A template may supply enough facts to set an item's holder without inventing its prior transfer history; missing attributes remain unknown.
+
 
 ## Idea
 Save reusable scenarios containing variables, world information and choices.
@@ -106,3 +111,5 @@ A plain-text/template-data editor would be simpler and allow technical users to 
 - 2026-10-17 — **Accepted IDEA-0006 minimal-start dependency:** Quick Start, blank Custom Opening and fully optional Guided Setup remain possible **without applying a scenario template**. Untitled adventures use the `Untitled Adventure` display fallback and still receive independent IDs. The reusable-template idea remains staging; the decision is not approval to require templates.
 - 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user**: reusable scenario templates, variable placeholders, optional Lorebook/world setup and structured starting state, producing fresh independent adventures without copied play history. Move to staging for refinement, not production.
+
+- 2026-10-28 — Explicit user-approved narrative-first declaration in B6-D01 governs any older contradictory mechanical/simulation prose in this staged note. Original decision provenance preserved; no implementation or stage promotion.
