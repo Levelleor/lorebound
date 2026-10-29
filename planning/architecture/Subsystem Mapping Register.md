@@ -2,11 +2,16 @@
 type: architecture
 status: evolving
 created: "2026-10-19"
-updated: "2026-10-19"
+updated: "2026-10-28"
 tags:
   - planning/architecture
 ---
 # Subsystem Mapping Register
+
+## Current narrative-first architectural authority — 2026-10-28
+
+**Subsequent explicit architectural clarification (2026-10-28):** [B6-D01](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) governs the **meaning of all existing world-state and event-producing subsystem mappings**. The engine primarily tracks accepted fiction for narration; event effects are declarative, last-assertion-wins current facts without mechanical source-state preconditions. Stable/sparse IDs and one coherent current item placement survive; historical contradictions are not technical corruption. This does **not** change the accepted Pass A ownership mapping, stage/implementation boundaries or original acceptance provenance.
+
 
 ## Purpose and authority
 
