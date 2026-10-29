@@ -16,6 +16,12 @@ tags:
 
 # P-B5-01 — B5 design closure; starting world and first-turn contracts
 
+## Later accepted architectural clarification — 2026-10-28
+
+**Do not use this historical closure record as authority to restore simulation-style event validation or retained event/passage revisions.** [B6-D01 — Narrative-first declarative outcome events](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) is the newer **explicitly user-approved** current contract: world-state events record accepted fiction and player corrections as ordered typed Set/Clear, Create/Remove and keyed relation assertions, with stable/sparse IDs and unknown details when earlier introductions disappear. A missing prior holder, route, item introduction or fictional cause **does not invalidate a later grounded fact**. Preserve actual technical format/replay errors, single-valued projections, atomicity, adventure versions, explicit manual Commit and pending overlays. [B3-D04](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) also superseded earlier immutable revision/audit storage. Original dated approvals and design closures remain **historically true and closed design-only**, not evidence of implementation.
+
+
+
 ## Approval and authority
 
 **Explicit user approval on 2026-10-28.** After receiving the nine-of-nine B5 closure assessment and being asked, “Would you like me to close B5 at the design level and begin the next architecture pass, as we did for B2–B4?”, the requesting user answered **“yes.”**
