@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-16"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: []
@@ -14,6 +14,11 @@ tags:
 ---
 # Automatic Character Sheet Tracking
 
+## Later accepted narrative-first world-memory rule — 2026-10-28
+
+**Narrative-first tracking ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Automatic fields reflect **the latest grounded accepted story facts** as declarative `Set/Clear` field assertions, not a simulator verifying whether character status changes were mechanically possible. Subsequent valid authored/player assertions replace earlier current field values without requiring a fictional causal chain. Manual sheet corrections remain noncanonical pending changes until **explicit player Commit**, not an autosave; technical type/projection/atomic checks still apply. Do not auto-invent unknown stats.
+
+
 ## Idea
 Automatically track and update **all applicable character-sheet fields** for every character as the story develops, without requiring separate Disabled, Manual Only or Automatic tracking modes for different fields or modules.
 
@@ -22,7 +27,7 @@ The user wants a simpler initial approach: a living character sheet that stays u
 
 ## Accepted direction
 - **Automatic tracking for the whole sheet:** For every character, automatically maintain **all applicable defined character-sheet fields**, including user-created custom fields, as accepted story events change them. Do not require players to configure individual state modules or field-level tracking modes.
-- **Validated state changes only:** Model output may propose updates, but changes must satisfy the authoritative validation rules and remain consistent with accepted narrative outcomes and committed world-state events. An unsupported AI assertion is not a valid change by itself.
+- **Grounded accepted state assertions:** Model output can propose field updates; only facts established by accepted narration or explicit player corrections become typed current-field assertions. Check payload validity and deterministic projection, **not prior gameplay feasibility**; unsupported/uncertain claims remain prose/unknown.
 - **No routine approval prompt:** Do not require the player to approve each automatic field update one at a time. This does not waive deterministic validation or prevent the user from inspecting/correcting records.
 - **Manual corrections are authoritative and historied (user acceptance 2026-10-19):** Players may directly correct defined character-sheet values. When confirmed, a valid manual correction is an **authoritative canonical state mutation with durable history and provenance**, not merely a UI preference or temporary exception. Later automatic updates evaluate the **latest accepted state**, including that correction, and must not replace it with an older AI assumption or stale proposal. A genuinely new validated story event may still change the value later; manual input is not a permanent immunity lock. Resolve concurrent/stale updates using the common transaction/version checks.
 - **Correct missing-value semantics:** A missing or unrecorded field remains unknown, not zero, false, empty or a guessed value. Only establish newly known values from trustworthy accepted outcomes, preserving explicitly known-empty values distinctly.
@@ -109,3 +114,5 @@ During or after each successful adventure turn, gather authoritative accepted ch
 - 2026-10-18 — **Accepted universal-character dependency:** Auto-tracking uses one unclassified character model with no PC/NPC or Playable tags. Temporary `Playing As` does not change an entity's status. Staging only.
 - 2026-10-16 — **User-requested capture, not acceptance.** During review of IDEA-0028, user said: "Lets just keep this idea unaccepted for now and introduce a new one, simpler one, where we just have automated tracking of character sheet for now for everything." Created as a separate candidate while IDEA-0028 remains unaccepted in Inbox.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** "Accept IDEA-0064 with automatic validated updates to all applicable PC and NPC character-sheet fields, including custom fields, without per-field Disabled/Manual/Automatic tracking modes or required approval for each change. Preserve manual editing, known versus unknown values, and authoritative state validation. Keep IDEA-0028 deferred and unaccepted." Promoted to staging for refinement only; IDEA-0028 remains an unaccepted Inbox candidate.
+
+- 2026-10-28 — **Explicit architecture update:** B6-D01 narrative-first declarative event rules override prior mechanical-precondition language in this staged note; original acceptance/alternative history preserved, no stage promotion/implementation.
