@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-29"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Memory Lorebook and Context Brainstorm]]", "[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Entity-Based Lorebook
+
+## Natural-language Lorebook projection for narration — 2026-10-29
+
+[B6-D04 — narrator-safe entity identities](../architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) adds a strict **view boundary**: internal Lorebook/world records may have stable IDs for relationships, renames and replay, but the narrator's context receives **only the relevant human-readable names, descriptions and established facts**. Do not expose the underlying IDs or alias-mapping tables in roleplay-generating prompts, including through retrieved Lorebook excerpts or status lists. An internal non-narrating resolver can see candidate stable IDs, and the engine binds references after narration. Same-name items remain distinct in storage; ambiguous references are left unresolved rather than assigned arbitrarily.
+
+
 
 ## Current accepted narrative-first scope — 2026-10-28
 
@@ -156,3 +162,5 @@ A combination of entry types and editable freeform lore supports both structured
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Entity-based Lorebook with typed editable entries, entity links, separation of persistent lore from mutable state, distinguishing reliable facts from rumours/beliefs, **and manual selection of what Lorebook content gets included in generation context**. Requested a separate **unaccepted** Inbox idea for automatic embedding-model/RAG selection; this acceptance does not extend to that additional idea. Moved to staging, not production.
 
 - 2026-10-28 — **Explicit user-approved B6-D01 reconciliation:** Narrative-first declarative events govern current behaviour; any earlier simulation-style validity statements in historical proposals/old acceptance text are subordinate. Original approval provenance retained; staging only, not implemented or promoted.
+
+- **2026-10-29 — Later user-requested documentation refinement:** [B6-D04](../architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) protects prose-producing narrator contexts from internal IDs while keeping internal reference resolution, same-model role reuse and single-pass generation. Earlier approvals preserved; no implementation asserted.
