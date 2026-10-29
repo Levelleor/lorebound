@@ -4,7 +4,7 @@ status: accepted
 decision_id: "B4-D02"
 phase: "B4"
 created: "2026-10-27"
-updated: "2026-10-27"
+updated: "2026-10-28"
 approved_at: "2026-10-27"
 approved_by: "requesting user (explicit chat approval)"
 tags:
@@ -16,6 +16,11 @@ tags:
 ---
 
 # B4-D02 — Undo and truncation boundaries for independent corrections
+
+## Later accepted replay interpretation — 2026-10-28
+
+Under [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), Undo and Delete All After Point still remove the **selected current timeline suffix** atomically, but **do not reject the surviving prefix** simply because a later assertion's former fictional setup or entity-introduction event disappeared. Replaying surviving assertions may construct a sparse ID and leave its origin or properties unknown. Only unprocessable/technically nonrepresentable data is fatal. No automatic downstream prose repairs.
+
 
 ## Approval and provenance
 
