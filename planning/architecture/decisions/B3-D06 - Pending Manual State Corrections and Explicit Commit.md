@@ -4,7 +4,7 @@ status: accepted
 decision_id: "B3-D06"
 phase: "B3"
 created: "2026-10-27"
-updated: "2026-10-27"
+updated: "2026-10-28"
 approved_at: "2026-10-27"
 approved_by: "requesting user (explicit chat approval)"
 tags:
@@ -15,6 +15,11 @@ tags:
 ---
 
 # B3-D06 — Pending manual state corrections and explicit Commit
+
+## Later accepted narrative-first clarification — 2026-10-28
+
+[B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) governs **how** manual corrections are represented: the approved batch records declarative `Set/Clear`, `Create/Remove` or keyed relationship changes, not a procedurally validated “transfer” requiring proof of previous possession or continuity. A correction asserting `SetItemHolder(key, chest)` need not prove the key was held by Mara; it sets the current tracked fact for that stable ID. Reject only unrepresentable typed data, broken atomic/version constraints or irreconcilable current projection structure, **not lack of fictional cause**. The accepted **explicit player Commit and full-composer overlay remain unchanged**.
+
 
 ## Approval and provenance
 
@@ -35,11 +40,11 @@ Under [B3-D04](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.m
 - **Stage instead of write:** When a player changes a world-state editor control, compare it against the current accepted state and accumulate the intended net difference in a **pending commit/change set**. Further related changes can be gathered in that same set. No canonical passage, event, current world state, or adventure version changes merely because a field was edited.
 - **Editable pre-commit preview:** The editor may show pending values for review, but must distinguish them from committed state. If a field is changed back to its original value, it need not generate a correction outcome: only accepted net changes are recorded.
 - **Explicit Commit button:** Show a clear **Commit** action associated with pending manual changes, in a conspicuous **bottom-area UI prompt/bar** when such changes exist. The player must press it to request acceptance; **autosave, field blur, navigation, typing, or elapsed time must not silently commit gameplay state**. Fine layout and exact labels remain UX refinement.
-- **Batch validation and persistence:** On Commit, S05/S06 prepare versioned deterministic **outcome events** for the intended changes, including stable entity IDs, event order and player-origin provenance. Corrections may reference an applicable story turn or event sequence position, but **must not invent a narrative passage/turn** solely to source them. Apply established structural/invariant and dependency checks to the **complete resulting change set**. If invalid, report the problem and leave canon untouched so the player can revise.
+- **Batch validation and persistence:** On Commit, S05/S06 prepare versioned deterministic **outcome events** for the intended changes, including stable entity IDs, event order and player-origin provenance. Corrections may reference an applicable story turn or event sequence position, but **must not invent a narrative passage/turn** solely to source them. Check the **complete resulting assertion batch** for technically representable typed records, stable identities, deterministic projections and coherent one-current-placement results—**not** whether the prior fictional/gameplay state supplied the key, action prerequisites or causal narrative. If invalid, report the problem and leave canon untouched so the player can revise.
 - **Atomic Go boundary:** Submit one B3-D01 typed prepared canonical-commit request for the valid batch, with the expected adventure version, library epoch and B3-D02 operation identity. Go checks storage integrity/fencing/version and commits all corresponding events and changes or none.
-- **Success and failure:** After confirmed durable success, pending changes are reconciled with the newly authoritative state. If rejected or stale under B3-D05, preserve an available noncanonical working proposal for inspection and require refetch and a fresh player/coordinator decision before another submission. A dropped/uncertain response must be resolved by B3-D02 rather than blindly generating a duplicate correction.
+- **Success and failure:** After confirmed durable success, pending changes are reconciled with the newly authoritative state. If invalid or uncertain, preserve an available noncanonical working proposal as B3-D10 requires. If an **uncommitted manual draft is confirmed externally stale**, apply later B4-D08 Option B and discard that obsolete draft; never treat a lost Commit response as merely stale. A dropped/uncertain response must be resolved by B3-D02 rather than blindly generating a duplicate correction.
 - **Deterministic reconstruction:** Correction outcome events are included in the **current ordered canonical events** and applied by Turn-0 replay, so the effect survives reconstruction. As under B3-D04, no old passage/event revision archive or permanent competing mutable world-state authority is introduced.
-- **No silent cascading history rewrite:** Don't automatically rewrite, suspend, deactivate or reinterpret other existing events when a correction conflicts with structural dependencies; reject/report an invalid batch rather than inventing fixes. The user may edit the pending set. **Fictional contradictions** in preserved story prose do not automatically make an otherwise valid correction fail.
+- **No silent cascading history rewrite:** Don't automatically rewrite, suspend, deactivate or reinterpret earlier events when a correction changes a current fact; **apply the later declarative assertion**. Reject only unrepresentable data, not an unsupported fictional predecessor; do not invent repairs. The user may edit the pending set. **Fictional contradictions** in preserved story prose do not automatically make an otherwise valid correction fail.
 - **Separate from narrative pipeline:** The button applies to **manual world-state editing**. It is not a new additional approval stage for normal AI-generated turns or the previously accepted automatically finalised Quick Start opening, and it doesn't replace the four historical prose edit confirmations.
 
 ## Suggested UX — decision boundary
