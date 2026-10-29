@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # LLM State Interpreter and Proposed Operations
+
+## Latest accepted governing architecture — 2026-10-28
+
+**Latest accepted 2026-10-28 interpretation contract:** [B6-D01 — narrative-first declarative outcome events](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). The interpreter proposes **source-grounded declarative facts** (Set/Clear, Create/Remove, keyed Add/Remove relationship) from **accepted narration or explicit player correction**, not procedural “TransferItem” actions that demand preconditions. It still distinguishes attempts from successful narrated outcomes: uncompleted attempts alone cannot create facts. Once prose/authorial outcome is accepted, a missing earlier item acquisition, route or creation event is a **fictional continuity issue**, not grounds to suppress the representable assertion. Stable IDs may be sparsely established; unsupported prose details remain narrative only; reject truly malformed/uninterpretable typed data.
+
 
 ## Idea
 Use an LLM role to convert arbitrary player language or draft prose into proposed typed changes.
@@ -34,7 +39,7 @@ Plain TypeScript cannot reliably infer meanings from unconstrained natural langu
 - **Separately accepted error and repair responsibilities:** Typed error reasons and bounded narrator repair on rejected operations belong to separately **accepted staging** [[Typed Tool Rejection and Narrative Repair]] (IDEA-0046). The interpreter remains a proposal mechanism; accepting it alone did not constitute approval of the other idea, which has since received its own separate staging acceptance.
 
 ## Proposed behaviour
-The coordinator invokes a configured LLM interpretation task on a player action, narrated event or draft. The interpreter proposes typed operations with arguments and any confidently resolvable stable entity references, while preserving when an event is only attempted, intended, historical or ambiguous. Schema validation catches malformed output and missing fields; deterministic domain validation then resolves whether the operation can occur given current authoritative state and adventure rules. Only the coordinator may commit accepted world changes and corresponding story events, coherently with narration. Interpretation can use the narrator model sequentially or an optionally configured task-specific model, with function-calling and constrained-JSON strategies as alternatives to evaluate. Any incomplete, contradictory or unsupported proposal remains provisional and triggers explicit safe handling rather than silent state mutation.
+The coordinator invokes a configured LLM interpretation task on a player action, narrated event or draft. The interpreter proposes typed operations with arguments and any confidently resolvable stable entity references, while preserving when an event is only attempted, intended, historical or ambiguous. Schema validation catches malformed output and missing fields; deterministic technical validation then checks that the proposed **accepted fact assertion** is grounded, typed and replayable; optional adventure rules may inform **uncommitted action attempts**, but cannot veto a completed accepted narrative fact for missing fictional prerequisites. Only the coordinator may commit accepted world changes and corresponding story events, coherently with narration. Interpretation can use the narrator model sequentially or an optionally configured task-specific model, with function-calling and constrained-JSON strategies as alternatives to evaluate. Any incomplete, contradictory or unsupported proposal remains provisional and triggers explicit safe handling rather than silent state mutation.
 
 ## Alternatives and trade-offs
 Native function/tool calling may provide provider-supported structured arguments, but not all locally hosted or role-playing-oriented models reliably support it. Constrained JSON or schema-guided text extraction can work with more providers yet may fail parsing or omit semantic changes. Either approach must pass schema checks and domain validators; correctness of the extracted meaning is a separate quality concern. Reusing one narrator model in successive tasks avoids compulsory multiple simultaneous model loads but may add latency or suffer weaker tool adherence. Dedicated interpreter model routing may be optional when desired, not a mandatory architecture.
@@ -61,7 +66,7 @@ Native function/tool calling may provide provider-supported structured arguments
 
 ## Selected player actor for Do and Say
 - **Explicit newer IDEA-0002/0007 decision supersedes prior first-person clarification path for Do/Say:** When the player uses **Do** or **Say**, the Settings sidebar's selected **`Playing As` Lorebook character ID** is already a defined actor/speaker, so the interpreter attributes 'I', 'my' and spoken dialogue to **that character**, without interrupting play to ask who the player is. Do/Say must be unavailable if there is no valid selection.
-- Ordinary deterministic validation still checks inventory possession, feasible action/state changes and any other actors referenced. Selecting a character **does not prove ownership of an item**, teleport a person or enable an impossible event.
+- Ordinary source interpretation distinguishes the selected actor from actual custody and movement facts; a focus change **does not itself** prove ownership or teleport a character. When a final accepted outcome establishes a new holder/location, emit the assertion without requiring proof of prior custody or fictional route.
 - **Story and Continue** can occur without a selected character and must still interpret grounded actors if any. Those modes must not silently infer `Playing As` as the actor. If the model cannot ground an operation, leave it unresolved rather than inventing a protagonist.
 
 ## Universal character actor references
@@ -70,7 +75,7 @@ Native function/tool calling may provide provider-supported structured arguments
 
 ## Do/Say perspective cut is not movement
 - **Accepted IDEA-0002/0026/0034 refinement:** The model interpreter receives the explicitly selected `Playing As` character ID for Do/Say **plus that character's currently established scene/context**. After changing from Mara in the capital to Theo in a forest, the next Do/Say is attributed to Theo **in the forest**, not to a moved Theo in the capital.
-- Do **not** interpret the player changing `Playing As` as a story event, travel request, teleporter use, elapsed time, automatic co-location or inventory/ownership transfer. An actual action described in the subsequent Do/Say is interpreted separately and remains subject to the usual deterministic checks.
+- Do **not** interpret the player changing `Playing As` as a story event, travel request, teleporter use, elapsed time, automatic co-location or inventory/ownership transfer. An actual attempted Do/Say action is interpreted separately; optional pre-narration guardrails may shape it, while a final accepted factual outcome updates the tracker declaratively rather than being retrospectively vetoed for a missing mechanical prerequisite.
 - Preserve unresolved/unknown location and actor-relevant details without pulling in the previous actor's location or fabricating lore to make the new viewpoint work. Story/Continue still have their normal actor-optional semantics.
 
 ## Playing As switching is context, not movement
@@ -150,3 +155,5 @@ For Do/Say, interpret the selected character's identity and **already establishe
 - 2026-10-17 — **Cross-reference update:** Wails v3 desktop/headless Go server, client-side TypeScript gameplay/AI logic and Go-managed filesystem SQLite are accepted architecture dependencies (IDEA-0053/0051). This idea remains in staging; unresolved feature details are not approved by this update.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** LLM interpretation of unconstrained player language and draft prose into schema-checked proposed typed operations; stable entity IDs where resolvable, explicit ambiguity, and distinctions among attempts, intentions, memories and completed acts; no authoritative state change without coordinator validation; sequential use of narrator model supported; native function calling and constrained JSON extraction both kept available for evaluation. Extraction reliability, schemas, fallback and repair details remain open. Moved to staging only, not production.
+
+- 2026-10-28 — **Explicit user-directed supersession:** Narrative-first declarative assertions adopted by user and reconciled here under [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Earlier action-precondition wording is preserved only as approval history where still quoted; **the latest governing section overrides it**. No staging promotion or implementation.
