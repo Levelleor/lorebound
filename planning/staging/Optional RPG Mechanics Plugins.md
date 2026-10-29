@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: agent
 created: "2026-10-16"
-updated: "2026-10-17"
+updated: "2026-10-28"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Gameplay Feature Catalogue Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]", "[[Characters Inventory Equipment and Anatomy Brainstorm]]"]
@@ -13,6 +13,11 @@ tags:
   - planning/idea
 ---
 # Optional RPG Mechanics Plugins
+
+## Later accepted narrative-first world-memory rule — 2026-10-28
+
+**Narrative-first engine boundary ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** RPG plugins are **optional** gameplay helpers. Selected plugin mechanics may guide/reject provisional attempted actions, but the core story/world tracker is not a strict simulation and must record typed **accepted outcome assertions** even without earlier fictional prerequisities. A missing/removed optional plugin never forces historic plugin-state replay or migration; core event payloads still require readable versions and safe atomicity. Plugins must not rewrite committed prose.
+
 
 ## Idea
 Allow optional mods for combat, dice, magic, economy, survival, quests, reputation and progression.
@@ -92,3 +97,5 @@ Hard-wiring combat, dice, experience, magic or survival into the core would make
 - 2026-10-17 — **Dependency alignment with accepted IDEA-0053/0051:** Wails v3 desktop/headless delivery, client-side TypeScript coordinator/gameplay plugins and Go-managed filesystem SQLite are selected. The integration section records the impact on this existing staging idea; its remaining behavioural choices are **not** thereby approved for production.
 - 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Optional, independently enabled RPG mechanics modules for categories such as combat, dice, magic, economy, survival, quests, reputation and progression. Use the universal native capability registry and deterministic coordinator rather than a separate RPG engine or global strictness modes. Disabled modules impose no optional rules; enabled ones enforce their validations and persist every accepted effect through complete incremental history. Historical reconstruction must remain valid if plugins are disabled or removed. Module catalogue, concrete rules, core-versus-plugin boundaries, configuration and plugin lifecycle remain open. Moved to staging, not production.
+
+- 2026-10-28 — **Explicit architecture update:** B6-D01 narrative-first declarative event rules override prior mechanical-precondition language in this staged note; original acceptance/alternative history preserved, no stage promotion/implementation.
