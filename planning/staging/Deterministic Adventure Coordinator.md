@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-29"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Deterministic Adventure Coordinator
+
+## Entity identity isolation for narration — 2026-10-29
+
+[B6-D04 — narrator-safe entity identities](../architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) is a binding design boundary. The TypeScript coordinator maintains **engine-owned stable IDs and name/alias-to-entity resolution**, while **every prose-producing model request is assembled without raw internal IDs or mapping tables**, even if the same model also serves as interpreter in another pass. A separate non-narrating resolver can use ID-bearing candidate context; a combined single-pass narrative+event proposal uses names/descriptions and is bound internally afterward. Reuse IDs across rename/alias; generate IDs for clearly introduced new objects; if multiple entities share the same name and context cannot distinguish them, do not guess or duplicate. Leave the specific state assertion unresolved while allowing narrative prose to stand. Do not add a universal approval gate, separate model requirement or mechanical precondition validation.
+
+
 
 ## Latest approved narrative-first event semantics — 2026-10-28
 
@@ -216,3 +222,5 @@ An AI agent directing arbitrary tool calls offers flexibility but introduces unp
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Deterministic, non-LLM TypeScript coordinator for AI interpretation, proposed operations, validators, tools, errors/repair, generation and coherent atomic turn finalisation; AI may propose but may not override canonical state; no mandatory multiple simultaneously loaded models. Exact call ordering, implicit-state detection, retries, repair and transaction mechanics are open. Promoted to staging for refinement only, not production.
 
 - 2026-10-28 — **User-directed architecture supersession:** Explicitly adopted narrative-first declarative state assertions, replacing simulation-style event preconditions; see [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Prior contrary statements remain only as original decision history; not current operative guidance. Still staging; no implementation/promotion.
+
+- **2026-10-29 — Later user-requested documentation refinement:** [B6-D04](../architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) protects prose-producing narrator contexts from internal IDs while keeping internal reference resolution, same-model role reuse and single-pass generation. Earlier approvals preserved; no implementation asserted.
