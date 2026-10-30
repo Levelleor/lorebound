@@ -3,7 +3,7 @@ type: architecture
 status: in-review
 phase: "B6"
 created: "2026-10-28"
-updated: "2026-10-29"
+updated: "2026-10-30"
 tags:
   - planning/architecture
   - pass-b
@@ -12,7 +12,7 @@ tags:
 
 # Pass B6 — World State Integrity and Cross-Module Contracts Review
 
-> **B6-D01 (narrative-first events) and B6-D04 (narrator-safe ID separation) accepted by explicit user direction; B6-D02/D03 remain unapproved proposals.** [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. The remaining B6-D02/D03 detail proposals below are unapproved pending separate user review. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
+> **B6-D01 and B6-D04 previously accepted; B6-D02 and B6-D03 each explicitly accepted revised Option A on 2026-10-30.** [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. Batch 2 D05-D07 below contains new, **unapproved** proposals; initial D02/D03 alternatives are retained for decision provenance. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
 
 ## Scope and inherited decisions
 
@@ -33,11 +33,13 @@ B3/B4 establish a single current ordered replayable event history, deterministic
 - If two identically named objects cannot be disambiguated, **do not guess or fabricate an entity ID**; the particular structured assertion remains unresolved, while accepted narrative prose can stand.
 - Preserve the already accepted narrator/interpretation routing, world-event replay, atomicity, explicit pending manual Commit, and other existing approval boundaries. Exact ambiguity UX, resolver algorithms and event schema are engineering follow-up work.
 
-**Approval scope:** B6-D04 records the explicit user's requested protection against ID leakage. **B6-D02/D03 remain unapproved.** This is not evidence of implemented prompt isolation, an entity resolver or tests.
+**Approval scope:** B6-D04 records the user's requested protection against ID leakage. **D02/D03 were later accepted separately as revised Option A.** This is not evidence of implemented prompt isolation, an entity resolver or tests.
 
-## Batch 1 continuation — unapproved follow-up decisions
+## Batch 1 continuation — approved revised Option A for D02/D03
 
-### B6-D02 — Inventory/equipment as one projected placement
+### B6-D02 — Inventory/equipment as one projected placement (accepted Option A)
+
+**Accepted on 2026-10-30:** [B6-D02 ADR](./decisions/B6-D02%20-%20One%20Item%20Identity%20and%20Declarative%20Equipment%20Placement.md). Original alternative descriptions below retained for provenance.
 
 **Question:** How should we derive inventory and equipment from assertion events without inventing a game simulation?
 
@@ -47,7 +49,9 @@ B3/B4 establish a single current ordered replayable event history, deterministic
 
 This is about representation detail, not whether a fictional “transfer” is legally possible. [B6-D01](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) already accepts the general declarative model; only further interface/schema details await approval.
 
-### B6-D03 — Location and presence as assertions from established facts
+### B6-D03 — Location and presence as assertions from established facts (accepted Option A)
+
+**Accepted on 2026-10-30:** [B6-D03 ADR](./decisions/B6-D03%20-%20Grounded%20Declarative%20Location%20and%20Scene%20Presence.md). Original alternative descriptions below retained for provenance.
 
 **Question:** How should a character's location and scene presence be tracked without assuming mentions imply arrival or requiring historical travel proof?
 
@@ -55,12 +59,44 @@ This is about representation detail, not whether a fictional “transfer” is l
 - **B (proposed):** Infer arrival from any narrative mention, creating incorrect current location.
 - **C (proposed):** Keep independent conflicting location/presence copies without common current projection.
 
-### Unapproved status
+### Current status (2026-10-30)
 
 - **B6-D01:** **Accepted as user-directed narrative-first replacement**, not the original proposed D01 A/B/C.
-- **B6-D02:** revised A/B/C proposals, **unapproved**.
-- **B6-D03:** revised A/B/C proposals, **unapproved**.
+- **B6-D02:** **Accepted revised A**, [ADR](./decisions/B6-D02%20-%20One%20Item%20Identity%20and%20Declarative%20Equipment%20Placement.md).
+- **B6-D03:** **Accepted revised A**, [ADR](./decisions/B6-D03%20-%20Grounded%20Declarative%20Location%20and%20Scene%20Presence.md).
 - **B6-D04:** **Accepted user-directed narrator/identity separation**, [ADR](./decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md).
+
+## Batch 2 — new proposals, not accepted
+
+All three questions refine the already approved narration-first assertion model without imposing simulated history prerequisites.
+
+### B6-D05 — Anatomy changes and unknown equipment destinations
+
+**Question:** Accepted narration establishes that a character lost an arm while an item had been equipped on it, but never says where the item went.
+
+- **A (recommended):** Assert the anatomy change and clear the incompatible equipped-slot relationship for that same stable item. **If the new physical placement is not grounded, leave it unknown/unresolved**, not in an invented pocket or on the floor. If narration *does* establish a valid new placement, the already approved automatic, grounded equipment-consequence assertions may update the same item in the same accepted batch. No duplicate item or rewrite of past narrative. **Trade-off:** More unknowns, but no invented fiction.
+- **B:** Retain the visibly incompatible equipment slot until player manually fixes it. **Trade-off:** Less automatic handling, but misleading current gear views.
+- **C:** Automatically drop the item into the character's room or inventory even if no destination was stated. **Trade-off:** Tidy-looking UI, but fabricates lore.
+
+This refines the earlier accepted grounded equipment-disposition exception; it is not a test of whether a transformation was mechanically possible.
+
+### B6-D06 — Arbitrary character status and sheet fields
+
+**Question:** How do we track a character's health, mood, conditions, goals and custom fields without enforcing an RPG game engine?
+
+- **A (recommended):** Store supported named/typed current field values on one stable character identity using replayable **Set/Clear assertions**. Last accepted assertion wins. Distinguish unknown/unset from explicit zero, false or empty. Do not infer unmentioned stats or require a prior mechanic. Manual edits stay pending until explicit player Commit. **Trade-off:** Needs a flexible field schema and typed-value handling.
+- **B:** Require fixed numerical RPG attributes and legal action/stat transitions. **Trade-off:** Simpler for simulation-oriented games, but conflicts with Lorebound's narrative-first purpose.
+- **C:** Keep all status fields as freeform prose only, with no structured current values. **Trade-off:** Simpler storage but weaker narration context and sheet editing.
+
+### B6-D07 — Doors, routes and other mutable location facts
+
+**Question:** What happens when accepted narration establishes that a door opens, a bridge collapses or a route is revealed?
+
+- **A (recommended):** Record grounded **current property/relationship assertions** on stable entities (door state, route status or keyed Add/Remove route). Later assertions replace earlier current facts, informing future map and travel context. Do **not** require proof of a key, prior path or mechanically legal transition, and do not invalidate previously accepted travel. **Trade-off:** Typed route/property projection work, with useful continuing world memory.
+- **B:** Re-evaluate and rewrite older journeys whenever routes change. **Trade-off:** Retroactive simulation that alters accepted fiction.
+- **C:** Show these changes as cosmetic map annotations without replayable world-state facts. **Trade-off:** Simpler, but the narrator may lose important established details.
+
+**Batch 2 status:** B6-D05, D06 and D07 are **proposals only**; none is approved, implemented or promoted to production. Exact schemas, uncertainty UI and tests remain engineering refinements.
 
 ## Initial B6 proposals — retained for decision provenance, now superseded
 
@@ -120,3 +156,5 @@ Further B6 batches can refine anatomy-equipment disposition when no grounded loc
 - **2026-10-28 — Explicit user-directed architectural replacement:** User approved narrative-first declarative Set/Clear and keyed Add/Remove event assertions and requested reconciliation of meaningful active documents. Created [B6-D01 accepted ADR](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md); original B6-D01 A/B/C proposals remain unapproved history. D02/D03 were revised as **new unapproved** questions consistent with accepted purpose.
 
 - **2026-10-29 — Explicit identity/narration separation:** User flagged possible leakage of system stable IDs into roleplay text if fed to the same model, then asked the recommended solution to be recorded for future work. Accepted [B6-D04](./decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md). Internal IDs stay out of prose-producing prompts; engine-side resolution, context isolation and one-pass compatibility remain. D02/D03 still unapproved.
+
+- **2026-10-30 — Explicit batch 1 continuation acceptance:** User approved **B6-D02 A** and **B6-D03 A** from the revised narrative-first options. Two separate ADRs capture the approvals with original proposal history. D01 and D04 remain accepted. Proposed D05–D07 as **unapproved Batch 2**, without stage promotion, implementation or B6 closure.
