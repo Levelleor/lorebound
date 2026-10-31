@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-31"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Characters Inventory Equipment and Anatomy Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Slot-Based Equipment and Body Diagram
+
+## Later accepted B6-D05 limit on anatomy-driven unequipping — 2026-10-31
+
+[B6-D05](../architecture/decisions/B6-D05%20-%20Conditional%20Anatomy%20Linked%20Equipment%20Detachment.md) specifies that **anatomy-linked automatic clearing exists only when real structured body-part identities and their equipment-slot links have actually been implemented and are active**. No such automatic clearing may be inferred from a mere narrative description of a lost arm or an optional free-form anatomy field. Until the feature is available, the tracked bracelet assignment stays as it was unless accepted prose explicitly unequips it or the player commits a correction. If the feature is implemented and an assignment is provably incompatible with a now-lost part, clear that item/slot assertion; **its new physical placement stays unknown unless the story establishes a destination**. Preserve one item identity and no invented effects. Earlier unqualified automatic-consequence language is subordinate to this explicit user clarification.
+
+
 
 ## Latest approved narrative-first event semantics — 2026-10-28
 
@@ -33,7 +39,7 @@ Makes equipped gear legible and available to AI context.
 - **Flexible for nonstandard anatomy:** The slots and diagram must be extensible enough to represent characters with different bodies or unusual available appendages; do not hardcode a mandatory two-armed human template for every character.
 - **Layering support:** Represent worn items sharing a body region in appropriate layers rather than assuming only one possible item per location. Actual ordering and compatibility rules remain for refinement.
 - **AI context visibility:** Relevant current equipment/slot state should be available to the narrator via the context builder when selected; distinguish equipped from merely carried gear and respect token-budget/manual context controls.
-- **Validated effects of anatomy changes (user decision 2026-10-23):** If accepted anatomy changes invalidate an equipment assignment, a subsequent validation pass **may automatically unequip, move or reassign the same stable item** to a grounded valid placement, without requiring a separate routine player confirmation. This consequence must be reflected consistently in item custody, equipment and recorded state. Exact destination preference and behavior when no valid destination is known are technical refinements.
+- **Feature-conditional anatomy effects (later B6-D05 user clarification):** Automatically clear an equipped assignment **only if actual supported structured anatomy and slot-to-body-part links exist and are active**, and the accepted change establishes incompatibility. The mere presence of free-text anatomical prose does not trigger it. If a new holder/location is grounded, record it using the same item ID; otherwise keep new placement unknown, not silently dropped. Without the feature, retain the assignment until the accepted story explicitly changes it or a player correction is committed. The earlier 2026-10-23 permission to automatically adjust grounded equipment remains but is conditioned by this later decision.
 - **Other mechanics remain open:** Exact slot catalogue, layering, two-handed item semantics and equipment incompatibility rules remain to refine.
 - **Art is optional and separate:** Start with a legible schematic. Generated character images or illustrated equipment portraits are not required or approved as part of this acceptance.
 - **Separate feature scopes:** [[Configurable Anatomy and Transformations]] (IDEA-0031) is **already independently accepted in staging** and now permits validated equipment consequences from anatomy changes. [[Optional Story Images and Equipment Art]] (IDEA-0057) remains **unaccepted in Inbox**; images are not necessary.
@@ -98,3 +104,5 @@ A text-labelled, static diagram is inexpensive, understandable and does not requ
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Slot-based equipment with a simple body-slot diagram; left/right hands, head, torso, feet, accessories, clothing layers and custom slots; separation of equipped from carried inventory; coherent validated equip/unequip/transfer linked to unique item IDs; and flexibility for nonstandard anatomy. Exact slots, two-handed/incompatibility mechanics, artwork and full anatomy transformations deliberately deferred to refinement or separate decisions. Moved to staging only.
 
 - 2026-10-28 — **User-directed architecture supersession:** Explicitly adopted narrative-first declarative state assertions, replacing simulation-style event preconditions; see [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Prior contrary statements remain only as original decision history; not current operative guidance. Still staging; no implementation/promotion.
+
+- **2026-10-31 — Explicit later B6-D05 user condition:** Do not automatically remove a bracelet's equipment assignment after an anatomy change unless genuine structured anatomy/arm/hand and binding-to-slot feature is implemented; no inferred destination, and no stage promotion or implementation.
