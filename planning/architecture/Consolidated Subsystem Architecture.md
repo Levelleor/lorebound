@@ -2,7 +2,7 @@
 type: architecture
 status: accepted-consolidation
 created: "2026-10-19"
-updated: "2026-10-29"
+updated: "2026-10-31"
 tags:
   - planning/architecture
   - pass-b
@@ -10,9 +10,15 @@ tags:
 ---
 # Consolidated Subsystem Architecture
 
+## B6 design closure and open B7 review — 2026-10-31
+
+**Pass B6 is now formally closed at architecture-design level**, by separate explicit user approval in [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md). All ten D01–D10 decisions have accepted dispositions. [B6-D05](./decisions/B6-D05%20-%20Conditional%20Anatomy%20Linked%20Equipment%20Detachment.md) **requires an actually implemented and active structured anatomy-to-equipment-slot feature** before automatic detachment. The earlier B6-D04 acceptance note below was written **before** D02/D03 approval; both were separately accepted on 2026-10-30 and are not outstanding. [B7](./Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) is **in review with unapproved initial questions** about event encoding, optional-module reducer ownership and noncanonical ambiguity diagnostics. This update does not approve implementation, staging promotion or an exact data schema.
+
+
+
 ## Later accepted cross-subsystem narrator/identity boundary — 2026-10-29
 
-[Accepted B6-D04](./decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) refines S04/S05/S06/S09/S10/S11: internal stable IDs are for **world-memory references and replay**, not fictional narration. **Narrator context assembly must never include raw IDs or ID↔name maps**; all prose-producing stages receive ordinary names, descriptions, relationships and world facts. The internal identity resolver may use ID-bearing candidates in a **separately isolated non-narrating task**, even when the same model is routed to both tasks. For combined one-pass prose+event generation, model-facing provisional references remain natural language and the engine resolves stable IDs after generation. A clearly new entity receives its ID from the engine; unresolved name collisions do not justify inventing facts or rejecting the prose. This is a **later explicitly requested design refinement**; B6-D02/D03 remain unaccepted, and no implementation/test claims follow.
+[Accepted B6-D04](./decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) refines S04/S05/S06/S09/S10/S11: internal stable IDs are for **world-memory references and replay**, not fictional narration. **Narrator context assembly must never include raw IDs or ID↔name maps**; all prose-producing stages receive ordinary names, descriptions, relationships and world facts. The internal identity resolver may use ID-bearing candidates in a **separately isolated non-narrating task**, even when the same model is routed to both tasks. For combined one-pass prose+event generation, model-facing provisional references remain natural language and the engine resolves stable IDs after generation. A clearly new entity receives its ID from the engine; unresolved name collisions do not justify inventing facts or rejecting the prose. This is a **later explicitly requested design refinement**; B6-D02/D03 were **still unaccepted when this 2026-10-29 identity note was written**, but were separately approved as revised Option A on 2026-10-30. No implementation/test claims follow.
 
 
 
