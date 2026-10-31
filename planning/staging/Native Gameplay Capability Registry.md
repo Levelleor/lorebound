@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-31"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Native Gameplay Capability Registry
+
+## Later accepted typed event ownership — 2026-10-31
+
+[B7-D01](../architecture/decisions/B7-D01%20-%20Versioned%20Typed%20Declarative%20Event%20Envelope.md) approves a **versioned, typed declarative event envelope** and domain-defined field payloads rather than replayable preconditioned gameplay commands. [B7-D02](../architecture/decisions/B7-D02%20-%20Core%20and%20Optional%20Plugin%20Event%20Ownership.md) approves explicit **required-core versus optional plugin-owned event domain/version** identification. Required-core unsupported events fail safe, but after disabling/removing a plugin, its unavailable custom past state need **not** be interpreted, migrated, reinstalled or reconstructed merely to continue narration. **Core assertions previously accepted through a plugin remain core records** and must still replay without that plugin. Existing capability permissions and Go/SQLite atomic commit protection still apply; no plugin loading/runtime implementation is claimed.
+
+
 
 ## Later accepted narrative-first world-memory rule — 2026-10-28
 
