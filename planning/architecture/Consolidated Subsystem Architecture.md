@@ -10,6 +10,12 @@ tags:
 ---
 # Consolidated Subsystem Architecture
 
+## B7 Batch 1 accepted representation and interpreter lifecycle — 2026-10-31
+
+**B7-D01 Option A** ([typed declarative envelope](./decisions/B7-D01%20-%20Versioned%20Typed%20Declarative%20Event%20Envelope.md)) and **B7-D02 Option A** ([core vs optional plugin ownership](./decisions/B7-D02%20-%20Core%20and%20Optional%20Plugin%20Event%20Ownership.md)) refine current S05/S06/S07/S12 contracts. Durable event records have typed, versioned declarative payloads with explicit domain ownership; unsupported **required core** effects fail safe, while removed optional plugin-specific effects need not be reconstructed. **B7-D03 Option C** ([silent unresolved extraction discard](./decisions/B7-D03%20-%20Discard%20Unresolved%20Extraction%20Suggestions%20Without%20Diagnostics.md)) specifically resolves S07's automatic interpretation-candidate policy: ambiguous candidates are **discarded without session/SQLite diagnostics, player hints or approval gate**. Do not confuse this with existing status/error diagnostics for real provider, required schema or atomic storage failures. All three decisions have distinct user approvals **A/A/C**, and Batch 2 remains unapproved. No code, stage promotion or B7 closure.
+
+
+
 ## B6 design closure and open B7 review — 2026-10-31
 
 **Pass B6 is now formally closed at architecture-design level**, by separate explicit user approval in [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md). All ten D01–D10 decisions have accepted dispositions. [B6-D05](./decisions/B6-D05%20-%20Conditional%20Anatomy%20Linked%20Equipment%20Detachment.md) **requires an actually implemented and active structured anatomy-to-equipment-slot feature** before automatic detachment. The earlier B6-D04 acceptance note below was written **before** D02/D03 approval; both were separately accepted on 2026-10-30 and are not outstanding. [B7](./Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) is **in review with unapproved initial questions** about event encoding, optional-module reducer ownership and noncanonical ambiguity diagnostics. This update does not approve implementation, staging promotion or an exact data schema.
