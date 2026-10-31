@@ -12,7 +12,7 @@ tags:
 
 # Pass B6 — World State Integrity and Cross-Module Contracts Review
 
-> **B6-D01 through D07 accepted as of 2026-10-31.** D05 Option A carries an explicit prerequisite: automatic equipment detachment requires an actually implemented, active structured anatomy/body-part-to-slot feature. Batch 3 D08-D10 remains unapproved. [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. Batch 2 D05-D07 received explicit user acceptance on 2026-10-31; their original proposals remain for approval history. Batch 3 D08-D10 awaits review. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
+> **All ten B6 architectural decisions D01–D10 have explicit accepted dispositions as of 2026-10-31.** D01 and D04 were user-directed approvals; D02/D03 and D06–D10 selected revised Option A; D05 selected Option A **with an actually implemented structured anatomy/slot prerequisite**. This is a design-closure assessment, not a formal closure. [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. Batch 2 D05-D07 received explicit user acceptance on 2026-10-31; their original proposals remain for approval history. Batch 3 D08-D10 awaits review. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
 
 ## Scope and inherited decisions
 
@@ -104,11 +104,13 @@ This refines the earlier accepted grounded equipment-disposition exception; it i
 
 **Batch 2 status (2026-10-31):** D05 **A with real-anatomy implementation condition**, D06 **A**, D07 **A** accepted separately. No implementation, staging promotion, integration testing, or formal B6 closure approved.
 
-## Batch 3 — proposed, not accepted
+## Batch 3 — accepted Option A (original proposals retained)
 
 These remaining details refine declarative replay and referent uncertainty. They do not add simulation-style feasibility checks.
 
-### B6-D08 — Unknown, explicit absence and current field clearing
+### B6-D08 — Unknown, explicit absence and current field clearing (accepted Option A)
+
+**Explicitly accepted 2026-10-31:** [B6-D08 ADR](./decisions/B6-D08%20-%20Distinct%20Unknown%20Absent%20and%20Known%20Current%20Facts.md). Original options below remain for provenance.
 
 **Question:** How should a projection distinguish a fact that was never established from a fact explicitly established as absent?
 
@@ -118,7 +120,9 @@ These remaining details refine declarative replay and referent uncertainty. They
 
 - **C:** Force every field to have a model-generated value. **Trade-off:** Complete-looking records but unreliable narration context.
 
-### B6-D09 — Handling ambiguous or contradictory references within accepted prose
+### B6-D09 — Handling ambiguous or contradictory references within accepted prose (accepted Option A)
+
+**Explicitly accepted 2026-10-31:** [B6-D09 ADR](./decisions/B6-D09%20-%20Preserve%20Ambiguous%20Story%20Facts%20Without%20Guessing%20IDs.md). Original alternatives below remain for provenance. Only resolved grounded events enter the coherent canon; unresolved candidates do not become malformed core events or a mandatory new player approval gate.
 
 **Question:** Two brass keys have the same name, or the passage does not clearly establish which key moved. What becomes structured state?
 
@@ -130,7 +134,9 @@ These remaining details refine declarative replay and referent uncertainty. They
 
 **Inherited:** B6-D04 already forbids guessing entity IDs. This proposal only refines what to commit and how the user sees uncertainty.
 
-### B6-D10 — Removing entities versus clearing their properties
+### B6-D10 — Removing entities versus clearing their properties (accepted Option A)
+
+**Explicitly accepted 2026-10-31:** [B6-D10 ADR](./decisions/B6-D10%20-%20Entity%20Removal%20Distinct%20from%20Property%20Clearing.md). Original alternatives below remain for provenance. Stable identity continuity must be resolved rather than guessed.
 
 **Question:** How do we distinguish a key that was explicitly destroyed from one whose current holder became unknown?
 
@@ -140,7 +146,43 @@ These remaining details refine declarative replay and referent uncertainty. They
 
 - **C:** Treat unknown placement and entity destruction as the same kind of removal. **Trade-off:** Fewer event types but misleading world memory.
 
-**Batch 3 status:** D08, D09 and D10 are proposed options only; no user acceptance, implementation or B6 closure is inferred.
+**Batch 3 status (2026-10-31):** **B6-D08 A**, **B6-D09 A** and **B6-D10 A** explicitly accepted in separate ADRs. No implementation, staging promotion or formal B6 design closure is implied.
+
+## B6 design closure assessment — 2026-10-31
+
+**All ten B6 numbered architecture decisions D01–D10 are accepted. B6 is ready for a separate explicit, design-only closure decision, but has NOT been formally closed.** The requesting user asked for an assessment, not a closure sign-off.
+
+| Decision | Accepted disposition |
+| --- | --- |
+| **D01** | User-directed **narrative-first declarative events** replacement; original D01 A/B/C not accepted |
+| **D02** | **Revised A:** single item identity; inventory/equipment derive from latest placement assertion |
+| **D03** | **Revised A:** established character location/presence only, no route-history proof |
+| **D04** | User-directed **narrator-safe internal ID separation**; no mandatory second model |
+| **D05** | **A with explicit condition:** automated anatomy/equipment detachment **only with implemented and enabled structured body-part-to-slot linkage**; unknown destination remains unknown |
+| **D06** | **A:** optional typed flexible character status Set/Clear assertions |
+| **D07** | **A:** grounded current door, route and mutable environment assertions |
+| **D08** | **A:** distinct unknown/unrecorded, explicit absence/none and known value |
+| **D09** | **A:** resolved grounded facts committed; ambiguous candidates stay noncanonical while story may stand |
+| **D10** | **A:** RemoveEntity distinct from ClearProperty; no cascade rewriting or guessed identity resurrection |
+
+### Why the design decision set can close
+
+- **Product purpose aligned:** Story/narration memory is primary; events assert accepted world facts and do not enforce retrospective fictional possession, travel or causal preconditions.
+- **Identity and uncertainty:** Engine-managed stable IDs stay out of narrator prompts; unknown, absence and ambiguous references are not guessed or used to invalidate prose.
+- **Current world views:** One physical item identity/current placement, character presence, optional flexible status, and environment conditions project deterministically from one current ordered assertion history. Later accepted facts may survive historical edits with sparse identities.
+- **Player approval and durability:** Manual corrections use pending noncanonical batches and explicit Commit/full-composer overlay. Go/SQLite preserves all-or-nothing current-only canon, version/epoch fencing and idempotent retry. Typed unsupported **core** event formats still fail safely.
+- **Feature conditionality preserved:** D05 does **not** assume anatomy with real hand/arm references exists. Without implemented structured anatomy/equipment links, no automatic detachment arises merely from prose. Lorebound is not required to implement full anatomical simulation.
+
+### Outstanding engineering contracts and verification, not new accepted B6 choices
+
+- Concrete versioned event schemas and TypeScript reducers for Set/Clear/Create/Remove and keyed relationships, explicit unknown/absence value encoding, entity lifecycle/tombstone and sparse identity semantics, and deterministic ordering/replay fixtures.
+- Reference resolver confidence/candidate matching, ambiguous extraction representation and optional feedback UI; safe handling of contradictions without leaking IDs or introducing mandatory model passes.
+- Real conditional anatomy/slot feature detection and item placement projections; custom status field types; physical/remote presence; door/route property and hierarchy integration.
+- Pending manual-draft overlay, coherent prose/event acceptance, browser/Go Wails integration, SQLite migration/restore, concurrency/idempotency, plugin boundaries and cross-module end-to-end tests. **No passing integration tests or implemented functionality are claimed.**
+- Preserve original ADR and staged idea approval history while reconciling further superseded simulation-first/revision-archive descriptions through separately approved planning gates. No production staging promotion or release authorisation.
+- The still open **B1 feasibility evidence gates** are not waived by B6 design readiness.
+
+**Recommended disposition:** Request explicit user approval to close B6 **at design level only** and then open the next planning/architecture pass. Do not automatically create a P-B6 closure ADR or mark this review closed merely from a request to assess closure.
 
 ## Initial B6 proposals — retained for decision provenance, now superseded
 
@@ -204,3 +246,5 @@ Further B6 batches can refine anatomy-equipment disposition when no grounded loc
 - **2026-10-30 — Explicit batch 1 continuation acceptance:** User approved **B6-D02 A** and **B6-D03 A** from the revised narrative-first options. Two separate ADRs capture the approvals with original proposal history. D01 and D04 remain accepted. Proposed D05–D07 as **unapproved Batch 2**, without stage promotion, implementation or B6 closure.
 
 - **2026-10-31 — Batch 2 accepted:** User approved **B6-D05 A with real structured-anatomy prerequisite, B6-D06 A and B6-D07 A**. ADRs recorded separately. The D05 qualification also appears in anatomy/equipment staging and B6-D02. D08-D10 remain unapproved proposals. No implementation/stage promotion or B6 closure.
+
+- **2026-10-31 — Batch 3 accepted, closure assessed only:** User expressly selected **B6-D08 A, B6-D09 A, B6-D10 A** with instructions to record only approved ADRs, preserve approval history and **assess**, not perform, formal B6 closure. Three accepted ADRs created. Ten numbered B6 decisions resolved (D01/D04 user-directed, D05 qualified A). Design assessed **ready for separate sign-off**, engineering/integration/staging gates still open, B6 review status remains **in-review**.
