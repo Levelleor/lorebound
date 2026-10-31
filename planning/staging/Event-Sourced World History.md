@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-31"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Story Editing and Event Timeline Brainstorm]]", "[[Lorebound Vision Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Event-Sourced World History
+
+## Later accepted event envelope and ambiguity policy — 2026-10-31
+
+[B7-D01](../architecture/decisions/B7-D01%20-%20Versioned%20Typed%20Declarative%20Event%20Envelope.md) requires a **versioned typed canonical event envelope** with total order, grounded provenance, domain owner, operation discriminator and type-checked declarative payloads. [B7-D02](../architecture/decisions/B7-D02%20-%20Core%20and%20Optional%20Plugin%20Event%20Ownership.md) distinguishes required-core supported reducers from unavailable optional plugin-owned state and preserves the earlier removed-plugin exception. **[B7-D03 Option C](../architecture/decisions/B7-D03%20-%20Discard%20Unresolved%20Extraction%20Suggestions%20Without%20Diagnostics.md) forbids retaining or showing unresolved *automatic interpretation candidates*:** they are not canonical events, not noncanonical pending drafts and **not diagnostics stored for later inspection**. Omit such candidates from a supported story acceptance and discard immediately while committing any other grounded resolved assertions, subject to the existing atomic Go/SQLite boundary. This narrow choice does **not** suppress technical parser, required-core replay, migration or transaction failures. Earlier openness to recording diagnostic proposed operations below does **not** authorise retaining ambiguous extraction hints.
+
+
 
 ## Latest accepted governing architecture — 2026-10-28
 
@@ -32,7 +38,7 @@ Makes undo, historical reconstruction and multi-entity consistency possible.
 - **One current story/event history:** Editing overwrites the current passage body; Undo/Delete remove the selected current event suffix as approved; Keep retains later accepted assertions even when earlier origin disappears. No branch-aware selector or inactive event archive.
 - **History edits and replay:** Current accepted events have stable IDs, ordered positions and optional current source-turn provenance; **Keep Later Turns** retains later assertions without their former fictional premise. A later reference can establish a sparse item/character/location identity with unknown missing attributes. Do not rewrite prose or invent causal steps. Undo/Delete remove current events at the approved boundary, with atomicity and deterministic replay.
 - **Projection coherence, not simulated feasibility:** Apply state assertions deterministically; each item's currently recorded physical placement is a single derived value shared by inventory/equipment/location views. Do **not** reject a location or holder assertion merely because an earlier route, source holder or fictional origin is absent. Unsupported/malformed typed core payloads remain failures.
-- **Validation boundary:** Failed, rejected or uncommitted AI-proposed operations must not enter the active authoritative history as accepted world-state changes. Diagnostic/proposed operations may be recorded separately if refined later.
+- **Validation boundary (B7-D03 C):** Failed, rejected or uncommitted AI-proposed operations must not enter active canonical history. **Genuinely ambiguous automatic extraction suggestions are immediately discarded without a separate diagnostic/pending record or UI notice**. Ordinary technical errors, provider failures and explicit pending manual edits retain their independent reporting/commit workflows.
 - **No persisted checkpoints:** Reconstruct the current world from the Turn-0 baseline and ordered current assertions; derived in-memory projections/caches are not competing canonical records. Full replay remains available.
 - **Storage and schema future-proofing:** Record enough version/provenance information for safe replay and later migrations without committing today to a fixed schema-versioning or dependency-resolution mechanism.
 - **Not a shipped implementation:** This note records an accepted staging direction and does not approve production or claim an event system exists.
