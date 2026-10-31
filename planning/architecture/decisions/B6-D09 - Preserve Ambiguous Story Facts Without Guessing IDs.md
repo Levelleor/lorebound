@@ -16,6 +16,12 @@ tags:
 
 # B6-D09 — Commit resolved assertions; do not guess ambiguous story references
 
+## Later accepted B7-D03 disposition — 2026-10-31
+
+**Current operative lifecycle:** [B7-D03 Option C](./B7-D03%20-%20Discard%20Unresolved%20Extraction%20Suggestions%20Without%20Diagnostics.md) narrows the **unresolved, noncanonical automatic interpretation candidate** discussed below. The engine may identify ambiguity during interpretation, but once unable to resolve the candidate it **discards it immediately, silently, without retaining a session/SQLite diagnostic, notification, hint or prompting for clarification**. Grounded unambiguous assertions still commit with otherwise acceptable narrative prose. No guessed ID is written. This **supersedes this ADR's originally open optional-feedback/retention detail only**; it does **not** alter the accepted B6-D09 no-guess rule or let actual malformed core events, unsafe writes or explicit manual-edit failures be hidden.
+
+
+
 ## Approval and provenance
 
 **Explicit user approval, 2026-10-31:** “Review B6 Batch 3: B6-D08: A; B6-D09: A; B6-D10: A. Record only explicitly accepted decisions as Lorebound GitHub ADRs, preserve approval history, then assess B6 design closure.”
@@ -38,7 +44,7 @@ A strict all-or-nothing event extractor that blocks story canon until every ment
 - **Conflicting claims:** Where accepted text genuinely provides an unambiguous temporal sequence, normal event order can resolve later assertions as the current value. If the referent or factual outcome remains genuinely indeterminate, do not impose an arbitrary last-token or first-ID rule to manufacture one. Exact contradiction detection and display are deferred.
 - **No hidden pending-commit gate:** An unresolved extraction is **not itself a prepared manual player correction**; it does not automatically trigger the chat-composer blocking overlay or require the player to approve every story fact. Existing Quick Start auto-commit, custom opening approval and pending *manual change* workflows remain governed by their previously accepted ADRs.
 - **Format and IDs:** Real canonical event records still require supported typed identity/format and deterministic replay. Unknown candidate references must not be committed as malformed required-core events, bypass [B2-D08](./B2-D08%20-%20Fail-Closed%20Unsupported%20Core%20Event%20Replay.md), or leak raw stable IDs into narrator prompts.
-- **Optional feedback:** An unobtrusive indication that a particular structured detail remains unresolved may help the player, but no exact prompt or disambiguation UX is selected by this decision. No compulsory extra LLM request is introduced.
+- **Later explicitly resolved feedback policy (B7-D03 C):** The earlier suggestion that an unobtrusive notice *might* be offered was not approved. Unresolved automatic interpretation candidates are **discarded without indication or backlog**. Technical commit/schema failures still follow the existing reporting policy.
 
 ## Alternatives considered
 
@@ -48,7 +54,7 @@ A strict all-or-nothing event extractor that blocks story canon until every ment
 
 ## Deferred contracts
 
-Explicit ambiguity representation (ephemeral vs persisted noncanonical interpretation hints), how to expose uncertainty in a read-only UI, true conflicting claims in one passage, optional manual disambiguation steps, interpreter-to-commit result types and source-span indexing. No mandatory new AI pass, code or tests are implied.
+Later B7-D03 **C** settled the candidate-diagnostics choice: **neither transient nor persisted ambiguous-extraction hints** and no automatic disambiguation prompt. Genuine conflicts in a passage, interpreter-to-commit typed result handling and source-span/grounding algorithms remain engineering details; no mandatory new AI pass, code or tests are implied.
 
 ## Traceability
 
