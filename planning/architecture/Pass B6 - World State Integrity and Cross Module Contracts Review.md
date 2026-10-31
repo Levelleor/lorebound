@@ -3,7 +3,7 @@ type: architecture
 status: in-review
 phase: "B6"
 created: "2026-10-28"
-updated: "2026-10-30"
+updated: "2026-10-31"
 tags:
   - planning/architecture
   - pass-b
@@ -12,7 +12,7 @@ tags:
 
 # Pass B6 — World State Integrity and Cross-Module Contracts Review
 
-> **B6-D01 and B6-D04 previously accepted; B6-D02 and B6-D03 each explicitly accepted revised Option A on 2026-10-30.** [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. Batch 2 D05-D07 below contains new, **unapproved** proposals; initial D02/D03 alternatives are retained for decision provenance. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
+> **B6-D01 through D07 accepted as of 2026-10-31.** D05 Option A carries an explicit prerequisite: automatic equipment detachment requires an actually implemented, active structured anatomy/body-part-to-slot feature. Batch 3 D08-D10 remains unapproved. [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. Batch 2 D05-D07 received explicit user acceptance on 2026-10-31; their original proposals remain for approval history. Batch 3 D08-D10 awaits review. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
 
 ## Scope and inherited decisions
 
@@ -66,11 +66,13 @@ This is about representation detail, not whether a fictional “transfer” is l
 - **B6-D03:** **Accepted revised A**, [ADR](./decisions/B6-D03%20-%20Grounded%20Declarative%20Location%20and%20Scene%20Presence.md).
 - **B6-D04:** **Accepted user-directed narrator/identity separation**, [ADR](./decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md).
 
-## Batch 2 — new proposals, not accepted
+## Batch 2 — accepted selections (original proposals retained)
 
 All three questions refine the already approved narration-first assertion model without imposing simulated history prerequisites.
 
-### B6-D05 — Anatomy changes and unknown equipment destinations
+### B6-D05 — Anatomy changes and unknown equipment destinations (A accepted with condition)
+
+**Approved 2026-10-31:** [B6-D05 ADR](./decisions/B6-D05%20-%20Conditional%20Anatomy%20Linked%20Equipment%20Detachment.md). Automatic removal of a bracelet or weapon from an affected limb is permitted **only when structured anatomy and the actual slot-to-body-part dependency are implemented and active**. Free-form narrative anatomy alone cannot trigger removal. If real structured incompatibility exists, clear the slot but do not invent an item destination; otherwise retain the assignment unless accepted narration or player Commit directly changes it. The original A/B/C proposal text below predates this condition.
 
 **Question:** Accepted narration establishes that a character lost an arm while an item had been equipped on it, but never says where the item went.
 
@@ -80,7 +82,9 @@ All three questions refine the already approved narration-first assertion model 
 
 This refines the earlier accepted grounded equipment-disposition exception; it is not a test of whether a transformation was mechanically possible.
 
-### B6-D06 — Arbitrary character status and sheet fields
+### B6-D06 — Arbitrary character status and sheet fields (A accepted)
+
+**Approved 2026-10-31:** [B6-D06 ADR](./decisions/B6-D06%20-%20Flexible%20Declarative%20Character%20Status%20Assertions.md). Original alternatives retained.
 
 **Question:** How do we track a character's health, mood, conditions, goals and custom fields without enforcing an RPG game engine?
 
@@ -88,7 +92,9 @@ This refines the earlier accepted grounded equipment-disposition exception; it i
 - **B:** Require fixed numerical RPG attributes and legal action/stat transitions. **Trade-off:** Simpler for simulation-oriented games, but conflicts with Lorebound's narrative-first purpose.
 - **C:** Keep all status fields as freeform prose only, with no structured current values. **Trade-off:** Simpler storage but weaker narration context and sheet editing.
 
-### B6-D07 — Doors, routes and other mutable location facts
+### B6-D07 — Doors, routes and other mutable location facts (A accepted)
+
+**Approved 2026-10-31:** [B6-D07 ADR](./decisions/B6-D07%20-%20Declarative%20Mutable%20World%20Location%20and%20Route%20Facts.md). Original alternatives retained.
 
 **Question:** What happens when accepted narration establishes that a door opens, a bridge collapses or a route is revealed?
 
@@ -96,7 +102,7 @@ This refines the earlier accepted grounded equipment-disposition exception; it i
 - **B:** Re-evaluate and rewrite older journeys whenever routes change. **Trade-off:** Retroactive simulation that alters accepted fiction.
 - **C:** Show these changes as cosmetic map annotations without replayable world-state facts. **Trade-off:** Simpler, but the narrator may lose important established details.
 
-**Batch 2 status:** B6-D05, D06 and D07 are **proposals only**; none is approved, implemented or promoted to production. Exact schemas, uncertainty UI and tests remain engineering refinements.
+**Batch 2 status (2026-10-31):** D05 **A with real-anatomy implementation condition**, D06 **A**, D07 **A** accepted separately. No implementation, staging promotion, integration testing, or formal B6 closure approved.
 
 ## Initial B6 proposals — retained for decision provenance, now superseded
 
@@ -158,3 +164,5 @@ Further B6 batches can refine anatomy-equipment disposition when no grounded loc
 - **2026-10-29 — Explicit identity/narration separation:** User flagged possible leakage of system stable IDs into roleplay text if fed to the same model, then asked the recommended solution to be recorded for future work. Accepted [B6-D04](./decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md). Internal IDs stay out of prose-producing prompts; engine-side resolution, context isolation and one-pass compatibility remain. D02/D03 still unapproved.
 
 - **2026-10-30 — Explicit batch 1 continuation acceptance:** User approved **B6-D02 A** and **B6-D03 A** from the revised narrative-first options. Two separate ADRs capture the approvals with original proposal history. D01 and D04 remain accepted. Proposed D05–D07 as **unapproved Batch 2**, without stage promotion, implementation or B6 closure.
+
+- **2026-10-31 — Batch 2 accepted:** User approved **B6-D05 A with real structured-anatomy prerequisite, B6-D06 A and B6-D07 A**. ADRs recorded separately. The D05 qualification also appears in anatomy/equipment staging and B6-D02. D08-D10 remain unapproved proposals. No implementation/stage promotion or B6 closure.
