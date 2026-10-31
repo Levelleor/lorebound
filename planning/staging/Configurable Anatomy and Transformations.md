@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-31"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Characters Inventory Equipment and Anatomy Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Configurable Anatomy and Transformations
+
+## Later accepted B6-D05 feature-conditional equipment policy — 2026-10-31
+
+[B6-D05](../architecture/decisions/B6-D05%20-%20Conditional%20Anatomy%20Linked%20Equipment%20Detachment.md) accepts automatic clearing of an incompatible equipment assignment **only when structured anatomy (real tracked arms/hands/body-part identities) and an explicit equipment-slot-to-part dependency have actually been implemented and are active for the affected character**. Free-form textual anatomy alone does **not** activate automatic detachment. If the feature/binding is absent, an accepted statement that an arm was lost **does not auto-unequip a bracelet** in the structured tracker unless narration itself establishes its removal or the player deliberately commits a correction. If such linked structured anatomy is implemented and establishes the incompatibility, the same item can be unequipped automatically, with **unknown placement** unless grounded prose gives a destination. Do not invent floor/pocket locations. This later explicit condition governs the earlier unqualified automatic-equipment wording below, whose approval history remains intact.
+
+
 
 ## Latest approved narrative-first event semantics — 2026-10-28
 
@@ -33,7 +39,7 @@ Physical changes should persist and affect equipment availability.
 - **Persistent physical state:** Track known body-part conditions, injuries, absent/missing limbs, prosthetics, additions/removals, transformations and relevant temporary or lasting changes across committed narrative history. Distinguish unknown/unrecorded anatomy from explicitly known absent or present features.
 - **Grounded declarative outcomes:** Record accepted narrative/player anatomy facts as typed `Set/Clear` assertions for stable character/anatomy IDs. Validate representable current fields and coherent equipment projections, not whether a preceding fictional transformation was mechanically possible. Player edits retain the explicit pending-commit gate.
 - **Shared stable identity across forms:** A character's ID persists through species differences, body changes and transformations; don't replace the character with a new identity merely due to anatomy edits.
-- **Validated automatic equipment consequences (user decision 2026-10-23):** After a confirmed anatomy change invalidates an equipped slot (for example, a sword held in a now-missing hand), the subsequent validator may **automatically unequip, reassign or move that same item** to a grounded and valid placement. This is a legitimate coherent response, not prohibited fictional teleportation. Do not demand routine manual equipment repair, duplicate/delete an item, invent a destination or partially commit mismatched anatomy/equipment. The exact default disposition if several or no placements are valid remains for refinement.
+- **Conditional automatic equipment consequences (later B6-D05 clarification, 2026-10-31):** Only **after an implemented and active structured anatomical body-part-to-equipment-slot relationship** establishes a real incompatibility may a confirmed anatomy change automatically clear that item's incompatible equipped assignment. Plain-language/free-text anatomical descriptions alone do **not** cause automatic unequipping. When a grounded new holder/location is stated, it may be recorded for the same item; otherwise leave disposition **unknown**, without inventing a drop or pocket. Earlier 2026-10-23 general permission for automatic consequences is retained as historical approval, subject to this later feature prerequisite.
 - **No assumption of universal body parts:** Gender identity, character identity and physical anatomy must not be inferred from one another. Entry presence, absence and details are player/story-defined.
 - **Separate mature-feature controls:** [[Optional Mature Reproductive Anatomy Fields]] (IDEA-0032) is a **separate unaccepted Inbox idea** proposing per-story mature-content controls and optional reproductive/sex-related fields. The accepted **general free-form data representation** must remain capable of describing requested body features; this decision does not yet approve IDEA-0032's content setting, default visibility, opt-in mechanics or disclosure/context rules.
 - **Optional in context:** Current relevant anatomy and transformations may be included in narration context subject to the accepted context builder's source and token controls. Do not automatically expose every private/descriptive anatomy entry in every prompt; exact selection/default behaviour remains open.
@@ -102,3 +108,5 @@ The user **selected free-form text as the baseline** rather than a required hier
 - 2026-10-16 — **Explicit acceptance by the requesting user, with added requirements:** Accept configurable anatomy and physical transformations, and make the record **entirely free form and text-based**, with removable basic entries on story creation and the ability to add arbitrary anatomy features such as genitals, lips, hair and breasts when desired. Keep character and world-state validation and equipment links coherent. IDEA-0032 was identified as a separate unaccepted candidate for optional mature-specific content controls, not silently bundled into this acceptance. Moved to staging for refinement only.
 
 - 2026-10-28 — **User-directed architecture supersession:** Explicitly adopted narrative-first declarative state assertions, replacing simulation-style event preconditions; see [B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md). Prior contrary statements remain only as original decision history; not current operative guidance. Still staging; no implementation/promotion.
+
+- **2026-10-31 — Explicit later B6-D05 user condition:** Do not automatically remove a bracelet's equipment assignment after an anatomy change unless genuine structured anatomy/arm/hand and binding-to-slot feature is implemented; no inferred destination, and no stage promotion or implementation.
