@@ -2,7 +2,7 @@
 type: architecture
 status: current
 created: "2026-10-28"
-updated: "2026-10-29"
+updated: "2026-10-31"
 tags:
   - planning/architecture
   - event-model
@@ -10,6 +10,12 @@ tags:
 ---
 
 # Narrative-first event model — documentation reconciliation register
+
+## Subsequent B6 design closure and B7 opening — 2026-10-31
+
+[P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) **formally closes B6 design-only** after a separate user sign-off. **All ten** B6 numbered ADRs were accepted by the user on their respective dates, including the D05 **real implemented anatomy/slot** prerequisite, D08's unknown/absence distinction, D09's nonblocking ambiguity, and D10's entity lifecycle vs property clearing. The earlier 2026-10-29 wording below that calls D02/D03 unapproved is a snapshot of **that time**, not their present disposition. [B7](./Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) is now in review with **unapproved** event encoding and interpretation proposals; no feature implementation or stage promotion is implied.
+
+
 
 ## Authoritative approved change
 
@@ -120,12 +126,12 @@ Following the explicit original narrative-first change, the user raised a risk o
 - Only isolated non-narrating interpretation/resolution may receive internal candidate IDs, even when sharing a selected model with narration.
 - Single-pass prose+event generation remains supported with natural-language candidate references; no mandatory second model/pass.
 - Relevant updated operational notes: context builder, interpreter, pipeline strategies, task routing, coordinator, Lorebook, consolidated architecture, planning instructions, B6-D01 and active B6 review.
-- B6-D02/D03 remain **unapproved**; this documented identity boundary does not approve their schema/placement/presence choices.
+- **At the time B6-D04 was recorded on 2026-10-29**, D02/D03 were unapproved. Both were subsequently explicitly accepted as revised Option A on 2026-10-30; D04 alone did not pre-approve them.
 
 ## Follow-up contracts still open (NOT approved by this reconciliation)
 
-- B6-D02: exact item current-placement and equipment assertion schema/view projection.
-- B6-D03: exact character-location and scene-presence assertion/refinement contract.
+- **Accepted B6-D02 Option A:** one item/current placement projection; exact event payload and reducer schema remain deferred.
+- **Accepted B6-D03 Option A:** grounded location/presence assertions; precise typed encoding and integration remain deferred.
 - Other technical event serialization, optional mechanic attempt limits, sparse entity encoding/tombstone semantics, idempotent replays and user-facing continuity warnings require engineering refinement.
 - No implementation, integration tests, staging-to-production promotion, feature release or completed mechanical correctness proof. B1 real host/provider/SQLite integration gates remain outstanding.
 
