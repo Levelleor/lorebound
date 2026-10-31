@@ -104,6 +104,44 @@ This refines the earlier accepted grounded equipment-disposition exception; it i
 
 **Batch 2 status (2026-10-31):** D05 **A with real-anatomy implementation condition**, D06 **A**, D07 **A** accepted separately. No implementation, staging promotion, integration testing, or formal B6 closure approved.
 
+## Batch 3 — proposed, not accepted
+
+These remaining details refine declarative replay and referent uncertainty. They do not add simulation-style feasibility checks.
+
+### B6-D08 — Unknown, explicit absence and current field clearing
+
+**Question:** How should a projection distinguish a fact that was never established from a fact explicitly established as absent?
+
+- **A (recommended):** Represent **unknown/unrecorded**, **explicitly absent/none** and **known value** distinctly where the field supports those meanings. A typed Set/Clear assertion updates the field without inventing a default or turning an unknown into zero/false. Use field-specific semantics consistently for item holders, locations, character status and environment. **Trade-off:** Requires careful per-field typing and UI labels.
+
+- **B:** Treat every unknown or cleared value as explicit absence. **Trade-off:** Simple but invents negative facts.
+
+- **C:** Force every field to have a model-generated value. **Trade-off:** Complete-looking records but unreliable narration context.
+
+### B6-D09 — Handling ambiguous or contradictory references within accepted prose
+
+**Question:** Two brass keys have the same name, or the passage does not clearly establish which key moved. What becomes structured state?
+
+- **A (recommended):** Commit the resolved, grounded assertions and accept the story prose; leave **individual ambiguous candidates unresolved and noncanonical**, never guessing an item ID or creating a duplicate. Optional uncertainty indicators may explain missing tracked details. **Trade-off:** The tracker may temporarily know less than the prose.
+
+- **B:** Bind the first same-name ID or arbitrarily pick an interpretation. **Trade-off:** Fewer unknowns but silent mistakes.
+
+- **C:** Reject all otherwise accepted story prose until every candidate is resolved. **Trade-off:** Interrupts narration over ordinary ambiguity.
+
+**Inherited:** B6-D04 already forbids guessing entity IDs. This proposal only refines what to commit and how the user sees uncertainty.
+
+### B6-D10 — Removing entities versus clearing their properties
+
+**Question:** How do we distinguish a key that was explicitly destroyed from one whose current holder became unknown?
+
+- **A (recommended):** Keep separate **RemoveEntity** and **ClearProperty** meanings. A grounded entity removal marks the ID as currently removed/inactive; clearing an item's holder only means that placement is unknown/unset. A later accepted assertion may re-establish a previously removed stable identity without inventing a historical explanation or cascading edits to accepted events. **Trade-off:** Small explicit lifecycle/tombstone representation.
+
+- **B:** Delete the ID and cascade-delete all surviving events that reference it. **Trade-off:** Simpler active rows but rewrites current accepted history.
+
+- **C:** Treat unknown placement and entity destruction as the same kind of removal. **Trade-off:** Fewer event types but misleading world memory.
+
+**Batch 3 status:** D08, D09 and D10 are proposed options only; no user acceptance, implementation or B6 closure is inferred.
+
 ## Initial B6 proposals — retained for decision provenance, now superseded
 
 The following original opening text remains solely to show what was proposed before the user's explicit redirection. **It is not current policy or an approved B6 choice.**
