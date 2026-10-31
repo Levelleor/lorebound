@@ -4,7 +4,7 @@ status: accepted
 decision_id: "B6-D02"
 phase: "B6"
 created: "2026-10-30"
-updated: "2026-10-30"
+updated: "2026-10-31"
 approved_at: "2026-10-30"
 approved_by: "requesting user (explicit chat approval)"
 tags:
@@ -15,6 +15,12 @@ tags:
 ---
 
 # B6-D02 — One item identity; inventory and equipment from declarative placement
+
+## Subsequent accepted implementation condition — 2026-10-31
+
+[B6-D05](./B6-D05%20-%20Conditional%20Anatomy%20Linked%20Equipment%20Detachment.md) **limits** the anatomy exception noted below: automatically clearing a bracelet's equipment assignment after loss of an arm/hand is authorised **only if a real structured anatomy/body-part and equipment slot binding is implemented and enabled**. Merely recording an arm as missing in free-form prose does not cause automatic unequipping. If the feature is active and the binding is incompatible, clear the slot and preserve unknown item disposition unless a new location is grounded. Stable item identity and current-placement projection rules in D02 remain otherwise unchanged.
+
+
 
 ## Approval and provenance
 
@@ -37,7 +43,7 @@ This accepts **B6-D02 Option A** of the **revised narrative-first proposal** in 
 - **Sparse records:** Later accepted placement may identify an item whose earlier introduction has been removed. Replay maintains the item's stable ID with unknown origin/name/older properties where absent; it does not require a retained Create event to justify the story.
 - **Deterministic technical coherence:** The stored assertions must be well-typed, version-supported and replayable, producing at most one *currently recorded* physical placement per unique ID. Incompatible placements **at different ordered event positions are not an error**; the latest applicable assertion determines the view. Technically ambiguous/non-representable event payloads, unsafe writes and stale commits remain failures. No Go gameplay validation engine.
 - **Atomicity and manual approval:** Any accepted multi-property/slot batch uses the existing TypeScript prepared assertion validation and Go/SQLite atomic/idempotent version/epoch transaction. Manual item/gear edits stay **noncanonical until player Approve/Commit** with the shared full-composer overlay, or Discard. No automatic canonical mutation merely by editing the UI.
-- **Anatomy exception retained:** Previously accepted, *grounded* automatic equipment consequences of an accepted anatomy change may generate additional compatible current assertions for the **same item**; don't invent an unestablished destination, duplicate the item or silently rewrite past events. Detailed no-grounded-destination behaviour remains for a later B6 question.
+- **Anatomy exception now feature-conditional under B6-D05:** Automatic clearing of an incompatible equipment slot is allowed **only with actually implemented active structured body-part identities and an equipment binding to the affected part**. Plain-text anatomy alone does not auto-unequip; absent the feature, retain the assignment until narration or explicit player correction changes it. If the feature establishes incompatibility, clear the slot for the same item and leave its location unknown unless grounded narration supplies the destination.
 - **No physical-simulation engine:** Modelled ownership claims, physical custody, proximity, slot assignment and fictional validity are distinct. Avoid deriving new ownership or impossibility judgments from a UI inventory projection.
 
 ## Original revised options and disposition
@@ -63,3 +69,5 @@ Exact event schema; slots/layers and character anatomy compatibility; a holder t
 - **2026-10-29:** User approved B6-D04 separation of natural-language narrator context from private entity IDs.
 - **2026-10-29:** Revised B6-D02 A/B/C presented with latest-holder/current-projection semantics; remained **unapproved**.
 - **2026-10-30:** User explicitly selected **B6-D02 A**, separately selected B6-D03 A, and requested acceptance to be recorded with provenance and B6 review to continue. No implementation or later decisions approved.
+
+- **2026-10-31 — Explicit later B6-D05 user condition:** Do not automatically remove a bracelet's equipment assignment after an anatomy change unless genuine structured anatomy/arm/hand and binding-to-slot feature is implemented; no inferred destination, and no stage promotion or implementation.
