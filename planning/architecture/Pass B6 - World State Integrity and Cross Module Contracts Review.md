@@ -12,7 +12,7 @@ tags:
 
 # Pass B6 — World State Integrity and Cross-Module Contracts Review
 
-> **All ten B6 architectural decisions D01–D10 have explicit accepted dispositions as of 2026-10-31.** D01 and D04 were user-directed approvals; D02/D03 and D06–D10 selected revised Option A; D05 selected Option A **with an actually implemented structured anatomy/slot prerequisite**. This is a design-closure assessment, not a formal closure. [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. Batch 2 D05-D07 received explicit user acceptance on 2026-10-31; their original proposals remain for approval history. Batch 3 D08-D10 awaits review. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
+> **All ten B6 architectural decisions D01–D10 have explicit accepted dispositions as of 2026-10-31.** D01 and D04 were user-directed approvals; D02/D03 and D06–D10 selected revised Option A; D05 selected Option A **with an actually implemented structured anatomy/slot prerequisite**. This is a design-closure assessment, not a formal closure. [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. Batch 2 D05–D07 and Batch 3 D08–D10 received separate explicit user approvals; original options remain in this review as decision provenance. Formal B6 design closure still requires separate user authorisation. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
 
 ## Scope and inherited decisions
 
