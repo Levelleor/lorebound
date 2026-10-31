@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-29"
+updated: "2026-10-31"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[Coordinator Tools and MCP Brainstorm]]", "[[LLM Providers and Generation Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # LLM State Interpreter and Proposed Operations
+
+## Latest explicit interpreter candidate policy — B7 Batch 1 (2026-10-31)
+
+[B7-D01](../architecture/decisions/B7-D01%20-%20Versioned%20Typed%20Declarative%20Event%20Envelope.md) accepts the **versioned typed declarative event envelope** and domain-registered payload checks, not procedural Transfer/Move commands. [B7-D02](../architecture/decisions/B7-D02%20-%20Core%20and%20Optional%20Plugin%20Event%20Ownership.md) keeps required core event reducers distinct from unavailable optional plugin-owned effects. **[B7-D03 Option C](../architecture/decisions/B7-D03%20-%20Discard%20Unresolved%20Extraction%20Suggestions%20Without%20Diagnostics.md) was expressly chosen by the user, despite earlier recommendation of A**: if a **proposed automatic extraction** cannot identify the referent/meaning, **drop that candidate immediately** without retaining it, storing it, displaying warnings, suggesting repairs or requiring player clarification. Commit the accepted story and any **other grounded/resolved** typed assertions atomically. Never guess names/IDs or fabricate source facts. Do **not** confuse an ambiguous optional candidate with a malformed required-core event, a failed provider request, failed database write or an explicit player-edited pending change; those still have their previously accepted failure/approval pathways. Earlier “preserve unresolved references/ask clarification” notes below should be read as **do not commit uncertain state**, not as a continuing request to retain/show uncertainty suggestions.
+
+
 
 ## Narration vs internal entity identity — latest accepted boundary (2026-10-29)
 
@@ -68,7 +74,7 @@ Native function/tool calling may provide provider-supported structured arguments
 ## Protagonist-optional actor extraction
 - **Accepted IDEA-0007/0026/0029:** The interpreting model must not assume that the player is a character, that an adventure has one permanent protagonist, or that a story turn always has a character actor. Proposed actions/events may involve **zero, one or several grounded actors**, with stable references where known.
 - Keep **narrative focus separate from per-turn actor attribution**. A changed focused character is not an item transfer or location movement; any world-state operation must name the actual established target/holder. Do not use a fabricated global Player Inventory.
-- With ambiguous first-person expressions such as "I draw my sword" and no grounded speaker/actor in context, do not invent a player avatar or assumed sword possession. Preserve unresolved references/ask clarification under the eventual UI policy instead of committing unsupported changes.
+- With ambiguous first-person expressions such as "I draw my sword" and no grounded speaker/actor in context, do not invent a player avatar or assumed sword possession. **Discard the unresolved automatic extraction candidate without a warning or clarification prompt (later accepted B7-D03 C)** instead of committing unsupported changes.
 
 ## Selected player actor for Do and Say
 - **Explicit newer IDEA-0002/0007 decision supersedes prior first-person clarification path for Do/Say:** When the player uses **Do** or **Say**, the Settings sidebar's selected **`Playing As` Lorebook character ID** is already a defined actor/speaker, so the interpreter attributes 'I', 'my' and spoken dialogue to **that character**, without interrupting play to ask who the player is. Do/Say must be unavailable if there is no valid selection.
@@ -125,7 +131,7 @@ For Do/Say, interpret the selected character's identity and **already establishe
 - [ ] Merely changing `Playing As` proposes no world-state operations; the next Do/Say is grounded in that actor's established location and state.
 - [ ] A change of `Playing As` alone produces **no world event**. Any subsequently **accepted** grounded movement is tracked through a declarative location assertion; optional attempted-action guardrails apply only before acceptance.
 - [ ] Arbitrary player or narrative prose can yield typed proposed changes with a defined and verifiable schema.
-- [ ] Entity references are resolved to stable IDs only when sufficiently grounded, with ambiguity preserved or surfaced otherwise.
+- [ ] Entity references are resolved to stable IDs only when sufficiently grounded; **discard unresolved automatic candidates silently** under B7-D03 C rather than retaining/surfacing an ambiguity list.
 - [ ] Intentions, failed attempts, hypotheticals and historical recollections are not automatically committed as completed present-tense actions.
 - [ ] Well-formed interpreter output remains provisional until deterministic world-state validation accepts it.
 - [ ] Unsupported or impossible changes do not become authoritative merely because the model describes them.
