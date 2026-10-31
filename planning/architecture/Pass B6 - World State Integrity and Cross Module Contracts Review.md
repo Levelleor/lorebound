@@ -1,6 +1,6 @@
 ---
 type: architecture
-status: in-review
+status: closed-design-only
 phase: "B6"
 created: "2026-10-28"
 updated: "2026-10-31"
@@ -12,7 +12,11 @@ tags:
 
 # Pass B6 — World State Integrity and Cross-Module Contracts Review
 
-> **All ten B6 architectural decisions D01–D10 have explicit accepted dispositions as of 2026-10-31.** D01 and D04 were user-directed approvals; D02/D03 and D06–D10 selected revised Option A; D05 selected Option A **with an actually implemented structured anatomy/slot prerequisite**. This is a design-closure assessment, not a formal closure. [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. Batch 2 D05–D07 and Batch 3 D08–D10 received separate explicit user approvals; original options remain in this review as decision provenance. Formal B6 design closure still requires separate user authorisation. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
+> **FORMALLY CLOSED AT DESIGN LEVEL, 2026-10-31, by separate explicit user approval.** [P-B6-01 closure ADR](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md). All ten numbered B6 decisions accepted with original approvals and alternatives preserved. [B7 event representation and interpretation review](./Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) is **opened only** with unapproved questions; neither implementation nor staging promotion is authorised.
+
+
+
+> **All ten B6 architectural decisions D01–D10 have explicit accepted dispositions as of 2026-10-31.** D01 and D04 were user-directed approvals; D02/D03 and D06–D10 selected revised Option A; D05 selected Option A **with an actually implemented structured anatomy/slot prerequisite**. The later separate closure approval is recorded in **P-B6-01**. The assessment below remains as its original pre-closure snapshot. [P-B5-01](./decisions/P-B5-01%20-%20Design%20Closure%20and%20Deferred%20World%20Integrity%20Contracts.md) formally closed B5 at design level. Batch 2 D05–D07 and Batch 3 D08–D10 received separate explicit user approvals; original options remain in this review as decision provenance. Separate user authorisation for formal B6 closure was later given and recorded in P-B6-01. No implementation, tests or staging-to-production promotion. The accepted declarative-event ADR overrides the earlier unapproved D01 alternatives.
 
 ## Scope and inherited decisions
 
@@ -248,3 +252,5 @@ Further B6 batches can refine anatomy-equipment disposition when no grounded loc
 - **2026-10-31 — Batch 2 accepted:** User approved **B6-D05 A with real structured-anatomy prerequisite, B6-D06 A and B6-D07 A**. ADRs recorded separately. The D05 qualification also appears in anatomy/equipment staging and B6-D02. D08-D10 remain unapproved proposals. No implementation/stage promotion or B6 closure.
 
 - **2026-10-31 — Batch 3 accepted, closure assessed only:** User expressly selected **B6-D08 A, B6-D09 A, B6-D10 A** with instructions to record only approved ADRs, preserve approval history and **assess**, not perform, formal B6 closure. Three accepted ADRs created. Ten numbered B6 decisions resolved (D01/D04 user-directed, D05 qualified A). Design assessed **ready for separate sign-off**, engineering/integration/staging gates still open, B6 review status remains **in-review**.
+
+- **2026-10-31 — Formal design-only closure after separate sign-off:** When explicitly asked whether to record formal B6 closure and open the next pass following the completed assessment, the user replied **“Sounds good proceed.”** Created [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) and marked this review **closed-design-only**. The earlier recommendation not to close without permission was applicable at assessment time and has now been satisfied. No implementation, tests or staging promotion; [B7](./Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) options remain unapproved.
