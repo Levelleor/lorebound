@@ -1,6 +1,6 @@
 ---
 type: architecture
-status: in-review
+status: closed-design-only
 phase: "B7"
 created: "2026-10-31"
 updated: "2026-10-31"
@@ -12,6 +12,10 @@ tags:
 ---
 
 # Pass B7 — Event Representation and Narrative Interpretation Contract Review
+
+> **FORMALLY CLOSED AT DESIGN LEVEL, 2026-10-31, after distinct user authorisation.** [P-B7-01 closure ADR](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) records that after the ten-decision **assessment** and a direct question about closure and B8 opening, the user answered **“yes proceed.”** The [B8 spatial canvas and integration review](./Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md) is **open only, with D01–D03 unapproved**. The assessment and pre-closure wording retained below are **historical snapshots**, not present review status. B7 closure makes no code, integration-test, staging-promotion or implementation-readiness claim.
+
+
 
 > **OPENED FOR REVIEW ONLY, 2026-10-31.** [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) formally closes B6 **at design level** after explicit separate user approval. **All ten B7 numbered decisions D01–D10 now have explicit accepted dispositions on 2026-10-31**: D01/D02 A, D03 **C**, D04–D09 A, and D10 an **explicit later user-directed spatial-canvas correction**. Original proposal alternatives remain below as history. **Later explicit B7-D10 correction: the player-facing world map is a persistent, coordinate-pinned, semantically scaled spatial canvas with meaningful grouped places and link lengths.** D06's graph describes route *connectivity only* and must not arbitrarily arrange geography. **B7-D10 is accepted by direct user instruction; Batch 3 D07–D09 was subsequently explicitly approved as Option A.** B7 has been **assessed for design closure only**, not formally closed. No implementation, tests or stage promotion is implied.
 
@@ -235,3 +239,5 @@ The user's request was to **record approvals and assess** closure, **not to crea
 - **2026-10-31 — Later explicit B7 map definition correction:** User clarified that locations must be **persistently pinned on a meaningful spatial canvas**, with nested groups for empires/cities/buildings/rooms and link lengths reflecting world distances, **rather than a map defined only as a graph**. Accepted [B7-D10](./decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) as a new user-directed chronological refinement to D06 and IDEA-0037; updated relevant current architecture and staging docs. D07–D09 remain unapproved proposals; no concrete graph class, coordinate units, implementation or stage promotion accepted.
 
 - **2026-10-31 — Batch 3 explicit approvals and assessment only:** User approved **B7-D07 A, B7-D08 A and B7-D09 A**, instructing separate accepted GitHub ADRs, approval history preservation and an **assessment** of B7 design closure. Three individual ADRs created. **Ten of ten B7 decisions now accepted** (D03 C, D10 an explicit spatial-canvas correction), and design-only closure assessed ready for **separate sign-off**; no P-B7 closure ADR or status change, no stage promotion/implementation/testing claim, and B7-D10 map-coordinate engineering remains deferred.
+
+- **2026-10-31 — Formal design-only closure after separate approval:** Following completion of accepted B7-D01–D10 and the review's earlier **assessment only**, the assistant explicitly asked whether to **formally close B7 and proceed to B8**, and the user replied **“yes proceed.”** [P-B7-01](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) records the separate sign-off. This B7 review is now **closed-design-only**. The earlier `in-review`/“no closure yet” language within the preserved assessment accurately described that preceding point in time. [B8](./Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md) has only **unapproved proposals**. No implemented schemas, tests, promotion or stage change are implied.
