@@ -11,9 +11,15 @@ tags:
 
 # Narrative-first event model — documentation reconciliation register
 
+## Formal B7 design closure and B8 next contracts — 2026-10-31
+
+The user separately approved **formal B7 design-level closure and opening B8** after the B7 closure assessment, recorded in [P-B7-01](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md). [B8](./Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md) contains **unapproved initial proposals** for hierarchy/local coordinate frames, geographic separation vs route distance and canonical spatial-pin editing/replay. B7-D01–D10 remain binding, with **D03 explicitly C** and **D10 defining a saved, semantically scaled spatial canvas rather than an arbitrary graph layout**. Earlier entries below calling B7 proposals unapproved describe their original dates, not current acceptance. No software, schema, test or staging promotion is implied by design closure.
+
+
+
 ## Subsequent B6 design closure and B7 opening — 2026-10-31
 
-[P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) **formally closes B6 design-only** after a separate user sign-off. **All ten** B6 numbered ADRs were accepted by the user on their respective dates, including the D05 **real implemented anatomy/slot** prerequisite, D08's unknown/absence distinction, D09's nonblocking ambiguity, and D10's entity lifecycle vs property clearing. The earlier 2026-10-29 wording below that calls D02/D03 unapproved is a snapshot of **that time**, not their present disposition. [B7](./Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) is now in review with **unapproved** event encoding and interpretation proposals; no feature implementation or stage promotion is implied.
+[P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) **formally closes B6 design-only** after a separate user sign-off. **All ten** B6 numbered ADRs were accepted by the user on their respective dates, including the D05 **real implemented anatomy/slot** prerequisite, D08's unknown/absence distinction, D09's nonblocking ambiguity, and D10's entity lifecycle vs property clearing. The earlier 2026-10-29 wording below that calls D02/D03 unapproved is a snapshot of **that time**, not their present disposition. [B7](./Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) initially opened with **unapproved** event proposals. **All ten were subsequently approved and P-B7-01 formally closed B7 design**; no feature implementation or stage promotion is implied.
 
 
 
