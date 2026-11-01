@@ -17,6 +17,12 @@ tags:
 
 # B8-D09 — Atomic accepted location creation and automatically generated first map placement
 
+## Later B9-D01/D02 runtime and provenance refinement — 2026-10-31
+
+[Accepted B9-D01 qualified A](./B9-D01%20-%20Typed%20Spatial%20Coordinates%20Without%20AI%20Player%20Authorship%20Labels.md) preserves typed map coordinates but removes the earlier assumption that every coordinate must carry a **player-vs-AI author label**. The accepted [B9-D02 A](./B9-D02%20-%20TypeScript%20Prepared%20Events%20and%20Go%20SQLite%20Atomic%20Commit%20Authority.md) keeps TypeScript preparation and Go technical/atomic SQLite commit authority; the **location and initial coordinate still save in one canonical idempotent transaction**. Generated defaults do not require a second manual approval, and later deliberate player map changes still require explicit Commit. Minimum operational pin protection must still prevent B8-D08's prohibited silent overwrites; its encoding is a separate **unapproved B9-D04 proposal**. Earlier origin/provenance language below is preserved as dated context, not a mandate for an AI/player audit field.
+
+
+
 ## Approval and provenance
 
 **User approval, 2026-10-31:** “Review B8 Batch 3: B8-D07: A; B8-D08: A; B8-D09: A. Record only explicitly approved choices as Lorebound GitHub ADRs, preserve approval history, and assess B8 design closure.”
