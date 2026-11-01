@@ -16,6 +16,11 @@ tags:
 
 # B9-D01 — Typed spatial coordinates and geometry without player-versus-AI authorship labels
 
+## Later B9 Batch 2 operative supersession — 2026-10-31
+
+**Later B9-D04 C supersession (2026-10-31):** [B9-D04 C](./B9-D04%20-%20All%20Coordinates%20Eligible%20for%20Automatic%20Layout.md) explicitly rejects the minimal auto-adjustable/fixed-pin protection policy that was provisionally preserved after B9-D01 qualified A. **All stored coordinates may later be repositioned by valid accepted automatic layout**, even when the user had deliberately moved the pin. No per-coordinate player-versus-AI author labels or permanent immunity flag. Earlier sections below documenting a need for pin protection are superseded, not silently reinterpreted. Typed durable geometry and the explicit pending Commit for direct manual edits remain.
+
+
 ## Explicit approval and qualification
 
 **2026-10-31 user instruction:** “Review B9 Batch 1: B9-D01: A; B9-D02: A; B9-D03: B. Notes: for D01 I don't think the distinction between player-authored and ai-authored should be accounted for. just store the credentials. For D03 we will have mocked tests for all parts of the app, we will not have scenario tests where AI model is acutally launched which is why I chose B. Record only explicitly approved choices as Lorebound GitHub ADRs, preserve approval history, and continue B9.”

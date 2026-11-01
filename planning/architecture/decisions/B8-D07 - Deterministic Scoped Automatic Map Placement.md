@@ -16,6 +16,11 @@ tags:
 
 # B8-D07 — Deterministic, scoped automatic initial map placement
 
+## Later B9 Batch 2 operative supersession — 2026-10-31
+
+**Later B9-D04 C override (2026-10-31):** [B9-D04 C](./B9-D04%20-%20All%20Coordinates%20Eligible%20for%20Automatic%20Layout.md) leaves deterministic frame-scoped initial placement and idempotent storage intact, but **supersedes this ADR's earlier blanket prohibition on later automatic movement of player-adjusted pins**. Valid subsequent automatic layout may reposition any location, under the same durable typed and atomic current-history path. It does not authorise arbitrary per-render reshuffling or fictional distance fabrication. Earlier no-moving-user-pin wording below is retained as dated approval history.
+
+
 ## Explicit approval and provenance
 
 **User approval, 2026-10-31:** “Review B8 Batch 3: B8-D07: A; B8-D08: A; B8-D09: A. Record only explicitly approved choices as Lorebound GitHub ADRs, preserve approval history, and assess B8 design closure.”

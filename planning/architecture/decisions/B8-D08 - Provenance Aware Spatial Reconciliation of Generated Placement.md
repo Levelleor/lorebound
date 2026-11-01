@@ -17,6 +17,11 @@ tags:
 
 # B8-D08 — Provenance-aware reconciliation of generated map positions with accepted geography
 
+## Later B9 Batch 2 operative supersession — 2026-10-31
+
+**Later explicit override of earlier B8-D08 pin immunity (2026-10-31):** [B9-D04 C](./B9-D04%20-%20All%20Coordinates%20Eligible%20for%20Automatic%20Layout.md) selects **Option C**, contrary to the B8-D08 requirement to reconcile only generated positions and never automatically move a deliberate player pin. That exclusivity and protection **no longer apply**: future technically valid, deterministic, replayable automatic layout updates may move any saved pin. No automatic-author or fixed/pinned field is to be persisted. The accepted separation of geographic pixels versus narrated distances, ordered current history, and explicit pending Commit for *direct manual edits* continue. The historical B8-D08 A approval and its trade-offs below remain as the original dated decision.
+
+
 ## Later B9-D01 clarification: protection without recording the author — 2026-10-31
 
 [Accepted B9-D01 A, qualified](./B9-D01%20-%20Typed%20Spatial%20Coordinates%20Without%20AI%20Player%20Authorship%20Labels.md) explicitly **rejects recording a per-coordinate player-vs-AI authorship classification**. The operative portion of this earlier B8-D08 **remains**: automatically generated default positions may be reconciled to later accepted geography, whereas **deliberately protected/pinned locations may not be silently shifted**. That protection can be represented by **minimal current auto-adjustment eligibility/pin state**, not by an AI/user-authorship ledger. **B9-D04 is an unapproved subsequent proposal** to choose the precise minimal protection mechanism; no particular flag/table/class has yet been accepted. Earlier “provenance” and “player-authored” explanations below are **original decision history**, not authority for adding rejected AI-vs-player source labels. The current event stream retains minimal ordering and source association under B7-D09, which is distinct from per-coordinate authorship.

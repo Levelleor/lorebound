@@ -17,6 +17,11 @@ tags:
 
 # B8-D06 — Automatically persist initial location positions, with player-controlled repositioning
 
+## Later B9 Batch 2 operative supersession — 2026-10-31
+
+**Later B9-D04 C override (2026-10-31):** [B9-D04 C](./B9-D04%20-%20All%20Coordinates%20Eligible%20for%20Automatic%20Layout.md) retains B8-D06 B's automatic durable initial location placement and the player's freedom to reposition with explicit Commit, but **removes the earlier guarantee that a deliberately moved location is immune to future automatic accepted layout**. Store typed coordinates with no coordinate-author label and no permanent pin lock. Subsequent automatic changes require normal versioned, replayable, atomic spatial events, not redraw-time random shifts. Source-generated distinctions in older paragraphs below are original context, not a mandate for an author ledger or protected-pin state.
+
+
 ## Later B9-D01 no-author-label refinement — 2026-10-31
 
 The user subsequently approved [B9-D01 A, qualified](./B9-D01%20-%20Typed%20Spatial%20Coordinates%20Without%20AI%20Player%20Authorship%20Labels.md), explicitly asking **not to distinguish player-authored versus AI-authored coordinates**. B8-D06 **B** still requires **automatic persisted initial location coordinates**, later user repositioning and no arbitrary movement of deliberate pinned positions. Do not add a per-coordinate author attribution field to meet this ADR's earlier “source/provenance” wording. Use only the **minimal current placement editability/protection semantics** needed for B8-D08's generated-only reconciliation, with exact encoding **unapproved and proposed for B9-D04**. Generated canvas positions do not, by themselves, establish canonical measured geography, travel cost or a road. Existing earlier approval history below is preserved.
