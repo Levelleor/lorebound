@@ -13,7 +13,7 @@ tags:
 
 # Pass B7 — Event Representation and Narrative Interpretation Contract Review
 
-> **OPENED FOR REVIEW ONLY, 2026-10-31.** [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) formally closes B6 **at design level** after explicit separate user approval. **B7-D01 A, D02 A, D03 C and D04–D06 A/A/A were explicitly accepted on 2026-10-31 in separate ADRs.** Original options remain below as proposal history. **D06 clarifies that the travel map is logically a derived graph**, but does not choose a concrete Graph class/storage design. Batch 3 D07–D09 remains unapproved. No implementation, tests, stage promotion, B7 selection or B7 design closure is implied.
+> **OPENED FOR REVIEW ONLY, 2026-10-31.** [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) formally closes B6 **at design level** after explicit separate user approval. **B7-D01 A, D02 A, D03 C and D04–D06 A/A/A were explicitly accepted on 2026-10-31 in separate ADRs.** Original options remain below as proposal history. **Later explicit B7-D10 correction: the player-facing world map is a persistent, coordinate-pinned, semantically scaled spatial canvas with meaningful grouped places and link lengths.** D06's graph describes route *connectivity only* and must not arbitrarily arrange geography. **B7-D10 is accepted by direct user instruction; Batch 3 D07–D09 remains unapproved.** No implementation, tests, stage promotion, B7 selection or B7 design closure is implied.
 
 ## Scope and purpose
 
@@ -108,7 +108,7 @@ Original proposals and dates remain intact. No D04–D06 approval or B7 closure 
 
 ### B7-D06 — Keyed relationship assertions and deterministic replay (accepted Option A)
 
-**Approved 2026-10-31:** [B7-D06 ADR](./decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md). **User asked: “should we also record the map is a graph object or something?”** The current accepted logical travel map already has nodes = stable location identities, edges = explicitly established travel routes; this **graph is projected from the ordered events**, not a separate durable source of truth. **Containment hierarchy is distinct from travel edges.** This note does **not** adopt a particular JavaScript `Graph` class, adjacency index, library, graph-table format or directedness. Those remain deferred implementation questions. Original A/B/C options below retained.
+**Approved 2026-10-31:** [B7-D06 ADR](./decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md). The user initially asked whether the map was a graph object. **A later explicit correction [B7-D10](./decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) establishes the user-facing map is instead a semantic spatial canvas:** persisted location coordinates, same-surface nested groups, meaningful distance/scale and non-arbitrary link lengths. **D06's graph remains only a logical derived topology** from explicit accepted routes; containment grouping is distinct, and neither a JavaScript `Graph` class nor a concrete spatial storage/coordinate scheme was selected. Original D06 proposals remain as historical text.
 
 **Question:** How should added/removed relationships (route connections, named associations or ownership claims) work when the same fact is repeated, contradicted or changes during the story?
 
@@ -126,7 +126,15 @@ Original proposals and dates remain intact. No D04–D06 approval or B7 closure 
 | B7-D05 | **A** | [Ordered entity lifecycle and re-establishment](./decisions/B7-D05%20-%20Event%20Ordered%20Entity%20Lifecycle%20and%20Reestablishment.md) |
 | B7-D06 | **A** | [Keyed relations and derived travel graph](./decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md) |
 
-D06's **graph** is a **logical derived relationship projection**: stable location IDs as nodes; explicit current route connections as edges; location containment tracked separately as an acyclic hierarchy. It is not an approval of an independent canonical mutable graph object or specific database structure. The original question and the accepted existing graph/containment boundaries are preserved.
+**Current reading after later B7-D10:** D06's **graph** is only a **logical current route-relationship projection**: stable IDs as route endpoints and current explicit Add/Remove route links. The **actual map is a saved semantic spatial canvas**; pinned coordinates/group footprints and meaningful relative scale are independent world-map facts that determine geographic positioning. This refinement was expressly approved by the user after D06; do not substitute arbitrary graph auto-layout.
+
+## Later user-directed map correction — B7-D10 ACCEPTED (2026-10-31)
+
+**Approval:** The user explicitly stated, *“locations should be rather a canvas, not a graph”*, directed that location coordinates be **pinned and persist**, that **the same canvas** spatially group empires, cities, buildings and rooms, and that **connection lengths/positions meaningfully express distance/world scale**. The user requested that this be the **actual definition, not just the graph**. This direction is now accepted in [B7-D10](./decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md), as a chronological refinement of approved B7-D06 rather than an option selection for D07–D09.
+
+The accepted **user-facing map** is a **single pannable/zoomable persistent semantic spatial canvas** with stable location identities, durable placed coordinates, nested spatial groups/extents and distance-sensitive visual geometry. The **logical travel graph** remains **a separate overlay/view of explicit route connectivity**; the acyclic containment hierarchy provides group relationships, not assumed routes. Graph auto-layout is **not** authoritative positioning and cannot rearrange pinned geography. Panning/zooming is visual-only; deliberately moving a pin changes *saved semantic map placement*, subject to existing world-edit approval, without automatically relocating characters or altering routes/containment. Unknown coordinates are not invented from narrative mentions.
+
+**Preserved open implementation choices:** Exact coordinate system and scale units, multi-level transforms, spatial region boundary geometry, route shape/path vs straight-line distance, schema and map rendering technology. **B7-D07/D08/D09 remain unapproved**. No implementation, staging promotion or B7 design closure.
 
 ## Batch 3 — proposed choices, NOT accepted
 
@@ -162,7 +170,7 @@ D06's **graph** is a **logical derived relationship projection**: stable locatio
 
 ## Subsequent potential review subjects (unapproved)
 
-- **B7-D10+:** detailed graph implementation/route schema and graph-index shape, type/field migration compatibility fixtures, model-specific structured-output constraints and further adapter/error handling remain future proposals. Batch 3 D07–D09 is proposed below, **not accepted**.
+- **B7-D10 is accepted by explicit user correction** as persistent semantic spatial canvas design; do not reuse its ID for a later proposal. **B7-D11+:** exact spatial coordinate reference/group transforms, path/visual route geometry, graph-index/cache layout, type/field migration fixtures, model-specific structured output and adapter/error handling remain unapproved refinements. Batch 3 D07–D09 is still unapproved.
 - All concrete table structures, payload JSON schemas, UI, handlers, library migration tests and plugin loading behaviour remain unimplemented unless separately authorised in later implementation work.
 
 ## Review status and decision history
@@ -172,3 +180,5 @@ D06's **graph** is a **logical derived relationship projection**: stable locatio
 - **2026-10-31 — Batch 1 explicit approval:** User selected **B7-D01 A, B7-D02 A, B7-D03 C** (not D03's recommended A), asking to record only accepted ADRs and continue B7. Created three accepted ADRs. **Unresolved interpretation suggestions are silently discarded**, not retained in a session/SQLite diagnostic store; true technical failures remain reportable. Batch 2 D04–D06 proposed, **unapproved**, with no code, promotion or B7 closure.
 
 - **2026-10-31 — Batch 2 explicit acceptance and map clarification:** User selected **B7-D04 A, B7-D05 A, B7-D06 A** and asked whether the map should be recorded as a graph object. Three accepted ADRs created. D06 records the previously accepted **logical travel graph** (location nodes, explicit route edges) separately from the parent/child containment hierarchy, with graph derived from event replay; **no concrete `Graph` class/object, graph library, table, or directionality chosen**. Batch 3 D07–D09 options proposed but **unapproved**. No code, tests, stage promotion or B7 closure.
+
+- **2026-10-31 — Later explicit B7 map definition correction:** User clarified that locations must be **persistently pinned on a meaningful spatial canvas**, with nested groups for empires/cities/buildings/rooms and link lengths reflecting world distances, **rather than a map defined only as a graph**. Accepted [B7-D10](./decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) as a new user-directed chronological refinement to D06 and IDEA-0037; updated relevant current architecture and staging docs. D07–D09 remain unapproved proposals; no concrete graph class, coordinate units, implementation or stage promotion accepted.
