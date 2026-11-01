@@ -13,7 +13,7 @@ tags:
 
 # Pass B9 — Typed Spatial Data and Runtime Integration Contract Review
 
-> **B9 IN REVIEW — Batch 1 accepted on 2026-10-31.** [P-B8-01](./decisions/P-B8-01%20-%20Design%20Closure%20and%20Deferred%20Runtime%20Integration%20Contracts.md) closed B8 design. User explicitly approved **B9-D01 A with a no-player/AI-authorship-label qualification**, **B9-D02 A**, and **B9-D03 B** (not recommended A), with **mocked tests across all app parts and no live AI model scenarios**. Original options below are retained for provenance; **B9-D04–D06 remain unapproved proposals**. No implementation, live-host test evidence, stage promotion or B9 closure is implied.
+> **B9 IN REVIEW — Batches 1 and 2 accepted on 2026-10-31; Batch 3 unapproved.** Batch 1: D01 qualified A (typed spatial facts, no player/AI author labels), D02 A (TypeScript prepared assertions, Go/SQLite technical atomicity), D03 B (mocked all-component tests, no live model scenarios). Batch 2: **D04 C** (all pins eligible for future automatic movement, overriding previous intentional-pin immunity), **D05 A** (validated nested local-frame coordinates and mutable region geometry), **D06 A** (broad mocked success/failure/history contracts, labelled honestly). Historical alternatives remain below. No tests run, runtime implementation, stage promotion, B9 closure or waiver of separate B1 evidence is implied.
 
 ## Purpose
 
@@ -81,7 +81,18 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 
 **Evidence boundary:** Mocked scenarios can simulate the whole application, including model results, backend persistence results, failures, Undo and Fork. They do **not** prove that an actual live model or real Wails/SQLite host was launched. The separate historic B1 feasibility gate is not silently waived by choosing B9-D03 B.
 
-## Batch 2 — unapproved proposals, NOT accepted
+## Batch 2 — accepted D04 C, D05 A, D06 A (original alternatives preserved)
+
+**Explicit 2026-10-31 approval:** User selected **B9-D04 C, B9-D05 A and B9-D06 A**, with instructions to record only approved choices and preserve history. The options below retain their *original proposed text* as historical alternatives; their accepted decisions are recorded in separate ADRs.
+
+| Decision | Accepted | Operative effect |
+| --- | --- | --- |
+| **B9-D04** | **C** | [B9-D04](./decisions/B9-D04%20-%20All%20Coordinates%20Eligible%20for%20Automatic%20Layout.md); no stored auto-adjustable/fixed rule; automatic layout may move previously user-moved pins. **Explicit later override of B8-D08's protected pin guarantee.** |
+| **B9-D05** | **A** | [B9-D05](./decisions/B9-D05%20-%20Validated%20Local%20Frame%20Coordinates%20and%20Mutable%20Region%20Geometry.md); typed finite local-frame coordinates, transforms and mutable region shapes; canonical geometry not browser pixels. |
+| **B9-D06** | **A** | [B9-D06](./decisions/B9-D06%20-%20Comprehensive%20Mocked%20Contracts%20and%20Explicit%20Evidence%20Labels.md); all-component mocked contracts include errors/history changes, with mock-only reporting. No real AI or host integration claim. |
+
+**No silent compatibility rewrite:** The earlier D04 description says C contradicts the old protection rule. That contradiction is now **resolved by the user's explicit later selection of C**, not by pretending B8-D08 remained unchanged. Existing manual pending Commit, deterministic initial placement and atomic persisted changes still apply. The choice doesn't mandate re-layout on each render or grant permission for noncanonical background geometry mutation.
+
 
 ### B9-D04 — Minimal protection of deliberately positioned pins without author labels
 
@@ -113,11 +124,45 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 
 **B9-D03 B itself is already accepted.** D06 only asks how the mock test boundary and reporting are structured. It cannot silently claim real-host evidence or waive the separate B1 gate.
 
-**Batch 2 status:** D04, D05, D06 are **proposals only**, none selected, no ADR, no implementation or B9 design closure.
+**Batch 2 status (latest):** D04 **C**, D05 **A**, D06 **A** are explicitly approved and documented in their separate ADRs. No code, tests, staging promotion or B9 design closure.
+
+## Batch 3 — proposed D07–D09, NOT approved
+
+### B9-D07 — Qualitative versus numeric geographic constraints
+
+**Question:** How should later accepted narrative facts such as “far east of” or “three days by road” influence typed spatial map constraints without inventing exact world measurements?
+
+- **A (recommended, proposed):** Typed **qualitative spatial relations** (direction, near/far/adjacent where grounded) alongside **optional explicitly grounded numeric** separation facts with units and their meaning. Let automatic placement satisfy supported qualitative constraints where possible, but never infer exact distance/time from canvas pixels. Contradictory narrative assertions remain visible facts rather than invented precision. **Trade-off:** Additional constraint parsing/validation, better narrative fidelity.
+- **B (proposed):** Convert qualitative phrases to mandatory exact numeric metres and treat rendered pixel length as that measurement. **Trade-off:** Simplifies one numeric layout input, fabricates precision.
+- **C (proposed):** Keep all distance/direction relationships as unconstrained free text, with no typed input to map placement. **Trade-off:** Minimal schema, weak geographic coherence.
+
+**Existing scope:** The meaning of route travel/time remains distinct from straight-line geography under B8-D02. No actual interpreter or solver implementation is approved by D07 selection.
+
+### B9-D08 — Automatic layout conflicts and deliberate pin movement
+
+**Question:** Given **B9-D04 C explicitly permits automatic relocation even of deliberately moved pins**, what should happen when new grounded geography conflicts with current saved coordinates or several spatial constraints?
+
+- **A (recommended, proposed):** Reconcile only on an accepted location/spatial-world change that actually calls for supported deterministic layout; evaluate frame/relationship constraints, and commit any resulting coordinate changes **atomically and replayably**, including previously player-positioned pins if needed. If explicit grounded spatial facts genuinely conflict, keep the accepted facts and surface a nonblocking layout conflict rather than fabricating a numeric answer or rejecting the story. **Trade-off:** Defined triggers and conflict handling needed; no pin lock.
+- **B (proposed):** Automatically rewrite every location and region placement after every redraw, pan, zoom or reload to obtain a fresh layout. **Trade-off:** Frequent unsolicited canonical changes and poor replay stability.
+- **C (proposed):** Reject accepted narration/world facts whenever current coordinates cannot satisfy the automatic map layout. **Trade-off:** Makes rendering constraints wrongly authoritative over narrative canon.
+
+**Existing scope:** No author/pin-protection flag may be reintroduced without another explicit decision. A deterministic canonical adjustment is distinct from disposable viewport arrangement.
+
+### B9-D09 — Overlapping and changeable region geometry
+
+**Question:** How should the current typed geometry validator and map projection treat overlapping, resized or partly intersecting region outlines?
+
+- **A (recommended, proposed):** Allow **well-formed type-appropriate overlapping or intersecting outlines**, validate finite points/reference frames and supported geometric shape constraints, and keep **containment and route identity separate**. Border edits update current spatial assertions; they do not automatically reparent places or invent fictional administrative changes. **Trade-off:** More work for overlapping-region rendering/selection.
+- **B (proposed):** Enforce a universal global ban on any region overlap, even for jurisdictions or fictional zones that can overlap. **Trade-off:** Simple polygon policy, conflicts with B8-D04 flexibility.
+- **C (proposed):** Whenever a border crosses another place, automatically change its containment, travel routes and owner identity. **Trade-off:** Convenient geometric inference but invents world facts.
+
+**Existing scope:** B8-D04 already permits region overlaps and independent containment; this is a proposal for validator/projection treatment, not a vote to remove that accepted behaviour.
+
+**Batch 3 status:** D07–D09 are **unapproved proposals**. No ADR has been created for them.
 
 ## Deferred B9 subjects, unapproved
 
-- **D07+:** Remaining qualitative and numeric distance constraints, placement conflict UX, mutable/overlapping region geometry, multiple entrances/portals, migration/restore wiring and user-visible map rendering. D04–D06 are proposed as Batch 2 below, **unapproved**.
+- **D10+:** Additional placement conflict UX and rendering detail, multiple entrances/portals, migration/restore wiring and user-visible map rendering. D07–D09 remain **unapproved Batch 3 proposals**.
 - Narrator-safe natural reference protocol from the selected model, simultaneous location creations, structured status/inventory projections, optional plugin event schema handling, current-only migration and restore wiring.
 - Browser canvas renderer/framework, drawing shape/scale bars, Wails API signatures, SQLite table/index design and migration scripts all require separate technical decisions/implementation permission. Do not infer them from B9 opening.
 - B1 real-host feasibility and pending staging→production gates are unchanged by this review.
@@ -128,3 +173,5 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 - **2026-10-31 — distinct formal closure/opening instruction:** Assistant asked **“Shall I record that closure and proceed to B9?”** and the user answered **“yes.”** [P-B8-01](./decisions/P-B8-01%20-%20Design%20Closure%20and%20Deferred%20Runtime%20Integration%20Contracts.md) formally closes **B8 design only**. **This B9 file opens review but D01–D03 A/B/C options are all unapproved**. No implementation, schema freeze, staging promotion or B9 design closure has been approved.
 
 - **2026-10-31 — Batch 1 explicit selection:** User selected **B9-D01 A qualified to exclude player-versus-AI author distinctions (“just store the credentials,” understood as coordinates)**, **B9-D02 A**, and **B9-D03 B** with **mocked tests for all app parts and no launched AI model scenario tests**. Three separate accepted ADRs created. Original A/B/C alternatives preserved and recommended B9-D03 A expressly *not selected*. B8-D08 protected-pin behaviour remains; a minimal implementation policy without author labels is **new unapproved B9-D04**. Mocked tests do not prove real host/SQLite operation and do not silently waive separate B1 evidence. Proposed D04–D06 as **unapproved Batch 2**. B9 remains `in-review`, no implementation, tests, staging promotion or formal B9 closure.
+
+- **2026-10-31 — Batch 2 explicit selections:** User approved **D04 C, D05 A, D06 A** and requested ADRs and continued B9. D04 C **expressly overrides** the earlier B8-D08/B8-D06/B8-D07 intentional-pin immunity, not initial auto-placement or explicit manual Commit; D05 validates local-frame typed geometry and mutable outlines; D06 requires comprehensive mocked scenarios with true evidence labels and no actual model runs. Three accepted ADRs created. **Batch 3 D07–D09 remains unapproved**. B9 remains in review; no code/tests were run, no staging promotion or B9 formal closure.
