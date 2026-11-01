@@ -14,6 +14,12 @@ tags:
 ---
 # Hierarchical World Locations
 
+## Accepted B8 Batch 3 parent-frame initial placement — 2026-10-31
+
+[B8-D07 A](../architecture/decisions/B8-D07%20-%20Deterministic%20Scoped%20Automatic%20Map%20Placement.md) locates **new accepted places automatically and deterministically within their known local containing frame**, with meaningful default spacing and preserved stable user positions. [B8-D08 A](../architecture/decisions/B8-D08%20-%20Provenance%20Aware%20Spatial%20Reconciliation%20of%20Generated%20Placement.md) allows **generated-only** initial pins to be adjusted when later accepted story geography establishes stronger constraints, while authored positions and canonical containment stay untouched unless separately changed. [B8-D09 A](../architecture/decisions/B8-D09%20-%20Atomic%20Canonical%20Location%20Creation%20and%20Initial%20Placement.md) saves each accepted location identity and its generated-origin first coordinate as **one atomic canonical batch**. Generated position does **not** imply that the location belongs to a region unless the independent parent/child relationship is accepted. Region borders remain mutable world data under D04 A; new positions do not rewrite hierarchy.
+
+
+
 ## Latest B8 dynamic boundaries and automatic location positioning — 2026-10-31
 
 [Accepted B8-D04 A](../architecture/decisions/B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md) makes borders/footprints **changeable accepted current world-state assertions**, independent of the acyclic location parent/child membership. [B8-D06 B](../architecture/decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) overrides the earlier “unplaced if unknown” map default: **newly established locations appear automatically at a persisted system-generated initial coordinate in the appropriate nested frame**, with source/provenance distinct from grounded lore and later user-controlled committed repositioning. A parent group's change of boundary **does not automatically reparent** a child; a parent's placement change can transform its descendants without rewriting their local coords under B8-D01. Generated placement does not establish narrative containment, roads, travel costs or exact fiction distances.
