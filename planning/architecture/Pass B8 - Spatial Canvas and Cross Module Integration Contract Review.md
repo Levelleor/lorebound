@@ -13,6 +13,11 @@ tags:
 
 # Pass B8 — Spatial Canvas and Cross-Module Integration Contract Review
 
+## Later B9 Batch 2 override of pin-protection policy — 2026-10-31
+
+B8 remains **formally closed at design level** under its earlier approvals. However, the user subsequently selected [B9-D04 Option C](./decisions/B9-D04%20-%20All%20Coordinates%20Eligible%20for%20Automatic%20Layout.md), which **expressly supersedes** B8-D08's original generated-only reconciliation and no-automatic-movement-of-manually-placed-pins restrictions. The operative design stores semantic coordinates with no author label or permanent fixed/auto-adjustable lock; accepted deterministic, replayable automatic changes may reposition **any** location. B8's original options/approval history remain below as historical evidence, not as a current reason to reintroduce pin immunity. [B9-D05 A](./decisions/B9-D05%20-%20Validated%20Local%20Frame%20Coordinates%20and%20Mutable%20Region%20Geometry.md) and [B9-D06 A](./decisions/B9-D06%20-%20Comprehensive%20Mocked%20Contracts%20and%20Explicit%20Evidence%20Labels.md) further refine geometry and mock testing. B9 is still in review; no code, tests or staging promotion.
+
+
 > **FORMALLY CLOSED AT DESIGN LEVEL, 2026-10-31, following distinct user approval.** [P-B8-01 closure ADR](./decisions/P-B8-01%20-%20Design%20Closure%20and%20Deferred%20Runtime%20Integration%20Contracts.md) records that after all nine accepted B8 decisions and the *assessment only*, the assistant directly asked **“Shall I record that closure and proceed to B9?”**, and the user replied **“yes.”** [B9 typed spatial data and runtime integration review](./Pass%20B9%20-%20Typed%20Spatial%20Data%20and%20Runtime%20Integration%20Contract%20Review.md) is **opened only with B9-D01–D03 unapproved proposals**. The earlier `in-review`/“not yet closed” statements below are **preserved chronological assessment notes**, not current status. No implementation, test evidence or staging promotion is implied.
 
 
