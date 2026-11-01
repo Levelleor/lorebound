@@ -14,6 +14,12 @@ tags:
 ---
 # Configurable Travel Graph Rules
 
+## B8-D02 accepted geographic versus route distance model — 2026-10-31
+
+[B8-D02](../architecture/decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) keeps **meaningful grounded geographic separation** (pinned spatial coordinates at relevant group scale) distinct from explicit route connectivity, optional grounded route shape/path length, travel cost/time and access conditions. Draw long connections between distant pinned regions rather than equal-length decorative graph edges, but **do not derive canonical travel time/legality from a line's pixel or straight-line length**. Exceptional winding roads and portals can have travel semantics different from geographic separation. Local coordinate frames from [B8-D01](../architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) must be composed for rendering cross-group endpoints; exact conversion and path-anchor rules remain deferred. New map pin positions do not create routes or retroactively invalidate accepted fictional arrivals.
+
+
+
 ## Spatial canvas vs route graph after B7-D10 — 2026-10-31
 
 [Accepted B7-D10](../architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) establishes that the **map is a single persistent semantic spatial canvas**, where placed cities, buildings, rooms, regions and empires keep their meaningful pinned coordinates and scale. **The graph is only the accepted route topology** over that canvas; its vertices use stable location identities and its edges are explicit known route relationships. A route drawn between distant places must visually span a meaningful separation; connections are not decorative equal-length lines, nor may force-directed graph layout reposition the world. The canvas and group extents inform spatial understanding; optional strict travel policy still consults **explicit route reachability and conditions**, not mere geographic proximity. A long drawn connection does not automatically establish travel time; a winding road or portal can differ from straight-line separation. Exact coordinate transforms, distance units and route-distance/path geometry are future choices, not approved here.
