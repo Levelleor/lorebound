@@ -17,6 +17,12 @@ tags:
 
 # B7-D10 — Persistent spatial canvas with meaningful coordinates, nested groups and scaled connections
 
+## Subsequent B8 Batch 1 approvals — 2026-10-31
+
+**The semantic canvas requirement remains binding, now refined by three separately approved B8 Option A decisions.** [B8-D01](./B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) specifies **nested durable local coordinate frames and composed group transforms**; [B8-D02](./B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) distinguishes meaningful geometric separation from optional route path geometry/time/cost; [B8-D03](./B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) ensures pin/group/frame/scale edits are **versioned typed current-world facts** committed only through the established explicit pending manual workflow and Go/SQLite atomic storage. These choices answer certain originally deferred *representation strategies*, but **do not** approve a particular JSON schema, projection unit, renderer or implementation. Earlier wording below describing those strategies as open is the original, earlier-stage provenance; D10's priority over a graph-only map is unchanged. B8-D04–D06 remain unapproved.
+
+
+
 ## Subsequent B7 Batch 3 approvals — 2026-10-31
 
 **Chronological status update:** After this user-directed D10 spatial-canvas decision was written, the user expressly accepted **B7-D07 A, B7-D08 A and B7-D09 A** in a separate B7 Batch 3 review. The statements below that call D07–D09 “unapproved” accurately describe **the time of this D10 approval**, not current status. In particular [B7-D07](./B7-D07%20-%20Versioned%20Field%20Registry%20and%20Atomic%20Meaning%20Preserving%20Event%20Migrations.md) covers meaning-preserving versioned migrations of future location-coordinate assertions, [B7-D08](./B7-D08%20-%20Narrator%20Safe%20Provisional%20References%20and%20Isolated%20ID%20Binding.md) protects narrator ID privacy, and [B7-D09](./B7-D09%20-%20Minimal%20Event%20Provenance%20and%20Deterministic%20Current%20Replay%20Verification.md) requires reproducible replay of persisted pinned positions/group geometry. **None selects an exact coordinate schema or implements the canvas.** B7 is only assessed for, not formally given, design-only closure.
