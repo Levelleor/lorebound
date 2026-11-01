@@ -14,6 +14,12 @@ tags:
 ---
 # Hierarchical World Locations
 
+## B8-D01 accepted local frames for nested semantic geography — 2026-10-31
+
+[B8-D01](../architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) establishes **persistent local coordinate frames** for placed locations/groups, composed into the **same spatial canvas** across world, empire, city, building and room scales. A child keeps its grounded local coordinates when its parent/group is deliberately moved. Unknown placements stay unknown rather than receiving fabricated geometry. Acyclic hierarchical *containment* still differs from actual spatial placement and explicit keyed *travel* routes. [B8-D03](../architecture/decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) makes semantic pin/frame/group placement a typed durable assertion accepted only after the existing explicit player Commit (or supported accepted narration), not a cosmetic layout value. A precise coordinate-unit scheme or polygon algorithm has not been selected.
+
+
+
 ## Later explicit spatial canvas requirement — B7-D10 (2026-10-31)
 
 [Accepted B7-D10](../architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) clarifies that **one persistent spatial canvas**, not a free-floating abstract graph, is the player-facing map. Each **placed** world location has **saved pinned coordinates** and meaningful relative separation/scale. The canvas groups nested places (empires/regions, cities, buildings, rooms and custom structures) with recognisable spatial extent, making the fictional geography intelligible at different zoom scales. A location's accepted parent/containment relationship provides grouping context, while its spatial position and size are **separate meaningful world-map properties**. The travel graph remains explicit keyed route connections and is **not** inferred from nearby coordinates, grouping or common ancestors. Changing map placement does not relocate characters or automatically create routes/parents. The exact nested coordinate frames/group transforms remain unselected; no exact geographic value should be fabricated merely because a new sparse place is mentioned. Earlier paragraphs that addressed geography only as a containment tree are **incomplete**, not a denial of the now-accepted spatial canvas.
