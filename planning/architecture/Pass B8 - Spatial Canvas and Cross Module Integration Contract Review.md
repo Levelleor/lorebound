@@ -13,7 +13,7 @@ tags:
 
 # Pass B8 — Spatial Canvas and Cross-Module Integration Contract Review
 
-> **B8 OPENED, PROPOSALS ONLY — 2026-10-31.** [P-B7-01](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) records the **separate explicit user approval** to close B7 at design level and open this review. **B8-D01–D03 are not approved**, regardless of recommendations below. No implementation, event schema finalisation, integration verification, staging promotion or B8 closure follows from opening the pass.
+> **B8 IN REVIEW — 2026-10-31.** [P-B7-01](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) closed B7 design and opened B8. **B8-D01, D02 and D03 were each explicitly accepted as Option A on 2026-10-31**, after the original unapproved proposals below were presented. **B8-D04–D06 remain unapproved new proposals.** No implementation, stage promotion, verified integration or formal B8 closure is implied.
 
 ## Purpose and immutable inherited boundaries
 
@@ -28,9 +28,11 @@ tags:
 5. **[B6-D01](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D05](./decisions/B6-D05%20-%20Conditional%20Anatomy%20Linked%20Equipment%20Detachment.md):** Accepted fiction grounds world state without simulated causal legality. Auto-unequipping after limb loss requires actual active structured anatomy-to-equipment binding, not merely textual anatomy.
 6. **Existing manual edit workflow:** Editing a location's **semantic pinned coordinates/group extent** is a world-state correction pending the already-approved explicit player Commit/Discard/full composer overlay and atomic Go/SQLite storage. Pan/zoom/selection/temporary label movement are presentation-only. Moving a pin is **not character travel**, route creation or changing containment.
 
-## Batch 1 — unapproved technical/design choices
+## Batch 1 — accepted Option A for D01–D03 (original proposals retained)
 
-### B8-D01 — How nested location coordinates share one canvas
+### B8-D01 — How nested location coordinates share one canvas (Option A accepted)
+
+**Accepted 2026-10-31:** [B8-D01 ADR](./decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md). The original proposed A/B/C alternatives remain below as approval history. Accepted A chooses persistent local frames and composed transforms, not final unit types.
 
 **Question:** What coordinate semantics allow an empire, a city within it, a building and a room to retain meaningful positions and extents across zoom levels, while avoiding one nonsensical fixed pixel/metre ratio for every fictional scale?
 
@@ -40,7 +42,9 @@ tags:
 
 **Existing user requirement:** Pin positions and meaningful scale must persist whichever encoding is chosen. This question selects the **coordinate/frame representation strategy**, not whether the map is spatial.
 
-### B8-D02 — Visual separation, route length and travel meaning
+### B8-D02 — Visual separation, route length and travel meaning (Option A accepted)
+
+**Accepted 2026-10-31:** [B8-D02 ADR](./decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md). Visual geographic separation follows meaningful pinned positions; optional grounded route-specific geometry/travel length/cost remains distinct. The original A/B/C alternatives remain below as history.
 
 **Question:** A map draws two cities far apart, two neighbouring rooms close together, and may also include winding roads, bridges or portals. How can route lines communicate scale without turning straight-line separation into mandatory travel time?
 
@@ -50,7 +54,9 @@ tags:
 
 **Existing user requirement:** Distinct link lengths and world-relative size are already accepted. This chooses how **visual distance relates to route-specific semantics** without inventing story facts.
 
-### B8-D03 — Durable spatial placement and map-edit transaction contract
+### B8-D03 — Durable spatial placement and map-edit transaction contract (Option A accepted)
+
+**Accepted 2026-10-31:** [B8-D03 ADR](./decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md). Persist semantic pin/group coordinates and scale as typed current-world assertions through the existing pending explicit Commit and atomic transaction; the canvas is a derived view, not an independent authority. The original A/B/C alternatives remain below as history.
 
 **Question:** Where does a deliberate map-pin/region movement become authoritative, and how is it kept coherent with the current story/event history, hierarchy and travel connections?
 
@@ -60,9 +66,53 @@ tags:
 
 **Existing user requirement:** Persistent map geography and explicit approval for canonical manual edits are already settled. D03 addresses the **cross-module data representation/transaction integration**.
 
+## Batch 1 accepted disposition — 2026-10-31
+
+| Decision | Explicitly approved | Current architecture record |
+| --- | --- | --- |
+| **B8-D01** | **A** | [Nested local coordinate frames and composed transforms](./decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) |
+| **B8-D02** | **A** | [Geographic separation versus grounded route-specific geometry/metrics](./decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) |
+| **B8-D03** | **A** | [Typed durable spatial properties, pending explicit map-edit Commit and atomic persistence](./decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) |
+
+These choices retain the already accepted B7-D10 primary **semantic spatial canvas**. Coordinates are not arbitrary UI auto-layout; the **route graph** is only the connectivity overlay. All actual implementation representations, tests and stage promotion are deferred.
+
+## Batch 2 — new proposals, NOT accepted
+
+### B8-D04 — Spatial group footprints and containment
+
+**Question:** How should a drawn empire/city/building boundary and the accepted location parent hierarchy relate, particularly if groups overlap or their shapes change?
+
+- **A (recommended, proposed):** A spatial group has an explicit **persistent extent/footprint**, rendered in its accepted local frame, while its **canonical parent/child containment relationship remains a separate typed, acyclic assertion**. When both are grounded, group footprint and child placements should be meaningfully coherent, but overlapping shapes or proximity must **not automatically change parent membership or invent a political/physical inclusion fact**. Explicitly committed parent or footprint corrections update only the relevant accepted fields, with deterministic projection and safe technical checks. **Trade-off:** Needs group-shape editing and cross-frame visualization decisions.
+- **B (proposed):** Infer canonical parent/child location identity solely from whether a pin falls inside a drawn outline; moving any border automatically rewrites the hierarchy and all child groups. **Trade-off:** Quick map interaction but silently changes fictional relationships.
+- **C (proposed):** Render groups as cosmetic, nonpersistent colored containers unrelated to location positions. **Trade-off:** Simple but contradicts pinned, meaningful group geography.
+
+**Inherited:** B8-D01 A already establishes nested coordinate frames; this proposal refines **group-boundary and containment interaction**, not the existence of the canvas.
+
+### B8-D05 — Cross-group routes, doors and portals
+
+**Question:** How should a route between a city street and a room inside a building, or a portal between two distant regions, attach to different coordinate frames on the same canvas?
+
+- **A (recommended, proposed):** Give explicitly established keyed route edges **stable endpoint location identities**, with optional grounded entrance/door/portal anchors and path geometry expressed in appropriate local frames. The map **projects endpoint coordinates through frame transforms** and renders a meaningful cross-group connection, collapsing or zooming segments as appropriate without changing canonical link identity. Door/bridge/portal properties can affect future route availability; nested containment, drawn adjacency and visual endpoint attachment never create implied travel edges. **Trade-off:** Needs coordinate projection and edge-anchor/layering rules.
+- **B (proposed):** Link only direct sibling locations and automatically create implicit doorway/routes for every ancestor and nested group needed for a connected line. **Trade-off:** Fewer visible gaps but fabricates traversable connections and constrains arbitrary fictional routes.
+- **C (proposed):** Treat cross-group links as purely visual lines with no stable keyed route identity or semantic meaning, even when accepted narration established the connection. **Trade-off:** Simpler rendering, but loses reliable travel topology.
+
+**Inherited:** A route's visual separation and optional travel length remain distinct under B8-D02. This proposal does not select a final routing algorithm or travel-cost rule.
+
+### B8-D06 — New locations whose coordinates are unknown
+
+**Question:** If a story establishes a new city but not where it lies, how should the canvas represent the city without inventing exact geography?
+
+- **A (recommended, proposed):** Keep a **first-class known location with unknown/unplaced spatial coordinates**, preserving its stable ID, accepted attributes and containment where grounded. Surface it in a clearly **non-geographic unplaced/location organizer** within the map/editor, allowing player placement by a pending explicit Commit. Any temporary preview/suggested position is visibly provisional and must never become canonical solely through auto-layout. **Trade-off:** Requires an unplaced-organizer UX that does not mislead players about distance.
+- **B (proposed):** Silently assign and commit exact canonical coordinates whenever a new location is first mentioned. **Trade-off:** Every location is immediately drawable, but invented geography contaminates the accepted world.
+- **C (proposed):** Hide every unplaced location entirely from the world/map editor until its coordinates become known. **Trade-off:** Cleaner canvas but the player may lose sight of otherwise established locations.
+
+**Inherited:** B7-D10 and B8-D01 already forbid invented canonical positions. This proposal refines **visibility and user placement flow**, not whether unknown placement is permissible.
+
+**Batch 2 status:** **B8-D04, D05 and D06 are unapproved proposals only**, pending explicit player review. No new ADRs have been accepted for them, and no code, stage promotion or B8 closure is authorised.
+
 ## Later proposed review topics (not yet selected)
 
-- **B8-D04+:** What counts as a spatial group footprint/containment overlap, cross-group route endpoints and door/portal attachment, handling new/unplaced locations, narrated spatial references vs exact coordinates, route directionality/parallel edges, schema migrations of existing pins, and map rendering/replay tests.
+- **B8-D07+:** Narrated spatial references versus exact coordinates, route directionality/parallel edges, schema migrations of existing pins, typed geometry normalization, map rendering and replay tests. The new **D04–D06 proposals** appear in Batch 2 below and remain **unapproved**.
 - **B8 integration handoffs:** Versioned Go/SQLite persistence vs TypeScript reducer ownership, scene/item/route/location projection reads, narrator-safe map context, manual world edit atomicity and replay/evidence fixtures. Their exact interfaces are not yet approved and no code is implemented.
 - No B8 choice can require a full geographical simulation, invent coordinates or travel lengths to fill missing lore, auto-move characters because a map pin changed, silently create traversable links or retroactively reject accepted narration.
 
@@ -70,3 +120,5 @@ tags:
 
 - **2026-10-31:** B7 D01–D10 accepted; a prior user request only authorised a **closure assessment**, so B7 remained `in-review`.
 - **2026-10-31 — Separate explicit closure and opening:** After a direct invitation to record B7 formal design-only closure and open B8, user replied **“yes proceed”**. [P-B7-01](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) closes B7 **design-only**, and this file **opens B8**. The A/B/C options for D01–D03 above are **unapproved suggestions** for later explicit review, not accepted user choices. No software changes, test results, stage promotion or B8 closure.
+
+- **2026-10-31 — Batch 1 explicit user approvals:** User selected **B8-D01 A, B8-D02 A and B8-D03 A**, instructed independent accepted GitHub ADRs and chronological preservation, and asked to **continue B8**. Created [D01](./decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md), [D02](./decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) and [D03](./decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md). Proposed new **unapproved** D04–D06 options. B8 remains `in-review`; no implementation, tests, stage promotion or design closure.
