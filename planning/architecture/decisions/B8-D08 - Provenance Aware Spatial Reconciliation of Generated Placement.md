@@ -17,6 +17,12 @@ tags:
 
 # B8-D08 — Provenance-aware reconciliation of generated map positions with accepted geography
 
+## Later B9-D01 clarification: protection without recording the author — 2026-10-31
+
+[Accepted B9-D01 A, qualified](./B9-D01%20-%20Typed%20Spatial%20Coordinates%20Without%20AI%20Player%20Authorship%20Labels.md) explicitly **rejects recording a per-coordinate player-vs-AI authorship classification**. The operative portion of this earlier B8-D08 **remains**: automatically generated default positions may be reconciled to later accepted geography, whereas **deliberately protected/pinned locations may not be silently shifted**. That protection can be represented by **minimal current auto-adjustment eligibility/pin state**, not by an AI/user-authorship ledger. **B9-D04 is an unapproved subsequent proposal** to choose the precise minimal protection mechanism; no particular flag/table/class has yet been accepted. Earlier “provenance” and “player-authored” explanations below are **original decision history**, not authority for adding rejected AI-vs-player source labels. The current event stream retains minimal ordering and source association under B7-D09, which is distinct from per-coordinate authorship.
+
+
+
 ## Explicit approval and provenance
 
 **User approval, 2026-10-31:** “Review B8 Batch 3: B8-D07: A; B8-D08: A; B8-D09: A. Record only explicitly approved choices as Lorebound GitHub ADRs, preserve approval history, and assess B8 design closure.”
