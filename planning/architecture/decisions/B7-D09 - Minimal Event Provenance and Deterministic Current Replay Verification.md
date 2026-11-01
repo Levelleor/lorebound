@@ -17,6 +17,12 @@ tags:
 
 # B7-D09 — Minimal durable event provenance and deterministic current-history replay verification
 
+## B9-D01 source-label scope clarification — 2026-10-31
+
+[Accepted B9-D01 qualified A](./B9-D01%20-%20Typed%20Spatial%20Coordinates%20Without%20AI%20Player%20Authorship%20Labels.md) says **do not tag each spatial coordinate as player-authored versus AI-authored**. This does **not** remove the minimal event origin/total-order association already accepted here for current story passage linkage and independently committed world corrections, which is required to support current-history replay and Undo/Fork. These are different data: minimal **event association** versus optional **coordinate creator identity**. No immutable old revision archive, per-coordinate AI authorship audit or invented geographic measurements.
+
+
+
 ## Approval and provenance
 
 **Explicit user approval, 2026-10-31:** “Review B7 Batch 3: B7-D07: A; B7-D08: A; B7-D09: A. Record only explicitly approved choices as Lorebound GitHub ADRs, preserve approval history, and assess B7 design closure.”
