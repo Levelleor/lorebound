@@ -13,7 +13,7 @@ tags:
 
 # Pass B9 — Typed Spatial Data and Runtime Integration Contract Review
 
-> **B9 IN REVIEW — Batches 1 and 2 accepted on 2026-10-31; Batch 3 unapproved.** Batch 1: D01 qualified A (typed spatial facts, no player/AI author labels), D02 A (TypeScript prepared assertions, Go/SQLite technical atomicity), D03 B (mocked all-component tests, no live model scenarios). Batch 2: **D04 C** (all pins eligible for future automatic movement, overriding previous intentional-pin immunity), **D05 A** (validated nested local-frame coordinates and mutable region geometry), **D06 A** (broad mocked success/failure/history contracts, labelled honestly). Historical alternatives remain below. No tests run, runtime implementation, stage promotion, B9 closure or waiver of separate B1 evidence is implied.
+> **B9 IN REVIEW — Batches 1, 2 and 3 accepted on 2026-10-31; Batch 4 unapproved.** Batch 1: D01 qualified A (typed spatial facts, no player/AI author labels), D02 A (TypeScript prepared assertions, Go/SQLite technical atomicity), D03 B (mocked all-component tests, no live model scenarios). Batch 2: **D04 C** (all pins eligible for future automatic movement, overriding previous intentional-pin immunity), **D05 A** (validated nested local-frame coordinates and mutable region geometry), **D06 A** (broad mocked success/failure/history contracts, labelled honestly). Historical alternatives remain below. **Batch 3: D07 B** (mandatory exact-metre conversion of qualitative geographic relations, superseding earlier no-fabricated-precision advice), **D08 A** (recalculate only on relevant accepted change, atomic commit and nonblocking conflicts), **D09 A** (allow valid overlapping mutable regions without changing containment/routes). No tests run, runtime implementation, stage promotion, B9 closure or waiver of separate B1 evidence is implied.
 
 ## Purpose
 
@@ -126,7 +126,18 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 
 **Batch 2 status (latest):** D04 **C**, D05 **A**, D06 **A** are explicitly approved and documented in their separate ADRs. No code, tests, staging promotion or B9 design closure.
 
-## Batch 3 — proposed D07–D09, NOT approved
+## Batch 3 — accepted D07 B, D08 A, D09 A (original proposals preserved)
+
+**Explicit user selection, 2026-10-31:** **B9-D07 B, B9-D08 A, B9-D09 A**. These accepted options are separate ADRs; the unchanged A/B/C text below is the original proposal and remains preserved as approval history.
+
+| Decision | Accepted | Operative direction |
+| --- | --- | --- |
+| **B9-D07** | **B, not recommended A** | [B9-D07](./decisions/B9-D07%20-%20Automatic%20Numeric%20Metre%20Conversion%20of%20Qualitative%20Geography.md): automatically convert supported qualitative *geographic* descriptions to **exact numeric metres** and measure scaled drawn separation accordingly. This knowingly **overrides** earlier B8 “no invented exact geographic number” instructions. Separately grounded route length/time/cost remain distinct. |
+| **B9-D08** | **A** | [B9-D08](./decisions/B9-D08%20-%20Event%20Triggered%20Deterministic%20Spatial%20Reconciliation%20and%20Conflict%20Reporting.md): deterministic, event-triggered geographic reconciliation, atomic commit, any pin movable under D04 C, nonblocking report of irreconcilable grounded facts. No extra arbitrary numeric conflict resolution beyond D07 B conversion. |
+| **B9-D09** | **A** | [B9-D09](./decisions/B9-D09%20-%20Valid%20Overlapping%20Mutable%20Region%20Geometry%20Without%20Implicit%20Containment.md): allow well-formed overlapping and changeable region shapes while keeping containment, route connectivity and ownership independently asserted. |
+
+**Precedence:** D07 B's numeric geographic inference is **deliberately different** from the previous B8-D08 “do not invent exact metric separation from ‘far apart’” safeguard. It does **not** imply automatic route-distance, travel-time or cost inference. Earlier decisions remain as dated history, not hidden replacements. D08 A prevents rerun per redraw and preserves contradictory accepted facts rather than overriding canon. D09 A refines previously approved mutable/overlapping boundaries.
+
 
 ### B9-D07 — Qualitative versus numeric geographic constraints
 
@@ -158,11 +169,45 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 
 **Existing scope:** B8-D04 already permits region overlaps and independent containment; this is a proposal for validator/projection treatment, not a vote to remove that accepted behaviour.
 
-**Batch 3 status:** D07–D09 are **unapproved proposals**. No ADR has been created for them.
+**Batch 3 status (latest):** D07 **B**, D08 **A**, D09 **A** accepted, each with a separate ADR. The alternatives above remain original proposals, not pending choices. No implementation, tests, stage promotion or B9 design closure.
+
+## Batch 4 — proposed D10–D12, NOT approved
+
+### B9-D10 — Conversion policy for qualitative geography to numeric metres
+
+**Question:** B9-D07 B accepted conversion to **exact numeric metres**. How should the actual mapping from phrases such as “nearby”, “far”, “several leagues west” and unknown world scales be chosen and kept reproducible?
+
+- **A (recommended, proposed):** A **versioned deterministic conversion table/profile**, scoped to supported local-frame scale and units, maps supported qualitative relations to finite metre constraints. Document which phrases are supported, validate number ranges and keep the chosen conversion stable across replay/Undo/Fork/migration. Players can change relevant facts through existing pending Commit; no player-vs-AI coordinate labels. **Trade-off:** Requires explicit calibration/configuration and migration policy but gives consistent results.
+- **B (proposed):** Apply one universal hardcoded metre multiplier to every location type and scale, even empires and individual rooms. **Trade-off:** Fewer rules, frequently nonsensical size relationships.
+- **C (proposed):** Ask an AI model to invent new exact metre values every time a map renders or the user zooms. **Trade-off:** Unstable, non-deterministic and can alter numeric facts without an accepted write.
+
+**Already accepted:** D07 B's numeric conversion and current-history commit. D10 only selects its conversion/calibration mechanism; no constants or exact schema are approved yet.
+
+### B9-D11 — Multiple entrances and portals across coordinate frames
+
+**Question:** How should one stable location or a cross-frame route represent multiple doors, gateways and portals without fabricating path connectivity?
+
+- **A (recommended, proposed):** Support **multiple stable keyed optional typed anchor points and route associations**, each bound to a supported local frame and to a grounded entrance/portal relation. Render via composed frame transforms; allow distinct routes between the same places. Missing anchors remain absent rather than being invented. **Trade-off:** More edge/anchor identifiers and validation.
+- **B (proposed):** Allow exactly one permanent entrance/anchor for each location and one route per pair of locations. **Trade-off:** Simple graph, unable to represent several doors or portals.
+- **C (proposed):** Derive any door and route connection automatically from visual line intersections and overlapping region boundaries. **Trade-off:** Invents traversable world facts.
+
+**Already accepted:** B8-D05 stable keyed cross-frame routes, optional anchors and grounded connectivity. D11 chooses explicit multiplicity/attachment representation, not whether routes may exist.
+
+### B9-D12 — Spatial-event migration and restored-library consistency
+
+**Question:** How should changes to current spatial schemas, nested frames, region geometry and routes behave on a library migration/restore?
+
+- **A (recommended, proposed):** Validate and migrate the **current canonical spatial event set and relevant transforms/anchors together** within existing versioned, atomic Go/SQLite migration and library-epoch/maintenance fencing. Rebuild TypeScript projections from migrated current history; any incompatible core geometry safely aborts and rolls back. **Trade-off:** More coordinated migration fixtures but no split truth.
+- **B (proposed):** Migrate a separately authoritative map-layout database after restoring story history. **Trade-off:** Risk orphan pins and conflicting canonical history.
+- **C (proposed):** Silently discard all spatial values and regenerate an arbitrary fresh map after every restore/schema change. **Trade-off:** Breaks durable geography and replay invariants.
+
+**Already accepted:** Current-only versioned events and atomic migration, Go maintenance/restore fencing and mock evidence limits. D12 clarifies their application to spatial data, not an implementation sign-off.
+
+**Batch 4 status:** **D10–D12 unapproved proposals**; no ADRs or implementation authorisation.
 
 ## Deferred B9 subjects, unapproved
 
-- **D10+:** Additional placement conflict UX and rendering detail, multiple entrances/portals, migration/restore wiring and user-visible map rendering. D07–D09 remain **unapproved Batch 3 proposals**.
+- **D13+:** Additional placement conflict UI, renderer/library selection, performance/scale bars, broader runtime API signatures and world-map interaction design. Batch 4 D10–D12 are **proposed, not accepted**.
 - Narrator-safe natural reference protocol from the selected model, simultaneous location creations, structured status/inventory projections, optional plugin event schema handling, current-only migration and restore wiring.
 - Browser canvas renderer/framework, drawing shape/scale bars, Wails API signatures, SQLite table/index design and migration scripts all require separate technical decisions/implementation permission. Do not infer them from B9 opening.
 - B1 real-host feasibility and pending staging→production gates are unchanged by this review.
@@ -175,3 +220,5 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 - **2026-10-31 — Batch 1 explicit selection:** User selected **B9-D01 A qualified to exclude player-versus-AI author distinctions (“just store the credentials,” understood as coordinates)**, **B9-D02 A**, and **B9-D03 B** with **mocked tests for all app parts and no launched AI model scenario tests**. Three separate accepted ADRs created. Original A/B/C alternatives preserved and recommended B9-D03 A expressly *not selected*. B8-D08 protected-pin behaviour remains; a minimal implementation policy without author labels is **new unapproved B9-D04**. Mocked tests do not prove real host/SQLite operation and do not silently waive separate B1 evidence. Proposed D04–D06 as **unapproved Batch 2**. B9 remains `in-review`, no implementation, tests, staging promotion or formal B9 closure.
 
 - **2026-10-31 — Batch 2 explicit selections:** User approved **D04 C, D05 A, D06 A** and requested ADRs and continued B9. D04 C **expressly overrides** the earlier B8-D08/B8-D06/B8-D07 intentional-pin immunity, not initial auto-placement or explicit manual Commit; D05 validates local-frame typed geometry and mutable outlines; D06 requires comprehensive mocked scenarios with true evidence labels and no actual model runs. Three accepted ADRs created. **Batch 3 D07–D09 remains unapproved**. B9 remains in review; no code/tests were run, no staging promotion or B9 formal closure.
+
+- **2026-10-31 — Batch 3 explicit selections:** User selected **D07 B** (contrary to recommended A), **D08 A**, **D09 A**, and requested separate ADRs and further B9 review. D07 B **explicitly overrides earlier B8 cautions against deriving exact geographic metres from qualitative language**; its numeric inferred geographic measurement must not be misrepresented as an independently narrated survey, nor confused with separate route travel length/time/cost. D08 A only reconciles on relevant accepted world changes, with deterministic atomic changes and nonblocking conflicts; D09 A allows technically valid region overlaps without implicit containment/route rewrites. **D10–D12 are unapproved Batch 4 proposals**. B9 remains `in-review`; no tests, code, staging promotion or design closure approved.
