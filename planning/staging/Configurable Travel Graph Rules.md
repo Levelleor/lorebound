@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-31"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Configurable Travel Graph Rules
+
+## B7-D06 typed graph representation clarification — 2026-10-31
+
+[Accepted B7-D06](../architecture/decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md) confirms the **logical travel map is a graph projection**, with stable location IDs as vertices and explicitly accepted, keyed travel-route relationships as edges. The latest ordered `AddRelation`/`RemoveRelation` assertion determines each route's current existence; current door/bridge/route properties can affect its **availability** for optional attempted-action travel policy. **Do not infer traversal links from the separate containment tree**, and do not maintain a second canonical graph independent of the current accepted event history. This clarifies existing approved graph semantics after the user asked about a “graph object”; it does **not** select a JavaScript `Graph` class, directedness, adjacency index, route cost schema, layout, default travel mode or graph storage table. Accepted narrative relocation never needs proof of an earlier route.
+
+
 
 ## Latest approved narrative-first event semantics — 2026-10-28
 
