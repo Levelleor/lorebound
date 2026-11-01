@@ -13,7 +13,7 @@ tags:
 
 # Pass B7 — Event Representation and Narrative Interpretation Contract Review
 
-> **OPENED FOR REVIEW ONLY, 2026-10-31.** [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) formally closes B6 **at design level** after explicit separate user approval. **B7-D01 A, B7-D02 A and B7-D03 C were explicitly accepted on 2026-10-31 in separate ADRs.** The original options remain below as proposal history; Batch 2 D04–D06 remains unapproved. No implementation, tests, stage promotion, B7 selection or B7 design closure is implied.
+> **OPENED FOR REVIEW ONLY, 2026-10-31.** [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) formally closes B6 **at design level** after explicit separate user approval. **B7-D01 A, D02 A, D03 C and D04–D06 A/A/A were explicitly accepted on 2026-10-31 in separate ADRs.** Original options remain below as proposal history. **D06 clarifies that the travel map is logically a derived graph**, but does not choose a concrete Graph class/storage design. Batch 3 D07–D09 remains unapproved. No implementation, tests, stage promotion, B7 selection or B7 design closure is implied.
 
 ## Scope and purpose
 
@@ -80,9 +80,11 @@ This decision may refine schema ownership but cannot overturn existing core fail
 
 Original proposals and dates remain intact. No D04–D06 approval or B7 closure inferred.
 
-## Batch 2 — proposed decisions, NOT accepted
+## Batch 2 — accepted Option A for D04–D06 (original proposals retained)
 
-### B7-D04 — Typed representation of unknown, explicit absence and clearing
+### B7-D04 — Typed representation of unknown, explicit absence and clearing (accepted Option A)
+
+**Approved 2026-10-31:** [B7-D04 ADR](./decisions/B7-D04%20-%20Typed%20Unknown%20Absence%20and%20Clear%20Semantics.md). Original A/B/C alternatives retained.
 
 **Question:** How should a versioned declarative event/field schema represent B6-D08's distinction between no known value, an explicit assertion of absence and a known value, without overloading JavaScript `null` and truthiness?
 
@@ -92,7 +94,9 @@ Original proposals and dates remain intact. No D04–D06 approval or B7 closure 
 
 **Existing B6-D08 is binding:** This proposal is about an encoding discipline, not whether unknown and absent should be different.
 
-### B7-D05 — Encoding entity removal and later re-establishment
+### B7-D05 — Encoding entity removal and later re-establishment (accepted Option A)
+
+**Approved 2026-10-31:** [B7-D05 ADR](./decisions/B7-D05%20-%20Event%20Ordered%20Entity%20Lifecycle%20and%20Reestablishment.md). Original A/B/C alternatives retained.
 
 **Question:** How should the typed reducer remember an item/character/place that the story says was destroyed/removed, yet still allow later accepted narration to re-establish the same stable identity?
 
@@ -102,7 +106,9 @@ Original proposals and dates remain intact. No D04–D06 approval or B7 closure 
 
 **Existing B6-D10 is binding:** RemoveEntity differs from clearing holder/location; do not infer that similarly named items are the same identity.
 
-### B7-D06 — Keyed relationship assertions and deterministic replay
+### B7-D06 — Keyed relationship assertions and deterministic replay (accepted Option A)
+
+**Approved 2026-10-31:** [B7-D06 ADR](./decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md). **User asked: “should we also record the map is a graph object or something?”** The current accepted logical travel map already has nodes = stable location identities, edges = explicitly established travel routes; this **graph is projected from the ordered events**, not a separate durable source of truth. **Containment hierarchy is distinct from travel edges.** This note does **not** adopt a particular JavaScript `Graph` class, adjacency index, library, graph-table format or directedness. Those remain deferred implementation questions. Original A/B/C options below retained.
 
 **Question:** How should added/removed relationships (route connections, named associations or ownership claims) work when the same fact is repeated, contradicted or changes during the story?
 
@@ -110,11 +116,53 @@ Original proposals and dates remain intact. No D04–D06 approval or B7 closure 
 - **B (proposed):** Append repeated unkeyed relationship objects indefinitely and infer the current graph from their array order/wording. **Trade-off:** Duplicates and ambiguous removals.
 - **C (proposed):** Validate every added route/relationship against all mechanically plausible earlier travel or ownership transitions and reject outcomes lacking proof. **Trade-off:** Contradicts narrative-first B6-D01.
 
-**Batch 2 status:** B7-D04, B7-D05 and B7-D06 are **new unapproved A/B/C proposals only**. Exact JSON shape, field registry, migration tests and UI remain engineering refinements, with no implementation claim.
+**Batch 2 status, 2026-10-31:** **B7-D04 A**, **B7-D05 A** and **B7-D06 A** accepted in three separate ADRs. The D06 map/graph clarification refers to already accepted IDEA-0033/0035 logical topology. **No actual `Graph` object/storage layout, implementation, tests, stage promotion or B7 closure is approved.**
+
+## Batch 2 accepted disposition — 2026-10-31
+
+| Decision | Approved | Current authority |
+| --- | --- | --- |
+| B7-D04 | **A** | [Typed unknown/absence/Clear result semantics](./decisions/B7-D04%20-%20Typed%20Unknown%20Absence%20and%20Clear%20Semantics.md) |
+| B7-D05 | **A** | [Ordered entity lifecycle and re-establishment](./decisions/B7-D05%20-%20Event%20Ordered%20Entity%20Lifecycle%20and%20Reestablishment.md) |
+| B7-D06 | **A** | [Keyed relations and derived travel graph](./decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md) |
+
+D06's **graph** is a **logical derived relationship projection**: stable location IDs as nodes; explicit current route connections as edges; location containment tracked separately as an acyclic hierarchy. It is not an approval of an independent canonical mutable graph object or specific database structure. The original question and the accepted existing graph/containment boundaries are preserved.
+
+## Batch 3 — proposed choices, NOT accepted
+
+### B7-D07 — Handling domain field/type schema changes over application upgrades
+
+**Question:** A built-in custom status field or core event payload changes type/shape in a later app version. What preserves the meaning of the currently stored event history?
+
+- **A (recommended, proposed):** A **versioned field/type registry with deterministic migration transformations** for supported current events. At upgrade, perform the previously accepted coordinated atomic conversion of the current stored records, preserving the meaning of explicit unknown/absent/known values and keyed relation identities. Unsupported required-core conversions fail safely without partial state; removed optional plugin-owned data retains its separate exception. **Trade-off:** Requires conversion fixtures and schema-version discipline.
+- **B (proposed):** Reinterpret existing stored event payloads using whichever field definitions happen to be loaded now. **Trade-off:** Faster but could silently change old accepted facts.
+- **C (proposed):** Always let every field's old format coexist indefinitely and upcast lazily without migrating current stored events. **Trade-off:** Supports old data but conflicts with the previously accepted coordinated current-record upgrade direction under B4-D04.
+
+**Boundary:** B4-D04 already approved the coordinated migration strategy. D07 would specify how the B7 typed field registry participates, rather than reversing that earlier decision.
+
+### B7-D08 — Narrator-to-interpreter reference protocol
+
+**Question:** In a configurable single-pass or multi-stage generation pipeline, what provisional reference form should the narrator/interpreter use before the engine binds stable IDs?
+
+- **A (recommended, proposed):** **Natural-language provisional references** (name, description and passage grounding) in **any request that may emit roleplay prose**. The engine binds them against a private candidate map afterward. Only a **separately isolated, non-narrating** interpretation context may see internal stable IDs. If references cannot be grounded, silently omit those candidate assertions under B7-D03 C without blocking otherwise valid prose. The same selected model may serve both roles. **Trade-off:** Needs a small typed provisional-result boundary and careful prompt isolation.
+- **B (proposed):** Give the combined prose+event model internal entity IDs and depend on “do not print IDs” instructions. **Trade-off:** Easier event JSON but risks leaking engine identifiers in story prose.
+- **C (proposed):** Require every adventure to run a separate second AI model for event/ID interpretation, even where the user's single-pass configuration is sufficient. **Trade-off:** Additional latency/cost and contradicts the accepted optional routing design.
+
+**Boundary:** B6-D04 already established no IDs in narrator prompts. This would refine the output/hand-off protocol and validation, not reopen that approval.
+
+### B7-D09 — Provenance and replay verification
+
+**Question:** How should an accepted event identify the story passage or manual correction establishing it, and how can the engine verify replay produces the same current state after Undo, Keep Later Turns, Fork or migration?
+
+- **A (recommended, proposed):** Store **minimal durable origin/provenance and total-order metadata** on canonical accepted events (story-passage association or independent committed manual correction), without maintaining old immutable passage revision archives. Specify deterministic replay and schema-migration regression fixtures over current history, including deletions leaving sparse IDs and one-item/one-location projections. **Trade-off:** More metadata and test cases, but reproducible state and diagnosable implementation errors.
+- **B (proposed):** Persist only event payloads and rely on prose/name inference later to recover their origin and ordering. **Trade-off:** Fragile Undo/Fork and source grounding.
+- **C (proposed):** Restore a complete immutable revision/audit archive for all old passage and event versions merely to track provenance. **Trade-off:** Reverses the accepted current-only B3-D04 model.
+
+**Batch 3 status:** B7-D07, D08 and D09 are **unapproved** proposals. No new approvals, implementation, exact type schema, tests or B7 closure follow from preparing this review.
 
 ## Subsequent potential review subjects (unapproved)
 
-- **B7-D07+:** field-schema changes and coordinated upgrade migrations; deterministic replay/provenance fixtures; ID-safe narrator/interpreter response protocol and weak-model structured-output constraints. D04–D06 are now explicitly proposed in Batch 2 above, **not accepted**.
+- **B7-D10+:** detailed graph implementation/route schema and graph-index shape, type/field migration compatibility fixtures, model-specific structured-output constraints and further adapter/error handling remain future proposals. Batch 3 D07–D09 is proposed below, **not accepted**.
 - All concrete table structures, payload JSON schemas, UI, handlers, library migration tests and plugin loading behaviour remain unimplemented unless separately authorised in later implementation work.
 
 ## Review status and decision history
@@ -122,3 +170,5 @@ Original proposals and dates remain intact. No D04–D06 approval or B7 closure 
 - **2026-10-31 — Opened only:** User explicitly approved **formal B6 design closure and opening the next architecture pass** after the B6 closure assessment (“Sounds good proceed”). The accepted authority is recorded in [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md). Opening **B7** is permitted, but **none of B7-D01/D02/D03 is accepted**. This register proposes A/B/C alternatives for subsequent explicit user review; it does not implement code or promote staged ideas.
 
 - **2026-10-31 — Batch 1 explicit approval:** User selected **B7-D01 A, B7-D02 A, B7-D03 C** (not D03's recommended A), asking to record only accepted ADRs and continue B7. Created three accepted ADRs. **Unresolved interpretation suggestions are silently discarded**, not retained in a session/SQLite diagnostic store; true technical failures remain reportable. Batch 2 D04–D06 proposed, **unapproved**, with no code, promotion or B7 closure.
+
+- **2026-10-31 — Batch 2 explicit acceptance and map clarification:** User selected **B7-D04 A, B7-D05 A, B7-D06 A** and asked whether the map should be recorded as a graph object. Three accepted ADRs created. D06 records the previously accepted **logical travel graph** (location nodes, explicit route edges) separately from the parent/child containment hierarchy, with graph derived from event replay; **no concrete `Graph` class/object, graph library, table, or directionality chosen**. Batch 3 D07–D09 options proposed but **unapproved**. No code, tests, stage promotion or B7 closure.
