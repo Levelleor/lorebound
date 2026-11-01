@@ -1,9 +1,9 @@
 ---
 type: architecture
-status: in-review
+status: closed-design-only
 phase: "B9"
 created: "2026-10-31"
-updated: "2026-10-31"
+updated: "2026-11-01"
 tags:
   - planning/architecture
   - pass-b
@@ -14,6 +14,17 @@ tags:
 # Pass B9 — Typed Spatial Data and Runtime Integration Contract Review
 
 > **B9 IN REVIEW — Batch 8 D22 C and D23 A (minimal viewport rendering) accepted; D24 deferred with explicit no-map-keyboard direction. D12/D13 remain deferred; Batch 9 D25 A, D26 qualified A, D27 qualified C accepted; Batch 10 D28 B, D29 A, D30 A accepted; design-only assessment authorised, formal closure unapproved.** Batch 1: D01 qualified A (typed spatial facts, no player/AI author labels), D02 A (TypeScript prepared assertions, Go/SQLite technical atomicity), D03 B (mocked all-component tests, no live model scenarios). Batch 2: **D04 C** (all pins eligible for future automatic movement, overriding previous intentional-pin immunity), **D05 A** (validated nested local-frame coordinates and mutable region geometry), **D06 A** (broad mocked success/failure/history contracts, labelled honestly). Historical alternatives remain below. **Batch 3: D07 B** (mandatory exact-metre conversion of qualitative geographic relations, superseding earlier no-fabricated-precision advice), **D08 A** (recalculate only on relevant accepted change, atomic commit and nonblocking conflicts), **D09 A** (allow valid overlapping mutable regions without changing containment/routes). No tests run, runtime implementation, stage promotion, B9 closure or waiver of separate B1 evidence is implied.
+
+## Final separate closure approval — 2026-11-01
+
+**The user separately resolved the outstanding options after the D30 completeness assessment:** **D12 defer**, **D13 B**, **D24 revised B**, followed by **“Let's close b with these.”** This later explicit close instruction applies to **B9 and the overall Pass B design**, which already had separately closed B1–B8 chapters. The accompanying “do not formally close B9 without separate approval” is met by the distinct later closure request; it is **not** a waiver of implementation or migration gates.
+
+- [D13 B](./decisions/B9-D13%20-%20Simple%20Coordinator%20Conflict%20Notice.md): coordinator-led best valid geography; when conflicts remain, general nonblocking notice, preserving accepted facts.
+- [D24 revised B](./decisions/B9-D24%20-%20Basic%20Map%20Pointer%20Interaction%20Without%20Keyboard%20Controls.md): basic pointer map, **no map-specific keyboard controls**; unrelated application controls unchanged.
+- **D12 explicitly DEFERRED:** “For d12 do nothing. We don't want to do migration yet for these.” No spatial migration work or migration ADR.
+- **Formal status: closed-design-only**, not implemented, tested or promoted. See [P-B9-01](./decisions/P-B9-01%20-%20B9%20and%20Pass%20B%20Design%20Closure%20with%20Deferred%20Spatial%20Migration.md).
+
+**Historic proposal/status passages below are preserved unchanged** as an audit trail, including prior statements that D13/D24 were still deferred. This section is the later operative disposition.
 
 ## Purpose
 
