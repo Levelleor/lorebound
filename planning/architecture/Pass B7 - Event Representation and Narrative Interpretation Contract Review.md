@@ -13,7 +13,7 @@ tags:
 
 # Pass B7 — Event Representation and Narrative Interpretation Contract Review
 
-> **OPENED FOR REVIEW ONLY, 2026-10-31.** [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) formally closes B6 **at design level** after explicit separate user approval. **B7-D01 A, D02 A, D03 C and D04–D06 A/A/A were explicitly accepted on 2026-10-31 in separate ADRs.** Original options remain below as proposal history. **Later explicit B7-D10 correction: the player-facing world map is a persistent, coordinate-pinned, semantically scaled spatial canvas with meaningful grouped places and link lengths.** D06's graph describes route *connectivity only* and must not arbitrarily arrange geography. **B7-D10 is accepted by direct user instruction; Batch 3 D07–D09 remains unapproved.** No implementation, tests, stage promotion, B7 selection or B7 design closure is implied.
+> **OPENED FOR REVIEW ONLY, 2026-10-31.** [P-B6-01](./decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) formally closes B6 **at design level** after explicit separate user approval. **All ten B7 numbered decisions D01–D10 now have explicit accepted dispositions on 2026-10-31**: D01/D02 A, D03 **C**, D04–D09 A, and D10 an **explicit later user-directed spatial-canvas correction**. Original proposal alternatives remain below as history. **Later explicit B7-D10 correction: the player-facing world map is a persistent, coordinate-pinned, semantically scaled spatial canvas with meaningful grouped places and link lengths.** D06's graph describes route *connectivity only* and must not arbitrarily arrange geography. **B7-D10 is accepted by direct user instruction; Batch 3 D07–D09 was subsequently explicitly approved as Option A.** B7 has been **assessed for design closure only**, not formally closed. No implementation, tests or stage promotion is implied.
 
 ## Scope and purpose
 
@@ -134,11 +134,13 @@ Original proposals and dates remain intact. No D04–D06 approval or B7 closure 
 
 The accepted **user-facing map** is a **single pannable/zoomable persistent semantic spatial canvas** with stable location identities, durable placed coordinates, nested spatial groups/extents and distance-sensitive visual geometry. The **logical travel graph** remains **a separate overlay/view of explicit route connectivity**; the acyclic containment hierarchy provides group relationships, not assumed routes. Graph auto-layout is **not** authoritative positioning and cannot rearrange pinned geography. Panning/zooming is visual-only; deliberately moving a pin changes *saved semantic map placement*, subject to existing world-edit approval, without automatically relocating characters or altering routes/containment. Unknown coordinates are not invented from narrative mentions.
 
-**Preserved open implementation choices:** Exact coordinate system and scale units, multi-level transforms, spatial region boundary geometry, route shape/path vs straight-line distance, schema and map rendering technology. **B7-D07/D08/D09 remain unapproved**. No implementation, staging promotion or B7 design closure.
+**Preserved open implementation choices:** Exact coordinate system and scale units, multi-level transforms, spatial region boundaries, route shape/path vs straight-line distance, schema and map rendering technology. **D07–D09 were subsequently accepted as Option A**; their initial proposal status is preserved in the chronological original text. No implementation, staging promotion or formal B7 closure.
 
-## Batch 3 — proposed choices, NOT accepted
+## Batch 3 — accepted Option A for D07–D09 (original proposals retained)
 
-### B7-D07 — Handling domain field/type schema changes over application upgrades
+### B7-D07 — Handling domain field/type schema changes over application upgrades (Option A accepted)
+
+**Explicit acceptance 2026-10-31:** [B7-D07 ADR](./decisions/B7-D07%20-%20Versioned%20Field%20Registry%20and%20Atomic%20Meaning%20Preserving%20Event%20Migrations.md). Original A/B/C alternatives below remain historical; this refines **B4-D04 Option B**, not an unapproved switch to perpetual upcasters.
 
 **Question:** A built-in custom status field or core event payload changes type/shape in a later app version. What preserves the meaning of the currently stored event history?
 
@@ -148,7 +150,9 @@ The accepted **user-facing map** is a **single pannable/zoomable persistent sema
 
 **Boundary:** B4-D04 already approved the coordinated migration strategy. D07 would specify how the B7 typed field registry participates, rather than reversing that earlier decision.
 
-### B7-D08 — Narrator-to-interpreter reference protocol
+### B7-D08 — Narrator-to-interpreter reference protocol (Option A accepted)
+
+**Explicit acceptance 2026-10-31:** [B7-D08 ADR](./decisions/B7-D08%20-%20Narrator%20Safe%20Provisional%20References%20and%20Isolated%20ID%20Binding.md). The narrator uses grounded natural-language provisional references; private engine ID binding and an isolated non-narrating stage are allowed. **Single-pass, same-model routing and B7-D03 C silent omission of ambiguous candidate interpretations remain binding.**
 
 **Question:** In a configurable single-pass or multi-stage generation pipeline, what provisional reference form should the narrator/interpreter use before the engine binds stable IDs?
 
@@ -158,7 +162,9 @@ The accepted **user-facing map** is a **single pannable/zoomable persistent sema
 
 **Boundary:** B6-D04 already established no IDs in narrator prompts. This would refine the output/hand-off protocol and validation, not reopen that approval.
 
-### B7-D09 — Provenance and replay verification
+### B7-D09 — Provenance and replay verification (Option A accepted)
+
+**Explicit acceptance 2026-10-31:** [B7-D09 ADR](./decisions/B7-D09%20-%20Minimal%20Event%20Provenance%20and%20Deterministic%20Current%20Replay%20Verification.md). Durable minimal current accepted story/manual-correction provenance and total ordering, with deterministic replay/Undo/Fork/migration regression obligations. **Does not resurrect an immutable revision archive** or claim real tests passed.
 
 **Question:** How should an accepted event identify the story passage or manual correction establishing it, and how can the engine verify replay produces the same current state after Undo, Keep Later Turns, Fork or migration?
 
@@ -166,11 +172,56 @@ The accepted **user-facing map** is a **single pannable/zoomable persistent sema
 - **B (proposed):** Persist only event payloads and rely on prose/name inference later to recover their origin and ordering. **Trade-off:** Fragile Undo/Fork and source grounding.
 - **C (proposed):** Restore a complete immutable revision/audit archive for all old passage and event versions merely to track provenance. **Trade-off:** Reverses the accepted current-only B3-D04 model.
 
-**Batch 3 status:** B7-D07, D08 and D09 are **unapproved** proposals. No new approvals, implementation, exact type schema, tests or B7 closure follow from preparing this review.
+**Batch 3 status (2026-10-31):** **B7-D07 A, B7-D08 A and B7-D09 A explicitly accepted** in separate GitHub ADRs. Exact type/schema/coordinate representations, code, tests, stage promotion and **formal B7 design closure** are not thereby approved.
+
+## Batch 3 accepted disposition — 2026-10-31
+
+| Decision | Explicitly approved | Accepted record |
+| --- | --- | --- |
+| B7-D07 | **A** | [Versioned field registry and atomic meaning-preserving current-event migrations](./decisions/B7-D07%20-%20Versioned%20Field%20Registry%20and%20Atomic%20Meaning%20Preserving%20Event%20Migrations.md) |
+| B7-D08 | **A** | [Narrator-safe provisional names and isolated internal ID binding](./decisions/B7-D08%20-%20Narrator%20Safe%20Provisional%20References%20and%20Isolated%20ID%20Binding.md) |
+| B7-D09 | **A** | [Minimal source provenance and deterministic current replay verification](./decisions/B7-D09%20-%20Minimal%20Event%20Provenance%20and%20Deterministic%20Current%20Replay%20Verification.md) |
+
+The user's request was to **record approvals and assess** closure, **not to create a formal B7 closure ADR**. This review remains `status: in-review` until distinct explicit closure authorisation.
+
+## B7 architecture-design closure assessment — 2026-10-31
+
+**Decision-set status: 10 of 10 B7 numbered decisions have explicit accepted dispositions. Architecture design is ready for a separate design-only closure sign-off, provided the deferred engineering contracts are carried forward and not misrepresented as implemented. No formal closure has yet been approved.**
+
+| Decision | Current accepted authority |
+| --- | --- |
+| **D01** | **A:** versioned typed declarative event envelope and domain payloads |
+| **D02** | **A:** required core vs optional plugin-owned effect/reducer boundary |
+| **D03** | **C, contrary to prior recommended A:** silently discard unresolved *automatic* extraction suggestions, but not genuine technical/transaction failures |
+| **D04** | **A:** field-typed unknown, explicit absence and known values; Clear means unset, not restoration of an older value |
+| **D05** | **A:** event-ordered RemoveEntity/re-establish of unambiguously identified stable identity |
+| **D06** | **A:** typed keyed Add/Remove relations and a **derived logical route graph**, **not** the entire geographic map |
+| **D07** | **A:** versioned typed field registry, coordinated meaning-preserving atomic migration of current records under B4-D04 **Option B** |
+| **D08** | **A:** narrator-safe grounded provisional natural references; private post-generation ID binding, same-model and single-pass strategies preserved |
+| **D09** | **A:** minimal current event source provenance and total order, with deterministic replay/regression obligations but no revision archive |
+| **D10** | **Explicit user-directed spatial map refinement, not a D10 A/B/C choice:** **one persistent coordinate-pinned, semantically scaled canvas** with nested empires/cities/buildings/rooms and distance-sensitive route visuals. The travel graph remains a separate overlay/topology |
+
+### Why design-only closure is reasonable
+
+1. **Semantics and representation are aligned.** B6's narrative-first current assertions are now associated with typed/versioned event/field ownership, field value semantics, lifecycle, keyed relations and replay/provenance. A later accepted story fact does not require a mechanically valid earlier fictional cause.
+2. **Narrator identity privacy is explicit.** A model that can emit RP prose never sees private ID mappings. The engine resolves provisional natural references; ambiguous automatic candidates are **discarded without hints or persistence**, while real technical failures remain reportable.
+3. **Optional capabilities and migrations remain coherent.** Required-core records fail safely if unsupported, optional removed-plugin effects need not be reconstructed, and supported current formats are converted via B4's coordinated atomic upgrade approach.
+4. **World map is correctly defined.** **D10's semantic spatial canvas supersedes any reading of D06 as an arbitrary graph layout.** Spatial pins, meaningful relative scale and nested group geography persist. Connectivity and containment remain distinct. Canvas position is not a travel/route assertion.
+5. **Accepted current-only history remains authoritative.** Events carry only minimal source and order metadata; no undeclared immutable passage/event revisions or second canonical map/graph state is introduced.
+
+### Deferred interface and verification contracts: NOT approvals and NOT implemented
+
+- **Concrete typed JSON/event union, schema registry and migrations:** field/tag schemas, unknown/known-absent value encoding, lifecycle restore details, relation-key shapes/cardinality, replay order, plugin namespace/version handling, TypeScript reducer/Go transport/SQLite representation.
+- **Persistent geographic canvas engineering:** explicit spatial coordinate system and units, nested group frame transforms, meaningful visual/route distances, region footprints, unplaced-node UX, user map-pin editing flow and replay/migration of current map-position assertions; **arbitrary layout must not change pinned semantics**. These are **substantive follow-up implementation interface details** introduced by D10, not permission to omit the accepted spatial canvas.
+- **Identity resolution and LLM adapters:** no-ID narrator prompt construction, single-pass provisional result schema, isolated same-model non-narrator interpretation, type/grounding checks, no silent swallowing of real errors.
+- **Real acceptance tests and integration:** replay after Undo/Delete After/Keep Later Turns/Fork, sparse references, status/items/locations/route projections, semantic map persistence, removed plugins, incompatible core events, migration rollback, Go/SQLite atomicity/idempotency/version and epoch fences, manual pending Commit/full-composer overlay. **No runtime tests are asserted to have passed.**
+- **Other historic gates:** B1 real-host feasibility and cross-module integration evidence remains outstanding. No code implementation, staging-to-production promotion, production approval, release readiness or B8 opening follows from this assessment alone.
+
+**Assessment/recommendation:** **B7 is ready for explicit separate design-only closure approval**. That closure should carry the above engineering contracts into a later technical/design pass or implementation planning, particularly the **B7-D10 persistent spatial-canvas representation**. Do not auto-create a P-B7 closure ADR, mark B7 `closed`, or open the next pass solely because the user asked to **assess** B7 closure.
 
 ## Subsequent potential review subjects (unapproved)
 
-- **B7-D10 is accepted by explicit user correction** as persistent semantic spatial canvas design; do not reuse its ID for a later proposal. **B7-D11+:** exact spatial coordinate reference/group transforms, path/visual route geometry, graph-index/cache layout, type/field migration fixtures, model-specific structured output and adapter/error handling remain unapproved refinements. Batch 3 D07–D09 is still unapproved.
+- **B7-D10 is accepted by explicit user correction** as the persistent semantic spatial canvas design; do not reuse its ID for a later proposal. **B7-D11+:** exact spatial coordinate reference/group transforms, route/link geometry, graph-index/cache layout, type/field migration fixtures, model-specific structured output and adapter/error handling remain **unapproved engineering refinements**, not secretly approved extra decisions. **D07–D09 are accepted Option A**, but B7 itself awaits separate formal design closure approval.
 - All concrete table structures, payload JSON schemas, UI, handlers, library migration tests and plugin loading behaviour remain unimplemented unless separately authorised in later implementation work.
 
 ## Review status and decision history
@@ -182,3 +233,5 @@ The accepted **user-facing map** is a **single pannable/zoomable persistent sema
 - **2026-10-31 — Batch 2 explicit acceptance and map clarification:** User selected **B7-D04 A, B7-D05 A, B7-D06 A** and asked whether the map should be recorded as a graph object. Three accepted ADRs created. D06 records the previously accepted **logical travel graph** (location nodes, explicit route edges) separately from the parent/child containment hierarchy, with graph derived from event replay; **no concrete `Graph` class/object, graph library, table, or directionality chosen**. Batch 3 D07–D09 options proposed but **unapproved**. No code, tests, stage promotion or B7 closure.
 
 - **2026-10-31 — Later explicit B7 map definition correction:** User clarified that locations must be **persistently pinned on a meaningful spatial canvas**, with nested groups for empires/cities/buildings/rooms and link lengths reflecting world distances, **rather than a map defined only as a graph**. Accepted [B7-D10](./decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) as a new user-directed chronological refinement to D06 and IDEA-0037; updated relevant current architecture and staging docs. D07–D09 remain unapproved proposals; no concrete graph class, coordinate units, implementation or stage promotion accepted.
+
+- **2026-10-31 — Batch 3 explicit approvals and assessment only:** User approved **B7-D07 A, B7-D08 A and B7-D09 A**, instructing separate accepted GitHub ADRs, approval history preservation and an **assessment** of B7 design closure. Three individual ADRs created. **Ten of ten B7 decisions now accepted** (D03 C, D10 an explicit spatial-canvas correction), and design-only closure assessed ready for **separate sign-off**; no P-B7 closure ADR or status change, no stage promotion/implementation/testing claim, and B7-D10 map-coordinate engineering remains deferred.
