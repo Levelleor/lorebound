@@ -64,13 +64,15 @@ These are design decisions, not acceptance of any C-SL entry or an instruction t
 
 **Dependency order:** Real host/browser service check + Go SQLite transaction evidence (C-SL-04, **NOT RUN**) → separate readiness/development authorisation → refine Story-mode acceptance criteria and mock tests for C-SL-01 under C-D05 C → implement the final product iteratively. Nothing in this register is an implementation authorisation.
 
-## Batch 4 proposed, NOT approved
+## Batch 4 accepted: stop extended planning, request Gate 0 approval
 
-- **C-D10:** Limit pre-development delay to documented material blocking uncertainties, rather than speculative future design.
-- **C-D11:** Consider reusable production-intended real host feasibility work rather than mandatory throwaway prototypes, **only after separately authorised implementation**.
-- **C-D12:** Define the focused development kickoff/explicit original-IDEA promotion approval when material evidence is ready. **This C-D12 is not B9-D12 spatial migration.**
+- [C-D10 A](./decisions/C-D10%20-%20Material%20Blockers%20Only%20Planning%20Stop%20Rule.md): only material evidence-backed host/storage/safety/first-story blockers delay relevant development; avoid speculative question loops.
+- [C-D11 A](./decisions/C-D11%20-%20Reusable%20Production%20Intended%20Real%20Host%20Foundation.md): after authorisation, build host/browser/Go/SQLite proof as **reusable final-product infrastructure**, not a mandatory disposable prototype.
+- [C-D12 A](./decisions/C-D12%20-%20Concise%20Go%20No%20Go%20Approval%20and%20Immediate%20Development%20Handoff.md): one focused explicit approval packet and prompt incremental implementation after genuine critical gates; no automatic promotion of all ideas.
 
-All three are proposals, not accepted slice contracts or automatic promotions.
+**Deadline condition, 2026-11-01:** The user wants dependencies resolved as early as possible and actual software implementation started; prolonged Pass C planning is not desirable. **Next action:** [Proposed Gate 0 authorisation packet](./Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md). Human approval is still required **independently** for the original **IDEA-0053** and **IDEA-0051** staging→production promotions and for actual narrow code/test execution. **None has yet been granted.**
+
+**Actual evidence:** Wails/Go/browser startup and typed request **NOT RUN**; Go SQLite commit/readback/rollback/reopen **NOT RUN**. C-SL-04 remains **proposed**, not implemented. No other slice is automatically implementation-ready; all 52 IDEA notes remain in staging. No B9-D12 spatial migrations.
 
 ## Deferred design scope
 
