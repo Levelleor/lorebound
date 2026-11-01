@@ -17,6 +17,12 @@ tags:
 
 # B8-D06 — Automatically persist initial location positions, with player-controlled repositioning
 
+## Later B9-D01 no-author-label refinement — 2026-10-31
+
+The user subsequently approved [B9-D01 A, qualified](./B9-D01%20-%20Typed%20Spatial%20Coordinates%20Without%20AI%20Player%20Authorship%20Labels.md), explicitly asking **not to distinguish player-authored versus AI-authored coordinates**. B8-D06 **B** still requires **automatic persisted initial location coordinates**, later user repositioning and no arbitrary movement of deliberate pinned positions. Do not add a per-coordinate author attribution field to meet this ADR's earlier “source/provenance” wording. Use only the **minimal current placement editability/protection semantics** needed for B8-D08's generated-only reconciliation, with exact encoding **unapproved and proposed for B9-D04**. Generated canvas positions do not, by themselves, establish canonical measured geography, travel cost or a road. Existing earlier approval history below is preserved.
+
+
+
 ## Subsequent accepted B8 Batch 3 refinements — 2026-10-31
 
 The user's later explicit **B8-D07 A, B8-D08 A, B8-D09 A** approvals now settle the originally deferred design strategy: [D07](./B8-D07%20-%20Deterministic%20Scoped%20Automatic%20Map%20Placement.md) uses **deterministic, local-frame-scoped automatic first placement**, preserving existing pins and grounded spatial constraints without a required extra model call; [D08](./B8-D08%20-%20Provenance%20Aware%20Spatial%20Reconciliation%20of%20Generated%20Placement.md) permits **provenance-aware reconciliation of only generated-only positions** with later accepted grounded geography, protecting deliberate player positions and never fabricating exact narrated distance; [D09](./B8-D09%20-%20Atomic%20Canonical%20Location%20Creation%20and%20Initial%20Placement.md) commits a resolved new location identity and its **system-generated initial typed map coordinate within the same atomic accepted creation batch**. These refine this still-binding **D06 Option B**, not a reversal to unplaced Option A. Later deliberate player map repositioning still requires explicit pending Commit/Discard. No implementation, B8 formal closure or staging promotion has been approved.
