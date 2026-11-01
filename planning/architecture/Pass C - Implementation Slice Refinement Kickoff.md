@@ -12,7 +12,7 @@ tags:
 
 # Pass C — Implementation Slice Refinement Kickoff
 
-> **PASS C PLANNING OPEN, NOT IMPLEMENTATION APPROVED.** This kickoff is authorised by the user's instruction on 2026-11-01 to “Proceed to establishing pass c. Explain what we'll do and which [topics] we'll want to cover overall.” It proposes a review method and a complete topic map. **No workstream priority, slice requirements or staging → production promotion is accepted merely by opening this document.**
+> **PASS C BATCH 1 ACCEPTED, NOT IMPLEMENTATION APPROVED.** This kickoff is authorised by the user's instruction on 2026-11-01 to “Proceed to establishing pass c. Explain what we'll do and which [topics] we'll want to cover overall.” It proposes a review method and a complete topic map. **C-D01 A establishes the first story-loop refinement priority; C-D02 A establishes slice traceability; C-D03 A establishes verification evidence rules. No specific proposed slice is approved for implementation and no staging → production promotion follows.**
 
 ## Where we are
 
@@ -74,13 +74,47 @@ Each proposed slice record should contain:
 
 ## First review to start Pass C
 
-**C0 / Batch 1 (three decisions, all UNAPPROVED):**
+**C0 / Batch 1 (three decisions ACCEPTED, original alternatives preserved):**
 
 1. **C-D01 — First vertical slice boundary:** Recommend the minimal runnable mock-driven single-adventure accepted story turn across host/UI, coordinator, typed event and Go transaction adapters, without maps, complex lore or multiple provider families initially. Alternative: begin from a self-contained platform-only spike or attempt the whole feature set at once. This is a prioritisation decision, not permission to code.
 2. **C-D02 — Slice and idea traceability policy:** Recommend a lightweight `C-SL-` slice register that traces multiple existing `IDEA-` files and ADRs while preserving original staged notes; no artificial new idea IDs or automatic production promotion. Alternative: review one `IDEA-` document at a time before cross-cutting work, or aggregate all into one monolith.
 3. **C-D03 — Verification/readiness scope:** Recommend mocked/unit/contract acceptance criteria per slice, explicitly **not run** until executed, while preserving separate future real-host Wails/Go/SQLite and browser-provider feasibility gates. No mandatory live AI model scenario suite. Alternative: mock-only evidence is treated as sufficient for real integration, or require live AI tests before a planning decision.
 
-The user has **not yet selected C-D01–D03**. Discuss these three before creating accepted Pass C ADRs or approving any idea promotion.
+**Explicit acceptance, 2026-11-01:** User selected **C-D01 A, C-D02 A, C-D03 A**, requested only explicitly approved ADRs and continuation in three-decision batches. See [C-D01](./decisions/C-D01%20-%20First%20Mock%20Driven%20End%20to%20End%20Story%20Turn%20Slice.md), [C-D02](./decisions/C-D02%20-%20Traceable%20Slice%20Register%20With%20Original%20Idea%20Identity.md), [C-D03](./decisions/C-D03%20-%20Mocked%20Contract%20Criteria%20With%20Separate%20Real%20Host%20Gates.md), and the [proposed slice register](./Pass%20C%20-%20Implementation%20Slice%20Register.md). Original choices 1–3 above remain review history. No specific slice was accepted as production-ready, no ideas were promoted and no tests were run.
+
+## Pass C Batch 2 — proposed C-D04–D06, NOT approved
+
+### C-D04 — Minimal first action workflow
+
+**Question:** What player-visible action should the first mock-driven complete story-loop slice use?
+
+- **A (recommended, proposed):** Start with **Story-mode** single freeform submitted passage/action and one deterministic mocked provisional narrative+optional typed world assertions, then accepted current story commit/reopen/replay. Preserve Do/Say/Continue as accepted future modes, but do not require all four controls or full actor selection in the first smallest slice. This isolates the history/commit architecture with fewer actor prerequisites. **Trade-off:** First slice does not yet prove the full action-mode UI.
+- **B (proposed):** Require **all Do/Say/Story/Continue modes** with their full actor semantics in the very first integrated slice. **Trade-off:** More representative, but substantially more prerequisites and branching.
+- **C (proposed):** Build only a static read-only story display initially, with no action/accept/commit/replay loop. **Trade-off:** Easier UI, fails the accepted complete vertical-slice purpose.
+
+The choice would narrow C-D01's accepted **complete story-loop target**, not alter existing IDEA-0002 or B1–B9 mode semantics. No implementation approval.
+
+### C-D05 — Mock transaction boundary in the first slice
+
+**Question:** How should the initial mock-first story loop represent the Go service authority while keeping real integration evidence separate?
+
+- **A (recommended, proposed):** TypeScript coordinator depends on a **narrow typed persistence interface** with expected adventure version, library epoch, idempotent operation identity, accepted event batch and typed result/errors. Use an **in-memory deterministic contract mock** for first-loop tests. Plan a separately identified Wails/Go/SQLite adapter and integration feasibility check as the next delivery gate, not as fictitious proof from the mock. **Trade-off:** Two adapters eventually; clear technical ownership and mock evidence.
+- **B (proposed):** Let the browser's local array/IndexedDB become a second canonical store for the first slice, with unspecified later Go reconciliation. **Trade-off:** Faster prototype, violates the accepted single canonical storage model.
+- **C (proposed):** Require completed real Wails+SQLite integration before **any** first story-loop mock or domain acceptance criteria can be defined. **Trade-off:** Avoids mocks, unnecessarily blocks contract refinement and conflicts with C-D03's mock-first planning.
+
+This does **not** approve executable mocks or real adapter code yet.
+
+### C-D06 — Minimal current-history payload for first acceptance
+
+**Question:** What must the initial accepted transaction preserve to prove deterministic reconstruction without prematurely choosing the entire world schema?
+
+- **A (recommended, proposed):** Commit a **stable adventure identity, accepted story passage/turn identity and order, story text, minimal typed event envelope/source ordering, and version metadata** sufficient for deterministic current-history reconstruction. Permit an **empty supported world-effect batch** when the accepted prose establishes no trackable state. Avoid invented map/character/item facts. Expand to typed character/world effects in later slices. **Trade-off:** Small but real canonical foundation.
+- **B (proposed):** Require every supported character, item, location, map geometry, inventory, lore and anatomy schema in the first commit. **Trade-off:** Delays the simplest complete story loop.
+- **C (proposed):** Persist only unversioned prose strings and reconstruct no stable turn/event identity or current history. **Trade-off:** Simpler demo, fails accepted deterministic replay/history and transaction boundaries.
+
+The choice is a **slice-scope proposal**, not approval of concrete serialized event fields or schema migration.
+
+**Batch 2 current status:** C-D04, C-D05, C-D06 **unapproved**; no ADRs created. No code, tests, staging promotion or implemented specs.
 
 ## Open exceptions and safeguards
 
@@ -89,10 +123,12 @@ The user has **not yet selected C-D01–D03**. Discuss these three before creati
 - **B9-D24 revised B:** No map-specific keyboard interaction, unrelated chat controls unchanged.
 - B1 feasibility/release checks remain unverified until separately executed. A mocked test plan is not a passed test; design closure is not an integration demonstration.
 - No new login/authentication layer, server-side model proxy, forced AI fallback, uncontrolled plugin authority or independent browser canonical world database.
-- This Pass C kickoff creates **no application source files, no production ideas, no specs and no new accepted slice decisions**.
+- This Pass C kickoff and Batch 1 review create **no application source files, no production ideas, no specs and no implementation-ready slice approvals**. Three separate Pass C architectural refinement ADRs are now accepted.
 
 ## History
 
 - **2026-10-24:** Pass A closed with 52 accepted staging ideas mapped to 12 logical subsystems.
 - **2026-11-01:** P-B9-01 separately closed B9 and Pass B at design level; D12 spatial migration remains deferred.
 - **2026-11-01:** User instructed the establishment and explanation of Pass C. This **planning kickoff** and its proposed topics/review method were opened, not approved for implementation or production promotion.
+
+- **2026-11-01 — Batch 1 approval:** User explicitly chose C-D01 A, C-D02 A, C-D03 A. Three accepted ADRs created and a preliminary proposed `C-SL-` register opened. Batch 2 D04–D06 remain unapproved; no implementation, tests or staging → production promotion authorised.
