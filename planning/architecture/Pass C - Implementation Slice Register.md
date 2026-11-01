@@ -26,10 +26,10 @@ tags:
 
 | ID | Slice / player-observable boundary | Primary owners | Example accepted IDEA references | Dependencies / constraints | Status |
 | --- | --- | --- | --- | --- | --- |
-| **C-SL-01** | Basic adventure entry and one provisional → accepted story turn with deterministic reconstruction | S02, S03, S05, S06, S07, S12 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0044, IDEA-0045, IDEA-0051 | [C-D01 A](./decisions/C-D01%20-%20First%20Mock%20Driven%20End%20to%20End%20Story%20Turn%20Slice.md); selected initial mode, minimal event subset, adapter detail remain C-D04–D06 proposals | **proposed** |
+| **C-SL-01** | Basic adventure entry and one provisional → accepted story turn with deterministic reconstruction | S02, S03, S05, S06, S07, S12 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0044, IDEA-0045, IDEA-0051 | [C-D01 A](./decisions/C-D01%20-%20First%20Mock%20Driven%20End%20to%20End%20Story%20Turn%20Slice.md); C-D04 A Story-mode first; C-D06 A minimal accepted history; **C-D05 C requires real Wails/Go/SQLite evidence before mock/domain story-loop acceptance criteria are finalised** | **proposed** |
 | **C-SL-02** | Typed current-event/replay and Go commit contract foundation | S05, S06, S12 | IDEA-0039, IDEA-0042, IDEA-0044, IDEA-0051 | Versioned expected-head, epoch and idempotent transaction envelope; pure TS deterministic reducers; **no B9-D12 spatial migration** | **proposed** |
 | **C-SL-03** | Provider/provisional attempt boundary and basic streaming/cancel | S07, S08, S06 | IDEA-0012, IDEA-0013, IDEA-0019, IDEA-0044, IDEA-0045 | Browser direct provider calls, mock-first tests; no mandatory live model, Go model proxy or automatic provider fallback | **proposed** |
-| **C-SL-04** | Host bootstrap and real browser/Go storage feasibility | S01, S12 | IDEA-0051, IDEA-0053 | Separate real-host evidence gate. Mock tests are not Wails/SQLite proof; no code has run | **proposed** |
+| **C-SL-04** | Host bootstrap and real browser/Go storage feasibility | S01, S12 | IDEA-0051, IDEA-0053 | **C-D05 C makes real Wails/Go/SQLite proof a prerequisite to first story-loop mock/domain acceptance criteria**; the precise host test is D07–D09 proposed; no code has run | **proposed** |
 | **C-SL-05** | Draft, Undo/Retry/Fork and history-edit recovery | S03, S05, S06, S12 | IDEA-0003, IDEA-0004, IDEA-0039, IDEA-0041 | Accepted current-only narrative-first replay and original composer Commit rules | **proposed** |
 
 **Register coverage:** Five entries are deliberately **starter candidates**, not an exhaustive mapping of 52 ideas. The full track-level coverage belongs to the [Pass C kickoff](./Pass%20C%20-%20Implementation%20Slice%20Refinement%20Kickoff.md), and all 52 original IDEA primary owners remain in the [Subsystem Mapping Register](./Subsystem%20Mapping%20Register.md). Add or refine entries only as the review reaches them.
@@ -46,13 +46,21 @@ Stable slice label; existing IDEA IDs and original note paths; B1–B9/C ADR lin
 
 **No slice itself, production promotion, code, tests or implemented spec was accepted by these three decisions.**
 
-## Next unapproved review: Pass C Batch 2
+## Batch 2 explicitly accepted
 
-- **C-D04:** Narrow initial story action mode and first observable user workflow.
-- **C-D05:** Define mocked transaction adapter and where real host evidence is separately required.
-- **C-D06:** Minimal supported canonical event/replay payload for the first story loop.
+- [C-D04 A](./decisions/C-D04%20-%20Story%20Mode%20First%20Complete%20Turn.md): Story mode is the first integrated action; others later.
+- [C-D05 C](./decisions/C-D05%20-%20Real%20Wails%20Go%20SQLite%20Integration%20Prerequisite.md): **real Wails headless Go and SQLite integration must be demonstrated before defining first-loop mocked/domain acceptance criteria**. Contrary to proposed mock-first order, but C-D01/C-D03 end goals remain.
+- [C-D06 A](./decisions/C-D06%20-%20Minimal%20Versioned%20Accepted%20Story%20History%20Payload.md): stable adventure/passages, accepted text and typed ordered events; empty effects allowed. Detailed mock criteria await host gate.
 
-All three are **unapproved proposals** at this point.
+These are design decisions, not acceptance of any C-SL entry or an instruction to write code.
+
+## Batch 3 proposed, NOT approved
+
+- **C-D07:** Define smallest real Wails headless Go/browser service evidence.
+- **C-D08:** Define real SQLite versioned commit/readback/rollback/reopen proof.
+- **C-D09:** Gate story-loop mock refinement behind observed host results, with separate readiness approval and no automatic staging promotion.
+
+All three remain proposals. Real-host execution and mocked tests are **NOT RUN**.
 
 ## Deferred design scope
 
