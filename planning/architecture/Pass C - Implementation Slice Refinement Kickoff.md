@@ -12,7 +12,7 @@ tags:
 
 # Pass C — Implementation Slice Refinement Kickoff
 
-> **PASS C BATCHES 1–3 ACCEPTED, REAL-HOST GATE NOT RUN, IMPLEMENTATION NOT YET APPROVED.** This kickoff is authorised by the user's instruction on 2026-11-01 to “Proceed to establishing pass c. Explain what we'll do and which [topics] we'll want to cover overall.” It proposes a review method and a complete topic map. **C-D01 A establishes the first story-loop refinement priority; C-D02 A establishes slice traceability; C-D03 A establishes verification evidence rules. No specific proposed slice is approved for implementation and no staging → production promotion follows.**
+> **PASS C BATCHES 1–4 ACCEPTED. STOP SPECULATIVE PLANNING; GATE 0 DEVELOPMENT APPROVAL PENDING.** This kickoff is authorised by the user's instruction on 2026-11-01 to “Proceed to establishing pass c. Explain what we'll do and which [topics] we'll want to cover overall.” It proposes a review method and a complete topic map. **C-D01 A establishes the first story-loop refinement priority; C-D02 A establishes slice traceability; C-D03 A establishes verification evidence rules. No specific proposed slice is approved for implementation and no staging → production promotion follows.**
 
 
 ## Current delivery intent after Batch 3 — 2026-11-01
@@ -151,7 +151,16 @@ The choice is a **slice-scope proposal**, not approval of concrete serialized ev
 
 **Batch 3 latest:** **D07 A, D08 A, D09 A are accepted as separate ADRs**, with prompt transition to actual development **after** genuine uncertainty verification and separate development/staging-promotion authorisation. The original A/B/C options above are kept as chronological proposals, not still-unapproved D07–D09 decisions. No runtime test was performed or application code written by accepting them.
 
-## Pass C Batch 4 — proposed C-D10–D12, NOT approved
+## Pass C Batch 4 — C-D10 A, C-D11 A, C-D12 A ACCEPTED
+
+**Explicit user approval, 2026-11-01:** **C-D10 A**, **C-D11 A**, **C-D12 A**, with this condition: **“I'd like to proceed to closing any dependencies as early as possible and starting actual implementation. Seems like our planning is taking pretty long that deadlines are pressing.”**
+
+The accepted records are [C-D10](./decisions/C-D10%20-%20Material%20Blockers%20Only%20Planning%20Stop%20Rule.md) (only material blockers), [C-D11](./decisions/C-D11%20-%20Reusable%20Production%20Intended%20Real%20Host%20Foundation.md) (reusable production-intended host foundation after authorisation), and [C-D12](./decisions/C-D12%20-%20Concise%20Go%20No%20Go%20Approval%20and%20Immediate%20Development%20Handoff.md) (one focused go/no-go, then prompt incremental final development, respecting distinct staging promotions).
+
+**Current next action, not another broad decision batch:** [Gate 0 host/storage implementation authorisation packet](./Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md), **PROPOSED, NOT APPROVED**. This requests separate explicit authorisation to move original IDEA-0053 and IDEA-0051 from staging to production, and to write/run the smallest real Wails/browser/Go/SQLite checks as reusable final-product foundation. Real host verification cannot occur without executing some code, but the user expressly prohibited implementation/testing/promotion **in this Batch 4 review**. **All 52 staging ideas remain where they are**.
+
+**Preserve original alternatives and review history below:** The original A/B/C choice wording and earlier recommendations remain valid approval evidence; the options are no longer unapproved. C-D05 C keeps genuine real host/storage evidence as a prerequisite to finalising first Story-mode mocked/domain criteria. Once evidence is obtained, submit the smallest story-slice development readiness request promptly, not another open-ended Pass C planning phase.
+
 
 These are proposed **last-mile planning/handoff rules**, not approval of implementation. Keep the next three decisions focused on stopping unnecessary planning and preparing the quickest safe path into final product development.
 
@@ -173,7 +182,7 @@ These are proposed **last-mile planning/handoff rules**, not approval of impleme
 - **B (proposed):** Automatically promote all 52 staged ideas and begin implementing them together when the first service ping succeeds.
 - **C (proposed):** Continue creating detailed architecture ADRs indefinitely even after the verified prerequisites and first readiness package are available.
 
-**Batch 4 status:** D10–D12 are **unapproved proposals**. Do not confuse C-D12 (a proposed implementation kickoff choice) with **B9-D12**, the still-deferred spatial migration decision. Nothing is promoted or implemented by proposing this batch.
+**Batch 4 final status:** C-D10 A, C-D11 A, C-D12 A **accepted as separate ADRs**. This is **not** approval to perform Gate 0 work or promote any original IDEA notes. **B9-D12 spatial migration remains deferred with no work.** The separate proposed Gate 0 approval packet is the next decision point; no further broad Pass C batch is required to reach it.
 
 
 ## Open exceptions and safeguards
@@ -196,3 +205,5 @@ These are proposed **last-mile planning/handoff rules**, not approval of impleme
 - **2026-11-01 — Batch 2 explicit approval:** D04 A Story-mode first, D05 C real Wails/Go/SQLite prerequisite before first story-loop mock/domain criteria, D06 A minimal versioned accepted story payload. Three ADRs recorded, with D05's precedence over the earlier mock-first sequence explicit. Batch 3 D07–D09 proposed only; no code, tests, promotions or specs.
 
 - **2026-11-01 — Batch 3 accepted:** User approved C-D07 A (real Wails/Go/browser service proof), C-D08 A (real Go SQLite commit/readback/rollback/reopen), C-D09 A (evidence-backed handoff), and directed that Pass C rapidly resolve material uncertainties so final-software implementation can begin **after the separate approval gate**. D10–D12 are unapproved Batch 4 proposals. No code/tests/promotions executed.
+
+- **2026-11-01 — Batch 4 accepted and expedited handoff:** User explicitly chose C-D10 A, C-D11 A, C-D12 A, requested immediate closing of critical dependencies under deadline pressure, and prohibited code/test/promotions in this review. Three accepted ADRs recorded. Prepared **proposed**, unapproved Gate 0 packet for original IDEA-0053 and IDEA-0051 and narrow reusable real Wails/Go/SQLite checks. Next action is explicit original-note promotion and execution approval, not continuing abstract planning. No tests performed or code/promotions implemented. B9-D12 remains deferred.
