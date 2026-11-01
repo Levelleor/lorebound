@@ -14,6 +14,12 @@ tags:
 ---
 # Configurable Travel Graph Rules
 
+## B8-D05 stable portal/door routes and D06 generated map positions — 2026-10-31
+
+[Accepted B8-D05 A](../architecture/decisions/B8-D05%20-%20Stable%20Cross%20Frame%20Routes%20with%20Grounded%20Door%20and%20Portal%20Anchors.md) refines explicit keyed travel graph relations across nested locations: stable route endpoints, optional grounded entrance/door/portal anchors, cross-frame rendering and current route availability without invented connections. [Accepted B8-D06 B](../architecture/decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) requires automatically **persisted initial visual map placements** for new locations. Generated placement is **not proof of established fictional distance or connectivity** and must not generate roads from visual proximity or impose fictional travel-legality tests. [Accepted B8-D04 A](../architecture/decisions/B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md) permits later mutable border edits without silently changing route keys or canonical parentage.
+
+
+
 ## B8-D02 accepted geographic versus route distance model — 2026-10-31
 
 [B8-D02](../architecture/decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) keeps **meaningful grounded geographic separation** (pinned spatial coordinates at relevant group scale) distinct from explicit route connectivity, optional grounded route shape/path length, travel cost/time and access conditions. Draw long connections between distant pinned regions rather than equal-length decorative graph edges, but **do not derive canonical travel time/legality from a line's pixel or straight-line length**. Exceptional winding roads and portals can have travel semantics different from geographic separation. Local coordinate frames from [B8-D01](../architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) must be composed for rendering cross-group endpoints; exact conversion and path-anchor rules remain deferred. New map pin positions do not create routes or retroactively invalidate accepted fictional arrivals.
