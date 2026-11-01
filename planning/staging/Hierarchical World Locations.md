@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-31"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Hierarchical World Locations
+
+## B7-D06 current relation and graph boundary — 2026-10-31
+
+[Accepted B7-D06](../architecture/decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md) refines the **existing** separation between the location **containment hierarchy** and the **travel graph**. Both reference stable/sparse location identities, but a room's parent is **not** an automatic traversable route. The hierarchy is an acyclic parent-child projection; the travel network is a **logically derived graph** with location IDs as nodes and **explicit grounded keyed route relations** as edges, updated by ordered accepted Add/Remove relation assertions and any current door/route status. One current event history remains authoritative, not a separately mutable map object. The user's question about a “graph object” is recorded as a request for clarity, **not** an implementation choice of a `Graph` class, graph database, index format or particular directedness. Existing editable, visible undiscovered locations and the map editor remain unchanged.
+
+
 
 ## Current accepted narrative-first scope — 2026-10-28
 
