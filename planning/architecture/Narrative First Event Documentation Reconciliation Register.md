@@ -11,6 +11,12 @@ tags:
 
 # Narrative-first event model — documentation reconciliation register
 
+## B8 design closure, B9 unapproved interface proposals — 2026-10-31
+
+After accepting **B8-D01–D09**, the user separately authorised formal B8 **design-only** closure and opening B9 by answering **“yes”** to a direct question. [P-B8-01](./decisions/P-B8-01%20-%20Design%20Closure%20and%20Deferred%20Runtime%20Integration%20Contracts.md) records the approval. The operative B8 map decisions include **D04 A mutable region borders**, **D06 B persistent automatic initial location placement with deliberate user overrides**, **D07 A deterministic generated coordinates**, **D08 A later grounded geography reconciling only generated-only pins**, and **D09 A atomically committed new location identity and first position**. The accepted scene/world map remains a **semantic nested spatial canvas**; route topology is a separate graph overlay. [B9](./Pass%20B9%20-%20Typed%20Spatial%20Data%20and%20Runtime%20Integration%20Contract%20Review.md) is open with **unapproved B9-D01–D03 proposals** concerning executable data types, runtime handoffs and actual verification. Original older B8 unapproved-proposal prose below remains history, not current status. No implementation, tests, B1 waiver or stage promotion is implied.
+
+
+
 ## Formal B7 design closure and B8 next contracts — 2026-10-31
 
 The user separately approved **formal B7 design-level closure and opening B8** after the B7 closure assessment, recorded in [P-B7-01](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md). [B8](./Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md) contains **unapproved initial proposals** for hierarchy/local coordinate frames, geographic separation vs route distance and canonical spatial-pin editing/replay. B7-D01–D10 remain binding, with **D03 explicitly C** and **D10 defining a saved, semantically scaled spatial canvas rather than an arbitrary graph layout**. Earlier entries below calling B7 proposals unapproved describe their original dates, not current acceptance. No software, schema, test or staging promotion is implied by design closure.
