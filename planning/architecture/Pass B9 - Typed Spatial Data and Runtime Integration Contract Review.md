@@ -13,7 +13,7 @@ tags:
 
 # Pass B9 — Typed Spatial Data and Runtime Integration Contract Review
 
-> **B9 IN REVIEW — Batch 8 D22 C and D23 A (minimal viewport rendering) accepted; D24 deferred with explicit no-map-keyboard direction. D12/D13 remain deferred; Batch 9 unapproved.** Batch 1: D01 qualified A (typed spatial facts, no player/AI author labels), D02 A (TypeScript prepared assertions, Go/SQLite technical atomicity), D03 B (mocked all-component tests, no live model scenarios). Batch 2: **D04 C** (all pins eligible for future automatic movement, overriding previous intentional-pin immunity), **D05 A** (validated nested local-frame coordinates and mutable region geometry), **D06 A** (broad mocked success/failure/history contracts, labelled honestly). Historical alternatives remain below. **Batch 3: D07 B** (mandatory exact-metre conversion of qualitative geographic relations, superseding earlier no-fabricated-precision advice), **D08 A** (recalculate only on relevant accepted change, atomic commit and nonblocking conflicts), **D09 A** (allow valid overlapping mutable regions without changing containment/routes). No tests run, runtime implementation, stage promotion, B9 closure or waiver of separate B1 evidence is implied.
+> **B9 IN REVIEW — Batch 8 D22 C and D23 A (minimal viewport rendering) accepted; D24 deferred with explicit no-map-keyboard direction. D12/D13 remain deferred; Batch 9 D25 A, D26 qualified A, D27 qualified C accepted; Batch 10 pending.** Batch 1: D01 qualified A (typed spatial facts, no player/AI author labels), D02 A (TypeScript prepared assertions, Go/SQLite technical atomicity), D03 B (mocked all-component tests, no live model scenarios). Batch 2: **D04 C** (all pins eligible for future automatic movement, overriding previous intentional-pin immunity), **D05 A** (validated nested local-frame coordinates and mutable region geometry), **D06 A** (broad mocked success/failure/history contracts, labelled honestly). Historical alternatives remain below. **Batch 3: D07 B** (mandatory exact-metre conversion of qualitative geographic relations, superseding earlier no-fabricated-precision advice), **D08 A** (recalculate only on relevant accepted change, atomic commit and nonblocking conflicts), **D09 A** (allow valid overlapping mutable regions without changing containment/routes). No tests run, runtime implementation, stage promotion, B9 closure or waiver of separate B1 evidence is implied.
 
 ## Purpose
 
@@ -390,7 +390,14 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 
 **Batch 8 latest status:** **D22 C accepted, D23 A qualified/accepted, D24 deferred.** The A/B/C text above remains the dated proposed alternatives. No D24 ADR. Explicit current scope: **no map keyboard interaction**. D12/D13 remain deferred; no implementation, migration, tests, promotion or closure.
 
-## Batch 9 — proposed D25–D27, NOT approved
+## Batch 9 — D25 A, D26 qualified A, D27 qualified C accepted
+
+**User explicit choices (2026-11-01):** D25 **A** (view pan/zoom is temporary), D26 **A** with initial map focus on the selected Playing As character's established current location, otherwise **default coordinates**, D27 **C** qualified to prevent **total location-marker overlap at the lowest zoom** by moving affected pins only slightly toward the nearest open side. This is deliberately narrower than original D27 C's broad geometry rewrite. The original options below remain as history.
+
+Accepted ADRs: [D25](./decisions/B9-D25%20-%20Disposable%20Map%20Pan%20and%20Zoom%20View%20State.md), [D26](./decisions/B9-D26%20-%20Player%20Location%20First%20Map%20View%20with%20Default%20Coordinate%20Fallback.md), [D27](./decisions/B9-D27%20-%20Minimal%20Canonical%20Pin%20Separation%20at%20Minimum%20Zoom.md).
+
+**Precedence:** D26 overrides the initial fit-all proposal. D27 C overrides hit-test-only A for total pin overlap, while preserving B9-D09's overlapping region geometry, D08's deterministic accepted-change-only canonical writes, and all unrelated fictional facts. No canonical write on zoom/redraw. **D12, D13 and D24 remain deferred**; no spatial migration work or map keyboard controls.
+
 
 ### B9-D25 — Pan and zoom view-state lifetime
 
@@ -422,14 +429,36 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 
 **Already accepted:** B9-D09 permits overlapping regions, D21 basic hover/inspect, D23 simple rendering and D24's explicit no-map-keyboard scope.
 
-**Batch 9 status:** D25–D27 are **unapproved proposals**. D12/D13/D24 remain deferred, and no implementation/stage promotion is authorised.
+**Batch 9 latest:** D25 A, D26 qualified A, D27 qualified C accepted. Original proposals above are historical. D12/D13/D24 remain deferred; no implementation, testing or staging promotion.
+
+## Batch 10 — proposed D28–D30, NOT approved
+
+### B9-D28 — Recentring when Playing As changes
+
+- **A (recommended, proposed):** Focus the selected character when opening the map under D26, but do not interrupt an already open map if Playing As changes. Use the new selected character next time the map opens.
+- **B (proposed):** Immediately recenter an open map whenever Playing As changes.
+- **C (proposed):** Continuously follow character movements on every accepted world update.
+
+### B9-D29 — Simple deterministic tie-breaking for pin separation
+
+- **A (recommended, proposed):** At the supported lowest zoom, use stable location ID order and a fixed nearest-free-offset direction order. Adjust only fully overlapping pins, with the smallest workable offset, when accepting a relevant spatial change.
+- **B (proposed):** Run random force-directed rearrangement every time the user zooms out.
+- **C (proposed):** Shift whole regions and redraw their boundaries for any pin overlap at every zoom level.
+
+### B9-D30 — B9 design completeness assessment
+
+- **A (recommended, proposed):** Audit B9 decisions, supersession, links, remaining deferred D12/D13/D24, and design dependencies **without implementing anything**. Report whether B9 is ready for a separately user-approved formal design closure.
+- **B (proposed):** Declare formal B9 closure immediately without assessing its consistency or deferrals.
+- **C (proposed):** Require full implementation and live model/host tests before even assessing design closure.
+
+**Batch 10 status:** All options remain unapproved. B9 remains in review. D12/D13/D24 remain deferred.
 
 ## Deferred B9 subjects, unapproved
 
 - **D12 deferred:** Do **no spatial migration work yet**. D12 A/B/C remain unselected and no spatial migration ADR or implementation is authorised. This does not erase earlier general event-migration decisions in B4/B7.
 - **D13 deferred:** Coordinator-led best effort is a recorded preference needing clarification; no D13 ADR or amendment to B9-D08 conflict-report obligations.
 - **D24 deferred:** User explicitly said **“No keyboard interaction for the map.”** This is current map UI scope; do not silently accept D24 A/B/C or create a D24 ADR. Do not infer a change to unrelated chat composer keyboard access.
-- **D28+:** Any further map questions only as needed. **D25–D27 are unapproved Batch 9 proposals**.
+- **D28+:** Any further map questions only as needed. **D28–D30 are unapproved Batch 10 proposals**.
 - Narrator-safe natural reference protocol from the selected model, simultaneous location creations, structured status/inventory projections, optional plugin event schema handling, current-only migration and restore wiring.
 - Browser canvas renderer/framework, drawing shape/scale bars, Wails API signatures, SQLite table/index design and migration scripts all require separate technical decisions/implementation permission. Do not infer them from B9 opening.
 - B1 real-host feasibility and pending staging→production gates are unchanged by this review.
@@ -454,3 +483,5 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 - **2026-10-31 — Batch 7 approvals:** User selected **D19 A, D20 A, D21 A**, with **“allow it to guess it and if guess doesn't work just use default value. Player will fix it.”** D20 accepted as **qualified A** permitting best-effort *geographic* estimate on already resolved stable places/frames before deterministic default, a later qualification of B9-D10's earlier no-guess unsupported geographic number language. Does **not** alter no-guess *identity* rule B7-D03 C/B9-D18 A. Three separate accepted ADRs, original alternatives preserved. D12 spatial migration and D13 conflict UI stay deferred. Batch 8 D22–D24 proposed only; B9 stays in-review; no code/tests/migration/promotion/closure.
 
 - **2026-11-01 — Batch 8 explicit disposition:** User selected **B9-D22 C** (no visible scale indicator) and **B9-D23 A** with a strong *keep it as easy as possible / no advanced features* condition, while choosing **B9-D24 defer** and separately stating **“No keyboard interaction for the map.”** Two accepted ADRs created for D22/D23 only. D23 starts with simple disposable view rendering and adds light culling only when useful; no sophisticated optimization subsystem mandated. The D24 no-keyboard scope is recorded without treating A/B/C as approved. D12 stays deferred without any spatial migration work; D13 stays deferred for coordinator clarification. D25–D27 proposed only as Batch 9. No code/tests/migrations/staging promotion/B9 closure.
+
+- **2026-11-01 — Batch 9 approval:** User approved **D25 A**, **D26 A with selected Playing As character's current position or default coordinates**, and **D27 C only for minimal nearest-free-side separation of completely overlapping pins at the farthest zoom-out**. Three accepted ADRs. Older alternative text retained. No per-redraw canonical writes or sweeping region/route changes. **D12 deferred without migration work; D13 deferred for coordinator clarification; D24 deferred without map keyboard interaction**. D28–D30 proposed only. No implementation, tests, staging promotion or formal B9 closure.
