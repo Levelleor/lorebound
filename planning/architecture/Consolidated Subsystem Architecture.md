@@ -10,6 +10,12 @@ tags:
 ---
 # Consolidated Subsystem Architecture
 
+## B7 Batch 2 accepted representations and spatial graph projection — 2026-10-31
+
+**B7-D04 A** ([typed absent/unknown/clear](./decisions/B7-D04%20-%20Typed%20Unknown%20Absence%20and%20Clear%20Semantics.md)), **B7-D05 A** ([ordered entity lifecycle](./decisions/B7-D05%20-%20Event%20Ordered%20Entity%20Lifecycle%20and%20Reestablishment.md)) and **B7-D06 A** ([keyed relationships and world travel graph](./decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md)) refine S05/S06/S10/S11/S12. In particular, locations are **stable graph nodes**; typed accepted keyed route relations are **travel edges**, projected from ordered current events. An independent **acyclic containment hierarchy** determines grouping, not reachability. The map canvas renders this derived state; do not add a separate mutable graph authority. A `Graph` class/library/SQLite graph table, edge directionality and layout schema remain **unapproved concrete implementation choices**. B7 Batch 3 remains proposed and unapproved. No implementation or staging promotion.
+
+
+
 ## B7 Batch 1 accepted representation and interpreter lifecycle — 2026-10-31
 
 **B7-D01 Option A** ([typed declarative envelope](./decisions/B7-D01%20-%20Versioned%20Typed%20Declarative%20Event%20Envelope.md)) and **B7-D02 Option A** ([core vs optional plugin ownership](./decisions/B7-D02%20-%20Core%20and%20Optional%20Plugin%20Event%20Ownership.md)) refine current S05/S06/S07/S12 contracts. Durable event records have typed, versioned declarative payloads with explicit domain ownership; unsupported **required core** effects fail safe, while removed optional plugin-specific effects need not be reconstructed. **B7-D03 Option C** ([silent unresolved extraction discard](./decisions/B7-D03%20-%20Discard%20Unresolved%20Extraction%20Suggestions%20Without%20Diagnostics.md)) specifically resolves S07's automatic interpretation-candidate policy: ambiguous candidates are **discarded without session/SQLite diagnostics, player hints or approval gate**. Do not confuse this with existing status/error diagnostics for real provider, required schema or atomic storage failures. All three decisions have distinct user approvals **A/A/C**, and Batch 2 remains unapproved. No code, stage promotion or B7 closure.
