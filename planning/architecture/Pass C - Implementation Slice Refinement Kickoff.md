@@ -51,8 +51,8 @@ The following **ten proposed workstreams** together span the existing S01–S12 
 
 ## Proposed dependency order (review, not execution approval)
 
-1. **Foundation contracts:** Host/service/secret boundaries (T01), canonical SQLite transaction boundary (T02), typed current events and pure reducers (T03).
-2. **First complete story loop:** Basic adventure shell (T06) + coordinator (T04) + a mocked provider path (T05) + primary action/story presentation (T09): `create adventure → submit Do/Say/Story/Continue → provisional narrative/event proposal → validate/accept once → atomic commit → reopen/replay`. Start with a **deterministic mocked provider** and real pure domain logic; no claim that a real AI or real Wails/SQLite integration has been exercised.
+1. **Real-host prerequisite under accepted C-D05 C:** Before first story-loop mocks or final story-loop domain acceptance criteria, the real Wails v3 headless Go/browser service and Go SQLite integration must be genuinely demonstrated through a separately approved delivery/evidence gate. The exact narrow proof is proposed for Batch 3. This changes the earlier suggested mock-first delivery order; no implementation or tests have yet been authorised.
+2. **After host evidence, first complete story loop:** Basic adventure shell (T06) + coordinator (T04) + a mocked provider path (T05) + primary action/story presentation (T09): `create adventure → submit Do/Say/Story/Continue → provisional narrative/event proposal → validate/accept once → atomic commit → reopen/replay`. Start with a **deterministic mocked provider** and real pure domain logic; no claim that a real AI or real Wails/SQLite integration has been exercised.
 3. **Editing and recovery:** Drafts, retry/cancel, stale concurrent tabs, committed Undo/Fork/history editing, replay and backup/restore **without** implementing spatial migrations (T02/T03/T04/T09).
 4. **World richness:** Lore/context (T07), character and item continuity (T08), local/cloud provider options (T05) and adventure-start variants (T06).
 5. **Map and expanded UI:** Durable world/map geometry in the existing story transaction (T08/T09), with minimal visual controls and already approved defaults/overlap rules; preserve the user-specified basic scope.
@@ -82,7 +82,12 @@ Each proposed slice record should contain:
 
 **Explicit acceptance, 2026-11-01:** User selected **C-D01 A, C-D02 A, C-D03 A**, requested only explicitly approved ADRs and continuation in three-decision batches. See [C-D01](./decisions/C-D01%20-%20First%20Mock%20Driven%20End%20to%20End%20Story%20Turn%20Slice.md), [C-D02](./decisions/C-D02%20-%20Traceable%20Slice%20Register%20With%20Original%20Idea%20Identity.md), [C-D03](./decisions/C-D03%20-%20Mocked%20Contract%20Criteria%20With%20Separate%20Real%20Host%20Gates.md), and the [proposed slice register](./Pass%20C%20-%20Implementation%20Slice%20Register.md). Original choices 1–3 above remain review history. No specific slice was accepted as production-ready, no ideas were promoted and no tests were run.
 
-## Pass C Batch 2 — proposed C-D04–D06, NOT approved
+## Pass C Batch 2 — C-D04 A, C-D05 C, C-D06 A ACCEPTED (original proposals preserved)
+
+**Explicit user approval, 2026-11-01:** C-D04 **A** ([Story mode first](./decisions/C-D04%20-%20Story%20Mode%20First%20Complete%20Turn.md)), C-D05 **C** ([real Wails/Go/SQLite integration is an earlier prerequisite](./decisions/C-D05%20-%20Real%20Wails%20Go%20SQLite%20Integration%20Prerequisite.md)), C-D06 **A** ([minimal versioned accepted story history](./decisions/C-D06%20-%20Minimal%20Versioned%20Accepted%20Story%20History%20Payload.md)). Original A/B/C alternatives remain below as approval history.
+
+**D05 C explicitly supersedes the proposed mock-first sequence where it put first story-loop mock/domain acceptance criteria ahead of actual host integration.** The real Wails v3 headless Go and SQLite integration feasibility and evidence gate now comes first. C-D01's complete story-loop *goal* and C-D03's mocked-test approach **remain accepted**, but cannot be treated as ready to carry out before that real-host gate. No application code, integration tests or actual real-host results were approved or executed by this planning choice.
+
 
 ### C-D04 — Minimal first action workflow
 
@@ -114,7 +119,30 @@ This does **not** approve executable mocks or real adapter code yet.
 
 The choice is a **slice-scope proposal**, not approval of concrete serialized event fields or schema migration.
 
-**Batch 2 current status:** C-D04, C-D05, C-D06 **unapproved**; no ADRs created. No code, tests, staging promotion or implemented specs.
+**Batch 2 latest status:** D04 A, D05 C, D06 A accepted as separate ADRs. No implementation, tests, staging promotion or implemented specs.
+
+## Pass C Batch 3 — proposed C-D07–D09, NOT approved
+
+### C-D07 — First real-host feasibility target
+
+- **A (recommended, proposed):** Verify the smallest real Wails v3 headless Go startup, ordinary browser client connection and one narrow typed service ping/health exchange, **then** add SQLite open/transaction checks before declaring the C-D05 gate satisfied. No story generation, provider calls or gameplay domain is required in this feasibility target. Report actual observations, errors and platform limitations, not mock evidence.
+- **B (proposed):** Require the complete UI, story pipeline and all domain entities to work before testing the host bridge.
+- **C (proposed):** Treat documentation or a simulated service as proof the real host works.
+
+### C-D08 — Minimum real SQLite persistence demonstration
+
+- **A (recommended, proposed):** To satisfy C-D05, establish a real Go-owned SQLite test operation with versioned/idempotent technical commit and readback, verify no partial success under deliberate failure, then verify reopen/restart durability. Keep test data isolated from real adventure libraries and **do no spatial schema migrations**.
+- **B (proposed):** A successful SQLite file-open alone satisfies C-D05, without writing, readback, rollback or restart evidence.
+- **C (proposed):** Require entire lore, inventory, spatial, backups and all adventure editing schemas to be integrated before a minimal transaction demonstration.
+
+### C-D09 — What approval may follow the host gate
+
+- **A (recommended, proposed):** Treat the real-host gate as verified **only after observed runtime evidence**. Then authorise a **separate review** to refine the mock-driven Story-mode first-loop contract and its minimal typed event criteria; do not automatically promote staging ideas or imply that real model calls ran.
+- **B (proposed):** Promote all host, coordinator, story, storage and model staging ideas immediately when any service ping works.
+- **C (proposed):** Do not use host results to revise story-slice priorities; require a full product implementation before returning to Pass C.
+
+**Batch 3 status:** D07–D09 remain unapproved. D05 C is an approved sequencing gate only, not proof or permission to execute tests.
+
 
 ## Open exceptions and safeguards
 
@@ -132,3 +160,5 @@ The choice is a **slice-scope proposal**, not approval of concrete serialized ev
 - **2026-11-01:** User instructed the establishment and explanation of Pass C. This **planning kickoff** and its proposed topics/review method were opened, not approved for implementation or production promotion.
 
 - **2026-11-01 — Batch 1 approval:** User explicitly chose C-D01 A, C-D02 A, C-D03 A. Three accepted ADRs created and a preliminary proposed `C-SL-` register opened. Batch 2 D04–D06 remain unapproved; no implementation, tests or staging → production promotion authorised.
+
+- **2026-11-01 — Batch 2 explicit approval:** D04 A Story-mode first, D05 C real Wails/Go/SQLite prerequisite before first story-loop mock/domain criteria, D06 A minimal versioned accepted story payload. Three ADRs recorded, with D05's precedence over the earlier mock-first sequence explicit. Batch 3 D07–D09 proposed only; no code, tests, promotions or specs.
