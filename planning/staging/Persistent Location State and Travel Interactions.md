@@ -14,6 +14,12 @@ tags:
 ---
 # Persistent Location State and Travel Interactions
 
+## B8 Batch 3 coherent initial placement transaction — 2026-10-31
+
+[B8-D07 A](../architecture/decisions/B8-D07%20-%20Deterministic%20Scoped%20Automatic%20Map%20Placement.md), [B8-D08 A](../architecture/decisions/B8-D08%20-%20Provenance%20Aware%20Spatial%20Reconciliation%20of%20Generated%20Placement.md), and [B8-D09 A](../architecture/decisions/B8-D09%20-%20Atomic%20Canonical%20Location%20Creation%20and%20Initial%20Placement.md) ensure newly accepted locations have **deterministically generated and durably stored** first map positions **in the same atomic transaction** as the accepted location identity, with explicit generated provenance. Later accepted narrative geography can reconcile *generated-only* positions, never silently moving a committed player-positioned pin or inventing an exact travel distance. Story arrival, route status and border changes remain separate accepted assertions. Player-driven map repositioning uses the established noncanonical draft and explicit Commit, not a free direct SQLite drag write. This is design-only; technical replay/fork/migration verification remains unimplemented.
+
+
+
 ## Latest B8 spatial world contracts — 2026-10-31
 
 [B8-D04 A](../architecture/decisions/B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md) accepts **mutable geographic/administrative region footprints** separately from location containment; later grounded changes use typed current-world assertions. [B8-D05 A](../architecture/decisions/B8-D05%20-%20Stable%20Cross%20Frame%20Routes%20with%20Grounded%20Door%20and%20Portal%20Anchors.md) accepts stable cross-frame route keys and optional door/portal anchors. **[B8-D06 B](../architecture/decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) explicitly replaces the older rule to leave new locations unplaced**: on accepted location creation assign a **persisted generated initial map coordinate**, with user edits permitted via pending explicit Commit and generated versus narrative geography provenance distinguished. Generated placements do not imply character movement, routes or known travel distances. No separate authoritative graph layout database.
