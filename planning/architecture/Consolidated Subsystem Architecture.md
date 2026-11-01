@@ -10,6 +10,12 @@ tags:
 ---
 # Consolidated Subsystem Architecture
 
+## Later user-approved map correction: semantic spatial canvas, not graph-only — 2026-10-31
+
+[Accepted B7-D10](./decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) explicitly refines B7-D06's graph-oriented explanation: **Lorebound's main location map is a persistent, coordinate-pinned, semantically scaled canvas.** On **one zoomable surface**, meaningful grouped places include empires, cities, buildings and rooms. Placed nodes retain geographic coordinates and group extents on reopen; distances and visual link lengths convey credible relative world size. **Containment hierarchy is distinct from explicit route edges**, and routes are still a derived logical graph, but arbitrary graph layout must never replace saved geographic positions. An actual player map-pin repositioning is a semantic world edit through the existing explicit pending Commit/Discard path, **not merely presentation layout**; viewport pan/zoom and optional label-offset arrangement remain presentation-only. Changing map geometry does not by itself move a character, change the parent hierarchy or invent a route. Cross-scale coordinate transforms, polygon shapes, routing geometry and DB/JS types remain deferred. This is a later explicit user direction; B7-D07–D09 are still unapproved and no implementation has occurred.
+
+
+
 ## B7 Batch 2 accepted representations and spatial graph projection — 2026-10-31
 
 **B7-D04 A** ([typed absent/unknown/clear](./decisions/B7-D04%20-%20Typed%20Unknown%20Absence%20and%20Clear%20Semantics.md)), **B7-D05 A** ([ordered entity lifecycle](./decisions/B7-D05%20-%20Event%20Ordered%20Entity%20Lifecycle%20and%20Reestablishment.md)) and **B7-D06 A** ([keyed relationships and world travel graph](./decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md)) refine S05/S06/S10/S11/S12. In particular, locations are **stable graph nodes**; typed accepted keyed route relations are **travel edges**, projected from ordered current events. An independent **acyclic containment hierarchy** determines grouping, not reachability. The map canvas renders this derived state; do not add a separate mutable graph authority. A `Graph` class/library/SQLite graph table, edge directionality and layout schema remain **unapproved concrete implementation choices**. B7 Batch 3 remains proposed and unapproved. No implementation or staging promotion.
@@ -101,7 +107,7 @@ This document consolidates **architectural ownership only**. It does not promote
 
 - **Owns:** Accessible responsive Svelte UI, story and entity views, status/equipment panels, map canvas, notifications, contextual action affordances and layout/readability preferences.
 - **Internal responsibility areas:** Svelte components; navigation/layout; accessibility; map renderer; inspector and status views.
-- **Does not own:** Map layout/selection are presentation, not fictional coordinates or travel actions. **The player can deliberately edit/add map location records** through validated world-state editing APIs owned by S11/S06; the map UI never bypasses that boundary or uses node clicks as gameplay input.
+- **Does not own:** Pure viewport pan/zoom/selection and cosmetic label offsets are presentation and never travel commands. **Map pins' geographic coordinates, meaningful scale and group extents are persistent world-map state** (B7-D10), owned by S11 and edited via the established S06/S12 validation and explicit-Commit flow; S04 renders/edits these facts but cannot bypass the canonical boundary. Node clicks never imply travel.
 - **Pass A primary idea count:** 2.
 
 ### S05 — Canonical History & Reconstruction
@@ -148,7 +154,7 @@ This document consolidates **architectural ownership only**. It does not promote
 
 ### S11 — World, Travel & Inventory
 
-- **Owns:** Persistent unique items and custody; equipment slots; stable nested locations and a separate travel graph; location **discovered/undiscovered** state separate from player map-editor visibility; mutable routes, doors, containers and environmental conditions. Domain-specific rules for movement, validated anatomy-triggered equipment adjustments and manual world edits integrate with S06.
+- **Owns:** Persistent unique items and custody; equipment slots; **semantically scaled location coordinates and grouped geographic extents on the world canvas**; stable nested containment; a separate derived logical travel graph; location **discovered/undiscovered** state separate from player map-editor visibility; mutable routes, doors, containers and environmental conditions. Domain-specific rules and deliberate geographic edits integrate with S06.
 - **Internal responsibility areas:** Item identity/custody and equipment; place hierarchy and graph; discovery flags, editable recorded location details and separately controlled fictional knowledge; environmental conditions; validated world-domain transitions.
 - **Does not own:** No global Player Inventory, automatically inferred travel edge from containment, duplicate unique item placement, or travel to a location solely because narration claims it.
 - **Pass A primary idea count:** 6.
