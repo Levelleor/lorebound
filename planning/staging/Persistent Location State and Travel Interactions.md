@@ -14,6 +14,12 @@ tags:
 ---
 # Persistent Location State and Travel Interactions
 
+## Latest B8 spatial world contracts — 2026-10-31
+
+[B8-D04 A](../architecture/decisions/B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md) accepts **mutable geographic/administrative region footprints** separately from location containment; later grounded changes use typed current-world assertions. [B8-D05 A](../architecture/decisions/B8-D05%20-%20Stable%20Cross%20Frame%20Routes%20with%20Grounded%20Door%20and%20Portal%20Anchors.md) accepts stable cross-frame route keys and optional door/portal anchors. **[B8-D06 B](../architecture/decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) explicitly replaces the older rule to leave new locations unplaced**: on accepted location creation assign a **persisted generated initial map coordinate**, with user edits permitted via pending explicit Commit and generated versus narrative geography provenance distinguished. Generated placements do not imply character movement, routes or known travel distances. No separate authoritative graph layout database.
+
+
+
 ## B8 Batch 1 spatial durability and route separation — 2026-10-31
 
 [B8-D01](../architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) selects **persistent nested local-frame coordinates and meaningful group scale**, [B8-D02](../architecture/decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) distinguishes geographic separation from optional grounded route path/travel metrics, and [B8-D03](../architecture/decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) stores deliberately committed semantic map placements/extents as **versioned typed current-world assertions**, not as a separate authoritative graph or presentation-only layout. Player drag/edit previews are noncanonical until explicit Commit; TypeScript reduces accepted spatial properties alongside *separate* containment and keyed route events, with Go/SQLite atomic storage. Reopening, replay and Fork preserve pinned coordinates according to accepted history boundaries. Moving pins does not automatically move inhabitants, grant passages or modify travel cost; no invented coordinates.
