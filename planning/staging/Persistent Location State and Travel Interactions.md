@@ -14,6 +14,12 @@ tags:
 ---
 # Persistent Location State and Travel Interactions
 
+## B8 Batch 1 spatial durability and route separation — 2026-10-31
+
+[B8-D01](../architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) selects **persistent nested local-frame coordinates and meaningful group scale**, [B8-D02](../architecture/decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) distinguishes geographic separation from optional grounded route path/travel metrics, and [B8-D03](../architecture/decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) stores deliberately committed semantic map placements/extents as **versioned typed current-world assertions**, not as a separate authoritative graph or presentation-only layout. Player drag/edit previews are noncanonical until explicit Commit; TypeScript reduces accepted spatial properties alongside *separate* containment and keyed route events, with Go/SQLite atomic storage. Reopening, replay and Fork preserve pinned coordinates according to accepted history boundaries. Moving pins does not automatically move inhabitants, grant passages or modify travel cost; no invented coordinates.
+
+
+
 ## Persistent geographic placement and route topology — B7-D10 (2026-10-31)
 
 [Accepted B7-D10](../architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) requires the **world-map canvas to save semantic coordinates, spatial grouping/extents and meaningful relative distance/scale** for placed locations. These facts are part of persistent world-map state tied to stable location identities, alongside the current route/door/environment events; the graph derived from route relations alone **is not the complete map**. A collapsed bridge can change edge availability without moving city pins; moving a city pin as a deliberately committed map edit does not create or remove a route, change container hierarchy or move story characters. Drawn connector lengths should reflect meaningful world separation at the current scale rather than arbitrary graph layout. Exact nested coordinate transforms, map unit definitions and route-specific travel lengths are later technical contracts.
