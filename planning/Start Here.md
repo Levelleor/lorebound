@@ -8,9 +8,15 @@ tags:
 ---
 # Start Here
 
+## B8 Batch 2 accepted, including automatic placement over the earlier unplaced default — 2026-10-31
+
+The user explicitly approved [B8-D04 A](architecture/decisions/B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md) (**dynamic region borders**), [B8-D05 A](architecture/decisions/B8-D05%20-%20Stable%20Cross%20Frame%20Routes%20with%20Grounded%20Door%20and%20Portal%20Anchors.md) (**stable cross-frame doors/portal/route anchors**) and **[B8-D06 B](architecture/decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md)** (**auto-place every new accepted location on the saved map**, with subsequent player repositioning). D06 B was **not** the previous recommendation and **overrides the earlier prohibition on generated persistent map coordinates for initial placement only**. Generated coordinates are **map-layout origin facts**, distinct from established story distances or route costs; deliberate user edits remain pending explicit Commit. [B8](architecture/Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md) remains `in-review` with **D07–D09 unapproved**. Design-only, no code, tests or staging promotion.
+
+
+
 ## B8 Batch 1 accepted spatial-map contracts — 2026-10-31
 
-In the [B8 spatial canvas and integration review](architecture/Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md), the user explicitly approved [D01 A](architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) (nested persistent local coordinate frames), [D02 A](architecture/decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) (geographic separation distinct from route-specific travel metrics) and [D03 A](architecture/decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) (typed map-placement facts and manual pending **Commit** for deliberate edits). The canvas remains semantic, persistent and separate from the logical travel graph. **D04–D06 are only proposals**; B8 remains `in-review`. No code, test evidence or staging promotion follows from these decisions.
+In the [B8 spatial canvas and integration review](architecture/Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md), the user explicitly approved [D01 A](architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) (nested persistent local coordinate frames), [D02 A](architecture/decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) (geographic separation distinct from route-specific travel metrics) and [D03 A](architecture/decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) (typed map-placement facts and manual pending **Commit** for deliberate edits). The canvas remains semantic, persistent and separate from the logical travel graph. **D04 A, D05 A and D06 B were later explicitly approved with clarifications; D07–D09 are still proposals**. B8 remains `in-review`. No code, tests or staging promotion follows from these decisions.
 
 
 
