@@ -16,6 +16,12 @@ tags:
 
 # B8-D03 — Typed durable spatial assertions and explicit atomic map-edit Commit
 
+## Later accepted initial-autoplacement exception — 2026-10-31
+
+[B8-D06 Option B](./B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) explicitly permits **automatic first placement and durable typed system-generated spatial assertions on new accepted location identities**, without a separate **manual player approval for every default pin**. This refines the earlier paragraph below that left new locations unplaced until grounded. Crucially the user still controls intentional map corrections: a **player drag/reposition/resize** is noncanonical until the existing **pending explicit Commit/Discard**, with no background drag writes. Automatically generated placement must share the accepted current-world event/atomic storage boundary, carry **generated origin**, and not silently overwrite authored geography or create fictional distances or routes.
+
+
+
 ## Approval and provenance
 
 **Explicit user choice, 2026-10-31:** “Review B8 Batch 1: B8-D01: A; B8-D02: A; B8-D03: A. Record only explicitly approved choices as Lorebound GitHub ADRs, preserve approval history, and continue B8.”
