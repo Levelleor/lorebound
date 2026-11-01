@@ -17,6 +17,12 @@ tags:
 
 # B8-D06 — Automatically persist initial location positions, with player-controlled repositioning
 
+## Subsequent accepted B8 Batch 3 refinements — 2026-10-31
+
+The user's later explicit **B8-D07 A, B8-D08 A, B8-D09 A** approvals now settle the originally deferred design strategy: [D07](./B8-D07%20-%20Deterministic%20Scoped%20Automatic%20Map%20Placement.md) uses **deterministic, local-frame-scoped automatic first placement**, preserving existing pins and grounded spatial constraints without a required extra model call; [D08](./B8-D08%20-%20Provenance%20Aware%20Spatial%20Reconciliation%20of%20Generated%20Placement.md) permits **provenance-aware reconciliation of only generated-only positions** with later accepted grounded geography, protecting deliberate player positions and never fabricating exact narrated distance; [D09](./B8-D09%20-%20Atomic%20Canonical%20Location%20Creation%20and%20Initial%20Placement.md) commits a resolved new location identity and its **system-generated initial typed map coordinate within the same atomic accepted creation batch**. These refine this still-binding **D06 Option B**, not a reversal to unplaced Option A. Later deliberate player map repositioning still requires explicit pending Commit/Discard. No implementation, B8 formal closure or staging promotion has been approved.
+
+
+
 ## Explicit approval and override provenance
 
 **User's explicit 2026-10-31 selection:** “Review B8 Batch 2: B8-D04: A; B8-D05: A; B8-D06: B. Notes: Note: the region boundaries could change eventually so the boundaries are also a dynamic content which is subject for change eventually. Note: we want to just automatically place everything on the map, but user should be able to move the stuff however they like if they wish. Record only explicitly approved choices as Lorebound GitHub ADRs, preserve approval history, and continue B8.”
