@@ -1,6 +1,6 @@
 ---
 type: architecture
-status: in-review
+status: closed-design-only
 phase: "B8"
 created: "2026-10-31"
 updated: "2026-10-31"
@@ -12,6 +12,10 @@ tags:
 ---
 
 # Pass B8 — Spatial Canvas and Cross-Module Integration Contract Review
+
+> **FORMALLY CLOSED AT DESIGN LEVEL, 2026-10-31, following distinct user approval.** [P-B8-01 closure ADR](./decisions/P-B8-01%20-%20Design%20Closure%20and%20Deferred%20Runtime%20Integration%20Contracts.md) records that after all nine accepted B8 decisions and the *assessment only*, the assistant directly asked **“Shall I record that closure and proceed to B9?”**, and the user replied **“yes.”** [B9 typed spatial data and runtime integration review](./Pass%20B9%20-%20Typed%20Spatial%20Data%20and%20Runtime%20Integration%20Contract%20Review.md) is **opened only with B9-D01–D03 unapproved proposals**. The earlier `in-review`/“not yet closed” statements below are **preserved chronological assessment notes**, not current status. No implementation, test evidence or staging promotion is implied.
+
+
 
 > **B8 IN REVIEW — 2026-10-31.** [P-B7-01](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) formally closed B7 design. **B8-D01–D05 A and B8-D06 B are now each explicitly accepted.** User clarified that **region boundaries change over time**, and **all new locations should be automatically placed and remain player-movable**. This B8-D06 B direction expressly **supersedes prior no-generated-canonical-coordinate defaults for map placement only**, without making generated map positions narratively established distances. The original proposals are retained as history. **Batch 3 D07–D09 were later explicitly accepted as Option A.** The original proposals below remain as historical provenance. B8 has been **assessed for design closure only**, and no code, staging promotion, integration verification or formal B8 closure is implied.
 
@@ -229,3 +233,5 @@ The requested action was to **record approved choices and assess design closure*
 - **2026-10-31 — Batch 2 explicit user approval:** The user selected **B8-D04 A (with dynamic region boundaries), B8-D05 A, and B8-D06 B (not recommended A)**, expressly requesting **automatic persisted first placement of locations with free player repositioning**. Three separate accepted ADRs preserve original alternatives and this approval. **B8-D06 B is an explicit later override of earlier no-generated-canonical-map-position guidance**, limited to initial system-sourced map geometry with clear provenance; not proof of narrative distance or travel routes. D04 footprints may change as ordered world facts while containment remains separate. Proposed D07–D09 as **unapproved Batch 3**; no implementation, stage promotion or B8 closure.
 
 - **2026-10-31 — Batch 3 acceptance and closure assessment only:** User expressly selected **B8-D07 A, B8-D08 A and B8-D09 A**, requested separate Lorebound GitHub ADRs, preservation of approval history and an **assessment** of design closure. Three accepted ADRs created. All nine B8 decisions now accepted; **D06 remains specifically B** with user-requested automatic persisted placement, D04 boundaries remain dynamically mutable. Assessment says **ready for separate design-only closure sign-off**, but B8 stays `in-review`. No P-B8 closure ADR, implementation, tests or stage promotion authorised.
+
+- **2026-10-31 — Formal design-only closure after separate explicit sign-off:** After the Batch 3 D07 A/D08 A/D09 A approvals and **9/9 closure assessment**, the assistant separately asked whether to close B8 and open B9. User answered **“yes.”** Created accepted [P-B8-01](./decisions/P-B8-01%20-%20Design%20Closure%20and%20Deferred%20Runtime%20Integration%20Contracts.md); this register is now **`closed-design-only`**. The earlier assessment's instruction not to create a closure ADR *without separate user approval* was satisfied by this later authorisation. [B9](./Pass%20B9%20-%20Typed%20Spatial%20Data%20and%20Runtime%20Integration%20Contract%20Review.md) contains only **unapproved proposals**. Original B8-D06 **B** and D04 mutable-boundary conditions remain binding. No code, tests, stage promotion or B9 selection.
