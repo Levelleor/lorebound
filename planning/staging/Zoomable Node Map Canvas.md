@@ -14,6 +14,16 @@ tags:
 ---
 # Zoomable Node Map Canvas
 
+## B8 Batch 1 accepted canvas coordinate and editing contracts — 2026-10-31
+
+[B8-D01](../architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) selects **durable nested local coordinate frames** with declared scale/transform semantics so cities, buildings and rooms appear on one spatial canvas while preserving placements relative to their group. Moving a parent shifts the displayed descendants by composing transforms rather than rewriting their own local positions. **Unplaced locations retain unknown coordinates.**
+
+[B8-D02](../architecture/decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) requires **meaningful visual geographic separation** from those positions while keeping explicit route-specific path geometry, length and time/cost *separate optional grounded facts*. A road or portal need not behave like a straight-line connector; don't infer journey time or canonical metrics from pixels.
+
+[B8-D03](../architecture/decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) makes deliberate pin/group placement and scale changes **typed, versioned current-world assertions** subject to the established **noncanonical preview → pending explicit Approve/Commit or Discard → atomic Go/SQLite persistence** workflow. Saved geography is replayed, not overwritten by graph auto-layout or direct drag writes to an unrelated map database. Pan/zoom/selection/cosmetic labels remain UI-only and no map edits by themselves move characters or create routes. Exact JSON schema, units, transform math and UI gestures remain engineering work, not implemented features.
+
+
+
 ## Latest accepted spatial-map definition: B7-D10 (2026-10-31)
 
 **The map is a persistent *semantic spatial canvas*, not merely a laid-out travel graph.** [Accepted B7-D10](../architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) explicitly requires:
