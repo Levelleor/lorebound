@@ -35,7 +35,7 @@ tags:
 
 ## Latest accepted event and narrative authority — 2026-10-28
 
-**Current map world-memory semantics ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Map nodes/links and discoverability are grounded **current declarative location/relationship assertions**. Player editing them is a **pending noncanonical change set until explicit Commit**, with the shared full-composer blocking overlay. Renaming, moving layout or stating a new location must not require old fictional travel-proof; source-grounded acceptance, stable IDs and technically coherent hierarchy still apply. Pan/zoom/layout remain presentation-only.
+**Current map world-memory semantics ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Map nodes/links and discoverability are grounded **current declarative location/relationship assertions**. Player editing them is a **pending noncanonical change set until explicit Commit**, with the shared full-composer blocking overlay. Renaming or **authorially repositioning the persistent spatial layout** requires no proof of earlier fictional travel; source-grounded acceptance, stable IDs and technically coherent hierarchy still apply. **Only viewport pan/zoom and optional label offsets are presentation-only.** A committed pin/group coordinate edit is a persistent semantic world-map correction under later B7-D10.
 
 
 ## Idea
@@ -57,10 +57,10 @@ Makes discovered places and buildings easy to navigate.
 - **Map editor vs travel controls (2026-10-23; refined by B7-D10):** The map is a world-state visualisation/editor, not a travel-command panel. Pan/zoom, select and inspect never move characters. **Deliberately repositioning a pinned location changes its semantic map coordinates** and is saved as an approved world-map correction; it still does **not** change actual character positions, containment or explicit traversable routes unless separately asserted.
 
 ## Proposed behaviour
-Provide a viewport onto the persistent hierarchy and travel graph. Users pan/zoom, inspect a location and navigate from broad nested areas into more specific places. Map nodes represent stable location IDs and recorded information, including **player-visible `undiscovered` nodes**; grouping represents containment, separately styled links represent established connections, and the node's discovery marker changes independently of whether the user can inspect or edit its name. Users may reposition nodes and groups in a visual layout independent of game-world location or route semantics. Layout processing should make nodes and labels legible, with sensible handling of overcrowding. Treat discovery as **visible editable node metadata**, not automatic filtering of undiscovered nodes from the player's map. Do not feed undiscovered/secret facts into in-story AI narration as if characters know them merely because the player can inspect the world editor. Integrate world expansions and changes only after they have been validated and committed by the authoritative world model.
+Provide **one semantically scaled spatial canvas** with persisted pinned coordinates and nested geographic group extents, supporting pan/zoom from empires and regions into cities, buildings and rooms. Recorded stable location IDs identify pins and grouped places, including **player-visible `undiscovered` nodes**. Spatial distance and connection lengths should communicate meaningful world size, not arbitrary graph equal-length layout. Containment groups are distinct from explicit accepted travel links, which overlay the same canvas. A deliberate pin/group placement edit updates saved geography only upon the normal explicit player Commit; **it does not move characters or independently change routes or containment**. Cosmetic labels and viewport transforms may improve legibility but must not displace pinned semantic locations. Preserve visible discovery metadata and keep undiscovered/secret world knowledge out of in-story narrator context unless established. Integrate new locations after appropriate accepted world-state writes; ungrounded positions remain unknown.
 
 ## Alternatives and trade-offs
-A nested graph canvas is flexible for non-geographic worlds and supports traversal and hierarchy, but graph density and nesting can impair readability or performance. Automatic layout and collision avoidance may fight manual positioning, so their balance remains to be specified. Collapsing children at certain zoom levels can improve legibility but risks hiding important routes or scene context. React Flow is a possible graph UI library, **not an accepted framework or dependency**. A simpler custom canvas, other graph libraries, or alternative rendering could be considered during refinement; stable data IDs and map semantics should not depend on the chosen frontend implementation.
+The **semantic spatial canvas** is mandatory under B7-D10; the travel graph is only an overlaid topology. Dense routes and nested groups still require legible rendering. Auto-layout/label collision handling must **not shift committed geographic pins**, but may suggest provisional placements for unpositioned places. Collapsing children at suitable zoom levels helps legibility but can hide important routes or scene context. React Flow is a possible graph UI library, **not an accepted framework or dependency**. A simpler custom canvas, other graph libraries, or alternative rendering could be considered during refinement; stable data IDs and map semantics should not depend on the chosen frontend implementation.
 
 ## Dependencies and constraints
 - Render locations by stable IDs and parent/child containment from accepted [[Hierarchical World Locations]] (IDEA-0033).
@@ -73,7 +73,7 @@ A nested graph canvas is flexible for non-geographic worlds and supports travers
 - Staging acceptance does not imply production approval or implemented functionality.
 
 ## Open questions
-- At what zoom levels should children collapse, and how are layout positions saved?
+- At which zoom levels should children collapse, and how should canonical nested coordinate frames/group transforms be serialized and presented? **Pinned spatial positions themselves must persist.**
 - **Persist geographic coordinates with the adventure's world-map state** (approved B7-D10); exact coordinate-space and per-group transform persistence, and separation from transient viewport preferences, remain engineering refinements.
 - How can provisional auto-placement avoid overlap **without shifting or inventing canonical pinned geographic coordinates** or hiding genuine semantic scale?
 - How are cross-group edges, nested building entrances and large clusters displayed legibly?
@@ -81,18 +81,18 @@ A nested graph canvas is flexible for non-geographic worlds and supports travers
 - How should node discovery change visible status indicators and the AI's in-story knowledge without altering the player's ability to see/edit the node's stored name/details? Any genuinely restricted secret field needs a separate explicit mechanism, not blanket suppression of `undiscovered` nodes.
 - What virtualisation, grouping or rendering strategies are needed for very large worlds?
 - What navigation and accessibility alternatives should support keyboard, touch, screen readers and mobile layouts?
-- How should edits to location hierarchy and travel links differ from purely visual arrangement actions?
+- How should the UI distinguish **semantic pin/group coordinate edits** (persistent world-map changes) from **viewport pan/zoom and cosmetic label arrangements** (presentation-only)?
 
 ## Draft acceptance criteria
 - [ ] A player can pan and zoom a node-based map of recorded world locations, including nodes marked `undiscovered`.
 - [ ] Locations are represented by stable-ID nodes that may appear inside nested parent-location groups.
 - [ ] Existing travel graph edges are visually distinguishable from location containment; parent/child grouping is not misrepresented as traversability.
 - [ ] Selecting a node displays its recorded name, discovery state and editable details, including when `undiscovered`, without generating a travel action.
-- [ ] A player can adjust the visual arrangement without modifying canonical hierarchy or travel connections.
+- [ ] A player can deliberately adjust and **Commit pinned semantic location/group coordinates** without automatically changing canonical hierarchy, routes, character locations or story turns; simple pan/zoom and cosmetic label moves remain presentation-only.
 - [ ] Placed locations retain persisted semantic positions across save/reopen and graph/layout redraw; geography and link lengths remain meaningful across relevant scales. Cosmetic label positioning may avoid overlaps without moving canonical pins.
 - [ ] Locations with an `undiscovered` state may remain visible, named, inspectable and editable in the **player's map editor**. Their discovered/undiscovered state remains distinguishable for narration/character knowledge; no blanket hiding rule is derived from the flag.
 - [ ] Newly committed discoveries and valid changes can appear on the map without fabricated duplicate locations.
-- [ ] Map clicks/select/drag/pan/zoom **never initiate player travel or a story turn**. Deliberate **add location** or **edit/correct location data** actions can persist through the normal validated world-state edit path without interpreting the node click as gameplay input.
+- [ ] Map clicks/select/drag/pan/zoom **never initiate character travel or a story turn**. Dragging/repositioning a pinned place **may edit persistent map coordinates** through a pending explicit player Commit; only pan/zoom and selection are purely presentational. Deliberate add/edit/correct location actions use the same validated world-state edit path.
 - [ ] Group collapse/zoom, exact coordinate transforms/units, visual label collisions, large-world performance and framework choice remain open for refinement; **persistent semantic location coordinates themselves are not optional**.
 
 ## Refinement checklist
