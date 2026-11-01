@@ -1,5 +1,11 @@
 # Lorebound agent instructions
 
+## Accepted world-map architecture
+
+For any map/location planning, [B7-D10](planning/architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) establishes that the world map is **a persistent, coordinate-pinned, semantically scaled canvas with nested geographic groups and meaningful distances**, **not merely an abstract travel graph**. B7-D06 describes route connectivity only; preserve saved spatial layout and separate containment/route relationships. Deliberate map-coordinate corrections follow explicit world-edit Commit, while pan/zoom is presentation-only. Do not infer this feature is implemented or choose unapproved coordinate/canvas/graph libraries.
+
+
+
 Lorebound is at an early repository stage. Do not infer an implemented product, tech stack, or feature from the project name; inspect the repository before making claims.
 
 ## Read first
