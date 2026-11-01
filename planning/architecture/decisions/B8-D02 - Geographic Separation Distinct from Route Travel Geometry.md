@@ -16,6 +16,12 @@ tags:
 
 # B8-D02 — Distinguish grounded geographic separation from optional route-specific travel distance
 
+## Later explicit B8-D06 B placement refinement — 2026-10-31
+
+[Accepted B8-D06 B](./B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) authorises **system-generated, saved initial location coordinates** even when narration has not established an exact map position. The older “leave coordinates unplaced” guidance below now records the earlier approval context, not today's default. **Generated geographic placement is not evidence of a canonical narrated distance**. This D02 Option A still requires geographic drawing geometry to be distinct from *grounded* route length/time/cost and any portal/winding-road semantics; never infer those story metrics from automatically allocated pixel distances.
+
+
+
 ## Approval and provenance
 
 **User's explicit decision, 2026-10-31:** “Review B8 Batch 1: B8-D01: A; B8-D02: A; B8-D03: A. Record only explicitly approved choices as Lorebound GitHub ADRs, preserve approval history, and continue B8.”
