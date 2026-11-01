@@ -1,5 +1,9 @@
 # Lorebound
 
+**World map design:** The player-facing map is a **persistent, semantically scaled spatial canvas** with saved location pins and nested grouping for empires, cities, buildings and rooms. Relative distances and link lengths should make the fictional world's size understandable. Explicit travel connections also form a logical graph, but the graph does **not** determine the positions or scale of the map. This is an accepted design refinement, **not an implemented feature**. See [B7-D10](planning/architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md).
+
+
+
 > **The player creates the story. The AI helps keep it consistent.**
 
 Lorebound is a project for player-led, AI-assisted interactive storytelling. Its guiding principle is simple: **the player's imagination comes first.**
