@@ -8,9 +8,15 @@ tags:
 ---
 # Start Here
 
+## B8 Batch 1 accepted spatial-map contracts — 2026-10-31
+
+In the [B8 spatial canvas and integration review](architecture/Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md), the user explicitly approved [D01 A](architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) (nested persistent local coordinate frames), [D02 A](architecture/decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) (geographic separation distinct from route-specific travel metrics) and [D03 A](architecture/decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) (typed map-placement facts and manual pending **Commit** for deliberate edits). The canvas remains semantic, persistent and separate from the logical travel graph. **D04–D06 are only proposals**; B8 remains `in-review`. No code, test evidence or staging promotion follows from these decisions.
+
+
+
 ## Formal B7 design closure and active B8 review — 2026-10-31
 
-[Formal B7 closure ADR](architecture/decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) records the user's distinct approval to **close B7 at design level and open B8**. All ten B7 decisions remain explicitly accepted, including **D03 C** (silently discard only genuinely ambiguous automatic extraction candidates) and **D10's pinned semantic spatial canvas**. [B8 spatial canvas and cross-module integration](architecture/Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md) is now **in review**, but its first three coordinate/distance/persistence options are **unapproved**. This closure does **not** approve code, staging promotion, tests, a final coordinate system or an independent authoritative graph store.
+[Formal B7 closure ADR](architecture/decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) records the user's distinct approval to **close B7 at design level and open B8**. All ten B7 decisions remain explicitly accepted, including **D03 C** (silently discard only genuinely ambiguous automatic extraction candidates) and **D10's pinned semantic spatial canvas**. [B8 spatial canvas and cross-module integration](architecture/Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md) is **in review**, with **D01–D03 Option A accepted on 2026-10-31** and D04–D06 still unapproved. This closure does **not** approve code, staging promotion, tests, a final coordinate system or an independent authoritative graph store.
 
 
 
