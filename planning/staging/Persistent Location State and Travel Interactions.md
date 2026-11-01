@@ -14,6 +14,12 @@ tags:
 ---
 # Persistent Location State and Travel Interactions
 
+## B9 Batch 1 typed map fields, Go commit and mock tests — 2026-10-31
+
+[B9-D01 qualified A](../architecture/decisions/B9-D01%20-%20Typed%20Spatial%20Coordinates%20Without%20AI%20Player%20Authorship%20Labels.md) stores **validated typed spatial coordinates**, not a mandatory **AI-versus-player author label** on each coordinate. B8-D06 generated first placement, B8-D08 protection of deliberate pins, and B8-D09 same-transaction identity/position are unchanged, but any needed pin-protection field is operational state and **unapproved B9-D04** will refine it. [B9-D02 A](../architecture/decisions/B9-D02%20-%20TypeScript%20Prepared%20Events%20and%20Go%20SQLite%20Atomic%20Commit%20Authority.md) assigns TypeScript preparation/projections and Go technical verification/atomic SQLite writes, not fictional travel simulation. [B9-D03 B](../architecture/decisions/B9-D03%20-%20Mock%20Based%20Component%20Verification%20Without%20Live%20AI%20Scenarios.md) selects mocked tests of app components, **no live AI scenario tests**; mocks do not prove an actual host database ran. This is accepted planning, not implemented behaviour.
+
+
+
 ## B8 Batch 3 coherent initial placement transaction — 2026-10-31
 
 [B8-D07 A](../architecture/decisions/B8-D07%20-%20Deterministic%20Scoped%20Automatic%20Map%20Placement.md), [B8-D08 A](../architecture/decisions/B8-D08%20-%20Provenance%20Aware%20Spatial%20Reconciliation%20of%20Generated%20Placement.md), and [B8-D09 A](../architecture/decisions/B8-D09%20-%20Atomic%20Canonical%20Location%20Creation%20and%20Initial%20Placement.md) ensure newly accepted locations have **deterministically generated and durably stored** first map positions **in the same atomic transaction** as the accepted location identity, with explicit generated provenance. Later accepted narrative geography can reconcile *generated-only* positions, never silently moving a committed player-positioned pin or inventing an exact travel distance. Story arrival, route status and border changes remain separate accepted assertions. Player-driven map repositioning uses the established noncanonical draft and explicit Commit, not a free direct SQLite drag write. This is design-only; technical replay/fork/migration verification remains unimplemented.
