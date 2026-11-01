@@ -16,6 +16,11 @@ tags:
 
 # B8-D02 — Distinguish grounded geographic separation from optional route-specific travel distance
 
+## Latest B9 Batch 3 approval — 2026-10-31
+
+The user explicitly accepted [B9-D07 B](./B9-D07%20-%20Automatic%20Numeric%20Metre%20Conversion%20of%20Qualitative%20Geography.md), [B9-D08 A](./B9-D08%20-%20Event%20Triggered%20Deterministic%20Spatial%20Reconciliation%20and%20Conflict%20Reporting.md), and [B9-D09 A](./B9-D09%20-%20Valid%20Overlapping%20Mutable%20Region%20Geometry%20Without%20Implicit%20Containment.md). **D07 B expressly overrides earlier B8 advice against inferring exact geographic metres from qualitative statements**: supported relative geography converts to exact metre constraints, with stable typed frame scale; this is an engine-derived measurement, **not** an exact surveyed narrator claim. Route length/time/cost stay separately grounded, not inferred from canvas pixels. D08 A restricts deterministic atomic re-layout to relevant accepted world changes (all pins remain moveable under D04 C), preserving conflicting accepted facts and surfacing nonblocking conflicts. D09 A accepts technically valid region overlaps without implicit containment/routes/ownership updates. **B9-D10–D12 are unapproved proposals**; B9 is still in review. Earlier text below preserves dated decisions even when superseded.
+
+
 ## Later explicit B8-D06 B placement refinement — 2026-10-31
 
 [Accepted B8-D06 B](./B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) authorises **system-generated, saved initial location coordinates** even when narration has not established an exact map position. The older “leave coordinates unplaced” guidance below now records the earlier approval context, not today's default. **Generated geographic placement is not evidence of a canonical narrated distance**. This D02 Option A still requires geographic drawing geometry to be distinct from *grounded* route length/time/cost and any portal/winding-road semantics; never infer those story metrics from automatically allocated pixel distances.

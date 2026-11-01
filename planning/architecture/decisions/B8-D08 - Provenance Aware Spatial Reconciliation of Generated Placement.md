@@ -17,6 +17,11 @@ tags:
 
 # B8-D08 — Provenance-aware reconciliation of generated map positions with accepted geography
 
+## Latest B9 Batch 3 approval — 2026-10-31
+
+The user explicitly accepted [B9-D07 B](./B9-D07%20-%20Automatic%20Numeric%20Metre%20Conversion%20of%20Qualitative%20Geography.md), [B9-D08 A](./B9-D08%20-%20Event%20Triggered%20Deterministic%20Spatial%20Reconciliation%20and%20Conflict%20Reporting.md), and [B9-D09 A](./B9-D09%20-%20Valid%20Overlapping%20Mutable%20Region%20Geometry%20Without%20Implicit%20Containment.md). **D07 B expressly overrides earlier B8 advice against inferring exact geographic metres from qualitative statements**: supported relative geography converts to exact metre constraints, with stable typed frame scale; this is an engine-derived measurement, **not** an exact surveyed narrator claim. Route length/time/cost stay separately grounded, not inferred from canvas pixels. D08 A restricts deterministic atomic re-layout to relevant accepted world changes (all pins remain moveable under D04 C), preserving conflicting accepted facts and surfacing nonblocking conflicts. D09 A accepts technically valid region overlaps without implicit containment/routes/ownership updates. **B9-D10–D12 are unapproved proposals**; B9 is still in review. Earlier text below preserves dated decisions even when superseded.
+
+
 ## Later B9 Batch 2 operative supersession — 2026-10-31
 
 **Later explicit override of earlier B8-D08 pin immunity (2026-10-31):** [B9-D04 C](./B9-D04%20-%20All%20Coordinates%20Eligible%20for%20Automatic%20Layout.md) selects **Option C**, contrary to the B8-D08 requirement to reconcile only generated positions and never automatically move a deliberate player pin. That exclusivity and protection **no longer apply**: future technically valid, deterministic, replayable automatic layout updates may move any saved pin. No automatic-author or fixed/pinned field is to be persisted. The accepted separation of geographic pixels versus narrated distances, ordered current history, and explicit pending Commit for *direct manual edits* continue. The historical B8-D08 A approval and its trade-offs below remain as the original dated decision.
