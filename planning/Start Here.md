@@ -8,9 +8,15 @@ tags:
 ---
 # Start Here
 
+## B9 Batch 1 explicitly accepted, with simplified map metadata and mocked tests — 2026-10-31
+
+In the [active B9 review](architecture/Pass%20B9%20-%20Typed%20Spatial%20Data%20and%20Runtime%20Integration%20Contract%20Review.md), the user selected **[D01 qualified A](architecture/decisions/B9-D01%20-%20Typed%20Spatial%20Coordinates%20Without%20AI%20Player%20Authorship%20Labels.md)** (**typed coordinates, no player-vs-AI author labels**), **[D02 A](architecture/decisions/B9-D02%20-%20TypeScript%20Prepared%20Events%20and%20Go%20SQLite%20Atomic%20Commit%20Authority.md)** (TypeScript event/projection preparation, Go validation and atomic SQLite commit) and **[D03 B](architecture/decisions/B9-D03%20-%20Mock%20Based%20Component%20Verification%20Without%20Live%20AI%20Scenarios.md)** (**mocked tests for all app parts, no live AI model scenario launches**, contrary to earlier recommended A). Earlier B8-D06 B auto-placement and B8-D08 no-moving-deliberate-pins remain binding, with only **minimal operational pin protection** proposed for separate selection at B9-D04. Mock test outcomes do not establish actual Wails/SQLite host operation; any separate B1 evidence gates remain open. **B9-D04–D06 are not approved**, and no code, tests, stage promotion or B9 closure follows.
+
+
+
 ## Formal B8 design closure and active B9 review — 2026-10-31
 
-[Formal B8 closure](architecture/decisions/P-B8-01%20-%20Design%20Closure%20and%20Deferred%20Runtime%20Integration%20Contracts.md) records a **separate explicit user approval** to close B8 **at design level only** after its nine decisions were accepted and reviewed. This maintains **D04 A: mutable region boundaries**, **D06 B: automatically persisted initial map locations with free player repositioning**, and **D07 A/D08 A/D09 A: deterministic local placement, generated-vs-grounded source precedence and atomic location+first-position creation**. [B9 typed spatial data and runtime integration](architecture/Pass%20B9%20-%20Typed%20Spatial%20Data%20and%20Runtime%20Integration%20Contract%20Review.md) is now **`in-review` with only unapproved D01–D03 A/B/C proposals**. No final executable schema, implementation, passing tests, production promotion or B9 approval is inferred.
+[Formal B8 closure](architecture/decisions/P-B8-01%20-%20Design%20Closure%20and%20Deferred%20Runtime%20Integration%20Contracts.md) records a **separate explicit user approval** to close B8 **at design level only** after its nine decisions were accepted and reviewed. This maintains **D04 A: mutable region boundaries**, **D06 B: automatically persisted initial map locations with free player repositioning**, and **D07 A/D08 A/D09 A: deterministic local placement, generated-vs-grounded source precedence and atomic location+first-position creation**. [B9 typed spatial data and runtime integration](architecture/Pass%20B9%20-%20Typed%20Spatial%20Data%20and%20Runtime%20Integration%20Contract%20Review.md) remains **`in-review`**, with D01 A qualified, D02 A and D03 B accepted on 2026-10-31; D04–D06 are new unapproved proposals. No final executable schema, implementation, passing tests, production promotion or B9 approval is inferred.
 
 
 
