@@ -8,6 +8,10 @@ tags:
 ---
 # Start Here
 
+## Pass C Batch 1 accepted — 2026-11-01
+
+User explicitly approved [C-D01 A](architecture/decisions/C-D01%20-%20First%20Mock%20Driven%20End%20to%20End%20Story%20Turn%20Slice.md) (first smallest mocked complete story turn), [C-D02 A](architecture/decisions/C-D02%20-%20Traceable%20Slice%20Register%20With%20Original%20Idea%20Identity.md) ([slice register](architecture/Pass%20C%20-%20Implementation%20Slice%20Register.md) linked to original staged IDEA identities and ADRs) and [C-D03 A](architecture/decisions/C-D03%20-%20Mocked%20Contract%20Criteria%20With%20Separate%20Real%20Host%20Gates.md) (unit/mock/contract criteria, honest evidence labels and separate real-host verification). [Pass C kickoff](architecture/Pass%20C%20-%20Implementation%20Slice%20Refinement%20Kickoff.md) now proposes unapproved Batch 2 D04–D06. **All 52 original accepted ideas remain in staging; no application code, tests, production promotion or implemented specs**. B9-D12 spatial migration remains deferred with no work; Pass B's design-only closure remains in force. Older text below is historical.
+
 ## Pass C now open for implementation-slice refinement — 2026-11-01
 
 [Pass C kickoff](architecture/Pass%20C%20-%20Implementation%20Slice%20Refinement%20Kickoff.md) covers the 52 accepted staging ideas across S01–S12 through ten **proposed workstreams**: host/secrets, SQLite transactions, current event history, coordinator/capabilities, AI providers/workflows, adventure setup, lore/context, character/world state, basic story/map UI, and integration verification. First review C-D01–D03 is **unapproved**. [P-B9-01](architecture/decisions/P-B9-01%20-%20B9%20and%20Pass%20B%20Design%20Closure%20with%20Deferred%20Spatial%20Migration.md) closes B9 and Pass B **at design level only**. D13 B and D24 revised B are accepted; **D12 spatial migration remains deferred with no work**. Pass C does not implement code, run tests, authorise staging → production promotion or add implemented specs. Earlier B9 “in-review” notes below are dated chronology, not current authority.
