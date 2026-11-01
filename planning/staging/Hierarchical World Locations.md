@@ -14,6 +14,12 @@ tags:
 ---
 # Hierarchical World Locations
 
+## Latest B8 dynamic boundaries and automatic location positioning — 2026-10-31
+
+[Accepted B8-D04 A](../architecture/decisions/B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md) makes borders/footprints **changeable accepted current world-state assertions**, independent of the acyclic location parent/child membership. [B8-D06 B](../architecture/decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) overrides the earlier “unplaced if unknown” map default: **newly established locations appear automatically at a persisted system-generated initial coordinate in the appropriate nested frame**, with source/provenance distinct from grounded lore and later user-controlled committed repositioning. A parent group's change of boundary **does not automatically reparent** a child; a parent's placement change can transform its descendants without rewriting their local coords under B8-D01. Generated placement does not establish narrative containment, roads, travel costs or exact fiction distances.
+
+
+
 ## B8-D01 accepted local frames for nested semantic geography — 2026-10-31
 
 [B8-D01](../architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) establishes **persistent local coordinate frames** for placed locations/groups, composed into the **same spatial canvas** across world, empire, city, building and room scales. A child keeps its grounded local coordinates when its parent/group is deliberately moved. Unknown placements stay unknown rather than receiving fabricated geometry. Acyclic hierarchical *containment* still differs from actual spatial placement and explicit keyed *travel* routes. [B8-D03](../architecture/decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) makes semantic pin/frame/group placement a typed durable assertion accepted only after the existing explicit player Commit (or supported accepted narration), not a cosmetic layout value. A precise coordinate-unit scheme or polygon algorithm has not been selected.
