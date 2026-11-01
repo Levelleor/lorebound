@@ -14,6 +14,12 @@ tags:
 ---
 # Persistent Location State and Travel Interactions
 
+## Persistent geographic placement and route topology — B7-D10 (2026-10-31)
+
+[Accepted B7-D10](../architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) requires the **world-map canvas to save semantic coordinates, spatial grouping/extents and meaningful relative distance/scale** for placed locations. These facts are part of persistent world-map state tied to stable location identities, alongside the current route/door/environment events; the graph derived from route relations alone **is not the complete map**. A collapsed bridge can change edge availability without moving city pins; moving a city pin as a deliberately committed map edit does not create or remove a route, change container hierarchy or move story characters. Drawn connector lengths should reflect meaningful world separation at the current scale rather than arbitrary graph layout. Exact nested coordinate transforms, map unit definitions and route-specific travel lengths are later technical contracts.
+
+
+
 ## Derived mutable travel graph from keyed facts — 2026-10-31
 
 [Accepted B7-D06](../architecture/decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md) refines B6-D07's mutable environment contract: persistent accepted door/bridge/route assertions and keyed relation Add/Remove events reconstruct **a current travel graph projection**. Location IDs are nodes; explicit routes are edges; current access/availability properties may affect optional pre-narration travel attempts. Containment hierarchy is **not** an automatic route. A collapsed bridge changes the **current projected graph**, not accepted earlier journeys. No separately authoritative graph object/table or simulated fictional-prerequisite engine is introduced; exact graph representation remains open.
