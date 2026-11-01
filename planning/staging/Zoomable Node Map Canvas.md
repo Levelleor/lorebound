@@ -14,6 +14,12 @@ tags:
 ---
 # Zoomable Node Map Canvas
 
+## Latest B8 Batch 2 map behaviour — 2026-10-31
+
+The user separately accepted [B8-D04 A](../architecture/decisions/B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md) **with changeable region borders**, [B8-D05 A](../architecture/decisions/B8-D05%20-%20Stable%20Cross%20Frame%20Routes%20with%20Grounded%20Door%20and%20Portal%20Anchors.md) **with stable anchored cross-group roads/doors/portals**, and **[B8-D06 B](../architecture/decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) for automatic initial map placement and player repositioning**. **All newly accepted locations should receive automatically generated and *persisted* initial coordinates** in their supported B8-D01 local frame; no mandatory unplaced-items area or player placement step. Mark initial placement provenance as **generated**, not a narrator-established exact world distance. A player can freely move places/groups, with a deliberate geographic edit pending explicit Commit; existing manually placed geography is never overwritten by a later automatic map layout. **Region boundaries are mutable** persistent spatial world facts, and may later be redrawn without automatically changing accepted containment. Earlier “do not generate coordinates” and “unplaced until grounded” lines below are **chronologically superseded** by D06 B; map is still a meaningful persistent semantic canvas, not just a graph.
+
+
+
 ## B8 Batch 1 accepted canvas coordinate and editing contracts — 2026-10-31
 
 [B8-D01](../architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) selects **durable nested local coordinate frames** with declared scale/transform semantics so cities, buildings and rooms appear on one spatial canvas while preserving placements relative to their group. Moving a parent shifts the displayed descendants by composing transforms rather than rewriting their own local positions. **Unplaced locations retain unknown coordinates.**
