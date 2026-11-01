@@ -17,6 +17,12 @@ tags:
 
 # B7-D10 — Persistent spatial canvas with meaningful coordinates, nested groups and scaled connections
 
+## Subsequent B7 Batch 3 approvals — 2026-10-31
+
+**Chronological status update:** After this user-directed D10 spatial-canvas decision was written, the user expressly accepted **B7-D07 A, B7-D08 A and B7-D09 A** in a separate B7 Batch 3 review. The statements below that call D07–D09 “unapproved” accurately describe **the time of this D10 approval**, not current status. In particular [B7-D07](./B7-D07%20-%20Versioned%20Field%20Registry%20and%20Atomic%20Meaning%20Preserving%20Event%20Migrations.md) covers meaning-preserving versioned migrations of future location-coordinate assertions, [B7-D08](./B7-D08%20-%20Narrator%20Safe%20Provisional%20References%20and%20Isolated%20ID%20Binding.md) protects narrator ID privacy, and [B7-D09](./B7-D09%20-%20Minimal%20Event%20Provenance%20and%20Deterministic%20Current%20Replay%20Verification.md) requires reproducible replay of persisted pinned positions/group geometry. **None selects an exact coordinate schema or implements the canvas.** B7 is only assessed for, not formally given, design-only closure.
+
+
+
 ## Approval and provenance
 
 **Explicit user direction, 2026-10-31:** “for the locations, I also want to make sure we record the idea that the locations should be rather a canvas, not a graph. Like, locations should be pinned to coordinates and persist at those coordinates & the same canvas will group the locations together to form cities, buildings/rooms, empires, etc. And the links are also actually different length depending on how far the location is meant to be, so map kinda makes sense semantically to understand how large the world is. Lets ensure that's the definition, not just the ‘graph’.”
