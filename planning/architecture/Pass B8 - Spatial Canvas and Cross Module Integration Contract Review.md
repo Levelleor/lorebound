@@ -13,7 +13,7 @@ tags:
 
 # Pass B8 — Spatial Canvas and Cross-Module Integration Contract Review
 
-> **B8 IN REVIEW — 2026-10-31.** [P-B7-01](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) closed B7 design and opened B8. **B8-D01, D02 and D03 were each explicitly accepted as Option A on 2026-10-31**, after the original unapproved proposals below were presented. **B8-D04–D06 remain unapproved new proposals.** No implementation, stage promotion, verified integration or formal B8 closure is implied.
+> **B8 IN REVIEW — 2026-10-31.** [P-B7-01](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) formally closed B7 design. **B8-D01–D05 A and B8-D06 B are now each explicitly accepted.** User clarified that **region boundaries change over time**, and **all new locations should be automatically placed and remain player-movable**. This B8-D06 B direction expressly **supersedes prior no-generated-canonical-coordinate defaults for map placement only**, without making generated map positions narratively established distances. The original proposals are retained as history. **Batch 3 D07–D09 is unapproved**; no code, staging promotion, integration verification or B8 closure is implied.
 
 ## Purpose and immutable inherited boundaries
 
@@ -21,7 +21,7 @@ tags:
 
 ### Governing accepted decisions
 
-1. **[B7-D10 — persistent semantic spatial canvas](./decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md):** The **main map is a single pan/zoom canvas** with saved semantically pinned location positions, nested spatial grouping for empires/regions/cities/buildings/rooms and meaningful relative scale/distances. A graph auto-layout must never replace committed geographic placement. Unknown locations must not be assigned invented coordinates. **This requirement is already accepted, not an option in B8.**
+1. **[B7-D10 — persistent semantic spatial canvas](./decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md):** The **main map is a single pan/zoom canvas** with saved, pinned location positions and meaningful nested grouping. **Later explicit [B8-D06 B](./decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) overrides the original prohibition on generated persisted coordinates:** initial system-generated **map** positions are permitted and expected for accepted new locations, with stored generated origin and player override. A generated coordinate is not proof of a narrated measured distance, and no layout pass may overwrite a deliberate committed user position. D10's canvas and explicit route/containment separation remain binding.
 2. **[B7-D06 — keyed relations and travel topology](./decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md):** Explicit grounded routes yield a **logical graph connectivity layer**, separate from the **spatial canvas** and separate from an acyclic parent/child containment hierarchy. Nearby pixels or shared parent do not imply a traversable route. Route properties affect future attempted-travel context, not already accepted narrated arrival.
 3. **[B7-D01](./decisions/B7-D01%20-%20Versioned%20Typed%20Declarative%20Event%20Envelope.md), [B7-D04](./decisions/B7-D04%20-%20Typed%20Unknown%20Absence%20and%20Clear%20Semantics.md), [B7-D05](./decisions/B7-D05%20-%20Event%20Ordered%20Entity%20Lifecycle%20and%20Reestablishment.md), [B7-D07](./decisions/B7-D07%20-%20Versioned%20Field%20Registry%20and%20Atomic%20Meaning%20Preserving%20Event%20Migrations.md) and [B7-D09](./decisions/B7-D09%20-%20Minimal%20Event%20Provenance%20and%20Deterministic%20Current%20Replay%20Verification.md):** typed/versioned accepted assertions, explicit unknown/absence, current-only event order/provenance, deterministic projection and atomic meaning-preserving migrations. Do not invent a second canonical map/graph authority or archived old passage revisions.
 4. **[B7-D08](./decisions/B7-D08%20-%20Narrator%20Safe%20Provisional%20References%20and%20Isolated%20ID%20Binding.md) and [B7-D03 C](./decisions/B7-D03%20-%20Discard%20Unresolved%20Extraction%20Suggestions%20Without%20Diagnostics.md):** No engine IDs or ID mappings in narrator prompts. Natural references bind to IDs internally. Truly ambiguous automatic extraction candidates are omitted *silently*, but technical failures are not hidden.
@@ -76,9 +76,11 @@ tags:
 
 These choices retain the already accepted B7-D10 primary **semantic spatial canvas**. Coordinates are not arbitrary UI auto-layout; the **route graph** is only the connectivity overlay. All actual implementation representations, tests and stage promotion are deferred.
 
-## Batch 2 — new proposals, NOT accepted
+## Batch 2 — accepted D04 A, D05 A, D06 B (original proposals retained)
 
-### B8-D04 — Spatial group footprints and containment
+### B8-D04 — Spatial group footprints and containment (Option A accepted)
+
+**Accepted 2026-10-31:** [B8-D04 ADR](./decisions/B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md). The user explicitly added that **region boundaries are mutable current world state**. Borders can be changed by later accepted story or player-corrected assertions, without automatically rewriting canonical parent/child membership. Original A/B/C proposals below are retained for approval history.
 
 **Question:** How should a drawn empire/city/building boundary and the accepted location parent hierarchy relate, particularly if groups overlap or their shapes change?
 
@@ -88,7 +90,9 @@ These choices retain the already accepted B7-D10 primary **semantic spatial canv
 
 **Inherited:** B8-D01 A already establishes nested coordinate frames; this proposal refines **group-boundary and containment interaction**, not the existence of the canvas.
 
-### B8-D05 — Cross-group routes, doors and portals
+### B8-D05 — Cross-group routes, doors and portals (Option A accepted)
+
+**Accepted 2026-10-31:** [B8-D05 ADR](./decisions/B8-D05%20-%20Stable%20Cross%20Frame%20Routes%20with%20Grounded%20Door%20and%20Portal%20Anchors.md). Stable keyed route endpoints, optional grounded door/portal anchors and cross-frame geometry; proximity, containment or region-border changes do not invent travel links. Original A/B/C text below is retained.
 
 **Question:** How should a route between a city street and a room inside a building, or a portal between two distant regions, attach to different coordinate frames on the same canvas?
 
@@ -98,7 +102,9 @@ These choices retain the already accepted B7-D10 primary **semantic spatial canv
 
 **Inherited:** A route's visual separation and optional travel length remain distinct under B8-D02. This proposal does not select a final routing algorithm or travel-cost rule.
 
-### B8-D06 — New locations whose coordinates are unknown
+### B8-D06 — New locations whose coordinates are unknown (Option B accepted, not recommended A)
+
+**Accepted 2026-10-31:** [B8-D06 ADR](./decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md). The user **selected B**, expressly directing **“automatically place everything on the map”** while allowing the player to move locations however they wish. This **overrides the original recommended A** and the earlier B7-D10/B8-D01/B8-D03 *unplaced until grounded* default **for initial map layout**. Generated initial coordinates become durable typed map placement with distinct **system-generated provenance**, not a false narrative claim of exact location or travel distance; deliberate player rearrangement still follows the approved pending Commit/Discard boundary. Original proposed A/B/C descriptions below remain historical, including B's original warning.
 
 **Question:** If a story establishes a new city but not where it lies, how should the canvas represent the city without inventing exact geography?
 
@@ -106,15 +112,59 @@ These choices retain the already accepted B7-D10 primary **semantic spatial canv
 - **B (proposed):** Silently assign and commit exact canonical coordinates whenever a new location is first mentioned. **Trade-off:** Every location is immediately drawable, but invented geography contaminates the accepted world.
 - **C (proposed):** Hide every unplaced location entirely from the world/map editor until its coordinates become known. **Trade-off:** Cleaner canvas but the player may lose sight of otherwise established locations.
 
-**Inherited:** B7-D10 and B8-D01 already forbid invented canonical positions. This proposal refines **visibility and user placement flow**, not whether unknown placement is permissible.
+**Chronological note:** When the original options were proposed, B7-D10/B8-D01 forbade automatically generated canonical coordinates. **The user's later explicit acceptance of D06 B supersedes that narrower default for generated initial map placement**, while preserving provenance and the distinction between a system layout decision and established fiction.
 
-**Batch 2 status:** **B8-D04, D05 and D06 are unapproved proposals only**, pending explicit player review. No new ADRs have been accepted for them, and no code, stage promotion or B8 closure is authorised.
+**Batch 2 status (2026-10-31):** B8-D04 **A with dynamic region boundaries**, B8-D05 **A**, and B8-D06 **B with automatic persisted placement and player adjustment** are all **accepted in separate ADRs**. The latter is an explicit later exception to no-invented-canonical-map-coordinate statements. No implementation, tests, stage promotion or B8 closure approved.
+
+## Batch 2 accepted disposition — 2026-10-31
+
+| Decision | Explicitly approved | Current ADR |
+| --- | --- | --- |
+| **B8-D04** | **A**, with user clarification: **region boundaries are mutable over time** | [Mutable region footprints and distinct containment](./decisions/B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md) |
+| **B8-D05** | **A** | [Stable cross-frame route endpoints, doors and portal anchors](./decisions/B8-D05%20-%20Stable%20Cross%20Frame%20Routes%20with%20Grounded%20Door%20and%20Portal%20Anchors.md) |
+| **B8-D06** | **B**, **not recommended A**, with user clarification: **place new locations automatically, let players move them** | [Generated persistent initial map placement with player overrides](./decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) |
+
+### Explicitly superseded earlier unplaced-location default
+
+B7-D10, B8-D01, B8-D02 and B8-D03 initially argued that unknown geographic coordinates must stay unplaced and never be generated/persisted. Those statements are **preserved as earlier decision history**, but **B8-D06 B is the later governing user instruction for initial map position**: accepted new location identities receive persistent system-generated placements by default. **Generated map placement is not itself evidence that prose established exact real-world distances, a road, a parent relation or travel costs**; preserve source/provenance so the narrator cannot mistake system layout for established fiction. A later manual map-pin adjustment remains an explicit pending Commit. An existing authored pin must not be silently re-randomised.
+
+## Batch 3 — new proposals, NOT accepted
+
+### B8-D07 — How to choose stable generated first positions
+
+**Question:** How should Lorebound automatically place newly established cities/rooms when their exact coordinates are not narrated, without turning the canvas into random equal-length graph layout?
+
+- **A (recommended, proposed):** Use a **deterministic, locally scoped first-placement strategy** in the existing parent spatial frame, preserving accepted known constraints and relative scale where available; otherwise choose a coherent default with sensible spacing/collision avoidance. Save the generated coordinate and its source. Do not require an extra AI call, change other committed pins, or generate route/travel facts. The player can reposition it. **Trade-off:** Requires initial placement and constraint priority rules.
+- **B (proposed):** Randomly recalculate all node locations on every reopen or new story turn, letting them move freely with the auto-layout. **Trade-off:** Easy to draw but defeats persistent geographic memory and player adjustments.
+- **C (proposed):** Require a new separate generative-model request to determine every location's coordinates, even when a deterministic reasonable default would suffice. **Trade-off:** More model cost/latency and invented precision without a narrative source.
+
+**Inherited:** D06 B already requires automatically *persisted* initial placement. This proposes the **initial placement strategy**, not a reversal to an unplaced-organizer design.
+
+### B8-D08 — When generated placement conflicts with later grounded geography
+
+**Question:** The system placed two cities nearby, but later accepted narration establishes they are far apart. Which spatial facts should prevail?
+
+- **A (recommended, proposed):** Preserve **source precedence and provenance**: explicit accepted player-authored placement/constraints and grounded narration outrank purely generated initial coordinates. Only reconcile **generated-only** positions where necessary to express newer accepted spatial facts, using a deterministic compatible current assertion; never silently shift a deliberate player-positioned pin or fabricate exact distance. Where both are explicit but contradictory, preserve the user-authored/canonical facts and leave resolution to a separate future UX contract, rather than guessing. **Trade-off:** Requires provenance-aware placement reconciliation and stable edit detection.
+- **B (proposed):** Treat the original generated coordinate as an immutable fact overriding later accepted story distance claims. **Trade-off:** Prevents geography from evolving with fiction.
+- **C (proposed):** Automatically move every map location, including player-adjusted pins, until a mathematical layout routine judges the map consistent. **Trade-off:** Damages intentional authorial arrangements.
+
+**Inherited:** This does not grant a simulation validator power to reject narrated travel or recalculate time/cost. It addresses **visual map consistency** following new spatial information.
+
+### B8-D09 — When automatic placement becomes durable
+
+**Question:** A newly accepted story passage establishes a location and Lorebound automatically assigns its first position. Should those changes be committed together?
+
+- **A (recommended, proposed):** Generate initial placement **within the existing accepted location-creation/coherent state transaction**, so stable identity, location creation and typed system-generated spatial assertion enter current canon atomically and idempotently. Undo/edit/Fork/migration replay that one coherent ordered set; failed core writes do not leave ghost pins or orphaned geography. Manual later pin edits still use the explicit player Commit workflow. **Trade-off:** Requires deterministic idempotent allocation before transaction commit.
+- **B (proposed):** Commit story/location immediately, then asynchronously auto-save coordinates in a separate independent transaction whenever the canvas eventually loads. **Trade-off:** Potential missing/ghost pins and extra concurrency states.
+- **C (proposed):** Keep automatic pins only in volatile UI storage and never put them in the accepted state history. **Trade-off:** Contradicts D06 B's explicit persisted placement.
+
+**Batch 3 status:** B8-D07, D08 and D09 are **unapproved proposals**, notwithstanding any recommended option A. No implementation, staging promotion, new ADR or B8 closure is approved by preparing this review.
 
 ## Later proposed review topics (not yet selected)
 
-- **B8-D07+:** Narrated spatial references versus exact coordinates, route directionality/parallel edges, schema migrations of existing pins, typed geometry normalization, map rendering and replay tests. The new **D04–D06 proposals** appear in Batch 2 below and remain **unapproved**.
+- **B8-D10+:** Further narrated spatial references, cross-scale distance constraints, arbitrary region shape data/edits, schema upgrades, spatial projection fixtures and renderer integration are deferred. **B8-D07–D09** are now proposed below and **remain unapproved**.
 - **B8 integration handoffs:** Versioned Go/SQLite persistence vs TypeScript reducer ownership, scene/item/route/location projection reads, narrator-safe map context, manual world edit atomicity and replay/evidence fixtures. Their exact interfaces are not yet approved and no code is implemented.
-- No B8 choice can require a full geographical simulation, invent coordinates or travel lengths to fill missing lore, auto-move characters because a map pin changed, silently create traversable links or retroactively reject accepted narration.
+- No B8 choice may require a full geographical simulation, **misrepresent generated map coordinates as narratively established exact geography**, fabricate route lengths or travel time, move characters because pins were moved, silently invent traversable links, or retroactively reject accepted narration. **Later B8-D06 B does explicitly authorise automatic persisted initial map coordinates**, with system-generated provenance and player overrides.
 
 ## Status and decision history
 
@@ -122,3 +172,5 @@ These choices retain the already accepted B7-D10 primary **semantic spatial canv
 - **2026-10-31 — Separate explicit closure and opening:** After a direct invitation to record B7 formal design-only closure and open B8, user replied **“yes proceed”**. [P-B7-01](./decisions/P-B7-01%20-%20Design%20Closure%20and%20Deferred%20Spatial%20Canvas%20Integration%20Contracts.md) closes B7 **design-only**, and this file **opens B8**. The A/B/C options for D01–D03 above are **unapproved suggestions** for later explicit review, not accepted user choices. No software changes, test results, stage promotion or B8 closure.
 
 - **2026-10-31 — Batch 1 explicit user approvals:** User selected **B8-D01 A, B8-D02 A and B8-D03 A**, instructed independent accepted GitHub ADRs and chronological preservation, and asked to **continue B8**. Created [D01](./decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md), [D02](./decisions/B8-D02%20-%20Geographic%20Separation%20Distinct%20from%20Route%20Travel%20Geometry.md) and [D03](./decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md). Proposed new **unapproved** D04–D06 options. B8 remains `in-review`; no implementation, tests, stage promotion or design closure.
+
+- **2026-10-31 — Batch 2 explicit user approval:** The user selected **B8-D04 A (with dynamic region boundaries), B8-D05 A, and B8-D06 B (not recommended A)**, expressly requesting **automatic persisted first placement of locations with free player repositioning**. Three separate accepted ADRs preserve original alternatives and this approval. **B8-D06 B is an explicit later override of earlier no-generated-canonical-map-position guidance**, limited to initial system-sourced map geometry with clear provenance; not proof of narrative distance or travel routes. D04 footprints may change as ordered world facts while containment remains separate. Proposed D07–D09 as **unapproved Batch 3**; no implementation, stage promotion or B8 closure.
