@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: user
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-10-31"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[World Map and Location Rules Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Zoomable Node Map Canvas
+
+## Map as derived graph view, not independent canon — 2026-10-31
+
+[Accepted B7-D06](../architecture/decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md) explicitly treats the map's **travel connections as a graph**: stable location entities are the nodes; **keyed, current route relation assertions** yield the edges. Separately, a location's acyclic containment parent and children determine the visual nested grouping, not travel edges. The map canvas **renders/edits this projected world state** through already-approved pending-Commit controls; it must not become a competing durable graph-object truth or interpret mere node selection/drag as story movement. A graph-shaped in-memory view is reasonable, but the user asked *whether* we should record a “graph object”; **no particular `Graph` class, graph library or underlying SQLite structure has been selected**. Map pan/zoom/layout and visible undiscovered node semantics are unchanged.
+
+
 
 ## Latest accepted event and narrative authority — 2026-10-28
 
