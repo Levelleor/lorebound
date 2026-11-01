@@ -4,7 +4,7 @@ type: idea
 status: staging
 origin: mixed
 created: "2026-10-16"
-updated: "2026-10-29"
+updated: "2026-10-31"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 source_brainstorms: ["[[LLM Providers and Generation Brainstorm]]", "[[Coordinator Tools and MCP Brainstorm]]"]
@@ -13,6 +13,12 @@ tags:
   - planning/idea
 ---
 # Configurable Generation Pipeline Strategies
+
+## B7-D08 accepted natural reference protocol — 2026-10-31
+
+[Accepted B7-D08](../architecture/decisions/B7-D08%20-%20Narrator%20Safe%20Provisional%20References%20and%20Isolated%20ID%20Binding.md) makes the narrator/interpreter handoff explicit across **single-pass, plan/validate/narrate and draft/audit/repair** strategies: prose-producing tasks use **natural-language entity references without internal IDs or alias-ID maps**; afterward the engine resolves grounded references privately into typed assertions. Only an **isolated non-narrating** stage may receive candidate IDs, and the same selected model may serve different stages without carrying ID-bearing interpretation text into future narrator context. No mandatory second model/inference pass. Ambiguous automatic candidate assertions follow **B7-D03 C** (silent omission); real errors remain reportable. The exact adapter/schema and model-compatibility tests are deferred.
+
+
 
 ## Role-isolated entity references across all generation strategies — 2026-10-29
 
