@@ -13,7 +13,7 @@ tags:
 
 # Pass B9 — Typed Spatial Data and Runtime Integration Contract Review
 
-> **B9 IN REVIEW — Batches 1–3 accepted; Batch 4 D10 A and D11 A accepted, D12 expressly deferred; Batch 5 unapproved.** Batch 1: D01 qualified A (typed spatial facts, no player/AI author labels), D02 A (TypeScript prepared assertions, Go/SQLite technical atomicity), D03 B (mocked all-component tests, no live model scenarios). Batch 2: **D04 C** (all pins eligible for future automatic movement, overriding previous intentional-pin immunity), **D05 A** (validated nested local-frame coordinates and mutable region geometry), **D06 A** (broad mocked success/failure/history contracts, labelled honestly). Historical alternatives remain below. **Batch 3: D07 B** (mandatory exact-metre conversion of qualitative geographic relations, superseding earlier no-fabricated-precision advice), **D08 A** (recalculate only on relevant accepted change, atomic commit and nonblocking conflicts), **D09 A** (allow valid overlapping mutable regions without changing containment/routes). No tests run, runtime implementation, stage promotion, B9 closure or waiver of separate B1 evidence is implied.
+> **B9 IN REVIEW — Batches 1–4 recorded; Batch 5 D14 A/D15 A accepted, D13 deferred for coordinator clarification; D12 deferred, no migrations. Batch 6 proposed.** Batch 1: D01 qualified A (typed spatial facts, no player/AI author labels), D02 A (TypeScript prepared assertions, Go/SQLite technical atomicity), D03 B (mocked all-component tests, no live model scenarios). Batch 2: **D04 C** (all pins eligible for future automatic movement, overriding previous intentional-pin immunity), **D05 A** (validated nested local-frame coordinates and mutable region geometry), **D06 A** (broad mocked success/failure/history contracts, labelled honestly). Historical alternatives remain below. **Batch 3: D07 B** (mandatory exact-metre conversion of qualitative geographic relations, superseding earlier no-fabricated-precision advice), **D08 A** (recalculate only on relevant accepted change, atomic commit and nonblocking conflicts), **D09 A** (allow valid overlapping mutable regions without changing containment/routes). No tests run, runtime implementation, stage promotion, B9 closure or waiver of separate B1 evidence is implied.
 
 ## Purpose
 
@@ -216,7 +216,20 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 
 **Batch 4 latest status:** D10 **A accepted** (ADR), D11 **A accepted** (ADR); **D12 explicitly DEFERRED with no migration work** and no ADR. The A/B/C option text above is retained as original unapproved proposals for the deferred question. No chapter closure, code, tests or staging promotion.
 
-## Batch 5 — proposed D13–D15, NOT approved
+## Batch 5 — D14 A and D15 A accepted; D13 DEFERRED (original alternatives preserved)
+
+**Explicit user review (2026-10-31):** D13 **defer**; D14 **A**; D15 **A**. Further user note for D13: **“For d13, more Info. I just want the coordinator to handle that. Whatever it decides happens but we try to make it as good as possible.”** User also reiterated D12 deferred with no spatial-migration work. The original A/B/C text below remains for provenance.
+
+| Decision | Disposition | Current interpretation |
+| --- | --- | --- |
+| **B9-D13** | **DEFERRED, no ADR** | User favours coordinator-led **best-effort** conflict handling rather than a complex dedicated conflict UI; user requests more explanation. This is **not approval** of a specific D13 option, algorithm, conflict-report suppression or expanded coordinator permission. |
+| **B9-D14** | **A accepted** | [Renderer-neutral typed spatial read models and S04 canvas adapter](./decisions/B9-D14%20-%20Renderer%20Independent%20Spatial%20Projections%20and%20S04%20Canvas%20Adapter.md). No specific graphics library chosen. |
+| **B9-D15** | **A accepted** | [Versioned typed browser/Go spatial contracts](./decisions/B9-D15%20-%20Versioned%20Typed%20Browser%20Go%20Spatial%20Service%20Contracts.md) with structural checks, expected-version/library epoch/idempotency and typed technical errors; Go is not a fictional validity judge. |
+
+**D13 explanation for later review:** S06 coordinates **whether and how** a supported automatic spatial reconciliation attempt proceeds when spatial constraints conflict, using the deterministic, versioned inputs selected in B9-D07/D10. This can include the best supported approximation or retaining the last valid placement, but exactly how constraints are prioritised and where an unresolved conflict appears is not yet decided. Already-accepted B9-D08 A **requires preserving contradictory accepted story facts and surfacing a nonblocking layout conflict** rather than rejecting narration or inventing arbitrary extra measurements. “Whatever it decides happens” cannot by itself authorise rewriting accepted facts, bypassing atomic version-safe commits, fabricating travel routes, or converting the map into a second canon store. Remaining D13 question: should the coordinator's residual unresolved status be communicated as a minimal notification, a map detail, or another lightweight nonblocking surface? Do not create a new policy/ADR until explicitly selected.
+
+**D12 still DEFERRED:** “do nothing” on spatial schema/event migrations; no migration scripts, migration tests, implementation, spatial migration ADR or implied approval.
+
 
 ### B9-D13 — Presenting unsatisfied map-layout constraints
 
@@ -248,12 +261,41 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 
 **Already accepted:** B9-D02 A commits events atomically with Go technical validation; B9-D03 B and D06 A select broad mock-only contract verification, not a real-model or live-host scenario prerequisite.
 
-**Batch 5 status:** D13–D15 are proposals only. **D12 remains deferred and is not part of Batch 5.**
+**Batch 5 latest status:** **D13 deferred**, with coordinator-led best-effort preference recorded for later clarification but no approved outcome; **D14 A and D15 A accepted** as separate ADRs; **D12 remains deferred, no spatial migration work**. Original options above remain dated proposals.
+
+## Batch 6 — proposed D16–D18, NOT approved
+
+### B9-D16 — Canonical versus presentation map interactions
+
+**Question:** How should map selection, pan/zoom and deliberate geometry edits interact with the existing pending change composer?
+
+- **A (recommended, proposed):** Keep pan/zoom/hover/selection as **presentation-only**, use temporary previews for pin/region/scale edits, and send deliberate changes to S06 as pending world corrections requiring explicit existing **Commit/Discard**. Do not turn drag gestures into direct SQLite writes or character travel. **Trade-off:** Clear edit state and intent boundaries, some UI state management.
+- **B (proposed):** Persist every pan, zoom, selection or transient drag immediately as canonical geography. **Trade-off:** Fewer UI states, unnecessary persistent history churn.
+- **C (proposed):** Make the map entirely passive and disallow any deliberate location/region editing. **Trade-off:** Simpler but contradicts previously accepted player-controlled repositioning.
+
+### B9-D17 — Several new locations in one accepted narrative change
+
+**Question:** If one accepted passage establishes several distinct, grounded new places, how should their generated initial placements be combined with accepted story history?
+
+- **A (recommended, proposed):** Resolve distinct stable identities, choose **deterministic frame-scoped initial placements in a stable order** (considering siblings together where relevant), and commit all created identities plus positions in the **same accepted atomic current-world transaction**, with idempotent replay. Ambiguous optional extraction still follows existing omission rules. **Trade-off:** Batch planning and ordering complexity.
+- **B (proposed):** Commit each place/pin independently and allow partially accepted story changes if a later placement fails. **Trade-off:** Simpler service calls, breaks accepted atomicity.
+- **C (proposed):** Randomly recompute positions for newly mentioned places on every map open. **Trade-off:** No repeatable durable semantic geography.
+
+### B9-D18 — Spatial reference identity without leaking model-facing IDs
+
+**Question:** How should narration naming places and entrances map to existing stable engine identities, including ambiguous same-name entities?
+
+- **A (recommended, proposed):** Pass **natural-language names and known facts** into prose-generating AI, never raw internal engine IDs. After generated narration, browser TypeScript performs contextual stable-identity binding for supported spatial proposals, rejecting guessing. Omit ambiguous optional automatic extraction according to the accepted rule and report genuine required-core technical failures. **Trade-off:** Separate binding logic/fixtures, reliable identity and narrator privacy.
+- **B (proposed):** Expose raw engine IDs in the narrator's prose-generation context to make database joins simpler. **Trade-off:** Conflicts with accepted narrator-safe reference boundaries.
+- **C (proposed):** Auto-create a new location whenever a reference could match multiple existing places. **Trade-off:** Unwanted duplicate world entities.
+
+**Batch 6 status:** D16–D18 are **unapproved proposals**. D12 and D13 remain deferred independently.
 
 ## Deferred B9 subjects, unapproved
 
 - **D12 deferred:** Do **no spatial migration work yet**. D12 A/B/C remain unselected and no spatial migration ADR or implementation is authorised. This does not erase earlier general event-migration decisions in B4/B7.
-- **D16+:** Remaining map interaction/performance/scale-bar design and other technical choices. Batch 5 D13–D15 remain **unapproved proposals**.
+- **D13 deferred:** Coordinator-led best effort is a recorded preference needing clarification; no D13 ADR or amendment to B9-D08 conflict-report obligations.
+- **D19+:** Other map performance, accessibility, scale bars and rendering details. D16–D18 remain **unapproved Batch 6 proposals**.
 - Narrator-safe natural reference protocol from the selected model, simultaneous location creations, structured status/inventory projections, optional plugin event schema handling, current-only migration and restore wiring.
 - Browser canvas renderer/framework, drawing shape/scale bars, Wails API signatures, SQLite table/index design and migration scripts all require separate technical decisions/implementation permission. Do not infer them from B9 opening.
 - B1 real-host feasibility and pending staging→production gates are unchanged by this review.
@@ -270,3 +312,5 @@ B6–B8 accepted Lorebound's narrative-first world-memory model, ID-safe interpr
 - **2026-10-31 — Batch 3 explicit selections:** User selected **D07 B** (contrary to recommended A), **D08 A**, **D09 A**, and requested separate ADRs and further B9 review. D07 B **explicitly overrides earlier B8 cautions against deriving exact geographic metres from qualitative language**; its numeric inferred geographic measurement must not be misrepresented as an independently narrated survey, nor confused with separate route travel length/time/cost. D08 A only reconciles on relevant accepted world changes, with deterministic atomic changes and nonblocking conflicts; D09 A allows technically valid region overlaps without implicit containment/route rewrites. **D10–D12 are unapproved Batch 4 proposals**. B9 remains `in-review`; no tests, code, staging promotion or design closure approved.
 
 - **2026-10-31 — Batch 4 selections:** User expressly approved **B9-D10 A** and **B9-D11 A**, while selecting **B9-D12 defer** with the condition **“For d12 do nothing. We don't want to do migration yet for these.”** Created **only two accepted ADRs**, and left D12 as **unapproved/deferred**. Existing general event-migration ADRs B4-D04/B4-D07/B7-D07 retain historical authority but are **not** approval to perform these spatial migrations now. Opened Batch 5 D13–D15 as **unapproved** proposals. B9 remains `in-review`; no code/tests/migrations/staging promotion/design closure.
+
+- **2026-10-31 — Batch 5 explicit review:** User selected **D13 defer**, **D14 A**, **D15 A**. D13 note: **“For d13, more Info. I just want the coordinator to handle that. Whatever it decides happens but we try to make it as good as possible.”** Created **only D14 and D15 accepted ADRs**; coordinator-first best-effort interpretation noted for further review, not treated as a selected policy or reversal of accepted D08 nonblocking conflict handling. D12 **remains deferred with no spatial migration work**. Opened Batch 6 D16–D18 as unapproved proposals; B9 stays `in-review`, with no code/tests/migration/staging promotion/closure.
