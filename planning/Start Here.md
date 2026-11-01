@@ -8,9 +8,15 @@ tags:
 ---
 # Start Here
 
+## Latest map architecture: persistent semantic spatial canvas — 2026-10-31
+
+[Accepted B7-D10](architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) clarifies that **the world map is a coordinate-pinned spatial canvas** with persistent positions and meaningful distance/scale, grouping empires/cities/buildings/rooms within the same zoomable experience. The accepted **travel graph** is a *separate logical connectivity layer*, not the map's auto-layout or its complete spatial model. Player-authored coordinate changes are meaningful saved map edits; pan/zoom is UI-only; proximity does not invent roads or move characters. Concrete canvas/graph libraries, nested transforms and route-distance schema remain unapproved implementation details. B7-D01–D06 and B7-D10 are accepted decisions; D07–D09 are currently unapproved proposals.
+
+
+
 ## Architecture milestones — 2026-10-31
 
-[Formal B6 design closure](architecture/decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) records all ten accepted narrative-first world-state decisions and preserves their dated provenance, including the feature-conditional anatomy/equipment rule. [B7 event representation and interpretation review](architecture/Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) is **opened with only unapproved proposals**. B6 design closure does **not** assert a working runtime or approve moving the 52 accepted staged ideas to production; concrete schemas, TypeScript reducer contracts, Go/SQLite integration and tests remain future work.
+[Formal B6 design closure](architecture/decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) records all ten accepted narrative-first world-state decisions and preserves their dated provenance, including the feature-conditional anatomy/equipment rule. [B7 event representation and interpretation review](architecture/Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) is **open**, with D01–D06 and user-directed D10 accepted, while D07–D09 remain unapproved proposals. B6 design closure does **not** assert a working runtime or approve moving the 52 accepted staged ideas to production; concrete schemas, TypeScript reducer contracts, Go/SQLite integration and tests remain future work.
 
 
 
