@@ -1,5 +1,11 @@
 # Planning vault rules
 
+## Required map interpretation — user-approved B7-D10, 2026-10-31
+
+[Accepted B7-D10](architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) explicitly makes the **primary location map a persistent semantic spatial canvas**, **not an arbitrary graph layout**. Save pinned location coordinates, meaningful relative scale/separations and grouped extents (empires, cities, buildings, rooms) in the adventure's coherent world-map state. The **logical travel graph is only explicit route connectivity**, visually overlaid on that canvas, while containment/grouping is a distinct accepted relationship. Link visual length should meaningfully communicate world distance; do not let graph auto-layout shuffle saved geography. Intentional player pin repositioning is a semantic map edit through pending explicit Commit, **not** character travel. Pan/zoom and cosmetic labels alone are presentation. The exact coordinate system, nested transforms and graph/canvas implementation library remain unselected. [B7-D07–D09](architecture/Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) remain proposed and unapproved; no implementation has occurred.
+
+
+
 ## Identity separation for narrative generation — explicit 2026-10-29 user direction
 
 [B6-D04](architecture/decisions/B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md) is now the **current operative boundary** for entity references: system-stable IDs and ID↔name maps stay **out of prose-generating model prompts**, including when one model is reused for narration and interpretation. Narrator-facing context must contain natural-language names, facts and descriptions. A separate non-narrating interpretation context may use internal IDs; in single-pass prose+events mode the model uses natural referents and the TypeScript engine binds IDs afterward. Do not guess among same-name entities or fabricate duplicates to satisfy event extraction; preserve ambiguous structured changes as unresolved without unnecessarily blocking narrative. This is documentation/architecture, not implementation or stage promotion.
