@@ -16,6 +16,12 @@ tags:
 
 # B8-D01 — Hierarchical local coordinate frames on one persistent world canvas
 
+## Later explicit B8-D06 B override — 2026-10-31
+
+[Accepted B8-D06 Option B](./B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) supersedes the earlier paragraph below saying a new location with unknown coordinates **must always remain unplaced**. New accepted locations are now **automatically assigned and persisted initial positions within the appropriate supported local frame**, with **system-generated origin distinct from established story geography**. Users can then intentionally move them and Commit. The **hierarchical local frame** and deterministic transform choice of this D01 Option A remains accepted; what changed is **how the initial coordinate is obtained**. Never invent a known journey distance or override manually committed pins merely to lay out the canvas.
+
+
+
 ## Approval and provenance
 
 **Explicit user selection, 2026-10-31:** “Review B8 Batch 1: B8-D01: A; B8-D02: A; B8-D03: A. Record only explicitly approved choices as Lorebound GitHub ADRs, preserve approval history, and continue B8.”
