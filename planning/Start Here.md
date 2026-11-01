@@ -8,15 +8,21 @@ tags:
 ---
 # Start Here
 
+## B7 architecture approvals and closure assessment — 2026-10-31
+
+**All ten B7 architectural decisions are now explicitly accepted**, including D03 **Option C** (silent discard of unresolved *automatic* extraction candidates), D07 **Option A** (versioned field-registry migrations), D08 **Option A** (ID-free narrator/provisional natural references) and D09 **Option A** (minimal current event provenance/replay). [The B7 review](architecture/Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) records a **design-closure assessment only**. It remains `in-review`, pending separate user approval for formal design closure. The previously accepted [B7-D10 spatial canvas](architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) still requires saved semantically scaled location coordinates and meaningful route geometry, not a graph auto-layout. No code, integration tests or staging promotion is claimed.
+
+
+
 ## Latest map architecture: persistent semantic spatial canvas — 2026-10-31
 
-[Accepted B7-D10](architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) clarifies that **the world map is a coordinate-pinned spatial canvas** with persistent positions and meaningful distance/scale, grouping empires/cities/buildings/rooms within the same zoomable experience. The accepted **travel graph** is a *separate logical connectivity layer*, not the map's auto-layout or its complete spatial model. Player-authored coordinate changes are meaningful saved map edits; pan/zoom is UI-only; proximity does not invent roads or move characters. Concrete canvas/graph libraries, nested transforms and route-distance schema remain unapproved implementation details. B7-D01–D06 and B7-D10 are accepted decisions; D07–D09 are currently unapproved proposals.
+[Accepted B7-D10](architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) clarifies that **the world map is a coordinate-pinned spatial canvas** with persistent positions and meaningful distance/scale, grouping empires/cities/buildings/rooms within the same zoomable experience. The accepted **travel graph** is a *separate logical connectivity layer*, not the map's auto-layout or its complete spatial model. Player-authored coordinate changes are meaningful saved map edits; pan/zoom is UI-only; proximity does not invent roads or move characters. Concrete canvas/graph libraries, nested transforms and route-distance schema remain unapproved implementation details. All B7-D01–D10 decisions are now accepted; **B7 has not yet been formally closed**.
 
 
 
 ## Architecture milestones — 2026-10-31
 
-[Formal B6 design closure](architecture/decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) records all ten accepted narrative-first world-state decisions and preserves their dated provenance, including the feature-conditional anatomy/equipment rule. [B7 event representation and interpretation review](architecture/Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) is **open**, with D01–D06 and user-directed D10 accepted, while D07–D09 remain unapproved proposals. B6 design closure does **not** assert a working runtime or approve moving the 52 accepted staged ideas to production; concrete schemas, TypeScript reducer contracts, Go/SQLite integration and tests remain future work.
+[Formal B6 design closure](architecture/decisions/P-B6-01%20-%20Design%20Closure%20and%20Deferred%20Event%20Representation%20Contracts.md) records all ten accepted narrative-first world-state decisions and preserves their dated provenance, including the feature-conditional anatomy/equipment rule. [B7 event representation and interpretation review](architecture/Pass%20B7%20-%20Event%20Representation%20and%20Narrative%20Interpretation%20Contract%20Review.md) remains **open for formal closure sign-off**, with **all D01–D10 decisions accepted** and a documented design-only closure assessment. B6 design closure does **not** assert a working runtime or approve moving the 52 accepted staged ideas to production; concrete schemas, TypeScript reducer contracts, Go/SQLite integration and tests remain future work.
 
 
 
