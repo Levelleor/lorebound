@@ -13,7 +13,7 @@ tags:
 
 # Pass B9 — Typed Spatial Data and Runtime Integration Contract Review
 
-> **B9 IN REVIEW — Batch 8 D22 C and D23 A (minimal viewport rendering) accepted; D24 deferred with explicit no-map-keyboard direction. D12/D13 remain deferred; Batch 9 D25 A, D26 qualified A, D27 qualified C accepted; Batch 10 pending.** Batch 1: D01 qualified A (typed spatial facts, no player/AI author labels), D02 A (TypeScript prepared assertions, Go/SQLite technical atomicity), D03 B (mocked all-component tests, no live model scenarios). Batch 2: **D04 C** (all pins eligible for future automatic movement, overriding previous intentional-pin immunity), **D05 A** (validated nested local-frame coordinates and mutable region geometry), **D06 A** (broad mocked success/failure/history contracts, labelled honestly). Historical alternatives remain below. **Batch 3: D07 B** (mandatory exact-metre conversion of qualitative geographic relations, superseding earlier no-fabricated-precision advice), **D08 A** (recalculate only on relevant accepted change, atomic commit and nonblocking conflicts), **D09 A** (allow valid overlapping mutable regions without changing containment/routes). No tests run, runtime implementation, stage promotion, B9 closure or waiver of separate B1 evidence is implied.
+> **B9 IN REVIEW — Batch 8 D22 C and D23 A (minimal viewport rendering) accepted; D24 deferred with explicit no-map-keyboard direction. D12/D13 remain deferred; Batch 9 D25 A, D26 qualified A, D27 qualified C accepted; Batch 10 D28 B, D29 A, D30 A accepted; design-only assessment authorised, formal closure unapproved.** Batch 1: D01 qualified A (typed spatial facts, no player/AI author labels), D02 A (TypeScript prepared assertions, Go/SQLite technical atomicity), D03 B (mocked all-component tests, no live model scenarios). Batch 2: **D04 C** (all pins eligible for future automatic movement, overriding previous intentional-pin immunity), **D05 A** (validated nested local-frame coordinates and mutable region geometry), **D06 A** (broad mocked success/failure/history contracts, labelled honestly). Historical alternatives remain below. **Batch 3: D07 B** (mandatory exact-metre conversion of qualitative geographic relations, superseding earlier no-fabricated-precision advice), **D08 A** (recalculate only on relevant accepted change, atomic commit and nonblocking conflicts), **D09 A** (allow valid overlapping mutable regions without changing containment/routes). No tests run, runtime implementation, stage promotion, B9 closure or waiver of separate B1 evidence is implied.
 
 ## Purpose
 
@@ -431,7 +431,16 @@ Accepted ADRs: [D25](./decisions/B9-D25%20-%20Disposable%20Map%20Pan%20and%20Zoo
 
 **Batch 9 latest:** D25 A, D26 qualified A, D27 qualified C accepted. Original proposals above are historical. D12/D13/D24 remain deferred; no implementation, testing or staging promotion.
 
-## Batch 10 — proposed D28–D30, NOT approved
+## Batch 10 — D28 B, D29 A, D30 A ACCEPTED (original alternatives retained)
+
+**Explicit user approval (2026-11-01):** D28 **B** (recenter an already open map immediately when Playing As changes), D29 **A** (stable nearest-free minimum-zoom pin offset ordering), D30 **A** (documentation-only design completeness/consistency assessment). Formal B9 closure explicitly **not authorised**.
+
+- [D28 accepted ADR](./decisions/B9-D28%20-%20Immediate%20View%20Recenter%20on%20Playing%20As%20Selection.md): recenter on changed Playing As selection when a known position exists; do not continuously follow ordinary character movement, and never write canonical state through viewport actions. If unavailable use D26 default.
+- [D29 accepted ADR](./decisions/B9-D29%20-%20Stable%20Nearest%20Free%20Pin%20Offset%20Ordering.md): stable pin order and deterministic closest free offset for fully overlapping pins at supported lowest zoom, integrated with accepted spatial commits; no broad region movements or redraw-triggered canonical writes.
+- [D30 accepted ADR](./decisions/B9-D30%20-%20Design%20Only%20Completeness%20Assessment%20Before%20Separate%20Closure%20Approval.md): assess ADR status, precedence and dependencies, history, links, and D12/D13/D24 deferrals; record findings without formal closure, implementation, migrations, test execution or staging promotion.
+
+**D12, D13, D24 remain deferred.** Original choices below remain the historical proposal text and must not be restated as still pending selections.
+
 
 ### B9-D28 — Recentring when Playing As changes
 
@@ -451,7 +460,11 @@ Accepted ADRs: [D25](./decisions/B9-D25%20-%20Disposable%20Map%20Pan%20and%20Zoo
 - **B (proposed):** Declare formal B9 closure immediately without assessing its consistency or deferrals.
 - **C (proposed):** Require full implementation and live model/host tests before even assessing design closure.
 
-**Batch 10 status:** All options remain unapproved. B9 remains in review. D12/D13/D24 remain deferred.
+**Batch 10 latest:** D28 B, D29 A, D30 A accepted as separate ADRs; design-only assessment authorised, not design closure. B9 remains `in-review`, and D12/D13/D24 remain deferred.
+
+## Assessment results and closure disposition
+
+[B9 design completeness assessment](./Pass%20B9%20-%20Design%20Completeness%20Assessment%20%28Not%20Closure%29.md) records approval consistency, supersession, link review, explicit deferrals and remaining design limitations. It is **not** a closure ADR. B9 status remains `in-review`; a **separate explicit user approval** is required before any formal design closure.
 
 ## Deferred B9 subjects, unapproved
 
@@ -485,3 +498,5 @@ Accepted ADRs: [D25](./decisions/B9-D25%20-%20Disposable%20Map%20Pan%20and%20Zoo
 - **2026-11-01 — Batch 8 explicit disposition:** User selected **B9-D22 C** (no visible scale indicator) and **B9-D23 A** with a strong *keep it as easy as possible / no advanced features* condition, while choosing **B9-D24 defer** and separately stating **“No keyboard interaction for the map.”** Two accepted ADRs created for D22/D23 only. D23 starts with simple disposable view rendering and adds light culling only when useful; no sophisticated optimization subsystem mandated. The D24 no-keyboard scope is recorded without treating A/B/C as approved. D12 stays deferred without any spatial migration work; D13 stays deferred for coordinator clarification. D25–D27 proposed only as Batch 9. No code/tests/migrations/staging promotion/B9 closure.
 
 - **2026-11-01 — Batch 9 approval:** User approved **D25 A**, **D26 A with selected Playing As character's current position or default coordinates**, and **D27 C only for minimal nearest-free-side separation of completely overlapping pins at the farthest zoom-out**. Three accepted ADRs. Older alternative text retained. No per-redraw canonical writes or sweeping region/route changes. **D12 deferred without migration work; D13 deferred for coordinator clarification; D24 deferred without map keyboard interaction**. D28–D30 proposed only. No implementation, tests, staging promotion or formal B9 closure.
+
+- **2026-11-01 — Batch 10 explicit selection:** User accepted **D28 B**, **D29 A**, **D30 A**, and expressly prohibited formal B9 closure without separate approval. D28 is immediate open-map recenter on Playing As change rather than earlier recommended defer-to-reopen A. D29 stabilises only minimum-zoom full pin overlap correction. D30 authorises a *design-only assessment*, not formal closure, code, migrations, testing or promotion. **D12, D13 and D24 remain deferred**, with no spatial migration work or map keyboard interaction. Earlier options and approvals retained.
