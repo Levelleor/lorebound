@@ -16,6 +16,11 @@ tags:
 
 # B8-D01 — Hierarchical local coordinate frames on one persistent world canvas
 
+## Subsequent B9 Batch 2 override — 2026-10-31
+
+**Later B9-D04 C and D05 A (2026-10-31):** [B9-D04 C](./B9-D04%20-%20All%20Coordinates%20Eligible%20for%20Automatic%20Layout.md) permits valid future automatic coordinate changes to **all** saved positions, including those previously moved by the player. Earlier “never auto-override manually committed pin” language is superseded. [B9-D05 A](./B9-D05%20-%20Validated%20Local%20Frame%20Coordinates%20and%20Mutable%20Region%20Geometry.md) refines the accepted nested-frame approach with typed validated relative coordinates/transforms and mutable region outlines. Persisted geography remains deterministic and separate from viewport pixels and route travel facts.
+
+
 ## Later explicit B8-D06 B override — 2026-10-31
 
 [Accepted B8-D06 Option B](./B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) supersedes the earlier paragraph below saying a new location with unknown coordinates **must always remain unplaced**. New accepted locations are now **automatically assigned and persisted initial positions within the appropriate supported local frame**, with **system-generated origin distinct from established story geography**. Users can then intentionally move them and Commit. The **hierarchical local frame** and deterministic transform choice of this D01 Option A remains accepted; what changed is **how the initial coordinate is obtained**. Never invent a known journey distance or override manually committed pins merely to lay out the canvas.

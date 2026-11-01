@@ -17,6 +17,11 @@ tags:
 
 # B8-D09 — Atomic accepted location creation and automatically generated first map placement
 
+## Subsequent B9 Batch 2 override — 2026-10-31
+
+**Later B9-D04 C and D05 A (2026-10-31):** [B9-D04 C](./B9-D04%20-%20All%20Coordinates%20Eligible%20for%20Automatic%20Layout.md) reverses this note's formerly proposed permanent protection for deliberately positioned pins: a future accepted automatic layout change may move any location. [B9-D05 A](./B9-D05%20-%20Validated%20Local%20Frame%20Coordinates%20and%20Mutable%20Region%20Geometry.md) approves typed finite local-frame coordinates/transforms and mutable shapes. **Atomic creation of the resolved location and its initial generated position remains mandatory**. Direct manual repositioning still uses pending explicit Commit. Earlier origin/lock assumptions below remain historical, not current.
+
+
 ## Later B9-D01/D02 runtime and provenance refinement — 2026-10-31
 
 [Accepted B9-D01 qualified A](./B9-D01%20-%20Typed%20Spatial%20Coordinates%20Without%20AI%20Player%20Authorship%20Labels.md) preserves typed map coordinates but removes the earlier assumption that every coordinate must carry a **player-vs-AI author label**. The accepted [B9-D02 A](./B9-D02%20-%20TypeScript%20Prepared%20Events%20and%20Go%20SQLite%20Atomic%20Commit%20Authority.md) keeps TypeScript preparation and Go technical/atomic SQLite commit authority; the **location and initial coordinate still save in one canonical idempotent transaction**. Generated defaults do not require a second manual approval, and later deliberate player map changes still require explicit Commit. Minimum operational pin protection must still prevent B8-D08's prohibited silent overwrites; its encoding is a separate **unapproved B9-D04 proposal**. Earlier origin/provenance language below is preserved as dated context, not a mandate for an AI/player audit field.

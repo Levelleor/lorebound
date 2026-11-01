@@ -17,6 +17,11 @@ tags:
 
 # B7-D10 — Persistent spatial canvas with meaningful coordinates, nested groups and scaled connections
 
+## Subsequent B9 Batch 2 override — 2026-10-31
+
+**Later B9-D04 C and D05 A (2026-10-31):** [B9-D04 C](./B9-D04%20-%20All%20Coordinates%20Eligible%20for%20Automatic%20Layout.md) means “pinned” in the older semantic-canvas description no longer implies permanent immunity from future accepted automatic layout. A committed position persists until a later deterministic, versioned, atomic spatial change, which may move **any** location. Manual moves still require explicit pending Commit. [B9-D05 A](./B9-D05%20-%20Validated%20Local%20Frame%20Coordinates%20and%20Mutable%20Region%20Geometry.md) confirms typed frame-local geometry and mutable outlines; the canvas remains semantic rather than screen pixels or merely a travel graph.
+
+
 ## Subsequent explicit B8 Batch 2 corrections — 2026-10-31
 
 **Later governing decision:** [B8-D06 Option B](./B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) was **expressly chosen over recommended A**. All new accepted locations receive **automatic, persisted initial map coordinates**, clearly distinguished as **system-generated map placement** rather than fictional facts establishing exact distances. Players may move/reposition them through the existing explicit pending Commit boundary, and their accepted positions must not be silently replaced. This is a deliberate **supersession of this ADR's older no-generated-canonical-coordinate rule for first placement only**. Do not infer roads, character movement or travel metrics from generated map positions. [B8-D04 A](./B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md) also confirms **spatial region borders are dynamic, persistently updated world facts**, separate from canonical containment. [B8-D05 A](./B8-D05%20-%20Stable%20Cross%20Frame%20Routes%20with%20Grounded%20Door%20and%20Portal%20Anchors.md) refines explicit cross-group route/door/portal anchors. All original D10 language below remains as its time-ordered approval provenance; B7 remains design-closed and B8 open.
