@@ -1,5 +1,11 @@
 # Lorebound agent instructions
 
+## Latest world-map approvals and B9 review status — 2026-10-31
+
+[B8 design closure](planning/architecture/decisions/P-B8-01%20-%20Design%20Closure%20and%20Deferred%20Runtime%20Integration%20Contracts.md) records nine accepted architecture decisions; **B8-D06 Option B** requires automatic **persisted generated first map coordinates** for each accepted new location, **B8-D04 Option A** permits dynamic region-border changes, B8-D07 A ensures deterministic scoped placement, B8-D08 A limits generated-placement corrections without overwriting authored pins, and B8-D09 A requires the new-location identity and first position to save **atomically together**. Manual deliberate map correction uses explicit pending Commit. Route topology and containment remain separate from geographic canvas placement; generated map pixels are not evidence of narrative route length. [B9](planning/architecture/Pass%20B9%20-%20Typed%20Spatial%20Data%20and%20Runtime%20Integration%20Contract%20Review.md) is **opened with D01–D03 unapproved proposals**; this is all unimplemented design, not staging promotion or shipped behaviour.
+
+
+
 ## Accepted world-map architecture
 
 For any map/location planning, [B7-D10](planning/architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) establishes that the world map is **a persistent, coordinate-pinned, semantically scaled canvas with nested geographic groups and meaningful distances**, **not merely an abstract travel graph**. B7-D06 describes route connectivity only; preserve saved spatial layout and separate containment/route relationships. Deliberate map-coordinate corrections follow explicit world-edit Commit, while pan/zoom is presentation-only. Do not infer this feature is implemented or choose unapproved coordinate/canvas/graph libraries.
