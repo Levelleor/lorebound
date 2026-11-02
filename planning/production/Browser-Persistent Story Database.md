@@ -1,18 +1,29 @@
 ---
 id: "IDEA-0051"
 type: idea
-status: staging
+status: production
 origin: user
 created: "2026-10-16"
-updated: "2026-10-28"
+updated: "2026-11-01"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
+approved_at: "2026-11-01"
+approved_by: "requesting user (explicit separate IDEA-0053 and IDEA-0051 production promotion)"
 source_brainstorms: ["[[Local First Storage and Deployment Brainstorm]]", "[[Story Editing and Event Timeline Brainstorm]]"]
 related: []
 tags:
   - planning/idea
 ---
 # Browser-Persistent Story Database
+
+## Current production readiness — explicitly approved 2026-11-01
+
+**Stage:** `production`, explicitly promoted from the original `planning/staging/` note by the requesting user on 2026-11-01: **“sounds good, lets approve both of those to production”**, referring to IDEA-0053 and IDEA-0051 in the Gate 0 review. This is **implementation-ready planning, not working or verified software**. Preserve the original IDEA ID and dated acceptance history. Historical text below saying “staging only” describes the earlier stage, not the current approval.
+
+**Gate 0 first development slice, separately awaiting explicit execution approval:** Reusable production-intended Go-owned SQLite transaction service using an **isolated disposable test database**, demonstrating a versioned and idempotent write, readback, deliberately failed write without partial persistence, and durability after close/reopen. Preserve the one canonical library boundary and browser TypeScript domain authority. The wider approved adventure/library, backup/restore, secrets and concurrency features remain later incremental requirements, not Gate 0's immediate implementation promise.
+
+**Gate 0 acceptance evidence (NOT RUN):** Actual Go SQLite connection, version/epoch/operation identity where applicable, commit/readback, deliberate rollback, reopening durability and captured errors/environment. Do not touch real user adventure files or begin **deferred B9-D12 spatial schema/event migrations**. **Code and test execution were not authorised by the promotion-only user response**, and must be separately approved. Related [Gate 0 authorisation packet](../architecture/Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md) and [C-D08](../architecture/decisions/C-D08%20-%20Real%20SQLite%20Versioned%20Commit%20Rollback%20and%20Reopen%20Proof.md).
+
 
 ## Current accepted architecture after 2026-10-28 redirection
 
@@ -180,7 +191,7 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - [ ] Dependencies, edge cases and failures considered
 - [ ] Open blocking questions resolved
 - [ ] Acceptance criteria are testable
-- [ ] Human approved promotion to production
+- [x] Human approved promotion to production (2026-11-01, requesting user; separate implementation permission pending)
 
 ## Evaluation notes
 - Origin: **user**. Browser-local persistence came from the original brainstorm; the user clarified an intended SvelteKit framework and requested comparison of browser, backend and optional hybrid databases, then **explicitly accepted the options-first direction for staging**.
@@ -214,3 +225,7 @@ The player's SvelteKit/Svelte UI and browser-side TypeScript game logic request 
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Stage IDEA-0051 as a **storage-options-first** design direction using SvelteKit, comparing browser `localStorage`, IndexedDB, SQLite WASM + OPFS, browser persistence permissions, SvelteKit server-side SQLite, hosted SQL and optionally hybrid persistence. Require deterministic **complete incremental reconstruction** and coherent transactional storage regardless of engine. **No** primary database, backend deployment, synchronisation model or hosting provider is selected. Moved to staging for further refinement; not production approval or implementation.
 
 - 2026-10-28 — **User-approved supersession:** Narrative-first declarative fact assertions and the revision-free current-story model now govern this document. Former contradictory original direction is historical approval context, not active implementation guidance. No stage promotion or software implementation.
+
+## Production stage promotion history — 2026-11-01
+
+- **2026-11-01:** User explicitly approved promoting **IDEA-0051** and the other Gate 0 foundation IDEA to `planning/production/`. Same continuing IDEA note moved without resetting ID, accepted direction or dated record. Gate 0 implementation and technical checks still require **separate execution authorisation**, not implied by staging promotion. No implementation, tests, migrations or specs created. The other 50 original staging ideas remain untouched.

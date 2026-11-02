@@ -1,18 +1,29 @@
 ---
 id: "IDEA-0053"
 type: idea
-status: staging
+status: production
 origin: user
 created: "2026-10-16"
-updated: "2026-10-18"
+updated: "2026-11-01"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
+approved_at: "2026-11-01"
+approved_by: "requesting user (explicit separate IDEA-0053 and IDEA-0051 production promotion)"
 source_brainstorms: ["[[Local First Storage and Deployment Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
 related: []
 tags:
   - planning/idea
 ---
 # Localhost Startup and Offline Mode
+
+## Current production readiness — explicitly approved 2026-11-01
+
+**Stage:** `production`, explicitly promoted from the original `planning/staging/` note by the requesting user on 2026-11-01: **“sounds good, lets approve both of those to production”**, referring to IDEA-0053 and IDEA-0051 in the Gate 0 review. This is **implementation-ready planning, not working or verified software**. Retain the original IDEA ID, all earlier acceptance/decision history, and accepted scope; historical sections below saying “staging only” describe their original dates, not the current file stage.
+
+**Gate 0 first development slice, separately awaiting explicit execution approval:** Reusable production-intended Wails v3 headless Go process, ordinary-browser SvelteKit asset delivery and a typed narrow browser-to-Go service exchange. Verification must observe real process/browser operation, binding/origin restrictions and request/response, not a simulated host. The accepted broader lifecycle, security, secrets, offline and distribution requirements remain in this production idea for incremental later implementation; their mere presence does not expand Gate 0.
+
+**Gate 0 acceptance evidence (NOT RUN):** Actual headless Go startup, ordinary-browser served UI, one typed round trip, restricted localhost origin/service boundary, and reported environment/versions/errors. Failed integration remains a blocker. No story generation, advanced map, spatial migration, model proxy, or application login. **Code and test execution were not authorised by the promotion-only user response**, and must be separately approved. Related [Gate 0 authorisation packet](../architecture/Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md) and [C-D07](../architecture/decisions/C-D07%20-%20Minimal%20Real%20Wails%20Browser%20Go%20Host%20Exchange.md).
+
 
 ## Idea
 Distribute Lorebound as **one cross-platform headless localhost application**, using a **Wails v3 Go server** packaged as prebuilt executables for Windows, macOS and Linux. Launching Lorebound starts a loopback-only HTTP server and (by default) opens the player's **ordinary system browser**. Wails serves a static/client-rendered SvelteKit/Svelte UI; the TypeScript gameplay engine, coordinator, enabled gameplay plugins and AI API adapters run alongside it **in that browser**, not in a native WebView or Node/SvelteKit backend. Go/Wails services provide filesystem-backed SQLite persistence, coherent transactions, saves, import/export and other necessary privileged operations. SQLite files are durable on the host computer; browser storage is not the canonical save location. Preserve offline local-model play, responsive interactions and simple installation.
@@ -171,7 +182,7 @@ A player launches the packaged Lorebound Go executable. It starts a **loopback-b
 - [ ] Dependencies, edge cases and failures considered
 - [ ] Open blocking questions resolved
 - [ ] Acceptance criteria are testable
-- [ ] Human approved promotion to production
+- [x] Human approved promotion to production (2026-11-01, requesting user; separate implementation permission pending)
 
 ## Evaluation notes
 - 2026-10-16: Earlier accepted direction used Tauri desktop + npm localhost; superseded by later user choices.
@@ -203,3 +214,7 @@ A player launches the packaged Lorebound Go executable. It starts a **loopback-b
 - 2026-10-16 — **User-requested Inbox refinement (not acceptance at that time):** Ease of installation must consider ordinary, nontechnical players. In addition to source/npm installation, investigate a published Docker image and other low-friction startup routes such as Compose, downloadable prebuilt local releases or desktop installers. Preserve the SvelteKit/local-offline direction, avoid premature delivery-method selection, and account for safe persistent data and model access.
 - 2026-10-16 — **Explicitly accepted by the requesting user:** Support **Tauri as the primary installation/startup method for ordinary players** alongside a straightforward **SvelteKit npm install/start localhost route**, sharing one application UI/gameplay core with platform-specific data/OS/model adapters. Keep **Docker and similar packaging as potential additional options** for evaluation rather than automatically mandatory deliverables. Preserve local/offline play and safe persistent story data. Moved the same note from Inbox to staging for refinement, not production.
 - 2026-10-17 — **Refinement decision accepted by the requesting user:** Choose **external AI execution** rather than packaging/hosting an AI model as part of Lorebound; offer integration with multiple local/cloud API styles. Target a cohesive offline-capable application on Windows, macOS and Linux (consistent with IDEA-0001). The user additionally **proposed for evaluation**, but did not yet approve, a Tauri-managed complete SvelteKit frontend/backend server to minimise Rust backend development. Keep the sidecar/server packaging architecture open pending comparison and approval. This is **not** approval to move IDEA-0053 to production.
+
+## Production stage promotion history — 2026-11-01
+
+- **2026-11-01:** User explicitly approved promoting **IDEA-0053** and the other Gate 0 foundation IDEA to `planning/production/`. Same continuing IDEA note moved without resetting ID, accepted direction or dated record. Gate 0 implementation and technical checks still require **separate execution authorisation**, not implied by staging promotion. No implementation, tests, migrations or specs created. The other 50 original staging ideas remain untouched.
