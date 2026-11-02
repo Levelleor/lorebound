@@ -8,6 +8,10 @@ tags:
 ---
 # Subsystem Mapping Register
 
+## Current Pass C implementation-readiness status — 2026-11-01
+
+The Pass A mapping and original 52 accepted `IDEA-` IDs remain unchanged. The user **separately approved** the original [IDEA-0053 runtime](../production/Localhost%20Startup%20and%20Offline%20Mode.md) and [IDEA-0051 Go SQLite database](../production/Browser-Persistent%20Story%20Database.md) for **staging → production**. All **other 50** remain staging. Original IDEA-0053/0051 source paths recorded in historical Pass A sections below refer to their **prior** stages; use the current production links above. No source implementation, tests, specs or migration are implied. Gate 0 implementation/test execution is **not yet approved**. B9-D12 spatial migration remains deferred.
+
 ## Current narrative-first architectural authority — 2026-10-28
 
 **Subsequent explicit architectural clarification (2026-10-28):** [B6-D01](./decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) governs the **meaning of all existing world-state and event-producing subsystem mappings**. The engine primarily tracks accepted fiction for narration; event effects are declarative, last-assertion-wins current facts without mechanical source-state preconditions. Stable/sparse IDs and one coherent current item placement survive; historical contradictions are not technical corruption. This does **not** change the accepted Pass A ownership mapping, stage/implementation boundaries or original acceptance provenance.
