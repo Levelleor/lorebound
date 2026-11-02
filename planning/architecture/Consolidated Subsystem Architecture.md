@@ -258,9 +258,9 @@ The table is sorted by original IDEA ID. Links point to the **unchanged staged i
 | [IDEA-0046](../staging/Typed%20Tool%20Rejection%20and%20Narrative%20Repair.md) | Typed Tool Rejection and Narrative Repair | Adventure Coordinator | **S06** | S07 |
 | [IDEA-0047](../staging/Native%20Gameplay%20Capability%20Registry.md) | Native Gameplay Capability Registry | Gameplay Capability Registry & Plugins | **S06** | S05, S07 |
 | [IDEA-0050](../staging/Structured%20UI%20Game%20Actions.md) | Structured UI Game Actions | Narrative Interaction & Intent | **S03** | S04, S06, S07 |
-| [IDEA-0051](../staging/Browser-Persistent%20Story%20Database.md) | Browser-Persistent Story Database | Persistence & Draft Management | **S12** | S01, S02, S05 |
+| [IDEA-0051](../production/Browser-Persistent%20Story%20Database.md) | Browser-Persistent Story Database | Persistence & Draft Management | **S12** | S01, S02, S05 |
 | [IDEA-0052](../staging/Backups%20Export%20and%20Storage%20Quotas.md) | Backups Export and Storage Quotas | Persistence & Draft Management | **S12** | S01, S02, S04, S05 |
-| [IDEA-0053](../staging/Localhost%20Startup%20and%20Offline%20Mode.md) | Localhost Startup and Offline Mode | Runtime & Platform Services | **S01** | S04, S08, S12 |
+| [IDEA-0053](../production/Localhost%20Startup%20and%20Offline%20Mode.md) | Localhost Startup and Offline Mode | Runtime & Platform Services | **S01** | S04, S08, S12 |
 | [IDEA-0055](../staging/Optional%20RPG%20Mechanics%20Plugins.md) | Optional RPG Mechanics Plugins | Gameplay Capability Registry & Plugins | **S06** | S04, S05 |
 | [IDEA-0061](../staging/Lorebound%20Branding%20and%20Engine%20Split.md) | Lorebound Branding and Engine Split | Application Foundation & Lifecycle | **S01** | S04, S06, S12 |
 | [IDEA-0062](../staging/Accessibility%20and%20Customisable%20Interface.md) | Accessibility and Customisable Interface | Presentation & UX | **S04** | S01, S02, S03, S06 |
