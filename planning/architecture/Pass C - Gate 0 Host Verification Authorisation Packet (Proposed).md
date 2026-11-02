@@ -1,6 +1,6 @@
 ---
 type: architecture
-status: proposed-for-explicit-approval
+status: partial-approval-execution-pending
 phase: "C"
 created: "2026-11-01"
 updated: "2026-11-01"
@@ -12,7 +12,19 @@ tags:
 
 # Pass C — Gate 0 host verification and final-product development authorisation (PROPOSED)
 
-> **NOT APPROVED.** This is a concise **separate approval request prepared in response to the user's deadline pressure**, not a command to implement. No IDEA promotion, code, testing, live integration evidence, or production/spec status is granted by the authoring of this packet.
+> **PARTIALLY APPROVED, EXECUTION NOT AUTHORISED.** On 2026-11-01 the user separately approved production promotion for **IDEA-0053 and IDEA-0051**. The **third independent permission**, to write and run the real Gate 0 host/SQLite foundation, **was not granted**. No implementation code, tests, runtime evidence or specs are claimed from these promotions.
+
+## Current approval disposition — 2026-11-01
+
+The user explicitly replied, **“sounds good, lets approve both of those to production, what do we do next?”** in response to the two identified staging ideas. This approved **only their individual staging → production transitions**, not an implicit Gate 0 source/test execution.
+
+| Permission | Current disposition |
+| --- | --- |
+| IDEA-0053 original note | **APPROVED and promoted**: [Localhost Startup and Offline Mode](../production/Localhost%20Startup%20and%20Offline%20Mode.md) |
+| IDEA-0051 original note | **APPROVED and promoted**: [Browser-Persistent Story Database](../production/Browser-Persistent%20Story%20Database.md) |
+| Implement the minimal real host/SQLite foundation and run actual checks | **AWAITING EXPLICIT AUTHORISATION** |
+
+**Next step:** Request one narrow approval to **begin Gate 0 implementation and real technical verification** as defined below. The already approved production notes retain their full long-term accepted scopes, but Gate 0 work is limited to the smallest required host/browser and SQLite transaction checks. B9-D12 spatial migration is excluded.
 
 ## Why this is next, rather than another planning round
 
@@ -20,14 +32,14 @@ The user accepted **[C-D10 A](./decisions/C-D10%20-%20Material%20Blockers%20Only
 
 **C-D05 C** and **C-D07 A/C-D08 A** require **verified real Wails v3 headless Go/browser and Go-owned SQLite integration before first Story-mode mock/domain acceptance criteria are finalised**. Such verification requires building and running *some real application code*. Therefore, the next shortest permissible step is an **explicit narrow implementation and test authorisation** for that foundation, **not more speculative architecture discussion**.
 
-## Exact existing original staging IDEA candidates
+## Exact original IDEA notes now promoted to production
 
-| Original note, currently STAGING | Why implicated | Requested stage action (still unapproved) |
+| Original note, now PRODUCTION | Why implicated | Stage action (approved 2026-11-01) |
 | --- | --- | --- |
-| **IDEA-0053** — [Localhost Startup and Offline Mode](../staging/Localhost%20Startup%20and%20Offline%20Mode.md) | Wails v3 headless Go executable, SvelteKit static/client-rendered assets in ordinary browser, protected localhost service exchange | **Explicitly approve original IDEA-0053 staging → production** for implementation readiness, retaining original ID, approved scope and history |
-| **IDEA-0051** — [Browser-Persistent Story Database](../staging/Browser-Persistent%20Story%20Database.md) | Go-exclusive SQLite canonical persistence and atomic request/version/epoch/idempotency boundary | **Explicitly approve original IDEA-0051 staging → production** for implementation readiness, retaining original ID, approved scope and history |
+| **IDEA-0053** — [Localhost Startup and Offline Mode](../production/Localhost%20Startup%20and%20Offline%20Mode.md) | Wails v3 headless Go executable, SvelteKit static/client-rendered assets in ordinary browser, protected localhost service exchange | **APPROVED AND DONE:** Original IDEA-0053 moved to production with ID and history intact; implementation not yet begun |
+| **IDEA-0051** — [Browser-Persistent Story Database](../production/Browser-Persistent%20Story%20Database.md) | Go-exclusive SQLite canonical persistence and atomic request/version/epoch/idempotency boundary | **APPROVED AND DONE:** Original IDEA-0051 moved to production with ID and history intact; implementation not yet begun |
 
-These are **only the two immediate candidates for the foundational host/storage gate**, not a blanket promotion of the other 50 staged ideas. Their broader accepted scopes stay recorded and are not magically implemented by a minimal first slice. Further original idea promotions require their own later explicit approvals.
+These are the **only two promoted ideas for the foundational host/storage gate**, not a blanket promotion of the other 50 staged ideas. Their broader accepted scopes stay recorded and are not magically implemented by a minimal first slice. Further original idea promotions require their own later explicit approvals.
 
 ## Exactly what development authority is being requested
 
@@ -41,15 +53,15 @@ These are **only the two immediate candidates for the foundational host/storage 
 
 **If authorised**, the real host foundation is intended to remain as the first part of the final software, not an automatically disposable prototype ([C-D11 A](./decisions/C-D11%20-%20Reusable%20Production%20Intended%20Real%20Host%20Foundation.md)).
 
-## One focused approval request, three independent permissions
+## Independent permissions: two approved, third still pending
 
-Human approval must **explicitly** name each of:
+Approval status of the three **distinct** permissions:
 
-1. **Approve IDEA-0053** for original staging → production promotion, preserving its note/history.
-2. **Approve IDEA-0051** for original staging → production promotion, preserving its note/history.
-3. **Authorise Gate 0 source implementation and real test execution** within the narrow scope above, using production-intended work and documenting genuine outcomes.
+1. **APPROVED AND COMPLETED:** IDEA-0053 original staging → production, preserving note/history.
+2. **APPROVED AND COMPLETED:** IDEA-0051 original staging → production, preserving note/history.
+3. **PENDING:** Explicitly **authorise Gate 0 source implementation and real test execution** within the narrow scope above, using production-intended work and documenting genuine outcomes.
 
-Unless all necessary authorisations are given, remain in planning without a source change or unauthorised idea move. This document records **none of those approvals yet**. Partial answers are not inferred as full approvals.
+Until the third permission is granted, **do not write or execute application code/tests**. The first two stage promotions are already complete; do not repeat them or infer a broader work authorisation.
 
 ## Immediate next step after genuine Gate 0 evidence
 
@@ -59,3 +71,5 @@ If actual host and SQLite checks pass, bring **one concise second approval packe
 
 - **2026-11-01:** C-D10, C-D11, C-D12 **Option A accepted**; user pressed for early dependency closure and prompt actual final-product implementation.
 - **2026-11-01:** This proposed **Gate 0 readiness packet** was drafted as documentation, **without** executing implementation/testing or promoting IDEA-0053/0051. Existing 52 accepted staging ideas remain in staging. B9-D12 remains deferred with no spatial migration work.
+
+- **2026-11-01 — Separate user approval:** Promoted the *original* IDEA-0053 and IDEA-0051 notes into `planning/production/`, retaining stable IDs and approval history. **Gate 0 source implementation/testing permission remains pending**; no code or tests performed. Other 50 original ideas remain in staging, B9-D12 spatial migration still deferred.
