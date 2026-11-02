@@ -12,6 +12,10 @@ tags:
 
 # Pass C — Implementation Slice Refinement Kickoff
 
+## Two foundational ideas promoted; Gate 0 execution pending — 2026-11-01
+
+Following the Batch 4 handoff, the user explicitly approved promoting **[IDEA-0053](../production/Localhost%20Startup%20and%20Offline%20Mode.md)** and **[IDEA-0051](../production/Browser-Persistent%20Story%20Database.md)** to production (their existing notes were moved with IDs/history intact). This narrows the next step to **explicit Gate 0 source/test execution authorisation**, covered by the [partially approved handoff](./Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md). The user did **not** yet separately authorise writing or running code. Current counts: **50 staging, 2 production, no implemented specs**, Wails/SQLite evidence **NOT RUN**. Do not infer broader idea promotion or B9-D12 spatial migrations from this approval.
+
 > **PASS C BATCHES 1–4 ACCEPTED. STOP SPECULATIVE PLANNING; GATE 0 DEVELOPMENT APPROVAL PENDING.** This kickoff is authorised by the user's instruction on 2026-11-01 to “Proceed to establishing pass c. Explain what we'll do and which [topics] we'll want to cover overall.” It proposes a review method and a complete topic map. **C-D01 A establishes the first story-loop refinement priority; C-D02 A establishes slice traceability; C-D03 A establishes verification evidence rules. No specific proposed slice is approved for implementation and no staging → production promotion follows.**
 
 
