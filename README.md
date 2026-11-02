@@ -14,7 +14,7 @@ Gameplay rules, maps, and world-state tracking are optional tools to help the AI
 
 ## Project status
 
-Lorebound is currently in the planning and architecture phase. These are design goals, not claims of implemented features.
+Lorebound has a verified Gate 0 host and test-record SQLite foundation. Story, map and gameplay features remain design goals, not implemented features. See [Gate 0 developer setup](docs/gate0-development.md) and [execution evidence](planning/architecture/Gate%200%20Execution%20Evidence.md).
 
 ## Planning
 

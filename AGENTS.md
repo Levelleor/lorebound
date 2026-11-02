@@ -2,6 +2,8 @@
 
 ## Current Pass C production promotions — 2026-11-01
 
+**Later Gate 0 execution update:** The user separately authorised the minimum production-intended Wails browser/Go and SQLite Gate 0 implementation and real testing. [Gate 0 evidence](planning/architecture/Gate%200%20Execution%20Evidence.md) records the result. Both original IDEA-0053 and IDEA-0051 remain production ideas; 50 others remain staging. No Story mode, spatial migration, full IDEA implementation or current application spec is implied. The paragraph below preserves the earlier promotion-only snapshot.
+
 User separately approved moving the *same original* **IDEA-0053** and **IDEA-0051** from `planning/staging/` to `planning/production/`: [host/runtime](planning/production/Localhost%20Startup%20and%20Offline%20Mode.md), [SQLite persistence](planning/production/Browser-Persistent%20Story%20Database.md). Original ID, history and accepted scope are retained. **50 ideas still staging, 2 production, none implemented.** **No application code or checks have run**. The remaining, unapproved permission is to perform the minimal production-intended [Gate 0 browser/Go/SQLite implementation and real evidence](planning/architecture/Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md). B9-D12 spatial migration remains deferred with no work. Historical notes below about B9 in review or 52 staged ideas are superseded by later approved records, not current status.
 
 ## Current B9 Batch 10 and assessment, NOT closure — 2026-11-01
