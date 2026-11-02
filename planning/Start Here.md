@@ -8,6 +8,12 @@ tags:
 ---
 # Start Here
 
+## Gate 0 production IDEA approvals (implementation permission still pending) — 2026-11-01
+
+User expressly approved moving the two original notes [IDEA-0053](production/Localhost%20Startup%20and%20Offline%20Mode.md) (Wails/browser/Go host) and [IDEA-0051](production/Browser-Persistent%20Story%20Database.md) (Go-owned SQLite) from staging to **production**. Their IDs, original accepted requirements and historical decision records are intact. **Current inventory: 50 staged original ideas; 2 production ideas; 0 implemented specs.** Approval to promote is **not** permission to write or run application source code in this turn.
+
+**Next decision:** [Gate 0 execution authorisation](architecture/Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md) now records that the two promotions are complete and requests **only** the remaining permission to implement/test the smallest production-intended Wails v3 browser↔Go round trip and isolated SQLite commit/readback/rollback/reopen. Checks remain **NOT RUN**. Keep **B9-D12 deferred** with no spatial migration. Older references to 52 staging ideas below describe dated historical states.
+
 ## Pass C Batch 4 accepted: proceed to explicit Gate 0 development authorisation — 2026-11-01
 
 User expressly approved [C-D10 A](architecture/decisions/C-D10%20-%20Material%20Blockers%20Only%20Planning%20Stop%20Rule.md), [C-D11 A](architecture/decisions/C-D11%20-%20Reusable%20Production%20Intended%20Real%20Host%20Foundation.md) and [C-D12 A](architecture/decisions/C-D12%20-%20Concise%20Go%20No%20Go%20Approval%20and%20Immediate%20Development%20Handoff.md), adding that deadlines are pressing and remaining dependencies should be closed quickly so implementation of the **final software** begins. Do **not** prolong architecture planning for noncritical issues. **Next action:** [proposed Gate 0 permission packet](architecture/Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md) requests explicit separate approvals to promote the original staging IDEA-0053 (localhost Wails host) and IDEA-0051 (Go SQLite persistence), and to build/run the minimal production-intended real integration checks. **None of those authorisations has been granted**: no code/tests/promotions in this review. Host/SQLite checks remain **NOT RUN**; 52 original accepted ideas remain in staging, zero in production. B9-D12 spatial schema migration remains deferred without work. Earlier dated notes below retain chronological context.
