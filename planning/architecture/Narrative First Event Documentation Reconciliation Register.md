@@ -112,7 +112,7 @@ Earlier approved ADRs remain accepted **as historical records**, with explicit c
 - [Snapshots and Incremental State Rebuild](../staging/Snapshots%20and%20Incremental%20State%20Rebuild.md)
 - [Versioned Text Blocks and Revision IDs](../staging/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md)
 - [Direct Editable Prose Document](../staging/Direct%20Editable%20Prose%20Document.md)
-- [Browser-Persistent Story Database](../staging/Browser-Persistent%20Story%20Database.md)
+- [Browser-Persistent Story Database](../production/Browser-Persistent%20Story%20Database.md)
 - [Adventure Save and Export Management](../staging/Adventure%20Save%20and%20Export%20Management.md)
 - [Configurable Generation Pipeline Strategies](../staging/Configurable%20Generation%20Pipeline%20Strategies.md)
 - [Episodic Memory Retrieval](../staging/Episodic%20Memory%20Retrieval.md)
