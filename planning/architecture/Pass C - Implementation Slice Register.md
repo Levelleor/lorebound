@@ -12,6 +12,10 @@ tags:
 
 # Pass C — Implementation Slice Register
 
+## Current promotion and immediate next gate — 2026-11-01
+
+The user separately approved the **original IDEA-0053** and **IDEA-0051** staging→production promotions: [runtime](../production/Localhost%20Startup%20and%20Offline%20Mode.md) and [Go SQLite](../production/Browser-Persistent%20Story%20Database.md). Keep **C-SL-04** as a **proposed implementation slice awaiting separate execution approval**, not a verified runnable foundation. The remaining 50 ideas are still in staging. See [Gate 0 partial approval packet](./Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md). No code/tests have run and B9-D12 spatial migration remains deferred.
+
 **Accepted register policy:** [C-D02 A](./decisions/C-D02%20-%20Traceable%20Slice%20Register%20With%20Original%20Idea%20Identity.md). This is a traceability and review register, **not** a production queue or evidence that code exists. Original 52 human-accepted IDEA files remain in staging; no new IDEA identities are created here.
 
 ## Status vocabulary
