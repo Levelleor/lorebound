@@ -1,5 +1,7 @@
 # Lorebound
 
+**Development status and next task:** [Planning Development Control Centre](planning/development/README.md) · [NOW](planning/development/NOW.md) · [all 52 feature statuses](planning/development/FEATURES.md) · [task queue](planning/development/TASKS.md). This is the working record for agent handoffs, evidence, newly discovered scope and implementation progress. The next recorded task, **DEV-001**, is to establish CI and trace the requirements for the first Story-mode slice; it has not been executed yet.
+
 **Read the full [System Architecture Overview](planning/architecture/Lorebound%20-%20System%20Architecture%20Overview.md)** for a self-contained explanation of the player experience, all 52 approved features, twelve subsystem boundaries, AI/Go/SQLite data flows, design style and real implementation status. A short root [ARCHITECTURE.md](ARCHITECTURE.md) also points there. This is the **current architectural entry point**, unlike chronological historical review documents.
 
 **UI design direction:** The finished application is intended to follow the user's approved [Command Citadel visual design reference](planning/design/README.md): warm charcoal/parchment/gold literary reading workspace, compact side rail, docked composer, source OKLCH tokens and responsive layout. This is a **planned look**, not a claim the current Gate 0 UI implements it. Accepted B1–B9/Pass C functionality still governs behaviour.
