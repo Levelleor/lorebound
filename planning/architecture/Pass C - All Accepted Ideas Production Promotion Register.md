@@ -81,6 +81,14 @@ PR #3 Gate 0 was confirmed merged. The 50 remaining original staging ideas were 
 
 The user previously preferred the smallest complete Story-mode slice first, followed by further functionality according to dependency. **All ideas being in production does not mean they must be implemented simultaneously** or invalidate C-D01–D12. Before marking any idea fully implemented, use code/tests and the normal `production → specs/archive` evidence gate. Historic `planning/staging/` paths in Pass A audit documents are prior-stage provenance, not present file locations.
 
+## Verification after promotion and link repair — 2026-11-03
+
+- Confirmed **0** remaining original `planning/staging/*.md` ideas and **52** `planning/production/*.md` ideas on `main`.
+- Reviewed all **52** current production idea notes for `status: production` and stable `IDEA-` identifiers; checked **144 relative Markdown links** within these notes against the current GitHub file tree with **0 broken**.
+- Verified all **50** promotions in this register link to existing production files.
+- Repaired affected links in current planning guidance and architecture ADRs to follow the notes into production. Dated historical discussion remains preserved rather than rewritten as new approvals.
+- No application source, runtime tests, B9-D12 spatial migration, or implemented specs were created by the promotion operation.
+
 ## Audit history
 
 - **2026-10-24:** Pass A closed, 52 accepted ideas mapped across 12 logical subsystems; all were staged.
