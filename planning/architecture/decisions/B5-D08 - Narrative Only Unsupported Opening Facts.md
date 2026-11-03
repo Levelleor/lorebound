@@ -55,7 +55,7 @@ The precise supported-type taxonomy, source span/provenance mapping, warning or 
 
 ## Traceability
 
-[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md), [B5-D02](./B5-D02%20-%20Grounded%20Initial%20Fact%20Extraction.md), [B5-D03](./B5-D03%20-%20Atomic%20Automatic%20Quick%20Start%20Opening.md), [B5-D06](./B5-D06%20-%20Explicit%20Commit%20of%20Player%20Authored%20Custom%20Opening.md), [B4-D06](./B4-D06%20-%20Preflight%20Structural%20Integrity%20of%20Current%20History%20Mutations.md), [IDEA-0006](../../staging/Quick%20Start%20and%20Custom%20Story%20Openings.md). Owners S02/S03/S05/S06/S10/S11.
+[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md), [B5-D02](./B5-D02%20-%20Grounded%20Initial%20Fact%20Extraction.md), [B5-D03](./B5-D03%20-%20Atomic%20Automatic%20Quick%20Start%20Opening.md), [B5-D06](./B5-D06%20-%20Explicit%20Commit%20of%20Player%20Authored%20Custom%20Opening.md), [B4-D06](./B4-D06%20-%20Preflight%20Structural%20Integrity%20of%20Current%20History%20Mutations.md), [IDEA-0006](../../production/Quick%20Start%20and%20Custom%20Story%20Openings.md). Owners S02/S03/S05/S06/S10/S11.
 
 ## Decision history
 

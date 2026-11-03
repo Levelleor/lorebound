@@ -45,7 +45,7 @@ Exact field type registry, allowed custom names, nested/collection fields, chang
 
 ## Traceability
 
-[B6 review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md), [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md), [IDEA-0027](../../staging/Customisable%20Character%20Status%20Sheets.md), [IDEA-0064](../../staging/Automatic%20Character%20Sheet%20Tracking.md). Owners S04/S05/S06/S10/S12.
+[B6 review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md), [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md), [IDEA-0027](../../production/Customisable%20Character%20Status%20Sheets.md), [IDEA-0064](../../production/Automatic%20Character%20Sheet%20Tracking.md). Owners S04/S05/S06/S10/S12.
 
 ## Decision history
 

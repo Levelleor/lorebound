@@ -63,7 +63,7 @@ Giving a narrator a prompt such as “Mara carries Brass Key (item_42)” create
 
 ## Traceability
 
-[B6 active review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md), [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [LLM State Interpreter and Proposed Operations](../../staging/LLM%20State%20Interpreter%20and%20Proposed%20Operations.md), [Token-Budgeted Context Builder and Inspector](../../staging/Token-Budgeted%20Context%20Builder%20and%20Inspector.md), [Configurable Generation Pipeline Strategies](../../staging/Configurable%20Generation%20Pipeline%20Strategies.md), [One-Model Task Routing](../../staging/One-Model%20Task%20Routing.md). Owners S04/S05/S06/S09/S10/S11; no code implemented.
+[B6 active review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md), [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [LLM State Interpreter and Proposed Operations](../../production/LLM%20State%20Interpreter%20and%20Proposed%20Operations.md), [Token-Budgeted Context Builder and Inspector](../../production/Token-Budgeted%20Context%20Builder%20and%20Inspector.md), [Configurable Generation Pipeline Strategies](../../production/Configurable%20Generation%20Pipeline%20Strategies.md), [One-Model Task Routing](../../production/One-Model%20Task%20Routing.md). Owners S04/S05/S06/S09/S10/S11; no code implemented.
 
 ## Decision history
 

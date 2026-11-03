@@ -60,7 +60,7 @@ Exact event schema; slots/layers and character anatomy compatibility; a holder t
 
 ## Traceability
 
-[B6 review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md); [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md), [B4-D01](./B4-D01%20-%20Total%20Ordering%20of%20Current%20Outcome%20Events.md), [IDEA-0029](../../staging/Persistent%20Items%20and%20Inventory%20Transfers.md), [IDEA-0030](../../staging/Slot-Based%20Equipment%20and%20Body%20Diagram.md), [IDEA-0031](../../staging/Configurable%20Anatomy%20and%20Transformations.md). Owners S05/S06/S10/S11/S12.
+[B6 review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md); [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md), [B4-D01](./B4-D01%20-%20Total%20Ordering%20of%20Current%20Outcome%20Events.md), [IDEA-0029](../../production/Persistent%20Items%20and%20Inventory%20Transfers.md), [IDEA-0030](../../production/Slot-Based%20Equipment%20and%20Body%20Diagram.md), [IDEA-0031](../../production/Configurable%20Anatomy%20and%20Transformations.md). Owners S05/S06/S10/S11/S12.
 
 ## Decision history
 

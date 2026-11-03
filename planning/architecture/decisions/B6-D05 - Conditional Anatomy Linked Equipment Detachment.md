@@ -24,7 +24,7 @@ The approved disposition is **B6-D05 Option A with a binding implementation cond
 
 ## Context
 
-Lorebound is a narrative-first world-memory tracker, not a simulation engine ([B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)). Equipment and inventory are derived from a single item identity and current assertions ([B6-D02](./B6-D02%20-%20One%20Item%20Identity%20and%20Declarative%20Equipment%20Placement.md)). Previously staged [IDEA-0031](../../staging/Configurable%20Anatomy%20and%20Transformations.md) and [IDEA-0030](../../staging/Slot-Based%20Equipment%20and%20Body%20Diagram.md) allow custom anatomy and optional grounded equipment consequences; however, free-form textual anatomy does **not** itself guarantee that physical limbs and equipment slots are actual connected, implemented structured records.
+Lorebound is a narrative-first world-memory tracker, not a simulation engine ([B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)). Equipment and inventory are derived from a single item identity and current assertions ([B6-D02](./B6-D02%20-%20One%20Item%20Identity%20and%20Declarative%20Equipment%20Placement.md)). Previously staged [IDEA-0031](../../production/Configurable%20Anatomy%20and%20Transformations.md) and [IDEA-0030](../../production/Slot-Based%20Equipment%20and%20Body%20Diagram.md) allow custom anatomy and optional grounded equipment consequences; however, free-form textual anatomy does **not** itself guarantee that physical limbs and equipment slots are actual connected, implemented structured records.
 
 ## Accepted decision — qualified Option A
 
@@ -53,7 +53,7 @@ Actual body/slot feature availability flags, custom morphology compatibility, la
 
 ## Traceability
 
-[B6 review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md), [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D02](./B6-D02%20-%20One%20Item%20Identity%20and%20Declarative%20Equipment%20Placement.md), [B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md), [IDEA-0031](../../staging/Configurable%20Anatomy%20and%20Transformations.md), [IDEA-0030](../../staging/Slot-Based%20Equipment%20and%20Body%20Diagram.md). Owners S05/S06/S10/S11/S12.
+[B6 review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md), [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D02](./B6-D02%20-%20One%20Item%20Identity%20and%20Declarative%20Equipment%20Placement.md), [B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md), [IDEA-0031](../../production/Configurable%20Anatomy%20and%20Transformations.md), [IDEA-0030](../../production/Slot-Based%20Equipment%20and%20Body%20Diagram.md). Owners S05/S06/S10/S11/S12.
 
 ## Decision history
 

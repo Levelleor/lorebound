@@ -45,7 +45,7 @@ Exact route/property event keys and shared entity type registry, optional graph 
 
 ## Traceability
 
-[B6 review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md), [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D03](./B6-D03%20-%20Grounded%20Declarative%20Location%20and%20Scene%20Presence.md), [B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md), [IDEA-0038](../../staging/Persistent%20Location%20State%20and%20Travel%20Interactions.md), [IDEA-0035](../../staging/Configurable%20Travel%20Graph%20Rules.md), [IDEA-0033](../../staging/Hierarchical%20World%20Locations.md). Owners S05/S06/S09/S11/S12.
+[B6 review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md), [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D03](./B6-D03%20-%20Grounded%20Declarative%20Location%20and%20Scene%20Presence.md), [B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md), [IDEA-0038](../../production/Persistent%20Location%20State%20and%20Travel%20Interactions.md), [IDEA-0035](../../production/Configurable%20Travel%20Graph%20Rules.md), [IDEA-0033](../../production/Hierarchical%20World%20Locations.md). Owners S05/S06/S09/S11/S12.
 
 ## Decision history
 

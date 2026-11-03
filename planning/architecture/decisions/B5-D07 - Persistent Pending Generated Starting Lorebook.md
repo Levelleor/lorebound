@@ -49,7 +49,7 @@ Exact draft storage shape, retention/cleanup, multiple interrupted requests, edi
 
 ## Traceability
 
-[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md); [B5-D04](./B5-D04%20-%20Approved%20Optional%20AI%20Starting%20Lorebook.md), [B5-D05](./B5-D05%20-%20Preserve%20Baseline%20on%20Setup%20Failure%20and%20Cancellation.md), [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md), [B3-D02](./B3-D02%20-%20Idempotent%20Canonical%20Commit%20Attempts.md), [IDEA-0066](../../staging/AI-Generated%20Starting%20Lorebook%20and%20World.md). Owners S02/S04/S05/S06/S09/S12.
+[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md); [B5-D04](./B5-D04%20-%20Approved%20Optional%20AI%20Starting%20Lorebook.md), [B5-D05](./B5-D05%20-%20Preserve%20Baseline%20on%20Setup%20Failure%20and%20Cancellation.md), [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md), [B3-D02](./B3-D02%20-%20Idempotent%20Canonical%20Commit%20Attempts.md), [IDEA-0066](../../production/AI-Generated%20Starting%20Lorebook%20and%20World.md). Owners S02/S04/S05/S06/S09/S12.
 
 ## Decision history
 

@@ -24,7 +24,7 @@ This records **B5-D06 Option A** only. The original B5 alternatives remain in [t
 
 ## Context
 
-The source staged [IDEA-0006](../../staging/Quick%20Start%20and%20Custom%20Story%20Openings.md) accepts a player-written Custom Opening, including **completely blank**. It also accepts strict text-grounded fact extraction when opening prose becomes canonical. The accepted common [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md) pending-commit UX blocks the chat composer while an explicit approval is unresolved. This decision specifies when the player's first custom prose becomes committed canon, distinct from auto-committed Quick Start AI prose.
+The source staged [IDEA-0006](../../production/Quick%20Start%20and%20Custom%20Story%20Openings.md) accepts a player-written Custom Opening, including **completely blank**. It also accepts strict text-grounded fact extraction when opening prose becomes canonical. The accepted common [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md) pending-commit UX blocks the chat composer while an explicit approval is unresolved. This decision specifies when the player's first custom prose becomes committed canon, distinct from auto-committed Quick Start AI prose.
 
 ## Accepted decision — Option A
 
@@ -49,7 +49,7 @@ Exact UI transition from the Custom Opening editor to the overlay, choice of whe
 
 ## Traceability
 
-[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md), [IDEA-0006](../../staging/Quick%20Start%20and%20Custom%20Story%20Openings.md), [B5-D01](./B5-D01%20-%20Durable%20Minimal%20Turn-0%20Baseline.md), [B5-D02](./B5-D02%20-%20Grounded%20Initial%20Fact%20Extraction.md), [B5-D03](./B5-D03%20-%20Atomic%20Automatic%20Quick%20Start%20Opening.md), [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md). Owners S02/S03/S04/S05/S06/S12.
+[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md), [IDEA-0006](../../production/Quick%20Start%20and%20Custom%20Story%20Openings.md), [B5-D01](./B5-D01%20-%20Durable%20Minimal%20Turn-0%20Baseline.md), [B5-D02](./B5-D02%20-%20Grounded%20Initial%20Fact%20Extraction.md), [B5-D03](./B5-D03%20-%20Atomic%20Automatic%20Quick%20Start%20Opening.md), [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md). Owners S02/S03/S04/S05/S06/S12.
 
 ## Decision history
 

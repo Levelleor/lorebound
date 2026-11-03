@@ -53,7 +53,7 @@ Precise scene/physical/remote presence encoding; supported unknown/in-transit va
 
 ## Traceability
 
-[B6 review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md), [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md), [B4-D01](./B4-D01%20-%20Total%20Ordering%20of%20Current%20Outcome%20Events.md), [IDEA-0034](../../staging/Character%20Presence%20and%20Current%20Scene.md), [IDEA-0035](../../staging/Configurable%20Travel%20Graph%20Rules.md), [IDEA-0033](../../staging/Hierarchical%20World%20Locations.md). Owners S05/S06/S09/S11/S12.
+[B6 review](../Pass%20B6%20-%20World%20State%20Integrity%20and%20Cross%20Module%20Contracts%20Review.md), [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md), [B6-D04](./B6-D04%20-%20Narrator%20Safe%20Entity%20References%20and%20Internal%20Identity%20Resolution.md), [B4-D01](./B4-D01%20-%20Total%20Ordering%20of%20Current%20Outcome%20Events.md), [IDEA-0034](../../production/Character%20Presence%20and%20Current%20Scene.md), [IDEA-0035](../../production/Configurable%20Travel%20Graph%20Rules.md), [IDEA-0033](../../production/Hierarchical%20World%20Locations.md). Owners S05/S06/S09/S11/S12.
 
 ## Decision history
 

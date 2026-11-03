@@ -49,7 +49,7 @@ Exact library list empty-state labels, optional setup resumption UI, partially f
 
 ## Traceability
 
-[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md), [B5-D01](./B5-D01%20-%20Durable%20Minimal%20Turn-0%20Baseline.md), [B5-D03](./B5-D03%20-%20Atomic%20Automatic%20Quick%20Start%20Opening.md), [B5-D06](./B5-D06%20-%20Explicit%20Commit%20of%20Player%20Authored%20Custom%20Opening.md), [B5-D07](./B5-D07%20-%20Persistent%20Pending%20Generated%20Starting%20Lorebook.md), [IDEA-0006](../../staging/Quick%20Start%20and%20Custom%20Story%20Openings.md). Owners S02/S03/S04/S05/S12.
+[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md), [B5-D01](./B5-D01%20-%20Durable%20Minimal%20Turn-0%20Baseline.md), [B5-D03](./B5-D03%20-%20Atomic%20Automatic%20Quick%20Start%20Opening.md), [B5-D06](./B5-D06%20-%20Explicit%20Commit%20of%20Player%20Authored%20Custom%20Opening.md), [B5-D07](./B5-D07%20-%20Persistent%20Pending%20Generated%20Starting%20Lorebook.md), [IDEA-0006](../../production/Quick%20Start%20and%20Custom%20Story%20Openings.md). Owners S02/S03/S04/S05/S12.
 
 ## Decision history
 
