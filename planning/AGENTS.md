@@ -1,5 +1,9 @@
 # Planning vault rules
 
+## Live implementation state, tasks and verification — 2026-11-03
+
+Before implementing any accepted IDEA, open **[development/README.md](development/README.md)** and **[development/NOW.md](development/NOW.md)**. The [feature ledger](development/FEATURES.md) tracks **all 52 production IDEAs**, their atomic requirement coverage and independently verified evidence; the [task queue](development/TASKS.md) records scope and dependencies; the [development journal](development/JOURNAL.md) records on-the-go context; the [agent runbook](development/AGENT-RUNBOOK.md) defines evidence/PR/reviewer handoff. **NOW is authoritative for the singular next task**, not earlier architecture batch proposals. Keep updates in the same PR as relevant implementation; never claim a feature verified on an unmerged PR, unrun mock or partial host test. This policy adds documentation, not actual tests or code authorisation. B9-D12 spatial migrations remain deferred.
+
 ## Single current architectural overview — 2026-11-03
 
 The user requested a coherent central reference explaining the complete Lorebound application and its features. **[Lorebound — System Architecture Overview](architecture/Lorebound%20-%20System%20Architecture%20Overview.md)** now serves as that **current-state entry point**. It covers player features, all 52 approved production notes, 12 subsystem responsibilities, durable canonical event architecture, browser/Go/provider boundaries, map, approved design style and what has actually been verified. Preserve separate ADRs, exact IDEA records and historical reviews as detailed provenance; update this overview on material accepted changes rather than appending dated approval batches to it. This document is not authority for implementation/testing or deferred B9-D12 spatial migration.
