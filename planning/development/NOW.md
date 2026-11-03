@@ -11,7 +11,7 @@ next_task: "DEV-001"
 
 > **THIS IS THE ONE-PAGE HANDOFF.** A new agent should read this first, then [TASKS](./TASKS.md), [FEATURES](./FEATURES.md), [JOURNAL](./JOURNAL.md), the [runbook](./AGENT-RUNBOOK.md), and [the system architecture](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md). Keep **exactly one** Next Task here and change it when work genuinely advances. This page represents **merged main**, not an unmerged agent's optimistic progress.
 
-<small>Last reconciled with GitHub main: **2026-11-03**. Updates are recorded as commits; do not infer current CI results from this static document.</small>
+Last reconciled with GitHub main: **2026-11-03**. Updates are recorded as commits; do not infer current CI results from this static document.
 
 ## Snapshot
 
@@ -30,21 +30,20 @@ next_task: "DEV-001"
 
 ## Next Task: **DEV-001 — Establish the delivery verification controls**
 
-<box>
 
 **Status: READY FOR ASSIGNMENT, NOT STARTED.** There is **no currently active implementation task recorded**. [Full task brief](./TASKS.md#dev-001--implement-ci-and-atomic-requirement-traceability).
 
 **Purpose:** Build the minimum reliable *implementation control* machinery without opening another full design phase.
 
-**First execution handoff:** Assign an agent a dedicated branch to (1) establish GitHub Actions build/static checks and real Go headless-server tests, (2) wire the existing repeatable browser smoke verification where CI runtime permits, and (3) **inventory the atomic accepted requirements across all 52 original IDEA notes, including later superseding ADRs**, assigning stable IDs and linking observable acceptance evidence types. Establish traceability between requirements, tasks, code and tests. Do not assume existing Gate 0 evidence proves untested future features.
+**First execution handoff:** Assign an agent a dedicated branch to (1) establish GitHub Actions build/static checks and real Go headless-server tests, (2) wire the existing repeatable browser smoke verification where CI runtime permits, and (3) **inventory the atomic accepted requirements of the original IDEA notes needed for DEV-002**, including later superseding ADRs, assigning stable IDs and linking planned acceptance evidence. Retain **all 52 original IDEA rows** in the global ledger, while other IDEA-level requirement breakdowns follow in their relevant development tasks. Establish traceability from requirements to tasks, code and tests. Do not assume existing Gate 0 evidence proves untested future features.
 
-**Completion requires:** Executable reproducible CI against the actual approved runtime (or clearly documented blocked runners), a genuinely complete accepted-requirement inventory with no omitted IDEA, evidence gates/tests explicitly NOT RUN until executed, source-linked tracker entries, review and a PR. If the atomic inventory is too large for a single bounded PR, split DEV-001 into **documented numbered sub-tasks with a visible uncovered count**, and do not claim DEV-001 complete until all are covered.
+**Completion requires:** Executable reproducible CI against the actual approved runtime (or clearly documented blocked runners), a **complete accepted-requirement inventory for the first Story-mode slice**, continued visible IDEA-level coverage of all 52 approved notes, evidence gates/tests explicitly NOT RUN until executed, linked tracker entries, review and a PR. **Do not mark the other ideas' uncounted atomic requirements as verified.** They are inventoried and checked as their respective slices begin, with a full 52-idea audit required before release.
 
 **Not included:** Implementing the Story-mode domain loop, live provider integrations, map, optional mechanics, all-feature parallel coding, or any deferred B9-D12 spatial migration.
 
 **Authorisation:** This document identifies the next task; it does not automatically authorise running code, changing CI settings or merging. Follow the user's explicit execution approval for the assigned task.
 
-</box>
+
 
 ## After DEV-001
 
