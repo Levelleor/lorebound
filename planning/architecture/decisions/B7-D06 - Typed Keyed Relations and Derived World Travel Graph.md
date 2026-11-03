@@ -31,8 +31,8 @@ This accepts **B7-D06 Option A** from the [B7 review](../Pass%20B7%20-%20Event%2
 
 ## Inherited accepted constraints
 
-- [IDEA-0033 Hierarchical World Locations](../../staging/Hierarchical%20World%20Locations.md): stable location identities, flexible parent/child containment hierarchy (acyclic); containment and traversal are distinct.
-- [IDEA-0035 Configurable Travel Graph Rules](../../staging/Configurable%20Travel%20Graph%20Rules.md): explicit route graph and optional freeform/adjacent/multi-hop pre-acceptance attempted-travel policies; no default routing strategy or exact edge attributes yet.
+- [IDEA-0033 Hierarchical World Locations](../../production/Hierarchical%20World%20Locations.md): stable location identities, flexible parent/child containment hierarchy (acyclic); containment and traversal are distinct.
+- [IDEA-0035 Configurable Travel Graph Rules](../../production/Configurable%20Travel%20Graph%20Rules.md): explicit route graph and optional freeform/adjacent/multi-hop pre-acceptance attempted-travel policies; no default routing strategy or exact edge attributes yet.
 - [B6-D07](./B6-D07%20-%20Declarative%20Mutable%20World%20Location%20and%20Route%20Facts.md): mutable routes, bridges, doors and environment recorded as current declarative facts and affect **future** context, not old journeys.
 - [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md): no fictional prior possession/travel-legality gate for accepted story facts.
 - [B7-D01](./B7-D01%20-%20Versioned%20Typed%20Declarative%20Event%20Envelope.md): versioned typed declarative event representation; [B7-D04](./B7-D04%20-%20Typed%20Unknown%20Absence%20and%20Clear%20Semantics.md): unknown/absence/value distinctions.

@@ -27,7 +27,7 @@ This accepts **B7-D02 Option A**, separately from D01 A and D03 **C**. [B7 sourc
 
 - [B7-D01](./B7-D01%20-%20Versioned%20Typed%20Declarative%20Event%20Envelope.md) accepts versioned typed declarative event envelopes.
 - [B2-D08](./B2-D08%20-%20Fail-Closed%20Unsupported%20Core%20Event%20Replay.md) requires failing safely when a **required core event type/version/payload** cannot be interpreted, rather than constructing an incomplete authoritative current world state.
-- Earlier [IDEA-0047](../../staging/Native%20Gameplay%20Capability%20Registry.md) explicitly permits **removed/disabled optional plugin-specific historical state** to become unavailable without reinstalling, emulating or migrating the plugin just to continue the story. Existing canonical prose/core identities/atomicity remain protected.
+- Earlier [IDEA-0047](../../production/Native%20Gameplay%20Capability%20Registry.md) explicitly permits **removed/disabled optional plugin-specific historical state** to become unavailable without reinstalling, emulating or migrating the plugin just to continue the story. Existing canonical prose/core identities/atomicity remain protected.
 - [B6-D01](./B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) forbids treating fictional prerequisite gaps as required-core format corruption.
 
 ## Accepted decision — Option A
