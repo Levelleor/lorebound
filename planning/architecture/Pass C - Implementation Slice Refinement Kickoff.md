@@ -12,6 +12,10 @@ tags:
 
 # Pass C — Implementation Slice Refinement Kickoff
 
+## Current full production approval — 2026-11-03
+
+The user explicitly approved the remaining 50 accepted `IDEA-` notes for production, resulting in **52 production, zero staging**. [Full register](./Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). This removes the idea-promotion bottleneck for subsequent work, **not** the need to implement/test each feature incrementally. Gate 0 PR #3 is merged; C-D01 Story-mode-first priority and C-D03 honest mock/real evidence labels remain. The user did not authorise all 52 simultaneous feature implementations or deferred B9-D12 spatial migrations by promoting the notes. Older staged counts below are historical.
+
 ## Two foundational ideas promoted; Gate 0 execution pending — 2026-11-01
 
 Following the Batch 4 handoff, the user explicitly approved promoting **[IDEA-0053](../production/Localhost%20Startup%20and%20Offline%20Mode.md)** and **[IDEA-0051](../production/Browser-Persistent%20Story%20Database.md)** to production (their existing notes were moved with IDs/history intact). This narrows the next step to **explicit Gate 0 source/test execution authorisation**, covered by the [partially approved handoff](./Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md). The user did **not** yet separately authorise writing or running code. Current counts: **50 staging, 2 production, no implemented specs**, Wails/SQLite evidence **NOT RUN**. Do not infer broader idea promotion or B9-D12 spatial migrations from this approval.

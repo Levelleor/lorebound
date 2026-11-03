@@ -12,6 +12,10 @@ tags:
 
 # Pass C — Implementation Slice Register
 
+## All original ideas now production-ready — 2026-11-03
+
+User expressly approved moving the other 50 original `IDEA-` notes into `planning/production/` (IDEA-0051 and IDEA-0053 were already promoted): **52 production notes, 0 staging notes, 0 implemented idea specs**. [Complete promotion audit](./Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). The `C-SL-` slice identifiers still designate proposed incremental implementation groupings and do not claim code/test success. Keep first Story-mode-turn priority, real Gate 0 evidence distinction and deferred spatial migrations. Historic earlier “no production ideas” text below is chronology.
+
 ## Current promotion and immediate next gate — 2026-11-01
 
 The user separately approved the **original IDEA-0053** and **IDEA-0051** staging→production promotions: [runtime](../production/Localhost%20Startup%20and%20Offline%20Mode.md) and [Go SQLite](../production/Browser-Persistent%20Story%20Database.md). Keep **C-SL-04** as a **proposed implementation slice awaiting separate execution approval**, not a verified runnable foundation. The remaining 50 ideas are still in staging. See [Gate 0 partial approval packet](./Pass%20C%20-%20Gate%200%20Host%20Verification%20Authorisation%20Packet%20%28Proposed%29.md). No code/tests have run and B9-D12 spatial migration remains deferred.

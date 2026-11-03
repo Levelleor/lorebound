@@ -1,5 +1,9 @@
 # Planning vault rules
 
+## Current 52-idea production approval — 2026-11-03
+
+User expressly promoted **all 50 remaining accepted staging notes** to `production/`, preserving IDs and acceptance histories; with IDEA-0051 and IDEA-0053 already there, the inventory is **52 production, 0 staging, 0 implemented specs**. [Promotion register](architecture/Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). This stage means **approved for implementation planning**, not that code, test verification, production release, complete 52-feature implementation or B9-D12 spatial migration is authorised/finished. Preserve latest accepted B/C supersessions over historic proposal wording. Gate 0 PR #3 is merged; its *limited* host/SQLite evidence is separate. Earlier dated staging and Gate 0 statuses remain archival narrative.
+
 ## Current Pass C staging→production approvals — 2026-11-01
 
 **Later Gate 0 execution update:** The user separately authorised minimum Gate 0 host/SQLite implementation and real tests. See [Gate 0 execution evidence](architecture/Gate%200%20Execution%20Evidence.md). IDEA-0053 and IDEA-0051 remain in production, 50 ideas remain staging, and no full idea or Story-mode spec is implemented. The following paragraph is the earlier promotion-only snapshot.

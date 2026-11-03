@@ -1,5 +1,9 @@
 # Lorebound agent instructions
 
+## Current idea stages after explicit full promotion — 2026-11-03
+
+The user explicitly authorised **all remaining 50 accepted ideas** to move from staging to production, after IDEA-0051 and IDEA-0053 were already promoted and Gate 0 PR #3 was merged. **Current: 52 production, 0 staging, 0 implemented idea specs.** [Full promotion register](planning/architecture/Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). This is broad **implementation-readiness** approval, **not proof of completed features**, permission to implement all simultaneously, or migration authorisation. Keep the accepted incremental Story-mode-first and evidence-gated delivery approach. **B9-D12 spatial migration remains deferred.** Dated earlier summaries below referring to 50/52 staging ideas or pending Gate 0 are chronological history only.
+
 ## Current Pass C production promotions — 2026-11-01
 
 **Later Gate 0 execution update:** The user separately authorised the minimum production-intended Wails browser/Go and SQLite Gate 0 implementation and real testing. [Gate 0 evidence](planning/architecture/Gate%200%20Execution%20Evidence.md) records the result. Both original IDEA-0053 and IDEA-0051 remain production ideas; 50 others remain staging. No Story mode, spatial migration, full IDEA implementation or current application spec is implied. The paragraph below preserves the earlier promotion-only snapshot.

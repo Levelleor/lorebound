@@ -2,11 +2,15 @@
 type: guide
 status: current
 created: 2026-10-16
-updated: 2026-10-31
+updated: "2026-11-03"
 tags:
   - planning/guide
 ---
 # Start Here
+
+## Current planning stage — all 52 ideas in production (2026-11-03)
+
+The user approved all remaining 50 accepted ideas for `planning/production/`, in addition to already-promoted IDEA-0051 and IDEA-0053: **52 production ideas, zero staging ideas, zero implemented idea specs**. The full set is traced in [Pass C production promotion register](architecture/Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). Gate 0 [PR #3](https://github.com/Levelleor/lorebound/pull/3) is merged, and its minimum Wails/SQLite verification has documented evidence, not a complete production feature. **Next development remains incremental and evidence-gated**, starting with the small Story-mode path. The promotion does not itself implement all features or start deferred **B9-D12 spatial migrations**. Previous statuses below are historical snapshots.
 
 **Later 2026-11-01 Gate 0 update:** The user authorised and the repository now contains the verified minimum Wails browser/Go and SQLite foundation. See [Gate 0 execution evidence](architecture/Gate%200%20Execution%20Evidence.md). Both original IDEA-0053 and IDEA-0051 remain production notes; the 50 other ideas remain staging. No Story mode or full idea scope is implemented. The historical snapshot below predates the execution authorisation.
 

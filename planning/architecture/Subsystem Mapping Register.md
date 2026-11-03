@@ -8,6 +8,10 @@ tags:
 ---
 # Subsystem Mapping Register
 
+## Current original-idea location — 2026-11-03
+
+All **52** Pass A accepted `IDEA-` notes are now in `planning/production/` following an explicit user approval for the remaining 50 notes; **zero** remain in staging. The twelve-subsystem ownership mapping and original IDs are unchanged. Current notes: [production directory](https://github.com/Levelleor/lorebound/tree/main/planning/production); full [promotion register](./Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). Older Pass A statements saying “staging” refer to that earlier review time, not current file locations. Promotion is not implementation, testing or B9-D12 spatial migration authorisation.
+
 ## Current Pass C implementation-readiness status — 2026-11-01
 
 The Pass A mapping and original 52 accepted `IDEA-` IDs remain unchanged. The user **separately approved** the original [IDEA-0053 runtime](../production/Localhost%20Startup%20and%20Offline%20Mode.md) and [IDEA-0051 Go SQLite database](../production/Browser-Persistent%20Story%20Database.md) for **staging → production**. All **other 50** remain staging. Original IDEA-0053/0051 source paths recorded in historical Pass A sections below refer to their **prior** stages; use the current production links above. No source implementation, tests, specs or migration are implied. Gate 0 implementation/test execution is **not yet approved**. B9-D12 spatial migration remains deferred.
@@ -27,7 +31,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0001 — Single-Player Account-Free Experience
 
-- **Source:** [[Single-Player Account-Free Experience]] (`planning/staging/Single-Player Account-Free Experience.md`)
+- **Source:** [[Single-Player Account-Free Experience]] (`planning/production/Single-Player Account-Free Experience.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Application Foundation & Lifecycle
 - **Secondary subsystems:** Runtime & Platform Services; Adventure Library & Persistence; AI Provider Integration
@@ -39,7 +43,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0002 — Freeform Player Action Modes
 
-- **Source:** [[Freeform Player Action Modes]] (`planning/staging/Freeform Player Action Modes.md`)
+- **Source:** [[Freeform Player Action Modes]] (`planning/production/Freeform Player Action Modes.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative Interaction & Intent
 - **Secondary subsystems:** Adventure Coordinator; Character & Scene State; Presentation & UX; World Rules & Validation
@@ -51,7 +55,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0003 — Direct Editable Prose Document
 
-- **Source:** [[Direct Editable Prose Document]] (`planning/staging/Direct Editable Prose Document.md`)
+- **Source:** [[Direct Editable Prose Document]] (`planning/production/Direct Editable Prose Document.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative Document & Editing
 - **Secondary subsystems:** Narrative History & Versioning; Adventure Coordinator; Persistence & Draft Management; World State Reconstruction; Presentation & UX
@@ -63,7 +67,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0004 — Retry Undo and Alternative Continuations
 
-- **Source:** [[Retry Undo and Alternative Continuations]] (`planning/staging/Retry Undo and Alternative Continuations.md`)
+- **Source:** [[Retry Undo and Alternative Continuations]] (`planning/production/Retry Undo and Alternative Continuations.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative History & Versioning
 - **Secondary subsystems:** Adventure Coordinator; AI Generation Pipeline; World State Reconstruction; Narrative Document & Editing; Persistence & Draft Management; Presentation & UX
@@ -75,7 +79,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0005 — Adventure Save and Export Management
 
-- **Source:** [[Adventure Save and Export Management]] (`planning/staging/Adventure Save and Export Management.md`)
+- **Source:** [[Adventure Save and Export Management]] (`planning/production/Adventure Save and Export Management.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Adventure Library & Persistence
 - **Secondary subsystems:** Persistence & Draft Management; Narrative History & Versioning; World State Reconstruction; Runtime & Platform Services; Presentation & UX
@@ -87,7 +91,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0006 — Quick Start and Custom Story Openings
 
-- **Source:** [[Quick Start and Custom Story Openings]] (`planning/staging/Quick Start and Custom Story Openings.md`)
+- **Source:** [[Quick Start and Custom Story Openings]] (`planning/production/Quick Start and Custom Story Openings.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Adventure Initialization & Setup
 - **Secondary subsystems:** Adventure Library & Persistence; AI Generation Pipeline; Adventure Coordinator; World Rules & Validation; Presentation & UX
@@ -99,7 +103,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0007 — Character Creation and Starting Choices
 
-- **Source:** [[Character Creation and Starting Choices]] (`planning/staging/Character Creation and Starting Choices.md`)
+- **Source:** [[Character Creation and Starting Choices]] (`planning/production/Character Creation and Starting Choices.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Character & Scene State
 - **Secondary subsystems:** Adventure Initialization & Setup; Entity-Based Lorebook; Narrative Interaction & Intent; Presentation & UX; World Rules & Validation
@@ -111,7 +115,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0008 — Reusable Scenario Templates and Placeholders
 
-- **Source:** [[Reusable Scenario Templates and Placeholders]] (`planning/staging/Reusable Scenario Templates and Placeholders.md`)
+- **Source:** [[Reusable Scenario Templates and Placeholders]] (`planning/production/Reusable Scenario Templates and Placeholders.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Scenario Templates & Configuration
 - **Secondary subsystems:** Adventure Initialization & Setup; Adventure Library & Persistence; Entity-Based Lorebook; Character & Scene State; World Rules & Validation
@@ -123,7 +127,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0010 — Narration Style and Perspective Controls
 
-- **Source:** [[Narration Style and Perspective Controls]] (`planning/staging/Narration Style and Perspective Controls.md`)
+- **Source:** [[Narration Style and Perspective Controls]] (`planning/production/Narration Style and Perspective Controls.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative Generation Configuration
 - **Secondary subsystems:** AI Generation Pipeline; AI Context & Prompt Construction; Presentation & UX; Adventure Library & Persistence
@@ -135,7 +139,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0011 — Manual Generation Branches
 
-- **Source:** [[Manual Generation Branches]] (`planning/staging/Manual Generation Branches.md`)
+- **Source:** [[Manual Generation Branches]] (`planning/production/Manual Generation Branches.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Adventure Library & Persistence
 - **Secondary subsystems:** Narrative History & Versioning; World State Reconstruction; Adventure Coordinator; Presentation & UX
@@ -147,7 +151,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0012 — Cloud LLM Provider Connectors
 
-- **Source:** [[Cloud LLM Provider Connectors]] (`planning/staging/Cloud LLM Provider Connectors.md`)
+- **Source:** [[Cloud LLM Provider Connectors]] (`planning/production/Cloud LLM Provider Connectors.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** AI Provider Integration
 - **Secondary subsystems:** AI Generation Pipeline; Provider Connection Management; Model Capability Management
@@ -159,7 +163,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0013 — Local LLM Server Connections
 
-- **Source:** [[Local LLM Server Connections]] (`planning/staging/Local LLM Server Connections.md`)
+- **Source:** [[Local LLM Server Connections]] (`planning/production/Local LLM Server Connections.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** AI Provider Integration
 - **Secondary subsystems:** Provider Connection Management; Model Capability Management; AI Generation Pipeline
@@ -171,7 +175,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0014 — Provider Connection Profiles and Discovery
 
-- **Source:** [[Provider Connection Profiles and Discovery]] (`planning/staging/Provider Connection Profiles and Discovery.md`)
+- **Source:** [[Provider Connection Profiles and Discovery]] (`planning/production/Provider Connection Profiles and Discovery.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Provider Connection Management
 - **Secondary subsystems:** AI Provider Integration; Runtime & Platform Services; Credential & Secret Storage; Presentation & UX
@@ -183,7 +187,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0015 — Model-Capability-Aware Controls
 
-- **Source:** [[Model-Capability-Aware Controls]] (`planning/staging/Model-Capability-Aware Controls.md`)
+- **Source:** [[Model-Capability-Aware Controls]] (`planning/production/Model-Capability-Aware Controls.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Model Capability Management
 - **Secondary subsystems:** AI Provider Integration; Narrative Generation Configuration; Presentation & UX
@@ -195,7 +199,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0016 — Sampling Presets and Advanced Parameters
 
-- **Source:** [[Sampling Presets and Advanced Parameters]] (`planning/staging/Sampling Presets and Advanced Parameters.md`)
+- **Source:** [[Sampling Presets and Advanced Parameters]] (`planning/production/Sampling Presets and Advanced Parameters.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative Generation Configuration
 - **Secondary subsystems:** Model Capability Management; Provider Connection Management; AI Provider Integration; Presentation & UX
@@ -207,7 +211,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0017 — One-Model Task Routing
 
-- **Source:** [[One-Model Task Routing]] (`planning/staging/One-Model Task Routing.md`)
+- **Source:** [[One-Model Task Routing]] (`planning/production/One-Model Task Routing.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** AI Task Routing & Model Selection
 - **Secondary subsystems:** Provider Connection Management; AI Generation Pipeline; Model Capability Management; Narrative Generation Configuration
@@ -219,7 +223,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0018 — Configurable Generation Pipeline Strategies
 
-- **Source:** [[Configurable Generation Pipeline Strategies]] (`planning/staging/Configurable Generation Pipeline Strategies.md`)
+- **Source:** [[Configurable Generation Pipeline Strategies]] (`planning/production/Configurable Generation Pipeline Strategies.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** AI Generation Pipeline
 - **Secondary subsystems:** AI Task Routing & Model Selection; Adventure Coordinator; World Rules & Validation; Narrative History & Versioning
@@ -231,7 +235,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0019 — Streaming Cancellation and Generation Diagnostics
 
-- **Source:** [[Streaming Cancellation and Generation Diagnostics]] (`planning/staging/Streaming Cancellation and Generation Diagnostics.md`)
+- **Source:** [[Streaming Cancellation and Generation Diagnostics]] (`planning/production/Streaming Cancellation and Generation Diagnostics.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Generation Lifecycle & Diagnostics
 - **Secondary subsystems:** AI Generation Pipeline; AI Provider Integration; Adventure Coordinator; Persistence & Draft Management; Presentation & UX
@@ -243,7 +247,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0020 — Entity-Based Lorebook
 
-- **Source:** [[Entity-Based Lorebook]] (`planning/staging/Entity-Based Lorebook.md`)
+- **Source:** [[Entity-Based Lorebook]] (`planning/production/Entity-Based Lorebook.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Entity-Based Lorebook
 - **Secondary subsystems:** Character & Scene State; World Rules & Validation; AI Context & Prompt Construction; Adventure Library & Persistence; Presentation & UX
@@ -255,7 +259,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0021 — Conditional Lorebook Activation
 
-- **Source:** [[Conditional Lorebook Activation]] (`planning/staging/Conditional Lorebook Activation.md`)
+- **Source:** [[Conditional Lorebook Activation]] (`planning/production/Conditional Lorebook Activation.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** AI Context & Prompt Construction
 - **Secondary subsystems:** Entity-Based Lorebook; World Rules & Validation; Presentation & UX
@@ -267,7 +271,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0022 — Automatic Long-Term Story Summaries
 
-- **Source:** [[Automatic Long-Term Story Summaries]] (`planning/staging/Automatic Long-Term Story Summaries.md`)
+- **Source:** [[Automatic Long-Term Story Summaries]] (`planning/production/Automatic Long-Term Story Summaries.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative Memory & Retrieval
 - **Secondary subsystems:** Narrative History & Versioning; AI Generation Pipeline; AI Task Routing & Model Selection; AI Context & Prompt Construction; World State Reconstruction
@@ -279,7 +283,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0023 — Episodic Memory Retrieval
 
-- **Source:** [[Episodic Memory Retrieval]] (`planning/staging/Episodic Memory Retrieval.md`)
+- **Source:** [[Episodic Memory Retrieval]] (`planning/production/Episodic Memory Retrieval.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative Memory & Retrieval
 - **Secondary subsystems:** Narrative History & Versioning; AI Context & Prompt Construction; Adventure Library & Persistence
@@ -291,7 +295,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0024 — Token-Budgeted Context Builder and Inspector
 
-- **Source:** [[Token-Budgeted Context Builder and Inspector]] (`planning/staging/Token-Budgeted Context Builder and Inspector.md`)
+- **Source:** [[Token-Budgeted Context Builder and Inspector]] (`planning/production/Token-Budgeted Context Builder and Inspector.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** AI Context & Prompt Construction
 - **Secondary subsystems:** Model Capability Management; Narrative Memory & Retrieval; Entity-Based Lorebook; AI Provider Integration; Presentation & UX
@@ -303,7 +307,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0025 — Author Notes and Persistent Story Instructions
 
-- **Source:** [[Author Notes and Persistent Story Instructions]] (`planning/staging/Author Notes and Persistent Story Instructions.md`)
+- **Source:** [[Author Notes and Persistent Story Instructions]] (`planning/production/Author Notes and Persistent Story Instructions.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative Generation Configuration
 - **Secondary subsystems:** AI Context & Prompt Construction; Scenario Templates & Configuration; Adventure Library & Persistence; Presentation & UX
@@ -315,7 +319,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0026 — Shared PC and NPC Character Entities
 
-- **Source:** [[Shared PC and NPC Character Entities]] (`planning/staging/Shared PC and NPC Character Entities.md`)
+- **Source:** [[Shared PC and NPC Character Entities]] (`planning/production/Shared PC and NPC Character Entities.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Character & Scene State
 - **Secondary subsystems:** Entity-Based Lorebook; Narrative Interaction & Intent; World Rules & Validation; Adventure Library & Persistence
@@ -327,7 +331,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0027 — Customisable Character Status Sheets
 
-- **Source:** [[Customisable Character Status Sheets]] (`planning/staging/Customisable Character Status Sheets.md`)
+- **Source:** [[Customisable Character Status Sheets]] (`planning/production/Customisable Character Status Sheets.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Character & Scene State
 - **Secondary subsystems:** Entity-Based Lorebook; World Rules & Validation; AI Context & Prompt Construction; Presentation & UX
@@ -339,7 +343,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0029 — Persistent Items and Inventory Transfers
 
-- **Source:** [[Persistent Items and Inventory Transfers]] (`planning/staging/Persistent Items and Inventory Transfers.md`)
+- **Source:** [[Persistent Items and Inventory Transfers]] (`planning/production/Persistent Items and Inventory Transfers.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Inventory & Item State
 - **Secondary subsystems:** Character & Scene State; World Locations & Topology; World Rules & Validation; Narrative History & Versioning
@@ -351,7 +355,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0030 — Slot-Based Equipment and Body Diagram
 
-- **Source:** [[Slot-Based Equipment and Body Diagram]] (`planning/staging/Slot-Based Equipment and Body Diagram.md`)
+- **Source:** [[Slot-Based Equipment and Body Diagram]] (`planning/production/Slot-Based Equipment and Body Diagram.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Inventory & Item State
 - **Secondary subsystems:** Character & Scene State; World Rules & Validation; AI Context & Prompt Construction; Presentation & UX
@@ -363,7 +367,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0031 — Configurable Anatomy and Transformations
 
-- **Source:** [[Configurable Anatomy and Transformations]] (`planning/staging/Configurable Anatomy and Transformations.md`)
+- **Source:** [[Configurable Anatomy and Transformations]] (`planning/production/Configurable Anatomy and Transformations.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Character & Scene State
 - **Secondary subsystems:** Inventory & Item State; World Rules & Validation; Narrative History & Versioning; AI Context & Prompt Construction
@@ -375,7 +379,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0033 — Hierarchical World Locations
 
-- **Source:** [[Hierarchical World Locations]] (`planning/staging/Hierarchical World Locations.md`)
+- **Source:** [[Hierarchical World Locations]] (`planning/production/Hierarchical World Locations.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** World Locations & Topology
 - **Secondary subsystems:** Character & Scene State; Inventory & Item State; Entity-Based Lorebook; World Rules & Validation; AI Context & Prompt Construction
@@ -387,7 +391,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0034 — Character Presence and Current Scene
 
-- **Source:** [[Character Presence and Current Scene]] (`planning/staging/Character Presence and Current Scene.md`)
+- **Source:** [[Character Presence and Current Scene]] (`planning/production/Character Presence and Current Scene.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Character & Scene State
 - **Secondary subsystems:** World Locations & Topology; World Rules & Validation; Narrative Interaction & Intent; AI Context & Prompt Construction; Presentation & UX
@@ -399,7 +403,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0035 — Configurable Travel Graph Rules
 
-- **Source:** [[Configurable Travel Graph Rules]] (`planning/staging/Configurable Travel Graph Rules.md`)
+- **Source:** [[Configurable Travel Graph Rules]] (`planning/production/Configurable Travel Graph Rules.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** World Locations & Topology
 - **Secondary subsystems:** World Rules & Validation; Character & Scene State; Adventure Library & Persistence; Adventure Coordinator
@@ -411,7 +415,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0036 — AI World Discovery and Expansion
 
-- **Source:** [[AI World Discovery and Expansion]] (`planning/staging/AI World Discovery and Expansion.md`)
+- **Source:** [[AI World Discovery and Expansion]] (`planning/production/AI World Discovery and Expansion.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** World Locations & Topology
 - **Secondary subsystems:** AI Generation Pipeline; Adventure Coordinator; World Rules & Validation; Entity-Based Lorebook; Character & Scene State
@@ -423,7 +427,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0037 — Zoomable Node Map Canvas
 
-- **Source:** [[Zoomable Node Map Canvas]] (`planning/staging/Zoomable Node Map Canvas.md`)
+- **Source:** [[Zoomable Node Map Canvas]] (`planning/production/Zoomable Node Map Canvas.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Presentation & UX
 - **Secondary subsystems:** World Locations & Topology; Character & Scene State; Adventure Library & Persistence
@@ -435,7 +439,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0038 — Persistent Location State and Travel Interactions
 
-- **Source:** [[Persistent Location State and Travel Interactions]] (`planning/staging/Persistent Location State and Travel Interactions.md`)
+- **Source:** [[Persistent Location State and Travel Interactions]] (`planning/production/Persistent Location State and Travel Interactions.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** World Environment & Mutable State
 - **Secondary subsystems:** World Locations & Topology; Inventory & Item State; Character & Scene State; World Rules & Validation; Narrative History & Versioning
@@ -447,7 +451,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0039 — Event-Sourced World History
 
-- **Source:** [[Event-Sourced World History]] (`planning/staging/Event-Sourced World History.md`)
+- **Source:** [[Event-Sourced World History]] (`planning/production/Event-Sourced World History.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative History & Versioning
 - **Secondary subsystems:** World State Reconstruction; Adventure Coordinator; World Rules & Validation; Persistence & Draft Management
@@ -459,7 +463,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0040 — Versioned Text Blocks and Revision IDs
 
-- **Source:** [[Versioned Text Blocks and Revision IDs]] (`planning/staging/Versioned Text Blocks and Revision IDs.md`)
+- **Source:** [[Versioned Text Blocks and Revision IDs]] (`planning/production/Versioned Text Blocks and Revision IDs.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative History & Versioning
 - **Secondary subsystems:** Narrative Document & Editing; Adventure Coordinator; World State Reconstruction; Persistence & Draft Management
@@ -471,7 +475,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0041 — Historical Edit Confirmation and Bulk Truncation
 
-- **Source:** [[Historical Edit Confirmation and Bulk Truncation]] (`planning/staging/Historical Edit Confirmation and Bulk Truncation.md`)
+- **Source:** [[Historical Edit Confirmation and Bulk Truncation]] (`planning/production/Historical Edit Confirmation and Bulk Truncation.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative Document & Editing
 - **Secondary subsystems:** Narrative History & Versioning; World State Reconstruction; Adventure Coordinator; Persistence & Draft Management; Presentation & UX
@@ -483,7 +487,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0042 — Snapshots and Incremental State Rebuild
 
-- **Source:** [[Snapshots and Incremental State Rebuild]] (`planning/staging/Snapshots and Incremental State Rebuild.md`)
+- **Source:** [[Snapshots and Incremental State Rebuild]] (`planning/production/Snapshots and Incremental State Rebuild.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** World State Reconstruction
 - **Secondary subsystems:** Narrative History & Versioning; Adventure Coordinator; Persistence & Draft Management; Narrative Memory & Retrieval; World Rules & Validation
@@ -495,7 +499,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0044 — Deterministic Adventure Coordinator
 
-- **Source:** [[Deterministic Adventure Coordinator]] (`planning/staging/Deterministic Adventure Coordinator.md`)
+- **Source:** [[Deterministic Adventure Coordinator]] (`planning/production/Deterministic Adventure Coordinator.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Adventure Coordinator
 - **Secondary subsystems:** AI Generation Pipeline; AI Task Routing & Model Selection; World Rules & Validation; AI Context & Prompt Construction; Narrative History & Versioning; Persistence & Draft Management
@@ -507,7 +511,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0045 — LLM State Interpreter and Proposed Operations
 
-- **Source:** [[LLM State Interpreter and Proposed Operations]] (`planning/staging/LLM State Interpreter and Proposed Operations.md`)
+- **Source:** [[LLM State Interpreter and Proposed Operations]] (`planning/production/LLM State Interpreter and Proposed Operations.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** AI Interpretation & Operation Proposals
 - **Secondary subsystems:** AI Generation Pipeline; Adventure Coordinator; Gameplay Capability Registry & Plugins; World Rules & Validation; Entity-Based Lorebook
@@ -519,7 +523,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0046 — Typed Tool Rejection and Narrative Repair
 
-- **Source:** [[Typed Tool Rejection and Narrative Repair]] (`planning/staging/Typed Tool Rejection and Narrative Repair.md`)
+- **Source:** [[Typed Tool Rejection and Narrative Repair]] (`planning/production/Typed Tool Rejection and Narrative Repair.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Adventure Coordinator
 - **Secondary subsystems:** World Rules & Validation; AI Generation Pipeline; AI Interpretation & Operation Proposals; Generation Lifecycle & Diagnostics; Gameplay Capability Registry & Plugins
@@ -531,7 +535,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0047 — Native Gameplay Capability Registry
 
-- **Source:** [[Native Gameplay Capability Registry]] (`planning/staging/Native Gameplay Capability Registry.md`)
+- **Source:** [[Native Gameplay Capability Registry]] (`planning/production/Native Gameplay Capability Registry.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Gameplay Capability Registry & Plugins
 - **Secondary subsystems:** Adventure Coordinator; World Rules & Validation; Narrative History & Versioning; World State Reconstruction; AI Interpretation & Operation Proposals
@@ -543,7 +547,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0050 — Structured UI Game Actions
 
-- **Source:** [[Structured UI Game Actions]] (`planning/staging/Structured UI Game Actions.md`)
+- **Source:** [[Structured UI Game Actions]] (`planning/production/Structured UI Game Actions.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Narrative Interaction & Intent
 - **Secondary subsystems:** Presentation & UX; Gameplay Capability Registry & Plugins; Adventure Coordinator; World Rules & Validation; AI Generation Pipeline
@@ -555,7 +559,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0051 — Browser-Persistent Story Database
 
-- **Source:** [[Browser-Persistent Story Database]] (`planning/staging/Browser-Persistent Story Database.md`)
+- **Source:** [[Browser-Persistent Story Database]] (`planning/production/Browser-Persistent Story Database.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Persistence & Draft Management
 - **Secondary subsystems:** Runtime & Platform Services; Adventure Library & Persistence; Narrative History & Versioning; World State Reconstruction; Credential & Secret Storage
@@ -567,7 +571,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0052 — Backups Export and Storage Quotas
 
-- **Source:** [[Backups Export and Storage Quotas]] (`planning/staging/Backups Export and Storage Quotas.md`)
+- **Source:** [[Backups Export and Storage Quotas]] (`planning/production/Backups Export and Storage Quotas.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Persistence & Draft Management
 - **Secondary subsystems:** Runtime & Platform Services; Adventure Library & Persistence; World State Reconstruction; Credential & Secret Storage; Presentation & UX
@@ -579,7 +583,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0053 — Localhost Startup and Offline Mode
 
-- **Source:** [[Localhost Startup and Offline Mode]] (`planning/staging/Localhost Startup and Offline Mode.md`)
+- **Source:** [[Localhost Startup and Offline Mode]] (`planning/production/Localhost Startup and Offline Mode.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Runtime & Platform Services
 - **Secondary subsystems:** Application Foundation & Lifecycle; Presentation & UX; Persistence & Draft Management; AI Provider Integration; Credential & Secret Storage
@@ -591,7 +595,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0055 — Optional RPG Mechanics Plugins
 
-- **Source:** [[Optional RPG Mechanics Plugins]] (`planning/staging/Optional RPG Mechanics Plugins.md`)
+- **Source:** [[Optional RPG Mechanics Plugins]] (`planning/production/Optional RPG Mechanics Plugins.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Gameplay Capability Registry & Plugins
 - **Secondary subsystems:** World Rules & Validation; Adventure Coordinator; Narrative History & Versioning; World State Reconstruction; Presentation & UX
@@ -603,7 +607,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0061 — Lorebound Branding and Engine Split
 
-- **Source:** [[Lorebound Branding and Engine Split]] (`planning/staging/Lorebound Branding and Engine Split.md`)
+- **Source:** [[Lorebound Branding and Engine Split]] (`planning/production/Lorebound Branding and Engine Split.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Application Foundation & Lifecycle
 - **Secondary subsystems:** Presentation & UX; Adventure Coordinator; Gameplay Capability Registry & Plugins; Runtime & Platform Services; Persistence & Draft Management
@@ -615,7 +619,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0062 — Accessibility and Customisable Interface
 
-- **Source:** [[Accessibility and Customisable Interface]] (`planning/staging/Accessibility and Customisable Interface.md`)
+- **Source:** [[Accessibility and Customisable Interface]] (`planning/production/Accessibility and Customisable Interface.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Presentation & UX
 - **Secondary subsystems:** Application Foundation & Lifecycle; Narrative Interaction & Intent; Gameplay Capability Registry & Plugins; Adventure Library & Persistence
@@ -627,7 +631,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0064 — Automatic Character Sheet Tracking
 
-- **Source:** [[Automatic Character Sheet Tracking]] (`planning/staging/Automatic Character Sheet Tracking.md`)
+- **Source:** [[Automatic Character Sheet Tracking]] (`planning/production/Automatic Character Sheet Tracking.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Character & Scene State
 - **Secondary subsystems:** AI Interpretation & Operation Proposals; World Rules & Validation; Adventure Coordinator; Narrative History & Versioning; World State Reconstruction; Presentation & UX
@@ -639,7 +643,7 @@ Map ideas individually in IDEA-ID order. For each approved idea, record its prim
 
 ### IDEA-0066 — AI-Generated Starting Lorebook and World
 
-- **Source:** [[AI-Generated Starting Lorebook and World]] (`planning/staging/AI-Generated Starting Lorebook and World.md`)
+- **Source:** [[AI-Generated Starting Lorebook and World]] (`planning/production/AI-Generated Starting Lorebook and World.md`)
 - **Pass A mapping:** Accepted by requesting user, recorded 2026-10-19.
 - **Primary subsystem:** Adventure Initialization & Setup
 - **Secondary subsystems:** Entity-Based Lorebook; AI Generation Pipeline; Adventure Coordinator; World Rules & Validation; Adventure Library & Persistence; World Locations & Topology
