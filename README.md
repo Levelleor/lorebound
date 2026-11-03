@@ -1,5 +1,7 @@
 # Lorebound
 
+**UI design direction:** The finished application is intended to follow the user's approved [Command Citadel visual design reference](planning/design/README.md): warm charcoal/parchment/gold literary reading workspace, compact side rail, docked composer, source OKLCH tokens and responsive layout. This is a **planned look**, not a claim the current Gate 0 UI implements it. Accepted B1–B9/Pass C functionality still governs behaviour.
+
 **Planning update, 2026-11-03:** All 52 explicitly accepted idea notes now reside in `planning/production/`, with no staging notes remaining. [Promotion register](planning/architecture/Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). This is implementation readiness, **not completed features or specs**. Gate 0 host/SQLite is the only documented implemented technical foundation, while full gameplay remains future development. B9-D12 spatial migrations remain deferred.
 
 **World map design:** The player-facing map is a **persistent, semantically scaled spatial canvas** with saved location pins and nested grouping for empires, cities, buildings and rooms. Relative distances and link lengths should make the fictional world's size understandable. Explicit travel connections also form a logical graph, but the graph does **not** determine the positions or scale of the map. This is an accepted design refinement, **not an implemented feature**. See [B7-D10](planning/architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md).
