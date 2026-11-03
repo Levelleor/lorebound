@@ -16,6 +16,10 @@ tags:
 ---
 # Zoomable Node Map Canvas
 
+## Current approved app visual design — 2026-11-03
+
+The user explicitly requested the look of the uploaded Command Citadel design-only kit. [Visual contract](../design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md), [UI state mapping](../design/Lorebound%20UI%20Interaction%20and%20State%20Mapping.md), and [source-accurate colour variables](../design/palette-and-presets.css) are **cross-cutting visual guidance** for this approved production idea. When implemented, the map inherits the Command Citadel dark/bright/midnight palette, understated 1px dividers, gold active context, restrained forms, 320px contextual rail and responsive Story/World switch. Use the simplest accepted map canvas, no advanced GIS styling. **No map-specific keyboard interaction (B9-D24 revised B)** and **no visible scale bar (B9-D22 C)**. Manual changes use the existing primary composer overlay; **B9-D12 spatial migrations remain deferred**. The visual reference adds no new map semantics. This is **design documentation only**, not evidence the feature has shipped; later B/C functional decisions retain priority over conflicting demo behaviour.
+
 ## Current production approval — 2026-11-03
 
 **Explicit user approval:** On 2026-11-03 the requesting user asked to promote **all remaining accepted Lorebound staging ideas** into production, including IDEA-0037. This same original idea note was moved to `planning/production/`, preserving its ID, previously accepted scope and historical decisions. **Production means approved for implementation planning, not already implemented or verified.** Later accepted B1–B9/Pass C decisions govern where older proposals differ. No application implementation, testing, spatial migration or implemented spec follows from this promotion. Previous “staging only” statements are dated history.
