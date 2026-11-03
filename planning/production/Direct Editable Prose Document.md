@@ -16,6 +16,10 @@ tags:
 ---
 # Direct Editable Prose Document
 
+## Current approved app visual design — 2026-11-03
+
+The user explicitly requested the look of the uploaded Command Citadel design-only kit. [Visual contract](../design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md), [UI state mapping](../design/Lorebound%20UI%20Interaction%20and%20State%20Mapping.md), and [source-accurate colour variables](../design/palette-and-presets.css) are **cross-cutting visual guidance** for this approved production idea. Use the approved Command Citadel **editorial reading experience**: centred ≤672px Cormorant Garamond prose column, 21px/1.625 default reading text, 32px comfortable or 16px compact passage gaps, sparse 2px gold left edit marker and quiet editing status. Maintain the **existing shared composer Commit/Discard overlay** and historical confirmation decisions; a kit example status banner must not create an additional commit point. Current-only structured prose and no immutable passage revision archive remain binding. This is **design documentation only**, not evidence the feature has shipped; later B/C functional decisions retain priority over conflicting demo behaviour.
+
 ## Current production approval — 2026-11-03
 
 **Explicit user approval:** On 2026-11-03 the requesting user asked to promote **all remaining accepted Lorebound staging ideas** into production, including IDEA-0003. This same original idea note was moved to `planning/production/`, preserving its ID, previously accepted scope and historical decisions. **Production means approved for implementation planning, not already implemented or verified.** Later accepted B1–B9/Pass C decisions govern where older proposals differ. No application implementation, testing, spatial migration or implemented spec follows from this promotion. Previous “staging only” statements are dated history.
