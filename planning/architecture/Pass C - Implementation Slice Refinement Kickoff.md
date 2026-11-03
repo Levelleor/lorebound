@@ -12,6 +12,10 @@ tags:
 
 # Pass C — Implementation Slice Refinement Kickoff
 
+## Binding visual style for Pass C UI slices — 2026-11-03
+
+The user approved their uploaded Command Citadel design kit as the appearance target for Lorebound. All frontend/story/character/lore/map slices should reuse the [visual design contract](../design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md), [state mapping](../design/Lorebound%20UI%20Interaction%20and%20State%20Mapping.md) and [design palette](../design/palette-and-presets.css) while implementing accepted behaviours. In particular, the first Story-mode slice should inherit the warm charcoal editorial page, parchment serif, golden modes, blue provisional block and **fixed shared composer**, with right rail and responsive switch. The source demo is **not** proof of app behaviour, nor approval to override C-D04 Story-mode first, current-only canonical events, Wails/SQLite authority or deferred B9-D12 spatial migrations. No styling code/tests were executed by adding this design reference.
+
 ## Current full production approval — 2026-11-03
 
 The user explicitly approved the remaining 50 accepted `IDEA-` notes for production, resulting in **52 production, zero staging**. [Full register](./Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). This removes the idea-promotion bottleneck for subsequent work, **not** the need to implement/test each feature incrementally. Gate 0 PR #3 is merged; C-D01 Story-mode-first priority and C-D03 honest mock/real evidence labels remain. The user did not authorise all 52 simultaneous feature implementations or deferred B9-D12 spatial migrations by promoting the notes. Older staged counts below are historical.
