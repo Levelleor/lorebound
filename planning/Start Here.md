@@ -8,6 +8,10 @@ tags:
 ---
 # Start Here
 
+## Central current-state architecture reference — 2026-11-03
+
+**[Lorebound — System Architecture Overview](architecture/Lorebound%20-%20System%20Architecture%20Overview.md)** is the **single starting point** for understanding the complete application, all 52 production-stage ideas, the 12 logical subsystems, player and AI flows, accepted persistence/history boundaries, visual design and implementation status. Use this before reading historical Pass A/B/C reviews or the older consolidated architecture, which preserve approval chronology rather than a clean current system summary. The full source-of-truth detailed records remain linked there. No gameplay implementation or B9-D12 spatial migration was authorised by writing the overview.
+
 ## Visual design approved for the finished app — 2026-11-03
 
 The user has supplied the **Lorebound Command Citadel design-only kit** and explicitly requested that the application **look like the design document**. The operative [design reference index](design/README.md) links the [visual design contract](design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md), [interaction/state map](design/Lorebound%20UI%20Interaction%20and%20State%20Mapping.md), and [exact OKLCH palette/presets](design/palette-and-presets.css). **This is the visual target for future Story-mode and all other UI slices**, separate from the factual implementation status. Do not copy demo data or override accepted B1–B9/Pass C behaviour; especially preserve shared composer Commit/Discard, no map keyboard gestures, and deferred B9-D12 migration.
