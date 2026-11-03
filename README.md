@@ -1,5 +1,7 @@
 # Lorebound
 
+**Read the full [System Architecture Overview](planning/architecture/Lorebound%20-%20System%20Architecture%20Overview.md)** for a self-contained explanation of the player experience, all 52 approved features, twelve subsystem boundaries, AI/Go/SQLite data flows, design style and real implementation status. A short root [ARCHITECTURE.md](ARCHITECTURE.md) also points there. This is the **current architectural entry point**, unlike chronological historical review documents.
+
 **UI design direction:** The finished application is intended to follow the user's approved [Command Citadel visual design reference](planning/design/README.md): warm charcoal/parchment/gold literary reading workspace, compact side rail, docked composer, source OKLCH tokens and responsive layout. This is a **planned look**, not a claim the current Gate 0 UI implements it. Accepted B1–B9/Pass C functionality still governs behaviour.
 
 **Planning update, 2026-11-03:** All 52 explicitly accepted idea notes now reside in `planning/production/`, with no staging notes remaining. [Promotion register](planning/architecture/Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). This is implementation readiness, **not completed features or specs**. Gate 0 host/SQLite is the only documented implemented technical foundation, while full gameplay remains future development. B9-D12 spatial migrations remain deferred.
