@@ -12,6 +12,8 @@ tags:
 
 # Lorebound — System Architecture Overview
 
+> **Where implementation stands now:** For the single current task, verified vs unverified feature coverage, changing technical context and next development handoff, see the [live Development Control Centre](../development/README.md), [NOW](../development/NOW.md) and [52-idea feature ledger](../development/FEATURES.md). This architecture overview describes the system and approved design, not a substitute for implementation evidence.
+
 > **Start here for the whole application.** This is the current, self-contained architectural overview of what Lorebound is intended to do, how the finished pieces fit together, which technical boundaries matter, and what exists today. It synthesises the **52 user-approved production ideas** and later accepted Pass B1–B9 and Pass C decisions; it does **not** override their detailed contracts or imply all 52 ideas have been implemented. [Architecture decisions](./decisions/), [production ideas](../production/), [visual design](../design/README.md), [historical consolidation](./Consolidated%20Subsystem%20Architecture.md), and [Pass C slice register](./Pass%20C%20-%20Implementation%20Slice%20Register.md) provide the drill-down records.
 
 ## 1. Lorebound in one minute
