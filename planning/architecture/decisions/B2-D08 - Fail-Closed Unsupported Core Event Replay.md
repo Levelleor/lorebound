@@ -62,7 +62,7 @@ This is a software/data-compatibility failure, **not** a fictional contradiction
 
 ## Traceability
 
-Logical owners S05, S06, S10, S11, S12. Relevant sources: [IDEA-0039](../../staging/Event-Sourced%20World%20History.md), [IDEA-0042](../../staging/Snapshots%20and%20Incremental%20State%20Rebuild.md); B1-D03/B1-D06; B2-D01, B2-D02, B2-D03, B2-D04, B2-D05 and B2-D06. Pass A A-07 and A-10.
+Logical owners S05, S06, S10, S11, S12. Relevant sources: [IDEA-0039](../../production/Event-Sourced%20World%20History.md), [IDEA-0042](../../production/Snapshots%20and%20Incremental%20State%20Rebuild.md); B1-D03/B1-D06; B2-D01, B2-D02, B2-D03, B2-D04, B2-D05 and B2-D06. Pass A A-07 and A-10.
 
 
 ### Precise fail-closed boundary now in force

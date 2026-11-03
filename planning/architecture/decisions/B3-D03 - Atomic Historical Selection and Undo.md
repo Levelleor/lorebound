@@ -55,7 +55,7 @@ Exact active-selection SQL representation, ordering, inclusive/exclusive truncat
 
 ## Traceability
 
-[B3 Batch 1 proposal](../Pass%20B3%20-%20Atomic%20Commit%20and%20Concurrency%20Contracts%20%28Review%29.md); [B2-D01](./B2-D01%20-%20Immutable%20Outcome%20Events%20and%20Atomic%20Commits.md), [B2-D02](./B2-D02%20-%20Immutable%20History%20and%20Single%20Active%20Selection.md), [B2-D03](./B2-D03%20-%20Turn-0%20Replay%20for%20Authoritative%20Reconstruction.md), [B2-D04](./B2-D04%20-%20Retained%20History%20and%20Suspended%20Unrepresentable%20Effects.md), [B2-D05](./B2-D05%20-%20Canonical%20Structured%20Passage%20Documents.md); [IDEA-0041](../../staging/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md), [IDEA-0004](../../staging/Retry%20Undo%20and%20Alternative%20Continuations.md). Owners S05, S06, S12.
+[B3 Batch 1 proposal](../Pass%20B3%20-%20Atomic%20Commit%20and%20Concurrency%20Contracts%20%28Review%29.md); [B2-D01](./B2-D01%20-%20Immutable%20Outcome%20Events%20and%20Atomic%20Commits.md), [B2-D02](./B2-D02%20-%20Immutable%20History%20and%20Single%20Active%20Selection.md), [B2-D03](./B2-D03%20-%20Turn-0%20Replay%20for%20Authoritative%20Reconstruction.md), [B2-D04](./B2-D04%20-%20Retained%20History%20and%20Suspended%20Unrepresentable%20Effects.md), [B2-D05](./B2-D05%20-%20Canonical%20Structured%20Passage%20Documents.md); [IDEA-0041](../../production/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md), [IDEA-0004](../../production/Retry%20Undo%20and%20Alternative%20Continuations.md). Owners S05, S06, S12.
 
 ## Decision history
 
