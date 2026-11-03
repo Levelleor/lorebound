@@ -8,6 +8,10 @@ tags:
 ---
 # Start Here
 
+## Active development workflow and next task — 2026-11-03
+
+**[Development Control Centre](development/README.md)** is the live implementation workflow. **[NOW: current state and exactly one next task](development/NOW.md)** is the operational handoff, supported by the [52-feature verification ledger](development/FEATURES.md), [ordered task queue](development/TASKS.md), [ongoing journal](development/JOURNAL.md) and [agent/reviewer runbook](development/AGENT-RUNBOOK.md). The initial next task is **DEV-001: minimum CI plus first Story-mode requirement traceability**; this is only a documented task, not claimed implemented or CI-tested. All 52 approved IDEAs stay production-stage; the Gate 0 host/storage evidence covers only a technical foundation. **Do not treat the older Pass C proposal register as the current task queue.**
+
 ## Central current-state architecture reference — 2026-11-03
 
 **[Lorebound — System Architecture Overview](architecture/Lorebound%20-%20System%20Architecture%20Overview.md)** is the **single starting point** for understanding the complete application, all 52 production-stage ideas, the 12 logical subsystems, player and AI flows, accepted persistence/history boundaries, visual design and implementation status. Use this before reading historical Pass A/B/C reviews or the older consolidated architecture, which preserve approval chronology rather than a clean current system summary. The full source-of-truth detailed records remain linked there. No gameplay implementation or B9-D12 spatial migration was authorised by writing the overview.
