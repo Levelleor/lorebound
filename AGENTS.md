@@ -1,5 +1,9 @@
 # Lorebound agent instructions
 
+## Development task control and agent handoff — 2026-11-03
+
+**The active development workflow lives in [planning/development/README.md](planning/development/README.md).** Before any code change, read **[planning/development/NOW.md](planning/development/NOW.md)** for the **one next task**, [TASKS](planning/development/TASKS.md) for dependency/acceptance gates, [FEATURES](planning/development/FEATURES.md) for 52 approved ideas and granular evidence, [JOURNAL](planning/development/JOURNAL.md) for ongoing context and [AGENT-RUNBOOK](planning/development/AGENT-RUNBOOK.md) for implementation/reviewer reports. Update those same control files within feature PRs and distinguish unmerged work from independently verified main. The initial next task is **DEV-001: minimal CI and first Story-mode requirement traceability** (not yet implemented). No new architecture or spatial-migration approval follows from this guidance.
+
 ## Current system architecture entry point — 2026-11-03
 
 **Before application development or architectural review, read [Lorebound — System Architecture Overview](planning/architecture/Lorebound%20-%20System%20Architecture%20Overview.md).** It is the self-contained current explanation of all 52 production ideas, twelve subsystem ownership boundaries, browser TypeScript + Wails/Go/SQLite data flow, AI generation and accepted story history, map semantics, approved UI styling and verified-vs-planned status. Use relevant original production IDEA and later accepted B/C ADRs for detailed authority; earlier Consolidated Subsystem Architecture and Pass reviews are dated historical context. The overview is a navigational synthesis, not a new gameplay approval, proof of 52 implemented ideas or authorisation to run B9-D12 spatial migrations.
