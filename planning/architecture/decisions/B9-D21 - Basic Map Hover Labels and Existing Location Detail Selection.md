@@ -25,7 +25,7 @@ User explicitly approved B9 Batch 7 on 2026-10-31: D19 A, D20 A, D21 A. Addition
 ## Operative rules
 
 1. Hover, selection and basic inspection are transient read-only presentation state: no narrative turn, AI call, character travel or canonical map write.
-2. Selection can inspect established recorded places, including places marked undiscovered, under [IDEA-0037](../../staging/Zoomable%20Node%20Map%20Canvas.md). Only their current known facts/relations are shown; no invented details.
+2. Selection can inspect established recorded places, including places marked undiscovered, under [IDEA-0037](../../production/Zoomable%20Node%20Map%20Canvas.md). Only their current known facts/relations are shown; no invented details.
 3. [B9-D16 qualified A](./B9-D16%20-%20Basic%20Map%20Navigation%20and%20Shared%20Composer%20Commit%20Controls.md) still limits initial features to pan, zoom, hover and simple selection/inspection, without complex editing panels.
 4. Any available deliberate world-map correction uses the existing pending shared composer **Commit/Discard above the primary chat action text field**, never a separate map-local Commit button. Hover/selection do not themselves create pending changes.
 5. Read from typed TypeScript projections through the S04 drawing adapter; no independent map database. The user's estimate/default condition for D19/D20 concerns **geography**, not creating new tooltip content.
