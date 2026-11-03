@@ -214,58 +214,58 @@ The table is sorted by original IDEA ID. Links point to the **unchanged staged i
 
 | Staged idea | Title | Pass A primary owner | Pass B primary | Pass B secondary |
 |---|---|---|---|---|
-| [IDEA-0001](../staging/Single-Player%20Account-Free%20Experience.md) | Single-Player Account-Free Experience | Application Foundation & Lifecycle | **S01** | S02, S08 |
-| [IDEA-0002](../staging/Freeform%20Player%20Action%20Modes.md) | Freeform Player Action Modes | Narrative Interaction & Intent | **S03** | S04, S06, S10 |
-| [IDEA-0003](../staging/Direct%20Editable%20Prose%20Document.md) | Direct Editable Prose Document | Narrative Document & Editing | **S03** | S04, S05, S06, S12 |
-| [IDEA-0004](../staging/Retry%20Undo%20and%20Alternative%20Continuations.md) | Retry Undo and Alternative Continuations | Narrative History & Versioning | **S05** | S03, S04, S06, S07, S12 |
-| [IDEA-0005](../staging/Adventure%20Save%20and%20Export%20Management.md) | Adventure Save and Export Management | Adventure Library & Persistence | **S02** | S01, S04, S05, S12 |
-| [IDEA-0006](../staging/Quick%20Start%20and%20Custom%20Story%20Openings.md) | Quick Start and Custom Story Openings | Adventure Initialization & Setup | **S02** | S04, S06, S07 |
-| [IDEA-0007](../staging/Character%20Creation%20and%20Starting%20Choices.md) | Character Creation and Starting Choices | Character & Scene State | **S10** | S02, S03, S04, S06, S09 |
-| [IDEA-0008](../staging/Reusable%20Scenario%20Templates%20and%20Placeholders.md) | Reusable Scenario Templates and Placeholders | Scenario Templates & Configuration | **S02** | S06, S09, S10 |
-| [IDEA-0010](../staging/Narration%20Style%20and%20Perspective%20Controls.md) | Narration Style and Perspective Controls | Narrative Generation Configuration | **S08** | S02, S04, S07, S09 |
-| [IDEA-0011](../staging/Manual%20Generation%20Branches.md) | Manual Generation Branches | Adventure Library & Persistence | **S02** | S04, S05, S06 |
-| [IDEA-0012](../staging/Cloud%20LLM%20Provider%20Connectors.md) | Cloud LLM Provider Connectors | AI Provider Integration | **S08** | S07 |
-| [IDEA-0013](../staging/Local%20LLM%20Server%20Connections.md) | Local LLM Server Connections | AI Provider Integration | **S08** | S07 |
-| [IDEA-0014](../staging/Provider%20Connection%20Profiles%20and%20Discovery.md) | Provider Connection Profiles and Discovery | Provider Connection Management | **S08** | S01, S04 |
-| [IDEA-0015](../staging/Model-Capability-Aware%20Controls.md) | Model-Capability-Aware Controls | Model Capability Management | **S08** | S04 |
-| [IDEA-0016](../staging/Sampling%20Presets%20and%20Advanced%20Parameters.md) | Sampling Presets and Advanced Parameters | Narrative Generation Configuration | **S08** | S04 |
-| [IDEA-0017](../staging/One-Model%20Task%20Routing.md) | One-Model Task Routing | AI Task Routing & Model Selection | **S07** | S08 |
-| [IDEA-0018](../staging/Configurable%20Generation%20Pipeline%20Strategies.md) | Configurable Generation Pipeline Strategies | AI Generation Pipeline | **S07** | S05, S06 |
-| [IDEA-0019](../staging/Streaming%20Cancellation%20and%20Generation%20Diagnostics.md) | Streaming Cancellation and Generation Diagnostics | Generation Lifecycle & Diagnostics | **S07** | S04, S06, S08, S12 |
-| [IDEA-0020](../staging/Entity-Based%20Lorebook.md) | Entity-Based Lorebook | Entity-Based Lorebook | **S09** | S02, S04, S06, S10 |
-| [IDEA-0021](../staging/Conditional%20Lorebook%20Activation.md) | Conditional Lorebook Activation | AI Context & Prompt Construction | **S09** | S04, S06 |
-| [IDEA-0022](../staging/Automatic%20Long-Term%20Story%20Summaries.md) | Automatic Long-Term Story Summaries | Narrative Memory & Retrieval | **S09** | S05, S07 |
-| [IDEA-0023](../staging/Episodic%20Memory%20Retrieval.md) | Episodic Memory Retrieval | Narrative Memory & Retrieval | **S09** | S02, S05 |
-| [IDEA-0024](../staging/Token-Budgeted%20Context%20Builder%20and%20Inspector.md) | Token-Budgeted Context Builder and Inspector | AI Context & Prompt Construction | **S09** | S04, S08 |
-| [IDEA-0025](../staging/Author%20Notes%20and%20Persistent%20Story%20Instructions.md) | Author Notes and Persistent Story Instructions | Narrative Generation Configuration | **S08** | S02, S04, S09 |
-| [IDEA-0026](../staging/Shared%20PC%20and%20NPC%20Character%20Entities.md) | Shared PC and NPC Character Entities | Character & Scene State | **S10** | S02, S03, S06, S09 |
-| [IDEA-0027](../staging/Customisable%20Character%20Status%20Sheets.md) | Customisable Character Status Sheets | Character & Scene State | **S10** | S04, S06, S09 |
-| [IDEA-0029](../staging/Persistent%20Items%20and%20Inventory%20Transfers.md) | Persistent Items and Inventory Transfers | Inventory & Item State | **S11** | S05, S06, S10 |
-| [IDEA-0030](../staging/Slot-Based%20Equipment%20and%20Body%20Diagram.md) | Slot-Based Equipment and Body Diagram | Inventory & Item State | **S11** | S04, S06, S09, S10 |
-| [IDEA-0031](../staging/Configurable%20Anatomy%20and%20Transformations.md) | Configurable Anatomy and Transformations | Character & Scene State | **S10** | S05, S06, S09, S11 |
-| [IDEA-0033](../staging/Hierarchical%20World%20Locations.md) | Hierarchical World Locations | World Locations & Topology | **S11** | S06, S09, S10 |
-| [IDEA-0034](../staging/Character%20Presence%20and%20Current%20Scene.md) | Character Presence and Current Scene | Character & Scene State | **S10** | S03, S04, S06, S09, S11 |
-| [IDEA-0035](../staging/Configurable%20Travel%20Graph%20Rules.md) | Configurable Travel Graph Rules | World Locations & Topology | **S11** | S02, S06, S10 |
-| [IDEA-0036](../staging/AI%20World%20Discovery%20and%20Expansion.md) | AI World Discovery and Expansion | World Locations & Topology | **S11** | S06, S07, S09, S10 |
-| [IDEA-0037](../staging/Zoomable%20Node%20Map%20Canvas.md) | Zoomable Node Map Canvas | Presentation & UX | **S04** | S02, S10, S11 |
-| [IDEA-0038](../staging/Persistent%20Location%20State%20and%20Travel%20Interactions.md) | Persistent Location State and Travel Interactions | World Environment & Mutable State | **S11** | S05, S06, S10 |
-| [IDEA-0039](../staging/Event-Sourced%20World%20History.md) | Event-Sourced World History | Narrative History & Versioning | **S05** | S06, S12 |
-| [IDEA-0040](../staging/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md) | Versioned Text Blocks and Revision IDs | Narrative History & Versioning | **S05** | S03, S06, S12 |
-| [IDEA-0041](../staging/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md) | Historical Edit Confirmation and Bulk Truncation | Narrative Document & Editing | **S03** | S04, S05, S06, S12 |
-| [IDEA-0042](../staging/Snapshots%20and%20Incremental%20State%20Rebuild.md) | Snapshots and Incremental State Rebuild | World State Reconstruction | **S05** | S06, S09, S12 |
-| [IDEA-0044](../staging/Deterministic%20Adventure%20Coordinator.md) | Deterministic Adventure Coordinator | Adventure Coordinator | **S06** | S05, S07, S09, S12 |
-| [IDEA-0045](../staging/LLM%20State%20Interpreter%20and%20Proposed%20Operations.md) | LLM State Interpreter and Proposed Operations | AI Interpretation & Operation Proposals | **S07** | S06, S09 |
-| [IDEA-0046](../staging/Typed%20Tool%20Rejection%20and%20Narrative%20Repair.md) | Typed Tool Rejection and Narrative Repair | Adventure Coordinator | **S06** | S07 |
-| [IDEA-0047](../staging/Native%20Gameplay%20Capability%20Registry.md) | Native Gameplay Capability Registry | Gameplay Capability Registry & Plugins | **S06** | S05, S07 |
-| [IDEA-0050](../staging/Structured%20UI%20Game%20Actions.md) | Structured UI Game Actions | Narrative Interaction & Intent | **S03** | S04, S06, S07 |
+| [IDEA-0001](../production/Single-Player%20Account-Free%20Experience.md) | Single-Player Account-Free Experience | Application Foundation & Lifecycle | **S01** | S02, S08 |
+| [IDEA-0002](../production/Freeform%20Player%20Action%20Modes.md) | Freeform Player Action Modes | Narrative Interaction & Intent | **S03** | S04, S06, S10 |
+| [IDEA-0003](../production/Direct%20Editable%20Prose%20Document.md) | Direct Editable Prose Document | Narrative Document & Editing | **S03** | S04, S05, S06, S12 |
+| [IDEA-0004](../production/Retry%20Undo%20and%20Alternative%20Continuations.md) | Retry Undo and Alternative Continuations | Narrative History & Versioning | **S05** | S03, S04, S06, S07, S12 |
+| [IDEA-0005](../production/Adventure%20Save%20and%20Export%20Management.md) | Adventure Save and Export Management | Adventure Library & Persistence | **S02** | S01, S04, S05, S12 |
+| [IDEA-0006](../production/Quick%20Start%20and%20Custom%20Story%20Openings.md) | Quick Start and Custom Story Openings | Adventure Initialization & Setup | **S02** | S04, S06, S07 |
+| [IDEA-0007](../production/Character%20Creation%20and%20Starting%20Choices.md) | Character Creation and Starting Choices | Character & Scene State | **S10** | S02, S03, S04, S06, S09 |
+| [IDEA-0008](../production/Reusable%20Scenario%20Templates%20and%20Placeholders.md) | Reusable Scenario Templates and Placeholders | Scenario Templates & Configuration | **S02** | S06, S09, S10 |
+| [IDEA-0010](../production/Narration%20Style%20and%20Perspective%20Controls.md) | Narration Style and Perspective Controls | Narrative Generation Configuration | **S08** | S02, S04, S07, S09 |
+| [IDEA-0011](../production/Manual%20Generation%20Branches.md) | Manual Generation Branches | Adventure Library & Persistence | **S02** | S04, S05, S06 |
+| [IDEA-0012](../production/Cloud%20LLM%20Provider%20Connectors.md) | Cloud LLM Provider Connectors | AI Provider Integration | **S08** | S07 |
+| [IDEA-0013](../production/Local%20LLM%20Server%20Connections.md) | Local LLM Server Connections | AI Provider Integration | **S08** | S07 |
+| [IDEA-0014](../production/Provider%20Connection%20Profiles%20and%20Discovery.md) | Provider Connection Profiles and Discovery | Provider Connection Management | **S08** | S01, S04 |
+| [IDEA-0015](../production/Model-Capability-Aware%20Controls.md) | Model-Capability-Aware Controls | Model Capability Management | **S08** | S04 |
+| [IDEA-0016](../production/Sampling%20Presets%20and%20Advanced%20Parameters.md) | Sampling Presets and Advanced Parameters | Narrative Generation Configuration | **S08** | S04 |
+| [IDEA-0017](../production/One-Model%20Task%20Routing.md) | One-Model Task Routing | AI Task Routing & Model Selection | **S07** | S08 |
+| [IDEA-0018](../production/Configurable%20Generation%20Pipeline%20Strategies.md) | Configurable Generation Pipeline Strategies | AI Generation Pipeline | **S07** | S05, S06 |
+| [IDEA-0019](../production/Streaming%20Cancellation%20and%20Generation%20Diagnostics.md) | Streaming Cancellation and Generation Diagnostics | Generation Lifecycle & Diagnostics | **S07** | S04, S06, S08, S12 |
+| [IDEA-0020](../production/Entity-Based%20Lorebook.md) | Entity-Based Lorebook | Entity-Based Lorebook | **S09** | S02, S04, S06, S10 |
+| [IDEA-0021](../production/Conditional%20Lorebook%20Activation.md) | Conditional Lorebook Activation | AI Context & Prompt Construction | **S09** | S04, S06 |
+| [IDEA-0022](../production/Automatic%20Long-Term%20Story%20Summaries.md) | Automatic Long-Term Story Summaries | Narrative Memory & Retrieval | **S09** | S05, S07 |
+| [IDEA-0023](../production/Episodic%20Memory%20Retrieval.md) | Episodic Memory Retrieval | Narrative Memory & Retrieval | **S09** | S02, S05 |
+| [IDEA-0024](../production/Token-Budgeted%20Context%20Builder%20and%20Inspector.md) | Token-Budgeted Context Builder and Inspector | AI Context & Prompt Construction | **S09** | S04, S08 |
+| [IDEA-0025](../production/Author%20Notes%20and%20Persistent%20Story%20Instructions.md) | Author Notes and Persistent Story Instructions | Narrative Generation Configuration | **S08** | S02, S04, S09 |
+| [IDEA-0026](../production/Shared%20PC%20and%20NPC%20Character%20Entities.md) | Shared PC and NPC Character Entities | Character & Scene State | **S10** | S02, S03, S06, S09 |
+| [IDEA-0027](../production/Customisable%20Character%20Status%20Sheets.md) | Customisable Character Status Sheets | Character & Scene State | **S10** | S04, S06, S09 |
+| [IDEA-0029](../production/Persistent%20Items%20and%20Inventory%20Transfers.md) | Persistent Items and Inventory Transfers | Inventory & Item State | **S11** | S05, S06, S10 |
+| [IDEA-0030](../production/Slot-Based%20Equipment%20and%20Body%20Diagram.md) | Slot-Based Equipment and Body Diagram | Inventory & Item State | **S11** | S04, S06, S09, S10 |
+| [IDEA-0031](../production/Configurable%20Anatomy%20and%20Transformations.md) | Configurable Anatomy and Transformations | Character & Scene State | **S10** | S05, S06, S09, S11 |
+| [IDEA-0033](../production/Hierarchical%20World%20Locations.md) | Hierarchical World Locations | World Locations & Topology | **S11** | S06, S09, S10 |
+| [IDEA-0034](../production/Character%20Presence%20and%20Current%20Scene.md) | Character Presence and Current Scene | Character & Scene State | **S10** | S03, S04, S06, S09, S11 |
+| [IDEA-0035](../production/Configurable%20Travel%20Graph%20Rules.md) | Configurable Travel Graph Rules | World Locations & Topology | **S11** | S02, S06, S10 |
+| [IDEA-0036](../production/AI%20World%20Discovery%20and%20Expansion.md) | AI World Discovery and Expansion | World Locations & Topology | **S11** | S06, S07, S09, S10 |
+| [IDEA-0037](../production/Zoomable%20Node%20Map%20Canvas.md) | Zoomable Node Map Canvas | Presentation & UX | **S04** | S02, S10, S11 |
+| [IDEA-0038](../production/Persistent%20Location%20State%20and%20Travel%20Interactions.md) | Persistent Location State and Travel Interactions | World Environment & Mutable State | **S11** | S05, S06, S10 |
+| [IDEA-0039](../production/Event-Sourced%20World%20History.md) | Event-Sourced World History | Narrative History & Versioning | **S05** | S06, S12 |
+| [IDEA-0040](../production/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md) | Versioned Text Blocks and Revision IDs | Narrative History & Versioning | **S05** | S03, S06, S12 |
+| [IDEA-0041](../production/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md) | Historical Edit Confirmation and Bulk Truncation | Narrative Document & Editing | **S03** | S04, S05, S06, S12 |
+| [IDEA-0042](../production/Snapshots%20and%20Incremental%20State%20Rebuild.md) | Snapshots and Incremental State Rebuild | World State Reconstruction | **S05** | S06, S09, S12 |
+| [IDEA-0044](../production/Deterministic%20Adventure%20Coordinator.md) | Deterministic Adventure Coordinator | Adventure Coordinator | **S06** | S05, S07, S09, S12 |
+| [IDEA-0045](../production/LLM%20State%20Interpreter%20and%20Proposed%20Operations.md) | LLM State Interpreter and Proposed Operations | AI Interpretation & Operation Proposals | **S07** | S06, S09 |
+| [IDEA-0046](../production/Typed%20Tool%20Rejection%20and%20Narrative%20Repair.md) | Typed Tool Rejection and Narrative Repair | Adventure Coordinator | **S06** | S07 |
+| [IDEA-0047](../production/Native%20Gameplay%20Capability%20Registry.md) | Native Gameplay Capability Registry | Gameplay Capability Registry & Plugins | **S06** | S05, S07 |
+| [IDEA-0050](../production/Structured%20UI%20Game%20Actions.md) | Structured UI Game Actions | Narrative Interaction & Intent | **S03** | S04, S06, S07 |
 | [IDEA-0051](../production/Browser-Persistent%20Story%20Database.md) | Browser-Persistent Story Database | Persistence & Draft Management | **S12** | S01, S02, S05 |
-| [IDEA-0052](../staging/Backups%20Export%20and%20Storage%20Quotas.md) | Backups Export and Storage Quotas | Persistence & Draft Management | **S12** | S01, S02, S04, S05 |
+| [IDEA-0052](../production/Backups%20Export%20and%20Storage%20Quotas.md) | Backups Export and Storage Quotas | Persistence & Draft Management | **S12** | S01, S02, S04, S05 |
 | [IDEA-0053](../production/Localhost%20Startup%20and%20Offline%20Mode.md) | Localhost Startup and Offline Mode | Runtime & Platform Services | **S01** | S04, S08, S12 |
-| [IDEA-0055](../staging/Optional%20RPG%20Mechanics%20Plugins.md) | Optional RPG Mechanics Plugins | Gameplay Capability Registry & Plugins | **S06** | S04, S05 |
-| [IDEA-0061](../staging/Lorebound%20Branding%20and%20Engine%20Split.md) | Lorebound Branding and Engine Split | Application Foundation & Lifecycle | **S01** | S04, S06, S12 |
-| [IDEA-0062](../staging/Accessibility%20and%20Customisable%20Interface.md) | Accessibility and Customisable Interface | Presentation & UX | **S04** | S01, S02, S03, S06 |
-| [IDEA-0064](../staging/Automatic%20Character%20Sheet%20Tracking.md) | Automatic Character Sheet Tracking | Character & Scene State | **S10** | S04, S05, S06, S07 |
-| [IDEA-0066](../staging/AI-Generated%20Starting%20Lorebook%20and%20World.md) | AI-Generated Starting Lorebook and World | Adventure Initialization & Setup | **S02** | S06, S07, S09, S11 |
+| [IDEA-0055](../production/Optional%20RPG%20Mechanics%20Plugins.md) | Optional RPG Mechanics Plugins | Gameplay Capability Registry & Plugins | **S06** | S04, S05 |
+| [IDEA-0061](../production/Lorebound%20Branding%20and%20Engine%20Split.md) | Lorebound Branding and Engine Split | Application Foundation & Lifecycle | **S01** | S04, S06, S12 |
+| [IDEA-0062](../production/Accessibility%20and%20Customisable%20Interface.md) | Accessibility and Customisable Interface | Presentation & UX | **S04** | S01, S02, S03, S06 |
+| [IDEA-0064](../production/Automatic%20Character%20Sheet%20Tracking.md) | Automatic Character Sheet Tracking | Character & Scene State | **S10** | S04, S05, S06, S07 |
+| [IDEA-0066](../production/AI-Generated%20Starting%20Lorebook%20and%20World.md) | AI-Generated Starting Lorebook and World | Adventure Initialization & Setup | **S02** | S06, S07, S09, S11 |
 
 **Coverage check:** exactly **52 distinct staged ideas** appear above, with one Pass B primary each. The original accepted primary idea names and their per-idea secondary touchpoints are preserved in Pass A, and the new secondary columns give the consolidated equivalents.
 
