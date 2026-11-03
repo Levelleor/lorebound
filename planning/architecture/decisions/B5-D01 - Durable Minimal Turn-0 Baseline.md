@@ -30,7 +30,7 @@ This accepts **B5-D01 Option A**, as originally proposed in [Pass B5 review](../
 
 ## Context
 
-The approved current-only history model [B3-D04](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) requires deterministic reconstruction of accepted world outcomes from the Turn-0 baseline. [IDEA-0006](../../staging/Quick%20Start%20and%20Custom%20Story%20Openings.md) already accepts blank, unnamed, characterless adventures and optional Quick Start/Custom Opening/Guided Setup, without compulsory generated scenes. [IDEA-0066](../../staging/AI-Generated%20Starting%20Lorebook%20and%20World.md) independently allows explicitly requested optional starting Lorebook generation.
+The approved current-only history model [B3-D04](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) requires deterministic reconstruction of accepted world outcomes from the Turn-0 baseline. [IDEA-0006](../../production/Quick%20Start%20and%20Custom%20Story%20Openings.md) already accepts blank, unnamed, characterless adventures and optional Quick Start/Custom Opening/Guided Setup, without compulsory generated scenes. [IDEA-0066](../../production/AI-Generated%20Starting%20Lorebook%20and%20World.md) independently allows explicitly requested optional starting Lorebook generation.
 
 ## Accepted decision — Option A
 
@@ -56,7 +56,7 @@ Precise Turn-0 schema, initial entity/event format, template placeholder handlin
 
 ## Traceability
 
-[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md); [B3-D04](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md); [B2-D03](./B2-D03%20-%20Turn-0%20Replay%20for%20Authoritative%20Reconstruction.md); [IDEA-0006](../../staging/Quick%20Start%20and%20Custom%20Story%20Openings.md). Owners S02/S05/S06/S10/S11/S12.
+[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md); [B3-D04](./B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md); [B2-D03](./B2-D03%20-%20Turn-0%20Replay%20for%20Authoritative%20Reconstruction.md); [IDEA-0006](../../production/Quick%20Start%20and%20Custom%20Story%20Openings.md). Owners S02/S05/S06/S10/S11/S12.
 
 ## Decision history
 

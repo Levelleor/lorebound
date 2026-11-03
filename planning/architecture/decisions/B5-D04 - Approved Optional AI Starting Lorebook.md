@@ -20,7 +20,7 @@ tags:
 
 **Explicit user approval on 2026-10-28:** “Review B5 Batch 2: B5-D04: A; B5-D05: A; B5-D06: A. Record only explicitly accepted decisions as Lorebound GitHub ADRs, preserve approval history and continue the B5 review.”
 
-The user selected **B5-D04 Option A**, from the original [B5 Batch 2 proposals](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md). D05 and D06 are separate approvals, not a blanket authorisation for additional B5 decisions. This refines the independently accepted but staging-level [IDEA-0066](../../staging/AI-Generated%20Starting%20Lorebook%20and%20World.md). No implementation or promotion is claimed.
+The user selected **B5-D04 Option A**, from the original [B5 Batch 2 proposals](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md). D05 and D06 are separate approvals, not a blanket authorisation for additional B5 decisions. This refines the independently accepted but staging-level [IDEA-0066](../../production/AI-Generated%20Starting%20Lorebook%20and%20World.md). No implementation or promotion is claimed.
 
 ## Context
 
@@ -49,7 +49,7 @@ Prompt/constraints, model generation staging, output size, editing within the pr
 
 ## Traceability
 
-[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md), [IDEA-0066](../../staging/AI-Generated%20Starting%20Lorebook%20and%20World.md), [B5-D01](./B5-D01%20-%20Durable%20Minimal%20Turn-0%20Baseline.md), [B5-D02](./B5-D02%20-%20Grounded%20Initial%20Fact%20Extraction.md), [B5-D03](./B5-D03%20-%20Atomic%20Automatic%20Quick%20Start%20Opening.md), [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md). Owners S02/S04/S05/S06/S09/S10/S11/S12.
+[B5 review](../Pass%20B5%20-%20Starting%20World%20and%20First%20Turn%20Contracts%20Review.md), [IDEA-0066](../../production/AI-Generated%20Starting%20Lorebook%20and%20World.md), [B5-D01](./B5-D01%20-%20Durable%20Minimal%20Turn-0%20Baseline.md), [B5-D02](./B5-D02%20-%20Grounded%20Initial%20Fact%20Extraction.md), [B5-D03](./B5-D03%20-%20Atomic%20Automatic%20Quick%20Start%20Opening.md), [B3-D07](./B3-D07%20-%20Shared%20Pending%20Commit%20Composer%20Overlay.md). Owners S02/S04/S05/S06/S09/S10/S11/S12.
 
 ## Decision history
 
