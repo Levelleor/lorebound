@@ -8,6 +8,10 @@ tags:
 ---
 # Start Here
 
+## Visual design approved for the finished app — 2026-11-03
+
+The user has supplied the **Lorebound Command Citadel design-only kit** and explicitly requested that the application **look like the design document**. The operative [design reference index](design/README.md) links the [visual design contract](design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md), [interaction/state map](design/Lorebound%20UI%20Interaction%20and%20State%20Mapping.md), and [exact OKLCH palette/presets](design/palette-and-presets.css). **This is the visual target for future Story-mode and all other UI slices**, separate from the factual implementation status. Do not copy demo data or override accepted B1–B9/Pass C behaviour; especially preserve shared composer Commit/Discard, no map keyboard gestures, and deferred B9-D12 migration.
+
 ## Current planning stage — all 52 ideas in production (2026-11-03)
 
 The user approved all remaining 50 accepted ideas for `planning/production/`, in addition to already-promoted IDEA-0051 and IDEA-0053: **52 production ideas, zero staging ideas, zero implemented idea specs**. The full set is traced in [Pass C production promotion register](architecture/Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). Gate 0 [PR #3](https://github.com/Levelleor/lorebound/pull/3) is merged, and its minimum Wails/SQLite verification has documented evidence, not a complete production feature. **Next development remains incremental and evidence-gated**, starting with the small Story-mode path. The promotion does not itself implement all features or start deferred **B9-D12 spatial migrations**. Previous statuses below are historical snapshots.
