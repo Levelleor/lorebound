@@ -1,5 +1,9 @@
 # Planning vault rules
 
+## Approved application visual style — 2026-11-03
+
+The user explicitly selected their uploaded **Command Citadel design-only kit** as the target appearance of Lorebound. Agents designing or implementing the user interface **must read [design/README.md](design/README.md), the [visual contract](design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md), the [interaction map](design/Lorebound%20UI%20Interaction%20and%20State%20Mapping.md), and the [reference CSS](design/palette-and-presets.css)**. Apply the 48px header, 320px right rail at desktop, 672px centred editorial reader, fixed composer, Cormorant/Plex fonts, source OKLCH palette and responsive breakpoints as features are implemented. **Visual fidelity does not override accepted B/C gameplay, map, accessibility or commit semantics.** This adds no source implementation or testing proof; B9-D12 remains deferred.
+
 ## Current 52-idea production approval — 2026-11-03
 
 User expressly promoted **all 50 remaining accepted staging notes** to `production/`, preserving IDs and acceptance histories; with IDEA-0051 and IDEA-0053 already there, the inventory is **52 production, 0 staging, 0 implemented specs**. [Promotion register](architecture/Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). This stage means **approved for implementation planning**, not that code, test verification, production release, complete 52-feature implementation or B9-D12 spatial migration is authorised/finished. Preserve latest accepted B/C supersessions over historic proposal wording. Gate 0 PR #3 is merged; its *limited* host/SQLite evidence is separate. Earlier dated staging and Gate 0 statuses remain archival narrative.
