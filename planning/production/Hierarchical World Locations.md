@@ -1,0 +1,140 @@
+---
+id: "IDEA-0033"
+type: idea
+status: production
+origin: user
+created: "2026-10-16"
+updated: "2026-11-03"
+accepted_at: "2026-10-16"
+accepted_by: "requesting user (chat confirmation)"
+approved_at: "2026-11-03"
+approved_by: "requesting user (explicit blanket promotion of all remaining 50 accepted staging ideas)"
+source_brainstorms: ["[[World Map and Location Rules Brainstorm]]", "[[Lorebound Vision Brainstorm]]"]
+related: []
+tags:
+  - planning/idea
+---
+# Hierarchical World Locations
+
+## Current production approval — 2026-11-03
+
+**Explicit user approval:** On 2026-11-03 the requesting user asked to promote **all remaining accepted Lorebound staging ideas** into production, including IDEA-0033. This same original idea note was moved to `planning/production/`, preserving its ID, previously accepted scope and historical decisions. **Production means approved for implementation planning, not already implemented or verified.** Later accepted B1–B9/Pass C decisions govern where older proposals differ. No application implementation, testing, spatial migration or implemented spec follows from this promotion. Previous “staging only” statements are dated history.
+
+## Accepted B8 Batch 3 parent-frame initial placement — 2026-10-31
+
+[B8-D07 A](../architecture/decisions/B8-D07%20-%20Deterministic%20Scoped%20Automatic%20Map%20Placement.md) locates **new accepted places automatically and deterministically within their known local containing frame**, with meaningful default spacing and preserved stable user positions. [B8-D08 A](../architecture/decisions/B8-D08%20-%20Provenance%20Aware%20Spatial%20Reconciliation%20of%20Generated%20Placement.md) allows **generated-only** initial pins to be adjusted when later accepted story geography establishes stronger constraints, while authored positions and canonical containment stay untouched unless separately changed. [B8-D09 A](../architecture/decisions/B8-D09%20-%20Atomic%20Canonical%20Location%20Creation%20and%20Initial%20Placement.md) saves each accepted location identity and its generated-origin first coordinate as **one atomic canonical batch**. Generated position does **not** imply that the location belongs to a region unless the independent parent/child relationship is accepted. Region borders remain mutable world data under D04 A; new positions do not rewrite hierarchy.
+
+
+
+## Latest B8 dynamic boundaries and automatic location positioning — 2026-10-31
+
+[Accepted B8-D04 A](../architecture/decisions/B8-D04%20-%20Mutable%20Spatial%20Region%20Footprints%20Separate%20from%20Containment.md) makes borders/footprints **changeable accepted current world-state assertions**, independent of the acyclic location parent/child membership. [B8-D06 B](../architecture/decisions/B8-D06%20-%20Automatic%20Persistent%20Location%20Placement%20with%20Player%20Overrides.md) overrides the earlier “unplaced if unknown” map default: **newly established locations appear automatically at a persisted system-generated initial coordinate in the appropriate nested frame**, with source/provenance distinct from grounded lore and later user-controlled committed repositioning. A parent group's change of boundary **does not automatically reparent** a child; a parent's placement change can transform its descendants without rewriting their local coords under B8-D01. Generated placement does not establish narrative containment, roads, travel costs or exact fiction distances.
+
+
+
+## B8-D01 accepted local frames for nested semantic geography — 2026-10-31
+
+[B8-D01](../architecture/decisions/B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md) establishes **persistent local coordinate frames** for placed locations/groups, composed into the **same spatial canvas** across world, empire, city, building and room scales. A child keeps its grounded local coordinates when its parent/group is deliberately moved. Unknown placements stay unknown rather than receiving fabricated geometry. Acyclic hierarchical *containment* still differs from actual spatial placement and explicit keyed *travel* routes. [B8-D03](../architecture/decisions/B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md) makes semantic pin/frame/group placement a typed durable assertion accepted only after the existing explicit player Commit (or supported accepted narration), not a cosmetic layout value. A precise coordinate-unit scheme or polygon algorithm has not been selected.
+
+
+
+## Later explicit spatial canvas requirement — B7-D10 (2026-10-31)
+
+[Accepted B7-D10](../architecture/decisions/B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md) clarifies that **one persistent spatial canvas**, not a free-floating abstract graph, is the player-facing map. Each **placed** world location has **saved pinned coordinates** and meaningful relative separation/scale. The canvas groups nested places (empires/regions, cities, buildings, rooms and custom structures) with recognisable spatial extent, making the fictional geography intelligible at different zoom scales. A location's accepted parent/containment relationship provides grouping context, while its spatial position and size are **separate meaningful world-map properties**. The travel graph remains explicit keyed route connections and is **not** inferred from nearby coordinates, grouping or common ancestors. Changing map placement does not relocate characters or automatically create routes/parents. The exact nested coordinate frames/group transforms remain unselected; no exact geographic value should be fabricated merely because a new sparse place is mentioned. Earlier paragraphs that addressed geography only as a containment tree are **incomplete**, not a denial of the now-accepted spatial canvas.
+
+
+
+## B7-D06 current relation and graph boundary — 2026-10-31
+
+[Accepted B7-D06](../architecture/decisions/B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md) refines the **existing** separation between the location **containment hierarchy** and the **travel graph**. Both reference stable/sparse location identities, but a room's parent is **not** an automatic traversable route. The hierarchy is an acyclic parent-child projection; the travel network is a **logically derived graph** with location IDs as nodes and **explicit grounded keyed route relations** as edges, updated by ordered accepted Add/Remove relation assertions and any current door/route status. One current event history remains authoritative, not a separately mutable map object. The user's question about a “graph object” is recorded as a request for clarity, **not** an implementation choice of a `Graph` class, graph database, index format or particular directedness. Existing editable, visible undiscovered locations and the map editor remain unchanged.
+
+
+
+## Current accepted narrative-first scope — 2026-10-28
+
+**Latest event model ([B6-D01](../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md)):** Location hierarchy, discovery markers and mutable properties are **current accepted state assertions**, keyed by stable/sparse IDs. A newly accepted location or changed parent/property does not require a prior story route or old location introduction, though a *current parent graph* must still be technically representable (e.g., no cycles). Hierarchy does not imply traversability; a place being mentioned is not necessarily a fictional arrival.
+
+
+## Idea
+Organise places into nested worlds, regions, settlements, buildings and rooms.
+
+## Why this idea matters
+Allows a rich setting with intuitive zoom levels and local scene context.
+
+## Accepted direction
+- **Flexible hierarchical locations on one spatial canvas:** Model places as nested parent/child groups, including worlds, empires, regions, settlements/cities, buildings, rooms and unusual kinds of spaces. **Placed locations retain meaningful persisted coordinates and extents** at appropriate map scales; hierarchy records containment separately from coordinate position. Do not require a fixed sequence of levels or a uniform depth.
+- **Durable identity and information:** Give each location a stable unique ID, name, description, optional type, parent reference (where applicable) and children. Renaming or reorganising a location must preserve its identity and relevant references.
+- **Customisable location types:** Type labels such as world, region, settlement, building, room, wilderness site, vehicle or other custom classifications may help display/search, but no rigid taxonomy is mandatory.
+- **Sparse/unknown-friendly records:** Locations may be created with minimal known details or without all descendants mapped. Missing information must not be silently invented or treated as a known empty world.
+- **Independent, editable discovery status (2026-10-23):** A recorded location can be `undiscovered` or `discovered` for in-story purposes while **remaining visible, named and editable** on the player's map editor (IDEA-0037). The discovery marker is separate from hierarchy, identity and any actual travel permission. A manual edit to a location does not necessarily mean a character discovered or visited it.
+- **Acyclic containment:** Reject or prevent parent/child links that form cycles, including a location becoming its own direct or indirect ancestor.
+- **Containment is distinct from traversal:** Nesting indicates that a place is situated within a larger place. **Do not treat parent/child relations as automatically passable travel connections**, or sibling locations as directly connected. Route/adjacency/travel constraints belong to separately reviewed ideas such as [[Configurable Travel Graph Rules]] (IDEA-0035).
+- **Local scene context and discoverability:** The hierarchy can supply broad-to-specific place context, e.g. room → building → settlement → region, to a current scene or navigation interface without requiring the entire world to be supplied every time.
+- **Stable links to world entities:** Character presence, persistent items and Lorebook place references can point to stable location IDs, not only names or prose. The particular presence and travel mechanics remain separate review decisions.
+- **Separate acceptance boundaries:** This idea itself approves only the hierarchical location **data model**. Zoomable map UI (IDEA-0037), optional strict/freeform travel policies (IDEA-0035), AI world discovery (IDEA-0036) and mutable route/environment state (IDEA-0038) have each **subsequently been accepted separately in staging**. Their separate implementation and refinement gates remain intact.
+- **Open hierarchy operations:** Moving a location and its descendants, deleting or merging places and resolving parent/child transitions when no valid travel route exists need further refinement.
+
+## Proposed behaviour
+Represent each place as a location entity keyed by a stable ID, with editable name, optional type and description, and a single parent reference (or no parent for a root). Derive child lists consistently from parent relationships. Allow parents to contain children at arbitrary depths and support rearranging a location subtree without resetting IDs or losing character, item and Lorebook links. Validate parent changes to prevent cycles. For contextual narration, resolve a character's current location and optionally its ancestry to obtain relevant local setting information. Keep a separate representation for route/door/movement edges; a place's ancestry is never in itself sufficient proof that a character can travel through a locked corridor or teleport between sibling rooms.
+
+## Alternatives and trade-offs
+A strict World → Region → Settlement → Building → Room chain makes some navigation predictable but fails for wilderness camps, ships, branching dungeon levels, nested realms and other unusual settings. The user accepted **flexible location containers** with optional type labels and arbitrary depths. A parent tree handles containment/breadcrumbs but **is not the full geographic map**: the **persistent spatial canvas** holds location placement/meaningful size at nested scales, while the separate travel graph handles multiple entrances, routes and nonphysical links. A free-form graph layout cannot arbitrarily place saved geographic pins. Storing children explicitly may be convenient but risks conflict with parent references; indexing or deriving children from a canonical parent reference is a possible approach, not yet a chosen implementation.
+
+## Dependencies and constraints
+- Compatible with accepted [[Shared PC and NPC Character Entities]] (IDEA-0026), [[Persistent Items and Inventory Transfers]] (IDEA-0029), and [[Entity-Based Lorebook]] (IDEA-0020), whose records may reference location IDs.
+- Character position/scene presence are a separate, **independently accepted staging** feature in [[Character Presence and Current Scene]] (IDEA-0034). Accepting location hierarchy alone did not approve presence, and the two retain distinct implementation/refinement gates.
+- Valid connections and traversal policies have been accepted separately in staging through [[Configurable Travel Graph Rules]] (IDEA-0035). Graph visualisation (IDEA-0037), AI discovery (IDEA-0036) and persistent environmental/route effects (IDEA-0038) are also separately accepted in staging, not unaccepted proposals. None is automatically implemented or in scope merely because the hierarchy was accepted.
+- Parent/child nesting must be acyclic and references remain valid across renaming or subtree reorganisation.
+- Moving or reorganising location containers must not silently teleport their occupants in violation of movement rules. Whether a ship and its interior occupants share mobile containment versus physical world location requires explicit design.
+- Sparse data and unknown descriptions/children must be distinguishable from intentionally recorded absence.
+- Do not automatically grant a travel edge, visibility, interaction or presence solely on the basis of shared containment ancestry.
+- Staging acceptance is not approval to implement or evidence that any world mapping feature already exists.
+
+## Open questions
+- How should a parent/child transition work when no direct travel connection exists?
+- How are nested moving locations such as vehicles or ships represented, especially when occupants move along with the container?
+- Should a place be allowed multiple container parents or aliases, or should a single canonical parent always be required?
+- How should merge, deletion, relocation and renaming preserve IDs and backlinks to characters, items and Lorebook entries?
+- Should root worlds/realms be top-level locations, with parallel settings or dimensions allowed?
+- Which optional type labels and metadata are useful as defaults without forcing a rigid taxonomy?
+- **Resolved 2026-10-23:** An `undiscovered` child location may exist in world state and still be visible/named/editable on the player's map. The `undiscovered` flag does **not** itself hide the node. Any truly confidential attributes require a different explicit policy.
+- How do location hierarchy, travel adjacency, range of visibility and co-location in large spaces interact?
+- Which ancestor descriptions should be provided to the context builder, and what happens when the context budget is constrained?
+
+## Draft acceptance criteria
+- [ ] The world can contain stable-ID location entities with name, description, optional type and parent/child relationships.
+- [ ] Location nesting supports variable depths and story-specific places rather than imposing a fixed World → Region → Settlement → Building → Room chain.
+- [ ] Cyclic nesting and self-parent relationships are rejected or prevented.
+- [ ] Renaming or reparenting a location preserves its stable ID and valid character/item/lore references.
+- [ ] Sparse location records and unknown details are permitted without inventing unrecorded child locations or descriptions.
+- [ ] A scene can resolve its current location's ancestry for relevant broader setting context when such ancestry is recorded.
+- [ ] Parent/child containment and sibling relations never automatically imply passable travel edges, door access or legal movement.
+- [ ] Hierarchy updates maintain coherent parent and child listings without orphaning references silently.
+- [ ] Detailed movement policy, automated discovery, map visualization and mutable routes remain separately gated decisions.
+
+## Refinement checklist
+- [ ] Behaviour and scope are clear
+- [ ] Dependencies, edge cases and failures considered
+- [ ] Open blocking questions resolved
+- [ ] Acceptance criteria are testable
+- [ ] Human approved promotion to production
+
+## Evaluation notes
+- Origin: **user**. Originally a user-requested candidate, now explicitly accepted for staging with flexible nesting, stable IDs, optional location types and distinct containment/travel links.
+- This is **not yet refined or approved for production**, and the document makes no claim of implementation.
+
+## Decisions and review history
+
+- 2026-10-23 — **Pass A final chronology correction:** IDEA-0034 character presence was accepted independently in staging; the older 'candidate' description is obsolete. No scope expansion or production promotion.
+
+- 2026-10-23 — **User resolved A-20:** Store explicit discovered/undiscovered location state independently of stable location records. The user can still view and edit recorded undiscovered node names/details on the map; don't turn discovery state into player-editor invisibility. Normal AI character-knowledge/route validation boundaries still apply. Staging only.
+
+- 2026-10-19 — **Pass A audit reference correction:** IDEA-0035, IDEA-0036, IDEA-0037 and IDEA-0038 are now independently accepted staging ideas. Earlier descriptions as separate candidates reflected their former status. No implicit production approval or scope expansion.
+- 2026-10-16 — Extracted from brainstorming as an **unaccepted candidate**.
+- 2026-10-16 — **Explicit acceptance by the requesting user:** Flexible hierarchical world locations with stable IDs; optional types; names and descriptions; parent/child nesting; acyclic ancestry; preservation of identity when renaming/reorganising; strict separation between containment hierarchy and travel links; and support for sparse, unusual location structures. Moved to staging for refinement only, not production.
+
+- 2026-10-28 — **Explicit user-approved B6-D01 reconciliation:** Narrative-first declarative events govern current behaviour; any earlier simulation-style validity statements in historical proposals/old acceptance text are subordinate. Original approval provenance retained; staging only, not implemented or promoted.
+
+## Stage transition history — 2026-11-03
+
+- **2026-11-03:** Requesting user explicitly approved promotion of all remaining 50 accepted `IDEA-` notes from staging to production. Original `IDEA-0033` identity, existing `accepted_at` and prior accepted/superseded alternatives retained. The new `approved_at` is the promotion date; **no implementation verification or spec archival** occurred.
