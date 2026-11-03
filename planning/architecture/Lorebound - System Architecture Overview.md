@@ -34,19 +34,13 @@ The experience combines:
 ```mermaid
 flowchart LR
     P["Player in ordinary browser"]
-    UI["SvelteKit / TypeScript UI
-S03 interaction · S04 presentation"]
-    CO["Browser TypeScript coordinator S06
-rules · validation · acceptance"]
-    DOM["Pure domain history / projections S05
-characters S10 · world S11"]
-    AI["Browser AI workflows S07
-context S09 · profiles S08"]
+    UI["SvelteKit / TypeScript UI<br/>S03 interaction · S04 presentation"]
+    CO["Browser TypeScript coordinator S06<br/>rules · validation · acceptance"]
+    DOM["Pure domain history / projections S05<br/>characters S10 · world S11"]
+    AI["Browser AI workflows S07<br/>context S09 · profiles S08"]
     EXT["Cloud / local AI model provider"]
-    HOST["Wails v3 headless Go host S01
-narrow privileged service bridge"]
-    DB[("Go-owned SQLite S12
-accepted history · adventure library · drafts")]
+    HOST["Wails v3 headless Go host S01<br/>narrow privileged service bridge"]
+    DB[("Go-owned SQLite S12<br/>accepted history · adventure library · drafts")]
     P --> UI
     UI --> CO
     CO <-->|"proposed input/output"| AI
