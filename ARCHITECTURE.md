@@ -1,5 +1,7 @@
 # Lorebound Architecture
 
+For **current implementation progress**, use the [Development Control Centre](planning/development/README.md) and especially the single [NOW next-task/status page](planning/development/NOW.md) and [52-feature verification ledger](planning/development/FEATURES.md). This architecture entry point defines the app; those documents track actual development and evidence.
+
 **The current single-reference description of Lorebound's entire planned application, subsystem architecture and feature catalogue is:**
 
 **[Lorebound — System Architecture Overview](planning/architecture/Lorebound%20-%20System%20Architecture%20Overview.md)**
