@@ -31,7 +31,7 @@ Last reconciled with GitHub main: **2026-11-03**. Updates are recorded as commit
 ## Next Task: **DEV-001 — Establish the delivery verification controls**
 
 
-**Status: READY FOR ASSIGNMENT, NOT STARTED.** There is **no currently active implementation task recorded**. [Full task brief](./TASKS.md#dev-001--implement-ci-and-atomic-requirement-traceability).
+**Status: READY FOR ASSIGNMENT, NOT STARTED.** There is **no currently active implementation task recorded**. [Full task brief](./TASKS.md#dev-001--implement-ci-and-first-slice-requirement-traceability).
 
 **Purpose:** Build the minimum reliable *implementation control* machinery without opening another full design phase.
 
