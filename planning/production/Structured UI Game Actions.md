@@ -16,6 +16,10 @@ tags:
 ---
 # Structured UI Game Actions
 
+## Current approved app visual design — 2026-11-03
+
+The user explicitly requested the look of the uploaded Command Citadel design-only kit. [Visual contract](../design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md), [UI state mapping](../design/Lorebound%20UI%20Interaction%20and%20State%20Mapping.md), and [source-accurate colour variables](../design/palette-and-presets.css) are **cross-cutting visual guidance** for this approved production idea. Use the Command Citadel design tokens, muted outlined controls, gold selected-action treatments, clear blue provisional and green confirmed states, responsive rail/composer geometry, and visible accessible focus for supported structured UI actions. Only actual recorded action/capability state may be shown; demo data and simulated control success in the source kit are not an implementation contract. This is **design documentation only**, not evidence the feature has shipped; later B/C functional decisions retain priority over conflicting demo behaviour.
+
 ## Current production approval — 2026-11-03
 
 **Explicit user approval:** On 2026-11-03 the requesting user asked to promote **all remaining accepted Lorebound staging ideas** into production, including IDEA-0050. This same original idea note was moved to `planning/production/`, preserving its ID, previously accepted scope and historical decisions. **Production means approved for implementation planning, not already implemented or verified.** Later accepted B1–B9/Pass C decisions govern where older proposals differ. No application implementation, testing, spatial migration or implemented spec follows from this promotion. Previous “staging only” statements are dated history.
