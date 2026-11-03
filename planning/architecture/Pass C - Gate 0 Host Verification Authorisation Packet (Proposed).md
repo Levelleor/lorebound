@@ -1,6 +1,6 @@
 ---
 type: architecture
-status: partial-approval-execution-pending
+status: gate-0-executed
 phase: "C"
 created: "2026-11-01"
 updated: "2026-11-01"
@@ -11,6 +11,8 @@ tags:
 ---
 
 # Pass C — Gate 0 host verification and final-product development authorisation (PROPOSED)
+
+> **LATER AUTHORISATION AND EXECUTION — 2026-11-01.** The user supplied a separate explicit Gate 0 implementation and real-testing assignment after the partial approval recorded below. The minimum foundation was built and verified; see [Gate 0 execution evidence](Gate%200%20Execution%20Evidence.md). The historical pending language below records the earlier disposition and does not supersede the later assignment. IDEA-0053 and IDEA-0051 remain production ideas, not fully implemented or archived.
 
 > **PARTIALLY APPROVED, EXECUTION NOT AUTHORISED.** On 2026-11-01 the user separately approved production promotion for **IDEA-0053 and IDEA-0051**. The **third independent permission**, to write and run the real Gate 0 host/SQLite foundation, **was not granted**. No implementation code, tests, runtime evidence or specs are claimed from these promotions.
 

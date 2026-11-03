@@ -8,6 +8,8 @@ tags:
 ---
 # Start Here
 
+**Later 2026-11-01 Gate 0 update:** The user authorised and the repository now contains the verified minimum Wails browser/Go and SQLite foundation. See [Gate 0 execution evidence](architecture/Gate%200%20Execution%20Evidence.md). Both original IDEA-0053 and IDEA-0051 remain production notes; the 50 other ideas remain staging. No Story mode or full idea scope is implemented. The historical snapshot below predates the execution authorisation.
+
 ## Gate 0 production IDEA approvals (implementation permission still pending) — 2026-11-01
 
 User expressly approved moving the two original notes [IDEA-0053](production/Localhost%20Startup%20and%20Offline%20Mode.md) (Wails/browser/Go host) and [IDEA-0051](production/Browser-Persistent%20Story%20Database.md) (Go-owned SQLite) from staging to **production**. Their IDs, original accepted requirements and historical decision records are intact. **Current inventory: 50 staged original ideas; 2 production ideas; 0 implemented specs.** Approval to promote is **not** permission to write or run application source code in this turn.

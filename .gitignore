@@ -34,3 +34,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Gate 0 generated files and disposable data
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/
+bin/
+.gate0/
+*.db
+*.db-shm
+*.db-wal
