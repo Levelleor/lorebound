@@ -16,6 +16,10 @@ tags:
 ---
 # Accessibility and Customisable Interface
 
+## Current approved app visual design — 2026-11-03
+
+The user explicitly requested the look of the uploaded Command Citadel design-only kit. [Visual contract](../design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md), [UI state mapping](../design/Lorebound%20UI%20Interaction%20and%20State%20Mapping.md), and [source-accurate colour variables](../design/palette-and-presets.css) are **cross-cutting visual guidance** for this approved production idea. The target desktop/mobile visual proportions are now defined by the user-supplied Command Citadel kit: full-height 48px header; continuous 320px darker desktop rail; centred max-672px reading column; bottom-docked composer; Story/World selector below 1024px; breadcrumb omission below 768px; smaller controls below 640px; Dark/Bright/Midnight, Comfortable/Compact, reading fonts/inks/sizes. Maintain keyboard accessibility in story/forms/dialogs, visible focus and icon labels. **Map-specific keyboard gestures remain excluded** by accepted B9-D24 revised B; this exception does not disable other controls. Appearance settings remain noncanonical. Visual implementation awaits normal feature work and evidence. This is **design documentation only**, not evidence the feature has shipped; later B/C functional decisions retain priority over conflicting demo behaviour.
+
 ## Current production approval — 2026-11-03
 
 **Explicit user approval:** On 2026-11-03 the requesting user asked to promote **all remaining accepted Lorebound staging ideas** into production, including IDEA-0062. This same original idea note has been moved to `planning/production/` with its ID, original accepted scope and historical decisions intact. **Production means approved for implementation planning, not already implemented or verified.** Apply the later accepted B1–B9 and Pass C architecture decisions where older proposals differ. No automatic source implementation, testing, spatial migration or movement into implemented specs follows from this stage change. Previous “staging only” statements below are dated history.
