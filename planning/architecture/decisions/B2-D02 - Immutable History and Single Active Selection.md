@@ -56,7 +56,7 @@ Lorebound supports mutable player-authored prose, passage-level revisions, commi
 
 ## Traceability
 
-Subsystems S03, S05, S06, S12. Sources [IDEA-0003](../../staging/Direct%20Editable%20Prose%20Document.md), [IDEA-0004](../../staging/Retry%20Undo%20and%20Alternative%20Continuations.md), [IDEA-0039](../../staging/Event-Sourced%20World%20History.md), [IDEA-0040](../../staging/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md), [IDEA-0041](../../staging/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md); Pass A audit A-02, A-06 and A-07; B1-D03/D06.
+Subsystems S03, S05, S06, S12. Sources [IDEA-0003](../../production/Direct%20Editable%20Prose%20Document.md), [IDEA-0004](../../production/Retry%20Undo%20and%20Alternative%20Continuations.md), [IDEA-0039](../../production/Event-Sourced%20World%20History.md), [IDEA-0040](../../production/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md), [IDEA-0041](../../production/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md); Pass A audit A-02, A-06 and A-07; B1-D03/D06.
 
 
 ## Decision history

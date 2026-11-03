@@ -55,7 +55,7 @@ The accepted system records validated world-state mutations as immutable, append
 
 ## Traceability
 
-Subsystems S05, S06, S10, S11, S12. Sources [IDEA-0039](../../staging/Event-Sourced%20World%20History.md), [IDEA-0040](../../staging/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md), [IDEA-0042](../../staging/Snapshots%20and%20Incremental%20State%20Rebuild.md), [IDEA-0044](../../staging/Deterministic%20Adventure%20Coordinator.md); B1-D01, B1-D03 and B1-D06.
+Subsystems S05, S06, S10, S11, S12. Sources [IDEA-0039](../../production/Event-Sourced%20World%20History.md), [IDEA-0040](../../production/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md), [IDEA-0042](../../production/Snapshots%20and%20Incremental%20State%20Rebuild.md), [IDEA-0044](../../production/Deterministic%20Adventure%20Coordinator.md); B1-D01, B1-D03 and B1-D06.
 
 
 ## Decision history

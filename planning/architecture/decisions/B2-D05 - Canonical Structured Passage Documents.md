@@ -86,7 +86,7 @@ The canonical document can be shown as HTML paragraphs in the browser and serial
 
 ## Traceability
 
-S03 narrative editing, S05 history and revisions, S06 coordination, S07 generation, S09 context, S12 storage. [IDEA-0003](../../staging/Direct%20Editable%20Prose%20Document.md), [IDEA-0040](../../staging/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md), [IDEA-0051](../../production/Browser-Persistent%20Story%20Database.md); [B2-D01](./B2-D01%20-%20Immutable%20Outcome%20Events%20and%20Atomic%20Commits.md), [B2-D02](./B2-D02%20-%20Immutable%20History%20and%20Single%20Active%20Selection.md), B1-D03/B1-D05.
+S03 narrative editing, S05 history and revisions, S06 coordination, S07 generation, S09 context, S12 storage. [IDEA-0003](../../production/Direct%20Editable%20Prose%20Document.md), [IDEA-0040](../../production/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md), [IDEA-0051](../../production/Browser-Persistent%20Story%20Database.md); [B2-D01](./B2-D01%20-%20Immutable%20Outcome%20Events%20and%20Atomic%20Commits.md), [B2-D02](./B2-D02%20-%20Immutable%20History%20and%20Single%20Active%20Selection.md), B1-D03/B1-D05.
 
 ## Decision history
 

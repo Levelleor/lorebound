@@ -58,7 +58,7 @@ B2-D01 accepts immutable structured outcome events; B2-D02 accepts a single sele
 
 ## Traceability
 
-S05, S06, S10, S11, S12; [IDEA-0039](../../staging/Event-Sourced%20World%20History.md), [IDEA-0041](../../staging/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md), [IDEA-0042](../../staging/Snapshots%20and%20Incremental%20State%20Rebuild.md); B1-D01, B1-D03, [B1-D06](./B1-D06%20-%20Browser%20TypeScript%20Event%20Replay.md), B2-D01, B2-D02 and B2-D04.
+S05, S06, S10, S11, S12; [IDEA-0039](../../production/Event-Sourced%20World%20History.md), [IDEA-0041](../../production/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md), [IDEA-0042](../../production/Snapshots%20and%20Incremental%20State%20Rebuild.md); B1-D01, B1-D03, [B1-D06](./B1-D06%20-%20Browser%20TypeScript%20Event%20Replay.md), B2-D01, B2-D02 and B2-D04.
 
 
 ### Deterministic assertion folding

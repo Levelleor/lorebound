@@ -56,7 +56,7 @@ This reduces state/status complexity and stays within accepted Story authorial f
 
 ## Traceability
 
-Related owners S03, S05, S06, S10, S11, S12. Sources: [IDEA-0039](../../staging/Event-Sourced%20World%20History.md), [IDEA-0041](../../staging/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md), [IDEA-0042](../../staging/Snapshots%20and%20Incremental%20State%20Rebuild.md), [B2-D01](./B2-D01%20-%20Immutable%20Outcome%20Events%20and%20Atomic%20Commits.md), [B2-D02](./B2-D02%20-%20Immutable%20History%20and%20Single%20Active%20Selection.md), [B2-D05](./B2-D05%20-%20Canonical%20Structured%20Passage%20Documents.md), Pass A A-06 and A-10.
+Related owners S03, S05, S06, S10, S11, S12. Sources: [IDEA-0039](../../production/Event-Sourced%20World%20History.md), [IDEA-0041](../../production/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md), [IDEA-0042](../../production/Snapshots%20and%20Incremental%20State%20Rebuild.md), [B2-D01](./B2-D01%20-%20Immutable%20Outcome%20Events%20and%20Atomic%20Commits.md), [B2-D02](./B2-D02%20-%20Immutable%20History%20and%20Single%20Active%20Selection.md), [B2-D05](./B2-D05%20-%20Canonical%20Structured%20Passage%20Documents.md), Pass A A-06 and A-10.
 
 
 ### Historical validity narrowed
