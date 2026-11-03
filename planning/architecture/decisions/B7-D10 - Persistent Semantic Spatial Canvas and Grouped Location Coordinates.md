@@ -44,7 +44,7 @@ tags:
 
 **Explicit user direction, 2026-10-31:** “for the locations, I also want to make sure we record the idea that the locations should be rather a canvas, not a graph. Like, locations should be pinned to coordinates and persist at those coordinates & the same canvas will group the locations together to form cities, buildings/rooms, empires, etc. And the links are also actually different length depending on how far the location is meant to be, so map kinda makes sense semantically to understand how large the world is. Lets ensure that's the definition, not just the ‘graph’.”
 
-This is an **affirmative user-directed refinement** to [B7-D06](./B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md) and accepted [IDEA-0037](../../staging/Zoomable%20Node%20Map%20Canvas.md), not another A/B/C selection. It makes the **persistent semantic spatial canvas** the operative **user-facing world map**. D06 remains accepted **only for the logical route-connection graph**, not as a substitute for the spatial map. B7-D07–D09 remain **unapproved**; no implementation or B7 closure is authorised.
+This is an **affirmative user-directed refinement** to [B7-D06](./B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md) and accepted [IDEA-0037](../../production/Zoomable%20Node%20Map%20Canvas.md), not another A/B/C selection. It makes the **persistent semantic spatial canvas** the operative **user-facing world map**. D06 remains accepted **only for the logical route-connection graph**, not as a substitute for the spatial map. B7-D07–D09 remain **unapproved**; no implementation or B7 closure is authorised.
 
 ## Problem being corrected
 

@@ -44,7 +44,7 @@ Polygon/outline/shape representation and holes; unions, overlapping regions and 
 
 ## Traceability
 
-[B8 review](../Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md), [B7-D10](./B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md), [B8-D01](./B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md), [B8-D03](./B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md), [IDEA-0033](../../staging/Hierarchical%20World%20Locations.md) and [IDEA-0037](../../staging/Zoomable%20Node%20Map%20Canvas.md). Owners S04/S05/S06/S11/S12.
+[B8 review](../Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md), [B7-D10](./B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md), [B8-D01](./B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md), [B8-D03](./B8-D03%20-%20Versioned%20Spatial%20Assertions%20and%20Explicit%20Map%20Edit%20Commit.md), [IDEA-0033](../../production/Hierarchical%20World%20Locations.md) and [IDEA-0037](../../production/Zoomable%20Node%20Map%20Canvas.md). Owners S04/S05/S06/S11/S12.
 
 ## Decision history
 

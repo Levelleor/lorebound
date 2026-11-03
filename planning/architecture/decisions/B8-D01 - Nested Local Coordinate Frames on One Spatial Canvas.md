@@ -58,7 +58,7 @@ Actual coordinate and unit types, transform composition conventions, geographic/
 
 ## Traceability
 
-[B8 review](../Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md); [B7-D10](./B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md); [B7-D06](./B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md); [IDEA-0033](../../staging/Hierarchical%20World%20Locations.md); [IDEA-0037](../../staging/Zoomable%20Node%20Map%20Canvas.md). Relevant owners S04/S05/S06/S11/S12.
+[B8 review](../Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md); [B7-D10](./B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md); [B7-D06](./B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md); [IDEA-0033](../../production/Hierarchical%20World%20Locations.md); [IDEA-0037](../../production/Zoomable%20Node%20Map%20Canvas.md). Relevant owners S04/S05/S06/S11/S12.
 
 ## Decision history
 

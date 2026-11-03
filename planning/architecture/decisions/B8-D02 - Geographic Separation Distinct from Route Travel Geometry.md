@@ -57,7 +57,7 @@ Exactly how distance is measured across group frames, unit conversion and user-d
 
 ## Traceability
 
-[B8 review](../Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md); [B7-D10](./B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md); [B8-D01](./B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md); [B7-D06](./B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md); [IDEA-0035](../../staging/Configurable%20Travel%20Graph%20Rules.md); [IDEA-0037](../../staging/Zoomable%20Node%20Map%20Canvas.md). Relevant owners S04/S06/S11/S12.
+[B8 review](../Pass%20B8%20-%20Spatial%20Canvas%20and%20Cross%20Module%20Integration%20Contract%20Review.md); [B7-D10](./B7-D10%20-%20Persistent%20Semantic%20Spatial%20Canvas%20and%20Grouped%20Location%20Coordinates.md); [B8-D01](./B8-D01%20-%20Nested%20Local%20Coordinate%20Frames%20on%20One%20Spatial%20Canvas.md); [B7-D06](./B7-D06%20-%20Typed%20Keyed%20Relations%20and%20Derived%20World%20Travel%20Graph.md); [IDEA-0035](../../production/Configurable%20Travel%20Graph%20Rules.md); [IDEA-0037](../../production/Zoomable%20Node%20Map%20Canvas.md). Relevant owners S04/S06/S11/S12.
 
 ## Decision history
 
