@@ -1,5 +1,9 @@
 # Planning vault rules
 
+## Single current architectural overview — 2026-11-03
+
+The user requested a coherent central reference explaining the complete Lorebound application and its features. **[Lorebound — System Architecture Overview](architecture/Lorebound%20-%20System%20Architecture%20Overview.md)** now serves as that **current-state entry point**. It covers player features, all 52 approved production notes, 12 subsystem responsibilities, durable canonical event architecture, browser/Go/provider boundaries, map, approved design style and what has actually been verified. Preserve separate ADRs, exact IDEA records and historical reviews as detailed provenance; update this overview on material accepted changes rather than appending dated approval batches to it. This document is not authority for implementation/testing or deferred B9-D12 spatial migration.
+
 ## Approved application visual style — 2026-11-03
 
 The user explicitly selected their uploaded **Command Citadel design-only kit** as the target appearance of Lorebound. Agents designing or implementing the user interface **must read [design/README.md](design/README.md), the [visual contract](design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md), the [interaction map](design/Lorebound%20UI%20Interaction%20and%20State%20Mapping.md), and the [reference CSS](design/palette-and-presets.css)**. Apply the 48px header, 320px right rail at desktop, 672px centred editorial reader, fixed composer, Cormorant/Plex fonts, source OKLCH palette and responsive breakpoints as features are implemented. **Visual fidelity does not override accepted B/C gameplay, map, accessibility or commit semantics.** This adds no source implementation or testing proof; B9-D12 remains deferred.
