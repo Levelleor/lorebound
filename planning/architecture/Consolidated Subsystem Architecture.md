@@ -10,6 +10,10 @@ tags:
 ---
 # Consolidated Subsystem Architecture
 
+## Current overview location — 2026-11-03
+
+For the **concise, current, self-contained system architecture and all-feature overview**, start with [Lorebound — System Architecture Overview](./Lorebound%20-%20System%20Architecture%20Overview.md). This older consolidation **preserves historic subsystem grouping and review chronology**, including dated notes later superseded by accepted B1–B9/Pass C decisions. It is not the most recent cross-system status summary; the original decisions and mappings remain available here. The new overview introduces no changes to accepted gameplay or migrations.
+
 ## B9 Batch 1 accepted typed spatial and mock-only verification boundary — 2026-10-31
 
 **[B9-D01 qualified A](./decisions/B9-D01%20-%20Typed%20Spatial%20Coordinates%20Without%20AI%20Player%20Authorship%20Labels.md)** approves typed spatial coordinates/frames/geometry **without per-coordinate player-vs-AI authorship labels**. The user wrote “credentials”, interpreted in the map-data context as **coordinates**. B8-D06 B automatic initial placement and B8-D08 preservation of deliberately placed pins still apply: the necessary **auto-adjustment protection policy is operational, not an authorship ledger**, with exact representation **unapproved B9-D04**. **[B9-D02 A](./decisions/B9-D02%20-%20TypeScript%20Prepared%20Events%20and%20Go%20SQLite%20Atomic%20Commit%20Authority.md)** confirms TypeScript typed preparation/replay and Go independent technical contract validation with atomic SQLite write/version/epoch/idempotency safeguards, without a Go gameplay simulator. **[B9-D03 B](./decisions/B9-D03%20-%20Mock%20Based%20Component%20Verification%20Without%20Live%20AI%20Scenarios.md)** adopts **mocked testing of all app parts, with no launched real AI model or mandatory full-host end-to-end B9 scenario suite**. Do not call mock results real host proof; prior B1 feasibility evidence remains a separate open gate, not silently removed. D04–D06 are **new unapproved B9 Batch 2 proposals**; B9 stays `in-review`, with no code, passing tests, stage promotion or closure.
