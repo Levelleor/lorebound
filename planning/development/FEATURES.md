@@ -107,7 +107,7 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 
 ## Active DEV-002A work (unmerged)
 
-User explicitly redirected this launch to **DEV-002A**, replacing Gate 0 scaffolding with real blank adventure creation/resume. IDEA-0006/R01–R03 are implemented on the isolated branch with passing local real SQLite/browser evidence ([report](./evidence/DEV-002A.md)), awaiting PR CI, final independent sign-off and merge; IDEA-0051/0053 retain only their existing PARTIAL main evidence until this child passes review and merges. The [95-row seven-IDEA draft](./requirements/DEV-002.md) is preserved but independent coverage verification is incomplete. No new atomic requirement or whole feature is VERIFIED; all other IDEAs remain unchanged. See [NOW](./NOW.md) and [TASKS](./TASKS.md).
+User explicitly redirected this launch to **DEV-002A**, replacing Gate 0 scaffolding with real blank adventure creation/resume. IDEA-0006/R01–R03 are implemented on the isolated branch with passing local real SQLite/browser evidence ([report](./evidence/DEV-002A.md)), with independent source/local sign-off, awaiting passing [PR #4](https://github.com/Levelleor/lorebound/pull/4) CI and authorised merge; IDEA-0051/0053 retain only their existing PARTIAL main evidence until this child passes review and merges. The [95-row seven-IDEA draft](./requirements/DEV-002.md) is preserved but independent coverage verification is incomplete. No new atomic requirement or whole feature is VERIFIED; all other IDEAs remain unchanged. See [NOW](./NOW.md) and [TASKS](./TASKS.md).
 
 ## Atomic requirement tracking (to be populated by DEV-001)
 

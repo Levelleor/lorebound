@@ -24,7 +24,7 @@ jobs:
     env:
       CGO_ENABLED: '0'
       GOTOOLCHAIN: local
-      LOREBOUND_ARTIFACT_DIR: ${{ runner.temp }}/lorebound-evidence
+      LOREBOUND_ARTIFACT_DIR: /tmp/lorebound-evidence
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -61,6 +61,6 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: headless-verification-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/lorebound-evidence
+          path: ${{ env.LOREBOUND_ARTIFACT_DIR }}
           if-no-files-found: warn
           retention-days: 7

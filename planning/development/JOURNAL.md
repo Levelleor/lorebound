@@ -119,3 +119,11 @@ tags:
 - **Artifacts:** Four actual screenshots retained under `evidence/DEV-002A/`; automation also emits all four viewport widths and Dark/Bright states. Reviewer inspected the rendered states and is running a separate browser suite.
 - **Traceability audit:** All 52 ledger IDs still match the original production notes; the parent draft has 95 unique requirement IDs and valid source paths. This structural audit does not certify the whole seven-IDEA requirement inventory.
 - **Next action:** Open DEV-002A PR, execute GitHub CI and obtain final independent sign-off. Keep next task DEV-002A until authorised merge/reconciliation; do not begin DEV-002B.
+
+### 2026-11-03 — DEV-002A / Independent PASS, PR and CI validation correction
+
+- **PR:** [#4](https://github.com/Levelleor/lorebound/pull/4), implementation commit `7abe54f050eedabc2a0891f88057274ff0d9b271`, unmerged.
+- **Independent review:** Fresh reviewer reran real browser suite on port 18081 and all frontend/Go checks; no unresolved blocking source findings. Full report preserved in `evidence/DEV-002A-review.md`.
+- **CI failure:** [Run 41772890446](https://github.com/Levelleor/lorebound/actions/runs/41772890446) failed workflow validation before jobs. The connector returned no PR-triggered runs because this validation failure was attached to push; direct read-only `gh api` exposed it. Actions are enabled.
+- **Correction:** Removed `runner.temp` from job-level `env`, where the runner context is unavailable under [GitHub's context reference](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability). The Linux job uses a literal temporary artifact directory, referenced by step-level artifact configuration. No product code changed; corrected CI must actually execute before its gate can pass.
+- **Next action:** Push the corrected workflow and inspect real CI results; no merge or DEV-002B launch.
