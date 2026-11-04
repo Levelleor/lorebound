@@ -2,7 +2,7 @@
 type: development-feature-ledger
 status: current
 created: "2026-11-03"
-updated: "2026-11-03"
+updated: "2026-11-04"
 baseline_idea_count: 52
 verified_idea_count: 0
 ---
@@ -55,7 +55,7 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | [IDEA-0003](../production/Direct%20Editable%20Prose%20Document.md) | Direct editable prose document | S03 | M2 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0004](../production/Retry%20Undo%20and%20Alternative%20Continuations.md) | Retry, Undo and alternate continuations | S05 | M2 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0005](../production/Adventure%20Save%20and%20Export%20Management.md) | Adventure save/export management | S02 | M7 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0006](../production/Quick%20Start%20and%20Custom%20Story%20Openings.md) | Quick Start and custom openings | S02 | M1 | **NOT STARTED** | Not yet inventoried | None |
+| [IDEA-0006](../production/Quick%20Start%20and%20Custom%20Story%20Openings.md) | Quick Start and custom openings | S02 | M1 | **NOT STARTED** | [R01–R03 implemented/unmerged](./evidence/DEV-002A.md); parent inventory draft | [PR #4](https://github.com/Levelleor/lorebound/pull/4), not merged |
 | [IDEA-0007](../production/Character%20Creation%20and%20Starting%20Choices.md) | Character creation and starting choices | S10 | M5 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0008](../production/Reusable%20Scenario%20Templates%20and%20Placeholders.md) | Reusable scenario templates | S02 | M7 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0010](../production/Narration%20Style%20and%20Perspective%20Controls.md) | Narration style and perspective controls | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
@@ -94,9 +94,9 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | [IDEA-0046](../production/Typed%20Tool%20Rejection%20and%20Narrative%20Repair.md) | Typed tool rejection and narrative repair | S06 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0047](../production/Native%20Gameplay%20Capability%20Registry.md) | Native gameplay capability registry | S06 | M8 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0050](../production/Structured%20UI%20Game%20Actions.md) | Structured UI game actions | S03 | M8 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0051](../production/Browser-Persistent%20Story%20Database.md) | Go-owned browser-persistent story database | S12 | M0 | **PARTIAL** | Not yet inventoried | [Gate 0](https://github.com/Levelleor/lorebound/pull/3) (foundation only) |
+| [IDEA-0051](../production/Browser-Persistent%20Story%20Database.md) | Go-owned browser-persistent story database | S12 | M0 | **PARTIAL** | [DEV-002A subsets implemented/unmerged](./evidence/DEV-002A.md); full inventory draft | [Gate 0](https://github.com/Levelleor/lorebound/pull/3) (foundation only) |
 | [IDEA-0052](../production/Backups%20Export%20and%20Storage%20Quotas.md) | Backup/export and storage quotas | S12 | M7 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0053](../production/Localhost%20Startup%20and%20Offline%20Mode.md) | Localhost startup and offline mode | S01 | M0 | **PARTIAL** | Not yet inventoried | [Gate 0](https://github.com/Levelleor/lorebound/pull/3) (foundation only) |
+| [IDEA-0053](../production/Localhost%20Startup%20and%20Offline%20Mode.md) | Localhost startup and offline mode | S01 | M0 | **PARTIAL** | [DEV-002A subsets implemented/unmerged](./evidence/DEV-002A.md); full inventory draft | [Gate 0](https://github.com/Levelleor/lorebound/pull/3) (foundation only) |
 | [IDEA-0055](../production/Optional%20RPG%20Mechanics%20Plugins.md) | Optional RPG mechanics plugins | S06 | M8 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0061](../production/Lorebound%20Branding%20and%20Engine%20Split.md) | Lorebound branding and engine split | S01 | M8 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0062](../production/Accessibility%20and%20Customisable%20Interface.md) | Accessibility and customisable interface | S04 | M8 | **NOT STARTED** | Not yet inventoried | None |
@@ -107,7 +107,7 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 
 ## Active DEV-002A work (unmerged)
 
-User explicitly redirected this launch to **DEV-002A**, replacing Gate 0 scaffolding with real blank adventure creation/resume. IDEA-0006/R01–R03 are implemented on the isolated branch with passing local real SQLite/browser evidence ([report](./evidence/DEV-002A.md)), with independent source/local sign-off, awaiting passing [PR #4](https://github.com/Levelleor/lorebound/pull/4) CI and authorised merge; IDEA-0051/0053 retain only their existing PARTIAL main evidence until this child passes review and merges. The [95-row seven-IDEA draft](./requirements/DEV-002.md) is preserved but independent coverage verification is incomplete. No new atomic requirement or whole feature is VERIFIED; all other IDEAs remain unchanged. See [NOW](./NOW.md) and [TASKS](./TASKS.md).
+User explicitly redirected this launch to **DEV-002A**, replacing Gate 0 scaffolding with real blank adventure creation/resume. IDEA-0006/R01–R03 are implemented on the isolated branch with passing local real SQLite/browser evidence ([report](./evidence/DEV-002A.md)), with independent source/local sign-off, with [passing CI](https://github.com/Levelleor/lorebound/actions/runs/41773118072), awaiting authorised [PR #4](https://github.com/Levelleor/lorebound/pull/4) merge; IDEA-0051/0053 retain only their existing PARTIAL main evidence until this child passes review and merges. The [95-row seven-IDEA draft](./requirements/DEV-002.md) is preserved but independent coverage verification is incomplete. No new atomic requirement or whole feature is VERIFIED; all other IDEAs remain unchanged. See [NOW](./NOW.md) and [TASKS](./TASKS.md).
 
 ## Atomic requirement tracking (to be populated by DEV-001)
 

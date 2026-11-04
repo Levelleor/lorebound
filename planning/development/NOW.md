@@ -1,9 +1,9 @@
 ---
 type: development-status
 status: current
-updated: "2026-11-03"
+updated: "2026-11-04"
 current_task: "DEV-002A"
-current_task_status: "IN PROGRESS (UNMERGED)"
+current_task_status: "PR READY (UNMERGED)"
 next_task: "DEV-002A"
 ---
 
@@ -30,17 +30,17 @@ Last reconciled with GitHub main: **2026-11-03**, commit `79263d647698b86c821bad
 
 ## Next Task: **DEV-002A — Replace Gate 0 with persisted adventure creation/resume**
 
-**Status: PR OPEN / REVIEW, UNMERGED.** The user explicitly redirected this launch on 2026-11-03 from DEV-001 controls to the first bounded production replacement. DEV-002 is split into sequential children in [TASKS](./TASKS.md). Only DEV-002A executes now.
+**Status: PR READY, UNMERGED.** The user explicitly redirected this launch on 2026-11-03 from DEV-001 controls to the first bounded production replacement. DEV-002 is split into sequential children in [TASKS](./TASKS.md). Only DEV-002A executes now.
 
 **Outcome:** Replace the Gate 0 screen/test-record service with real blank adventure creation, shared Go-owned SQLite storage, durable minimal Turn-0 baseline, listing and resume by stable identity. Blank/unnamed stories need no model, character or generated first turn. Use the approved Command Citadel style on implemented surfaces.
 
 **Branch:** `feat/dev-002a-adventure-foundation` (renamed after the user redirected this launch). Lead owns integration/control documents. Existing unfinished CI work is adapted to verify actual production behavior; DEV-001 is not claimed complete.
 
-**Gates:** Real storage atomicity/idempotency/isolation/reopen; actual Wails browser create/resume and failure/recovery; responsive visual evidence; passing PR CI and independent review. Independent review resumed after the earlier account-limit interruption. Storage/typecheck/build and final browser/visual checks pass locally; the reviewer found two UI recovery/navigation issues that are now fixed. Independent browser rerun and source/local review PASS. [PR #4](https://github.com/Levelleor/lorebound/pull/4) is open; initial CI workflow validation failed and its corrected rerun is pending. [Evidence](./evidence/DEV-002A.md). No merge is authorised.
+**Gates:** Real storage atomicity/idempotency/isolation/reopen; actual Wails browser create/resume and failure/recovery; responsive visual evidence; passing PR CI and independent review. Independent review resumed after the earlier account-limit interruption. Storage/typecheck/build and final browser/visual checks pass locally; the reviewer found two UI recovery/navigation issues that are now fixed. Independent browser rerun and source/local review PASS. [PR #4](https://github.com/Levelleor/lorebound/pull/4) is open; [corrected CI passes](https://github.com/Levelleor/lorebound/actions/runs/41773118072) after an initial workflow-validation correction. Independent review and real local/browser gates also pass. [Evidence](./evidence/DEV-002A.md). No merge is authorised.
 
 **Exclusions:** Generated Story turns and passage acceptance belong to DEV-002B; full Quick Start, templates, rename/delete, history editing, provider setup, packaging and advanced lifecycle follow their recorded tasks. No B9-D12 spatial migrations. Gate 0 test data is not migrated into an adventure library.
 
-**Exact next action:** Implement and verify DEV-002A, open its PR, complete independent review. Do not begin DEV-002B in this launch or mark unmerged behavior verified on main.
+**Exact next action:** Obtain explicit merge authorisation for [PR #4](https://github.com/Levelleor/lorebound/pull/4). Require passing latest PR checks; after an authorised merge, reconcile actual merged main before advancing. Do not begin DEV-002B in this launch or mark unmerged behavior verified on main.
 
 ## Recent verified milestone
 

@@ -2,7 +2,7 @@
 type: development-task-queue
 status: current
 created: "2026-11-03"
-updated: "2026-11-03"
+updated: "2026-11-04"
 current_next_task: "DEV-002A"
 ---
 
@@ -75,7 +75,7 @@ Build in the actual SvelteKit browser and Go SQLite app:
 
 ### DEV-002A — Production blank adventure creation and resume (NEXT)
 
-Status: PR OPEN / REVIEW / UNMERGED. Owner: Codex lead. Authorisation: user explicitly changed this launch to production replacement, 2026-11-03.
+Status: PR READY / UNMERGED. Owner: Codex lead. Authorisation: user explicitly changed this launch to production replacement, 2026-11-03.
 
 - Replace runtime Gate 0 test UI, service, record schema, binary/script naming with the actual adventure library path; preserve Wails/browser TS/Go/SQLite boundaries.
 - Create an independent stable-ID adventure and minimal valid empty Turn-0 baseline atomically. Missing title uses `Untitled Adventure`; no AI, protagonist, fake passage or setup questionnaire required.
@@ -85,7 +85,7 @@ Status: PR OPEN / REVIEW / UNMERGED. Owner: Codex lead. Authorisation: user expl
 - Requirements: [draft IDEA-0006/R01–R03](./requirements/DEV-002.md#idea-0006--quick-start-and-custom-openings); B5-D01/B5-D09; applicable IDEA-0051 storage, IDEA-0053 host boundaries; visual contract. Other draft requirement rows are not certified by this child.
 - Checks: actual Go SQLite success/rollback/idempotency/wrong epoch/invalid input/isolation/reopen, real Firefox Wails create/resume/restart, UI error/retry, 390/768/1024/1440px screenshots and keyboard use, CI and fresh independent review.
 - No existing Gate 0 data migration. Generated prose/turn acceptance, rename/delete, shared drafts, Quick Start, full host lifecycle and platform packaging excluded. B9-D12 remains deferred.
-- Branch: `feat/dev-002a-adventure-foundation`. PR: [#4](https://github.com/Levelleor/lorebound/pull/4). Independent reviewer: `/root/independent_review`, [source/local/browser PASS](./evidence/DEV-002A-review.md). Initial CI workflow validation failed; corrected rerun pending. [Local passing evidence](./evidence/DEV-002A.md). Next action: PR CI and final independent sign-off for this child only.
+- Branch: `feat/dev-002a-adventure-foundation`. PR: [#4](https://github.com/Levelleor/lorebound/pull/4). Independent reviewer: `/root/independent_review`, [source/local/browser PASS](./evidence/DEV-002A-review.md). [Corrected GitHub CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41773118072); initial validation failure retained in the journal. [Local passing evidence](./evidence/DEV-002A.md). Next action: explicit merge authorisation for PR #4, then actual-main reconciliation after merge; no next child in this launch.
 
 ### DEV-002B — First provisional and accepted Story turn
 

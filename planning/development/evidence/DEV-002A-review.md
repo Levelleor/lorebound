@@ -54,3 +54,13 @@ The named fonts are not bundled; specified local fallback stacks are used when a
 **Recommended next action:** inspect the PR's actual CI results for reviewed source, resolve any failure, then record the PR/evidence in the control files. Do not merge without the required authorisation or start DEV-002B in this launch.
 
 Changed repository files by reviewer: **none**. This report was written only to `/tmp/dev002a-independent-review.md` for lead integration.
+
+## Follow-up review — CI artifact-context correction
+
+Reviewed commit `2496367d2603a83d8f57c2d267dbca2dbc37397e` against the implementation review above. **Workflow/source delta review: PASS; actual CI execution remains pending.** No product source changed and no full test rerun was necessary for this workflow/documentation-only delta.
+
+The job-level artifact variable now uses the literal `/tmp/lorebound-evidence` on the declared Ubuntu runner. The upload action reads that same value through step-level `env.LOREBOUND_ARTIFACT_DIR`. This removes the unavailable job-env `runner` context while preserving the same log/screenshot collection behavior. Independently checked [GitHub's context-availability table](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability): job-level `env` excludes `runner`, and step `with` permits `env`.
+
+The evidence and trackers link open PR #4, retain the initial failed-validation run, and distinguish local/source review PASS from corrected CI pending and unmerged main. Local Markdown link checks for NOW, TASKS, FEATURES, JOURNAL and both DEV-002A evidence/review files all passed; `git diff --check` was clean. One minor handoff cleanup remains for the lead's final tracker update: NOW's Exact next action still says to implement/open the PR even though PR #4 exists; replace it with the actual remaining CI/merge-authorisation action once CI resolves.
+
+Repository files changed by reviewer: **none**. This follow-up does not assert GitHub CI PASS and does not authorise merge or DEV-002B.

@@ -2,7 +2,7 @@
 type: development-evidence
 status: implemented-unmerged
 created: "2026-11-03"
-updated: "2026-11-03"
+updated: "2026-11-04"
 task: "DEV-002A"
 ---
 
@@ -10,7 +10,7 @@ task: "DEV-002A"
 
 The user explicitly redirected this launch from DEV-001 to the first bounded production replacement. This child replaces the Gate 0 test UI/service/schema with actual blank adventure creation/list/resume. It does not deliver generated Story turns or complete any whole IDEA. No merge is authorised.
 
-Base main: `79263d647698b86c821badd0194e8299aea23105`. Branch: `feat/dev-002a-adventure-foundation`. PR: [#4](https://github.com/Levelleor/lorebound/pull/4), open draft. Implementation reviewed at `7abe54f050eedabc2a0891f88057274ff0d9b271`. CI: initial validation failed; corrected workflow awaiting rerun. Main remains the earlier Gate 0 baseline until an authorised merge and reconciliation.
+Base main: `79263d647698b86c821badd0194e8299aea23105`. Branch: `feat/dev-002a-adventure-foundation`. PR: [#4](https://github.com/Levelleor/lorebound/pull/4), open and ready for review. Implementation reviewed at `7abe54f050eedabc2a0891f88057274ff0d9b271`. CI: corrected workflow PASS at `2496367d2603a83d8f57c2d267dbca2dbc37397e`; subsequent changes only record evidence/tracker state. The PR checks remain the live final-head gate. Main remains the earlier Gate 0 baseline until an authorised merge and reconciliation.
 
 ## Scoped requirement traceability
 
@@ -41,7 +41,7 @@ Local environment: Linux `7.2.11-arch1-1` x86_64; Go `1.27.3-X:nodwarf5`; Node `
 | Failure / recovery | PASS | Real commit with simulated HTTP success-response loss, same-request Retry after library refresh, wrong-epoch rejection; SQL rollback/read-only/cancel/retry and eight concurrent duplicate requests |
 | Visual / responsive | PASS for implemented surfaces | Real Firefox screenshots in Dark/Bright test states at four widths; 48px header, max 672px reader, 320px desktop rail and no horizontal overflow; mobile Story/World switch |
 | Browser-request restrictions | PASS | Same-origin 200; hostile Origin/fetch metadata/Host/WebSocket 403; preflight 405 |
-| GitHub Actions | FAIL (initial validation); corrected rerun pending | [Initial run](https://github.com/Levelleor/lorebound/actions/runs/41772890446) had no jobs; invalid job-level runner context corrected |
+| GitHub Actions | PASS | [Run 41773118072](https://github.com/Levelleor/lorebound/actions/runs/41773118072): all build/unit/static/SQLite/Firefox/smoke/artifact steps succeeded on Ubuntu 24.04; initial invalid workflow was corrected |
 | Independent review | PASS (source/local scope) | [Independent report](./DEV-002A-review.md): reran storage/frontend/build/browser on port 18081; both regressions, restart and screenshots pass; CI remains separate |
 | Windows/macOS runtime/packaging | NOT RUN | No cross-platform runtime claim |
 | Live AI / spatial migrations | N/A | No provider or spatial functionality in this child |
@@ -60,3 +60,9 @@ Local environment: Linux `7.2.11-arch1-1` x86_64; Go `1.27.3-X:nodwarf5`; Node `
 Real Firefox captures from the final passing local run: [desktop adventure](./DEV-002A/adventure-dark-1440.png), [mobile adventure](./DEV-002A/adventure-dark-390.png), [Bright mobile adventure](./DEV-002A/adventure-bright-390.png), [mobile library](./DEV-002A/library-dark-390.png). All four widths and both test themes are also emitted by the CI artifact recipe.
 
 Final local browser command exited 0, including `PASS: delayed adventure read cannot override newer Back navigation` and `PASS: fresh browser after process restart resumes both exact zero-turn adventure identities`. Independent reviewer inspected the retained visual states and reran the full browser suite separately with exit 0.
+
+## Final CI reconciliation — 2026-11-04
+
+The lead inspected the actual completed run, all job steps and job log, not merely the badge: two TypeScript tests, five Go test functions with ten rejection/conflict cases, every browser recovery/navigation/reopen PASS marker and artifact upload are present. [CI artifact](https://github.com/Levelleor/lorebound/actions/runs/41773118072/artifacts/13295059611) contains logs and all responsive screenshots (seven-day retention); selected screenshots are also retained in Git above.
+
+Independent review covers original requirements, source, local real integration and the corrected workflow delta. The lead verified GitHub CI separately; the review report's earlier CI-pending wording is chronological, not an invented later reviewer CI assertion. A requested additional reviewer CI-only follow-up hit the account usage limit, with no new source finding. There is no unresolved blocking implementation finding. All applicable executed gates pass; merge authorisation is still required. After an authorised merge, reconcile actual main/merge SHA before selecting another task. DEV-002B has not started.

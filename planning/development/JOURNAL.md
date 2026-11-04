@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-03"
+updated: "2026-11-04"
 tags:
   - planning/development
   - chronological-context
@@ -127,3 +127,11 @@ tags:
 - **CI failure:** [Run 41772890446](https://github.com/Levelleor/lorebound/actions/runs/41772890446) failed workflow validation before jobs. The connector returned no PR-triggered runs because this validation failure was attached to push; direct read-only `gh api` exposed it. Actions are enabled.
 - **Correction:** Removed `runner.temp` from job-level `env`, where the runner context is unavailable under [GitHub's context reference](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability). The Linux job uses a literal temporary artifact directory, referenced by step-level artifact configuration. No product code changed; corrected CI must actually execute before its gate can pass.
 - **Next action:** Push the corrected workflow and inspect real CI results; no merge or DEV-002B launch.
+
+### 2026-11-04 — DEV-002A / Passing GitHub CI and ready-for-review handoff
+
+- **Verified CI:** [Run 41773118072](https://github.com/Levelleor/lorebound/actions/runs/41773118072) succeeded for `2496367d2603a83d8f57c2d267dbca2dbc37397e`. Lead inspected all steps and logs: build/check, two TS tests, Go vet/real SQLite tests, Firefox installation, actual host/browser/recovery/restart suite and artifact upload all PASS.
+- **Artifact:** [Logs and 12 screenshots](https://github.com/Levelleor/lorebound/actions/runs/41773118072/artifacts/13295059611); four selected images retained in Git. No user database or credentials uploaded.
+- **Independent review:** Original-requirement source/local/browser PASS and corrected-workflow delta PASS preserved in `evidence/DEV-002A-review.md`. Additional optional CI-only reviewer follow-up hit an account usage limit; lead independently inspected the actual remote results, without pretending that follow-up ran.
+- **State:** PR #4 ready for review, still unmerged. No unresolved blocking source/test finding. All 52 IDEA rows retained, zero whole-IDEA verifications; R01–R03 and host/storage subsets remain implemented/unmerged. DEV-001 is interrupted and its broader 95-row parent inventory is draft; DEV-002B has not started.
+- **Next action:** Explicit merge authorisation for PR #4, subject to latest passing PR checks. Only after authorised merge reconcile actual main; never automatically begin another task in this launch.
