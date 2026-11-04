@@ -9,142 +9,269 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"regexp"
+	"strings"
+	"unicode/utf8"
 
 	_ "modernc.org/sqlite"
 )
 
 const SchemaVersion = 1
+const applicationID = 0x4c4f5245
 
-var operationIDPattern = regexp.MustCompile(`^[A-Za-z0-9_-]{1,80}$`)
-
+var identifier = regexp.MustCompile(`^[A-Za-z0-9_-]{1,80}$`)
 var (
-	ErrInvalidRequest = errors.New("invalid_request")
-	ErrWrongEpoch     = errors.New("wrong_epoch")
-	ErrStaleVersion   = errors.New("stale_version")
-	ErrOperationID    = errors.New("operation_id_conflict")
+	ErrInvalidRequest     = errors.New("invalid_request")
+	ErrWrongEpoch         = errors.New("wrong_epoch")
+	ErrOperationID        = errors.New("operation_id_conflict")
+	ErrAdventureExists    = errors.New("adventure_exists")
+	ErrNotFound           = errors.New("adventure_not_found")
+	ErrUnsupportedLibrary = errors.New("unsupported_library")
 )
 
-// This small technical record is a Gate 0 contract, not a story schema.
-type State struct {
+// Baseline is the canonical empty starting point, not a story passage or checkpoint.
+// World-domain schemas are introduced only by their separately approved slices.
+type Baseline struct {
+	SchemaVersion int `json:"schemaVersion"`
+}
+type Adventure struct {
+	ID      string `json:"id"`
+	Title   string `json:"title"`
+	Version int64  `json:"version"`
+}
+type Snapshot struct {
+	SchemaVersion int       `json:"schemaVersion"`
+	Epoch         string    `json:"epoch"`
+	Adventure     Adventure `json:"adventure"`
+	Baseline      Baseline  `json:"baseline"`
+}
+type Library struct {
+	SchemaVersion int         `json:"schemaVersion"`
+	Epoch         string      `json:"epoch"`
+	Adventures    []Adventure `json:"adventures"`
+}
+type CreateRequest struct {
+	SchemaVersion int      `json:"schemaVersion"`
+	Epoch         string   `json:"epoch"`
+	OperationID   string   `json:"operationId"`
+	AdventureID   string   `json:"adventureId"`
+	Title         string   `json:"title"`
+	Baseline      Baseline `json:"baseline"`
+}
+type CreateResult struct {
+	Snapshot Snapshot `json:"snapshot"`
+	Replayed bool     `json:"replayed"`
+}
+type ReadRequest struct {
 	SchemaVersion int    `json:"schemaVersion"`
 	Epoch         string `json:"epoch"`
-	Version       int64  `json:"version"`
-	Value         string `json:"value"`
-}
-
-type CommitRequest struct {
-	SchemaVersion   int    `json:"schemaVersion"`
-	Epoch           string `json:"epoch"`
-	ExpectedVersion int64  `json:"expectedVersion"`
-	OperationID     string `json:"operationId"`
-	Value           string `json:"value"`
-}
-
-type CommitResult struct {
-	State    State `json:"state"`
-	Replayed bool  `json:"replayed"`
+	AdventureID   string `json:"adventureId"`
 }
 
 type Store struct{ db *sql.DB }
 
 func Open(path string) (*Store, error) {
+	// New libraries are private. Existing files are never overwritten or imported.
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0600)
+	if err != nil {
+		return nil, err
+	}
+	if err = file.Close(); err != nil {
+		return nil, err
+	}
 	db, err := sql.Open("sqlite", path)
 	if err != nil {
 		return nil, err
 	}
-	// One connection serializes writes across tabs and keeps connection pragmas stable.
 	db.SetMaxOpenConns(1)
-	if _, err = db.Exec(`PRAGMA busy_timeout = 5000; PRAGMA foreign_keys = ON;
-		CREATE TABLE IF NOT EXISTS gate_meta (id INTEGER PRIMARY KEY CHECK(id = 1), epoch TEXT NOT NULL, version INTEGER NOT NULL, value TEXT NOT NULL);
-		CREATE TABLE IF NOT EXISTS gate_operations (operation_id TEXT PRIMARY KEY, request_hash TEXT NOT NULL, resulting_version INTEGER NOT NULL, resulting_value TEXT NOT NULL);`); err != nil {
-		db.Close()
-		return nil, fmt.Errorf("initialize gate database: %w", err)
-	}
-	var count int
-	if err = db.QueryRow(`SELECT count(*) FROM gate_meta`).Scan(&count); err != nil {
+	s := &Store{db: db}
+	if err = s.initialize(); err != nil {
 		db.Close()
 		return nil, err
 	}
-	if count == 0 {
-		var identity [16]byte
-		if _, err = rand.Read(identity[:]); err != nil {
-			db.Close()
-			return nil, err
-		}
-		if _, err = db.Exec(`INSERT INTO gate_meta(id, epoch, version, value) VALUES(1, ?, 0, '')`, hex.EncodeToString(identity[:])); err != nil {
-			db.Close()
-			return nil, err
-		}
+	return s, nil
+}
+
+func (s *Store) initialize() error {
+	if _, err := s.db.Exec(`PRAGMA busy_timeout = 5000; PRAGMA foreign_keys = ON;`); err != nil {
+		return err
 	}
-	return &Store{db: db}, nil
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	var version, app, tables int
+	if err = tx.QueryRow(`PRAGMA user_version`).Scan(&version); err != nil {
+		return err
+	}
+	if err = tx.QueryRow(`PRAGMA application_id`).Scan(&app); err != nil {
+		return err
+	}
+	if version == SchemaVersion && app == applicationID {
+		return tx.Commit()
+	}
+	if err = tx.QueryRow(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'`).Scan(&tables); err != nil {
+		return err
+	}
+	if version != 0 || app != 0 || tables != 0 {
+		return ErrUnsupportedLibrary
+	}
+	var identity [16]byte
+	if _, err = rand.Read(identity[:]); err != nil {
+		return err
+	}
+	if _, err = tx.Exec(`
+ CREATE TABLE library_meta (id INTEGER PRIMARY KEY CHECK(id=1), epoch TEXT NOT NULL);
+ CREATE TABLE adventures (id TEXT PRIMARY KEY, title TEXT NOT NULL, version INTEGER NOT NULL CHECK(version>=0), baseline TEXT NOT NULL);
+ CREATE TABLE operations (operation_id TEXT PRIMARY KEY, request_hash TEXT NOT NULL, result TEXT NOT NULL);
+ PRAGMA application_id = 1280266821;
+ PRAGMA user_version = 1;`); err != nil {
+		return err
+	}
+	if _, err = tx.Exec(`INSERT INTO library_meta VALUES (1, ?)`, hex.EncodeToString(identity[:])); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (s *Store) Close() error { return s.db.Close() }
 
-func (s *Store) Read(ctx context.Context) (State, error) {
-	state := State{SchemaVersion: SchemaVersion}
-	err := s.db.QueryRowContext(ctx, `SELECT epoch, version, value FROM gate_meta WHERE id = 1`).Scan(&state.Epoch, &state.Version, &state.Value)
-	return state, err
+func epoch(tx *sql.Tx) (string, error) {
+	var value string
+	err := tx.QueryRow(`SELECT epoch FROM library_meta WHERE id=1`).Scan(&value)
+	return value, err
 }
 
-func (s *Store) Commit(ctx context.Context, req CommitRequest) (CommitResult, error) {
-	return s.commit(ctx, req, false)
+func (s *Store) List(ctx context.Context) (Library, error) {
+	result := Library{SchemaVersion: SchemaVersion, Adventures: []Adventure{}}
+	tx, err := s.db.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		return result, err
+	}
+	defer tx.Rollback()
+	if result.Epoch, err = epoch(tx); err != nil {
+		return result, err
+	}
+	rows, err := tx.QueryContext(ctx, `SELECT id, title, version FROM adventures ORDER BY rowid DESC`)
+	if err != nil {
+		return result, err
+	}
+	for rows.Next() {
+		var item Adventure
+		if err = rows.Scan(&item.ID, &item.Title, &item.Version); err != nil {
+			rows.Close()
+			return result, err
+		}
+		result.Adventures = append(result.Adventures, item)
+	}
+	err = rows.Err()
+	rows.Close()
+	if err != nil {
+		return result, err
+	}
+	return result, tx.Commit()
 }
 
-func (s *Store) commit(ctx context.Context, req CommitRequest, failAfterWrite bool) (CommitResult, error) {
-	if req.SchemaVersion != SchemaVersion || req.Epoch == "" || req.ExpectedVersion < 0 || !operationIDPattern.MatchString(req.OperationID) || len(req.Value) > 1024 {
-		return CommitResult{}, ErrInvalidRequest
+func (s *Store) Read(ctx context.Context, req ReadRequest) (Snapshot, error) {
+	result := Snapshot{SchemaVersion: SchemaVersion}
+	if req.SchemaVersion != SchemaVersion || req.Epoch == "" || !identifier.MatchString(req.AdventureID) {
+		return result, ErrInvalidRequest
+	}
+	tx, err := s.db.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		return result, err
+	}
+	defer tx.Rollback()
+	if result.Epoch, err = epoch(tx); err != nil {
+		return result, err
+	}
+	if req.Epoch != result.Epoch {
+		return result, ErrWrongEpoch
+	}
+	var baseline string
+	err = tx.QueryRowContext(ctx, `SELECT id, title, version, baseline FROM adventures WHERE id=?`, req.AdventureID).Scan(&result.Adventure.ID, &result.Adventure.Title, &result.Adventure.Version, &baseline)
+	if errors.Is(err, sql.ErrNoRows) {
+		return result, ErrNotFound
+	}
+	if err != nil {
+		return result, err
+	}
+	if err = json.Unmarshal([]byte(baseline), &result.Baseline); err != nil || result.Baseline.SchemaVersion != SchemaVersion {
+		return result, ErrUnsupportedLibrary
+	}
+	return result, tx.Commit()
+}
+
+func (s *Store) Create(ctx context.Context, req CreateRequest) (CreateResult, error) {
+	return s.create(ctx, req, false)
+}
+
+func (s *Store) create(ctx context.Context, req CreateRequest, failAfterInsert bool) (CreateResult, error) {
+	if req.SchemaVersion != SchemaVersion || req.Baseline.SchemaVersion != SchemaVersion || req.Epoch == "" || !identifier.MatchString(req.AdventureID) || !identifier.MatchString(req.OperationID) || !utf8.ValidString(req.Title) || utf8.RuneCountInString(req.Title) > 160 || strings.TrimSpace(req.Title) == "" {
+		return CreateResult{}, ErrInvalidRequest
 	}
 	encoded, err := json.Marshal(req)
 	if err != nil {
-		return CommitResult{}, err
+		return CreateResult{}, err
 	}
-	hash := fmt.Sprintf("%x", sha256.Sum256(encoded))
+	fingerprint := fmt.Sprintf("%x", sha256.Sum256(encoded))
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
-		return CommitResult{}, err
+		return CreateResult{}, err
 	}
 	defer tx.Rollback()
-	var previousHash string
-	var previousVersion int64
-	var previousValue string
-	err = tx.QueryRowContext(ctx, `SELECT request_hash, resulting_version, resulting_value FROM gate_operations WHERE operation_id = ?`, req.OperationID).Scan(&previousHash, &previousVersion, &previousValue)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return CommitResult{}, err
+	currentEpoch, err := epoch(tx)
+	if err != nil {
+		return CreateResult{}, err
 	}
-	duplicate := err == nil
-	state := State{SchemaVersion: SchemaVersion}
-	if err = tx.QueryRowContext(ctx, `SELECT epoch, version, value FROM gate_meta WHERE id = 1`).Scan(&state.Epoch, &state.Version, &state.Value); err != nil {
-		return CommitResult{}, err
+	// Validate the library before looking up receipts from a previous epoch.
+	if req.Epoch != currentEpoch {
+		return CreateResult{}, ErrWrongEpoch
 	}
-	if duplicate {
-		if previousHash != hash {
-			return CommitResult{}, ErrOperationID
+	var oldHash, receipt string
+	err = tx.QueryRowContext(ctx, `SELECT request_hash, result FROM operations WHERE operation_id=?`, req.OperationID).Scan(&oldHash, &receipt)
+	if err == nil {
+		if oldHash != fingerprint {
+			return CreateResult{}, ErrOperationID
 		}
-		state.Version = previousVersion
-		state.Value = previousValue
-		return CommitResult{State: state, Replayed: true}, nil
+		var snapshot Snapshot
+		if err = json.Unmarshal([]byte(receipt), &snapshot); err != nil {
+			return CreateResult{}, err
+		}
+		return CreateResult{Snapshot: snapshot, Replayed: true}, nil
 	}
-	if req.Epoch != state.Epoch {
-		return CommitResult{}, ErrWrongEpoch
+	if !errors.Is(err, sql.ErrNoRows) {
+		return CreateResult{}, err
 	}
-	if req.ExpectedVersion != state.Version {
-		return CommitResult{}, ErrStaleVersion
+	var exists int
+	if err = tx.QueryRowContext(ctx, `SELECT count(*) FROM adventures WHERE id=?`, req.AdventureID).Scan(&exists); err != nil {
+		return CreateResult{}, err
 	}
-	if _, err = tx.ExecContext(ctx, `UPDATE gate_meta SET version = version + 1, value = ? WHERE id = 1`, req.Value); err != nil {
-		return CommitResult{}, err
+	if exists != 0 {
+		return CreateResult{}, ErrAdventureExists
 	}
-	if failAfterWrite {
-		return CommitResult{}, errors.New("injected_transaction_failure")
+	baseline, err := json.Marshal(req.Baseline)
+	if err != nil {
+		return CreateResult{}, err
 	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO gate_operations(operation_id, request_hash, resulting_version, resulting_value) VALUES(?, ?, ?, ?)`, req.OperationID, hash, state.Version+1, req.Value); err != nil {
-		return CommitResult{}, err
+	snapshot := Snapshot{SchemaVersion: SchemaVersion, Epoch: currentEpoch, Adventure: Adventure{ID: req.AdventureID, Title: req.Title, Version: 0}, Baseline: req.Baseline}
+	receiptBytes, err := json.Marshal(snapshot)
+	if err != nil {
+		return CreateResult{}, err
+	}
+	if _, err = tx.ExecContext(ctx, `INSERT INTO adventures(id,title,version,baseline) VALUES(?,?,0,?)`, req.AdventureID, req.Title, string(baseline)); err != nil {
+		return CreateResult{}, err
+	}
+	if failAfterInsert {
+		return CreateResult{}, errors.New("injected_transaction_failure")
+	}
+	if _, err = tx.ExecContext(ctx, `INSERT INTO operations VALUES(?,?,?)`, req.OperationID, fingerprint, string(receiptBytes)); err != nil {
+		return CreateResult{}, err
 	}
 	if err = tx.Commit(); err != nil {
-		return CommitResult{}, err
+		return CreateResult{}, err
 	}
-	state.Version++
-	state.Value = req.Value
-	return CommitResult{State: state}, nil
+	return CreateResult{Snapshot: snapshot}, nil
 }

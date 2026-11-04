@@ -1,11 +1,12 @@
 {
-  "name": "lorebound-gate0-frontend",
+  "name": "lorebound-frontend",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "vite build",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "test:browser": "node scripts/check-browser.mjs"
+    "test:browser": "node scripts/check-browser.mjs",
+    "test:unit": "node --test tests/*.test.ts"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "4.0.1",

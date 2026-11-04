@@ -105,6 +105,10 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 
 **Whole-idea completion rule:** An IDEA may become `VERIFIED` **only** after its entire currently accepted requirement breakdown is complete; all applicable unit, contract, real integration, browser E2E, visual, failure/recovery and cross-feature/regression gates pass; the reviewer signs off; and source/test evidence is merged on `main`. Partial PRs may verify atomic requirements without verifying the whole IDEA.
 
+## Active DEV-002A work (unmerged)
+
+User explicitly redirected this launch to **DEV-002A**, replacing Gate 0 scaffolding with real blank adventure creation/resume. IDEA-0006/R01–R03 are implemented on the isolated branch with passing local real SQLite/browser evidence ([report](./evidence/DEV-002A.md)), awaiting PR CI, final independent sign-off and merge; IDEA-0051/0053 retain only their existing PARTIAL main evidence until this child passes review and merges. The [95-row seven-IDEA draft](./requirements/DEV-002.md) is preserved but independent coverage verification is incomplete. No new atomic requirement or whole feature is VERIFIED; all other IDEAs remain unchanged. See [NOW](./NOW.md) and [TASKS](./TASKS.md).
+
 ## Atomic requirement tracking (to be populated by DEV-001)
 
 For each note, record *all* normative approved behaviours, exclusions, later superseded conditions, edge cases, negative tests and acceptance evidence. Assign stable `IDEA-NNNN/R##` IDs; the exact breakdown must trace to paragraph/section in the original production idea or later accepted ADR. Link to test file/symbol, test case/CI run, browser evidence and independent review.

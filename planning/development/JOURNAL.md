@@ -68,3 +68,54 @@ tags:
 - When a finding changes feature implementation/verification status, also update [FEATURES](./FEATURES.md) with the code/test/PR evidence, never with speculation.
 - When a user **approves** a new product capability or a contract change, preserve the formal original IDEA/ADR process and link its accepted record. Do not treat an agent's reasonable suggestion as user approval.
 - Do not backdate or rewrite historical entries. Add **Correction to [date/entry]** when previously documented facts need revision.
+
+### 2026-11-03 — DEV-001 / Authorised start and clean main reconciliation
+
+- **Actor / role:** Codex lead; requesting user's launch explicitly authorises exactly the current DEV task, bounded delegation, tests and PR creation.
+- **Branch / base:** `feat/dev-001-verification-controls` from `79263d647698b86c821badd0194e8299aea23105`; `git fetch origin main` confirmed local main matches remote; GitHub open-PR search returned no open PRs.
+- **Scope:** Minimal CI for the existing Wails server/frontend/real SQLite/browser smoke and atomic requirements needed by DEV-002. No Story-mode implementation in this launch; no merge authority inferred.
+- **Work ownership:** Lead owns task selection, integration, requirements publication and development control files. Separate agents research accepted requirements and implement CI/scripts; a fresh independent reviewer will check original requirements and rerun applicable checks.
+- **Initial evidence:** Existing `TestRealSQLiteContract` covers technical commit/readback, invalid request, operation replay/reuse, stale version, wrong epoch, rollback and reopen. Existing Firefox smoke covers browser bridge/save/reload. These were inspected, not rerun yet. Node/npm are absent from the initial shell PATH; installed runtime discovery is in progress.
+- **Risk/constraint:** NONBLOCKING while runtime setup is investigated. B9-D12 remains DEFERRED, no work. All 52 original IDEA rows and zero full-feature verifications remain unchanged.
+- **Next action:** Implement and execute DEV-001 checks, publish traceability with future Story-mode checks explicitly NOT RUN, then independent review and PR.
+
+### 2026-11-03 — DEV-001 / Scope refinements from accepted sources
+
+- **Actor / role:** Lead integrating bounded requirement research and independent source review; no new product decision.
+- **Accepted source precedence:** B3-D04 supersedes IDEA-0040's historical revision-archive wording: keep stable passage IDs and one current structured body, technical schema/adventure versions and transaction receipts, not old passage revisions. B4-D03 requires coherent adventure/version/epoch reads. B3-D02 requires unchanged operation identity when resolving a lost success response.
+- **Opening distinction:** C-D04's ordinary Story-mode candidate acceptance is separate from Quick Start's validated automatic first-turn commit under IDEA-0006/B5-D03. The first slice uses minimal blank/custom entry; full Quick Start remains later work.
+- **Interpretation/security limits:** B7-D03 C discards unresolved automatic extraction suggestions without storing/showing diagnostics for those suggestions; technical failures still surface. IDEA-0053's accepted local boundary excludes a new login/session-token framework; the existing hostile-local-process limitation is not authority to invent one.
+- **Verification setup:** Node 24.14.0, npm 11.9.0 and Firefox are already installed locally. Initial sandbox dependency install did not complete and was interrupted; an authorised network-enabled retry is underway. No passing build or CI result is inferred from that interruption.
+- **Risk/constraint:** B9-D12 remains DEFERRED. Broad IDEA obligations and first-slice acceptance must remain separately traceable; no source IDEA is archived or marked fully verified.
+
+### 2026-11-03 — DEV-001 / Gate 0 replacement clarification and interrupted review
+
+- **User direction:** “we'd want to get rid of gate0 stuff … replace it with actual production code now”. Gate 0's test screen, test-record service/schema and task-specific naming are temporary prerequisite scaffolding. Retain proven host/persistence boundaries while replacing the scaffold with actual application behavior; do not treat the test record as the product.
+- **Task-boundary clarification pending:** The launch originally selects exactly DEV-001 (CI/traceability) and queues production Story-mode work under DEV-002. The lead asked whether to finish DEV-001 then replace Gate 0 in DEV-002, or change this launch to the first bounded production replacement. Do not begin that dependent implementation or advance NOW before the answer.
+- **Agent interruption:** All three delegates stopped with a reported account usage limit before final verification/sign-off. CI changes and a requirement research draft exist, but independent review is incomplete. This is an evidence blocker, not a code failure or approval-review rejection.
+- **Observed local logs:** `/tmp/dev001-go-test.log` reports PASS for the real SQLite contract, including readback, operation replay/reuse, stale version, wrong epoch, rollback and reopen. `/tmp/dev001-host-smoke.log` reports loopback bind EPERM under the sandbox; real browser smoke has not passed. Build log contains successful Svelte check/static output; exact final command exit evidence still needs reconciliation.
+- **Next action:** Resolve the selected-task boundary with the user; preserve unmerged work and obtain completed independent review before any completion/merge claim.
+
+### 2026-11-03 — DEV-002A / Explicit production replacement selected
+
+- **User decision:** Answered the task-boundary question with “Change this launch to production replacement”. This supersedes the earlier finish-DEV-001-first plan; it is not authorisation to implement multiple tasks or merge.
+- **Selected bounded child:** DEV-002A replaces the test-record UI/service with real blank adventure initialization/list/resume, durable atomic Turn-0 baseline and actual browser/storage verification. Parent DEV-002 is split sequentially; generated Story turns remain DEV-002B.
+- **Preserved work:** CI/scripts are adapted to production paths as supporting verification. The research draft with 95 unverified rows is preserved in `requirements/DEV-002.md`; no completed inventory/review is claimed. DEV-001 remains interrupted rather than falsely complete.
+- **Git:** Existing isolated branch remains in use; branch rename request did not complete and was cancelled. No application edits have yet been claimed verified.
+- **Next action:** Lead implements this one production child. Independent review, CI and merge gates remain mandatory; account-limit interruption is recorded, not bypassed.
+
+### 2026-11-03 — DEV-002A / Production implementation and independent findings
+
+- **Branch:** Renamed successfully to `feat/dev-002a-adventure-foundation` after the user redirection.
+- **Implementation:** Replaced GateService/test record with typed LibraryService and real adventure/baseline/creation-receipt storage. TypeScript prepares stable IDs and default titles; Go saves atomically in one shared `lorebound.db`. Replaced the test page with production create/list/resume surfaces using approved visual tokens. Current setup is `docs/development.md`, `scripts/build.sh` and `scripts/run.sh`; original Gate 0 evidence remains historical.
+- **Local evidence:** Frontend check has zero errors/warnings; static build, TypeScript contract test and five Go storage tests (plus invalid-request cases) pass. Independent reviewer reran frontend checks, Go tests, vet and server build successfully.
+- **Review findings:** Reviewer found refresh hid Retry after an uncertain creation and a late response could override newer Back navigation. Both were corrected; browser regressions cover refresh-then-retry and delayed-read navigation. No silent production scope expansion.
+- **Browser verification:** First attempt exposed an ineffective response-loss test fixture (overriding the runtime function did not interrupt a response). Replaced it with interception that lets the real request commit then drops its HTTP response. Actual Firefox creation/reload, response-loss recovery, wrong-epoch rejection and process-restart identity persistence then passed. Final rerun includes the navigation fix.
+- **Limits:** This is blank-adventure persistence, not full Story mode. Font roles use their approved local fallbacks; no external fonts/AI calls. Bright tokens are tested without claiming a completed appearance-settings UI. Platform packaging, launcher lifecycle and B9-D12 remain outside this child.
+
+### 2026-11-03 — DEV-002A / Final local browser pass and PR preparation
+
+- **Observed:** Final `scripts/verify-host.sh` exited 0 after actual Firefox create/resume/reload, simulated lost success response to a real SQLite commit, refresh-then-identical-request recovery, delayed Read versus Back navigation, wrong-epoch rejection and fresh-browser readback after process restart. Host Origin/Host/preflight/WebSocket checks passed.
+- **Artifacts:** Four actual screenshots retained under `evidence/DEV-002A/`; automation also emits all four viewport widths and Dark/Bright states. Reviewer inspected the rendered states and is running a separate browser suite.
+- **Traceability audit:** All 52 ledger IDs still match the original production notes; the parent draft has 95 unique requirement IDs and valid source paths. This structural audit does not certify the whole seven-IDEA requirement inventory.
+- **Next action:** Open DEV-002A PR, execute GitHub CI and obtain final independent sign-off. Keep next task DEV-002A until authorised merge/reconciliation; do not begin DEV-002B.

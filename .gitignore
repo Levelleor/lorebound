@@ -35,11 +35,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Gate 0 generated files and disposable data
+# Generated frontend/binaries and local database files
 frontend/node_modules/
 frontend/.svelte-kit/
 frontend/build/
 bin/
+# Historical disposable Gate 0 directory (never imported)
 .gate0/
 *.db
 *.db-shm
