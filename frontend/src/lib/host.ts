@@ -1,18 +1,15 @@
-export interface HostInfo { name: string; schemaVersion: number }
-export interface State { schemaVersion: number; epoch: string; version: number; value: string }
-export interface CommitRequest { schemaVersion: number; epoch: string; expectedVersion: number; operationId: string; value: string }
-export interface CommitResult { state: State; replayed: boolean }
+import { readCreateResult, readLibrary, readSnapshot, schemaVersion, type CreateRequest } from './library';
 
 interface WailsRuntime { Call: { ByName(name: string, ...args: unknown[]): Promise<unknown> } }
 declare global { interface Window { wails?: WailsRuntime } }
 
-async function call<T>(method: string, ...args: unknown[]): Promise<T> {
-  if (!window.wails) throw new Error('Wails runtime unavailable');
-  return await window.wails.Call.ByName(`main.GateService.${method}`, ...args) as T;
+async function call(method: string, ...args: unknown[]): Promise<unknown> {
+  if (!window.wails) throw new Error('host_unavailable');
+  return window.wails.Call.ByName(`main.LibraryService.${method}`, ...args);
 }
 
 export const host = {
-  ping: () => call<HostInfo>('Ping'),
-  read: () => call<State>('Read'),
-  commit: (request: CommitRequest) => call<CommitResult>('Commit', request)
+  list: async () => readLibrary(await call('List')),
+  read: async (epoch: string, adventureId: string) => readSnapshot(await call('Read', { schemaVersion, epoch, adventureId })),
+  create: async (request: CreateRequest) => readCreateResult(await call('Create', request))
 };

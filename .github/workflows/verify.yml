@@ -1,0 +1,66 @@
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  headless:
+    name: Headless host and browser
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    env:
+      CGO_ENABLED: '0'
+      GOTOOLCHAIN: local
+      LOREBOUND_ARTIFACT_DIR: /tmp/lorebound-evidence
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6.1.0
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
+      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: '24.14.0'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Record environment
+        run: |
+          mkdir -p "$LOREBOUND_ARTIFACT_DIR"
+          { uname -a; go version; node --version; npm --version; } | tee "$LOREBOUND_ARTIFACT_DIR/environment.log"
+      - name: Install, typecheck and build the real host
+        run: bash scripts/build.sh 2>&1 | tee "$LOREBOUND_ARTIFACT_DIR/build.log"
+      - name: TypeScript library contracts
+        run: npm --prefix frontend run test:unit 2>&1 | tee "$LOREBOUND_ARTIFACT_DIR/ts-test.log"
+      - name: Static Go checks
+        run: go vet -tags server ./... 2>&1 | tee "$LOREBOUND_ARTIFACT_DIR/vet.log"
+      - name: Real SQLite contract and recovery tests
+        run: go test -count=1 -tags server -v ./... 2>&1 | tee "$LOREBOUND_ARTIFACT_DIR/go-test.log"
+      - name: Install Firefox and system dependencies
+        working-directory: frontend
+        run: npx --no-install playwright install --with-deps firefox
+      - name: Real browser, host restrictions and restart persistence
+        timeout-minutes: 3
+        run: bash scripts/verify-host.sh 2>&1 | tee "$LOREBOUND_ARTIFACT_DIR/host-smoke.log"
+      - name: Retain verification logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: headless-verification-${{ github.run_attempt }}
+          path: ${{ env.LOREBOUND_ARTIFACT_DIR }}
+          if-no-files-found: warn
+          retention-days: 7

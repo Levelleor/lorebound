@@ -1,17 +1,17 @@
 ---
 type: development-status
 status: current
-updated: "2026-11-03"
-current_task: "DEV-001"
-current_task_status: "READY FOR ASSIGNMENT"
-next_task: "DEV-001"
+updated: "2026-11-04"
+current_task: "DEV-002A"
+current_task_status: "PR READY (UNMERGED)"
+next_task: "DEV-002A"
 ---
 
 # Lorebound — Current Development Status
 
 > **THIS IS THE ONE-PAGE HANDOFF.** A new agent should read this first, then [TASKS](./TASKS.md), [FEATURES](./FEATURES.md), [JOURNAL](./JOURNAL.md), the [runbook](./AGENT-RUNBOOK.md), and [the system architecture](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md). Keep **exactly one** Next Task here and change it when work genuinely advances. This page represents **merged main**, not an unmerged agent's optimistic progress.
 
-Last reconciled with GitHub main: **2026-11-03**. Updates are recorded as commits; do not infer current CI results from this static document.
+Last reconciled with GitHub main: **2026-11-03**, commit `79263d647698b86c821badd0194e8299aea23105`; no outstanding PRs at task start. Updates are recorded as commits; do not infer current CI results from this static document.
 
 ## Snapshot
 
@@ -28,48 +28,19 @@ Last reconciled with GitHub main: **2026-11-03**. Updates are recorded as commit
 
 **What actually works so far:** The Gate 0 Wails v3 headless Go/SvelteKit browser bridge and isolated Go-owned SQLite technical test record were implemented and **reported passing real host, browser and SQLite checks** on Linux, and the branch was merged as PR #3. These limited checks are not proof that whole adventure storage, first Story-mode turn, full security/restore, all providers, world/map or the approved visual design are working.
 
-## Next Task: **DEV-001 — Establish the delivery verification controls**
+## Next Task: **DEV-002A — Replace Gate 0 with persisted adventure creation/resume**
 
+**Status: PR READY, UNMERGED.** The user explicitly redirected this launch on 2026-11-03 from DEV-001 controls to the first bounded production replacement. DEV-002 is split into sequential children in [TASKS](./TASKS.md). Only DEV-002A executes now.
 
-**Status: READY FOR ASSIGNMENT, NOT STARTED.** There is **no currently active implementation task recorded**. [Full task brief](./TASKS.md#dev-001--implement-ci-and-first-slice-requirement-traceability).
+**Outcome:** Replace the Gate 0 screen/test-record service with real blank adventure creation, shared Go-owned SQLite storage, durable minimal Turn-0 baseline, listing and resume by stable identity. Blank/unnamed stories need no model, character or generated first turn. Use the approved Command Citadel style on implemented surfaces.
 
-**Purpose:** Build the minimum reliable *implementation control* machinery without opening another full design phase.
+**Branch:** `feat/dev-002a-adventure-foundation` (renamed after the user redirected this launch). Lead owns integration/control documents. Existing unfinished CI work is adapted to verify actual production behavior; DEV-001 is not claimed complete.
 
-**First execution handoff:** Assign an agent a dedicated branch to (1) establish GitHub Actions build/static checks and real Go headless-server tests, (2) wire the existing repeatable browser smoke verification where CI runtime permits, and (3) **inventory the atomic accepted requirements of the original IDEA notes needed for DEV-002**, including later superseding ADRs, assigning stable IDs and linking planned acceptance evidence. Retain **all 52 original IDEA rows** in the global ledger, while other IDEA-level requirement breakdowns follow in their relevant development tasks. Establish traceability from requirements to tasks, code and tests. Do not assume existing Gate 0 evidence proves untested future features.
+**Gates:** Real storage atomicity/idempotency/isolation/reopen; actual Wails browser create/resume and failure/recovery; responsive visual evidence; passing PR CI and independent review. Independent review resumed after the earlier account-limit interruption. Storage/typecheck/build and final browser/visual checks pass locally; the reviewer found two UI recovery/navigation issues that are now fixed. Independent browser rerun and source/local review PASS. [PR #4](https://github.com/Levelleor/lorebound/pull/4) is open; [corrected CI passes](https://github.com/Levelleor/lorebound/actions/runs/41773118072) after an initial workflow-validation correction. Independent review and real local/browser gates also pass. [Evidence](./evidence/DEV-002A.md). No merge is authorised.
 
-**Completion requires:** Executable reproducible CI against the actual approved runtime (or clearly documented blocked runners), a **complete accepted-requirement inventory for the first Story-mode slice**, continued visible IDEA-level coverage of all 52 approved notes, evidence gates/tests explicitly NOT RUN until executed, linked tracker entries, review and a PR. **Do not mark the other ideas' uncounted atomic requirements as verified.** They are inventoried and checked as their respective slices begin, with a full 52-idea audit required before release.
+**Exclusions:** Generated Story turns and passage acceptance belong to DEV-002B; full Quick Start, templates, rename/delete, history editing, provider setup, packaging and advanced lifecycle follow their recorded tasks. No B9-D12 spatial migrations. Gate 0 test data is not migrated into an adventure library.
 
-**Not included:** Implementing the Story-mode domain loop, live provider integrations, map, optional mechanics, all-feature parallel coding, or any deferred B9-D12 spatial migration.
-
-**Authorisation:** This document identifies the next task; it does not automatically authorise running code, changing CI settings or merging. Follow the user's explicit execution approval for the assigned task.
-
-
-
-## After DEV-001
-
-**DEV-002 — First complete Story-mode turn** on the verified Gate 0 foundation. Create/resume a minimal adventure, submit Story input, produce a *mocked* provisional narrative candidate, explicitly accept or discard, commit versioned passage/events atomically through actual Go/SQLite, close/reopen and deterministically rebuild the current story. Include visible design-aligned reading/composer states. [Task queue](./TASKS.md) owns the full dependency chain and scope.
-
-## Active work / blockers
-
-| Category | Current state | What to do |
-| --- | --- | --- |
-| Active development task | **None recorded** | Assign DEV-001, create branch/PR, update this page |
-| Real host / SQLite foundation | **Gate 0 merged, narrow foundation verified** | Reuse rather than restart. Do not mark full IDEA-0051/0053 complete |
-| CI | **Missing** | DEV-001 should add and exercise appropriate GitHub workflow(s) |
-| Atomic feature coverage | **Only 52 idea-level rows inventoried; individual requirements not yet decomposed** | DEV-001; do not equate an idea row to all acceptance criteria |
-| Localhost privileged service | **Known bounded risk**: origin restrictions do not authenticate a hostile local process | Before adding sensitive Go APIs, define/test appropriate protection boundary and record evidence |
-| Epoch / idempotency after restore | **Known later integration concern** | Check epoch rotation and duplicate replay ordering before restore/library change; not a blocker to the narrow existing test record |
-| B9-D12 spatial migration | **Explicitly deferred** | No design/implementation/tests until a new explicit decision |
-
-No other issue is currently recorded as a hard blocker to **preparing DEV-001**. This does not mean all future implementation risks are resolved.
-
-## Handoff to the next agent
-
-Use this exact opening statement in your task brief:
-
-> “Work on **DEV-001** according to `planning/development/TASKS.md`, `FEATURES.md` and `AGENT-RUNBOOK.md`. Read the central system architecture, production ideas and accepted ADRs before touching code. Preserve the 52-idea inventory and original approvals; keep this current-status page, the task queue and journal in sync. Implement only the authorised next task, run real tests, open a PR and return the required report.”
-
-**Do not change Next Task just because a PR is opened.** Move forward only on accepted evidence and verified completion, recording the next single task and any remaining blockers. In-progress branches belong under Active Work; final merged status stays honest.
+**Exact next action:** Obtain explicit merge authorisation for [PR #4](https://github.com/Levelleor/lorebound/pull/4). Require passing latest PR checks; after an authorised merge, reconcile actual merged main before advancing. Do not begin DEV-002B in this launch or mark unmerged behavior verified on main.
 
 ## Recent verified milestone
 
