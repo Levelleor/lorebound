@@ -8,7 +8,7 @@ task: "DEV-002A"
 
 # DEV-002A — Post-merge reconciliation
 
-This launch closes the remaining DEV-002A record-maintenance work. It changes documentation only on `docs/dev-002a-merge-reconciliation`; no subsequent development task starts. Application evidence below is already merged. These record corrections remain unmerged pending their documentation PR.
+This launch closes the remaining DEV-002A record-maintenance work. It changes documentation only on `docs/dev-002a-merge-reconciliation`; no subsequent development task starts. Application evidence below is already merged. These record corrections are in [documentation PR #5](https://github.com/Levelleor/lorebound/pull/5), open and unmerged at handoff. Its live CI is a separate gate from the verified PR #4 evidence below.
 
 ## Merge and CI provenance
 

@@ -146,3 +146,5 @@ tags:
 - **Record corrections:** NOW/TASKS/FEATURES and scoped evidence now reflect merged blank adventure creation/list/resume, one workflow and scoped visual verification. Requirements and architecture current-status statements no longer describe the removed Gate 0 test record as current application behavior. Historical journal/review findings are preserved; no original IDEA is archived.
 - **Branch:** `docs/dev-002a-merge-reconciliation` from merged main. Documentation corrections await their own PR; application progress already reflects merged main.
 - **Next action:** DEV-002B on a separately authorised launch, beginning with the outstanding first-slice requirement audit and bounded acceptance definition. DEV-001 remains interrupted; no whole-IDEA certification, new architecture or B9-D12 spatial migration is implied.
+
+- **Publication:** [Documentation PR #5](https://github.com/Levelleor/lorebound/pull/5) opened after independent documentation review PASS and the minor M0 reference correction. Original PR #4 remains merged; PR #5 carries only reconciliation records and remains unmerged. Inspect its live checks before any authorised merge.

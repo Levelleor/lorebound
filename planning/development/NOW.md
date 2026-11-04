@@ -31,7 +31,7 @@ Last reconciled with GitHub main: **2026-11-04**, commit `fac5521bfbe7cd63ea3c7b
 
 **Status: VERIFIED & MERGED.** Implementation branch: `feat/dev-002a-adventure-foundation`; final head `473a957797ce8ad339435c04aad39592e61525d1`; merged as `fac5521bfbe7cd63ea3c7b85108b7d1865b678b9` on 2026-11-04. The user reported the merge; GitHub and fetched main confirm it. No merge approval remains outstanding for PR #4.
 
-**Post-merge record maintenance:** This launch closes DEV-002A on `docs/dev-002a-merge-reconciliation`. Application verification above reflects merged main; these documentation corrections remain unmerged until their own PR merges. No product code or subsequent child task starts in this launch. Original review and test evidence are retained, with final-head CI and merge provenance added.
+**Post-merge record maintenance:** This launch closes DEV-002A on `docs/dev-002a-merge-reconciliation`. Application verification above reflects merged main; these documentation corrections are tracked in [PR #5](https://github.com/Levelleor/lorebound/pull/5) and remain unmerged until that PR merges. No product code or subsequent child task starts in this launch. Original review and test evidence are retained, with final-head CI and merge provenance added.
 
 ## Next Task: **DEV-002B — First provisional and accepted Story turn**
 
