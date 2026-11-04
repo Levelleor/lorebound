@@ -1,6 +1,6 @@
 # Lorebound development
 
-The current production slice creates and resumes independent blank adventures in a Go-owned SQLite library. The former Gate 0 test-record service and screen have been replaced. Story writing/generation, rename/delete, backup/restore and full host lifecycle are later slices; see [the task record](../planning/development/TASKS.md#dev-002a--production-blank-adventure-creation-and-resume-next).
+The current production slice creates and resumes independent blank adventures in a Go-owned SQLite library. The former Gate 0 test-record service and screen have been replaced. Story writing/generation, rename/delete, backup/restore and full host lifecycle are later slices; see [the task record](../planning/development/TASKS.md#dev-002a--production-blank-adventure-creation-and-resume).
 
 Use Go 1.27.3 (`go.mod`), Node 24.14.0 and npm for development. Node is not a player runtime dependency. Dependencies are locked in `go.sum` and `frontend/package-lock.json`.
 

@@ -3,7 +3,7 @@ type: development-task-queue
 status: current
 created: "2026-11-03"
 updated: "2026-11-04"
-current_next_task: "DEV-002A"
+current_next_task: "DEV-002B"
 ---
 
 # Lorebound — Development Task Queue
@@ -21,7 +21,7 @@ Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies,
 | Task | Outcome | Depends on | Primary IDEA coverage | Status | PR/evidence |
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
-| **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | SPLIT: DEV-002A → DEV-002B → DEV-002C | Unmerged |
+| **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | SPLIT: DEV-002A → DEV-002B → DEV-002C | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B/C not started |
 | **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | QUEUED | None |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
@@ -41,7 +41,7 @@ Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies,
 
 **2026-11-03 redirection:** User selected “Change this launch to production replacement”. The former DEV-001-before-product sequencing is replaced for this launch by DEV-002A with its own mandatory build/storage/browser/CI/review gates. Remaining DEV-001 inventory certification is outstanding; the seven-IDEA draft is [preserved](./requirements/DEV-002.md), not independently certified.
 
-**Why next:** Current main contains merged Gate 0 host/SQLite and one Go test package/browser verification script, but no `.github/workflows/` files. The next Story-mode implementation should be automatically checked rather than relying on one subagent's local results. Full 52-idea inventory already exists, so **do not delay first product coding to exhaustively rewrite the remaining 50 idea documents into atomic requirements all at once**.
+**Historical rationale (2026-11-03, before DEV-002A):** Main then contained merged Gate 0 host/SQLite and one Go test package/browser verification script, but no `.github/workflows/` files. The next Story-mode implementation should be automatically checked rather than relying on one subagent's local results. Full 52-idea inventory already exists, so **do not delay first product coding to exhaustively rewrite the remaining 50 idea documents into atomic requirements all at once**.
 
 **Expected deliverables:**
 
@@ -73,23 +73,23 @@ Build in the actual SvelteKit browser and Go SQLite app:
 
 **Evidence:** unit + contract + real SQLite host + actual browser E2E + appropriate visual screenshots, independent review and CI link. Only then can any atomic requirements be marked VERIFIED; the broader IDEA titles remain PARTIAL until their entire accepted scope works.
 
-### DEV-002A — Production blank adventure creation and resume (NEXT)
+### DEV-002A — Production blank adventure creation and resume
 
-Status: PR READY / UNMERGED. Owner: Codex lead. Authorisation: user explicitly changed this launch to production replacement, 2026-11-03.
+Status: VERIFIED & MERGED. Owner: Codex lead. Authorisation: user explicitly selected production replacement, 2026-11-03; user reported PR #4 merged on 2026-11-04, independently confirmed against GitHub and fetched main.
 
 - Replace runtime Gate 0 test UI, service, record schema, binary/script naming with the actual adventure library path; preserve Wails/browser TS/Go/SQLite boundaries.
 - Create an independent stable-ID adventure and minimal valid empty Turn-0 baseline atomically. Missing title uses `Untitled Adventure`; no AI, protagonist, fake passage or setup questionnaire required.
 - List and resume zero-turn adventures from the same library, including after browser and process restart; unrelated adventures remain isolated.
 - Narrow versioned service requests, library-epoch validation, idempotent creation and truthful recoverable errors. Failed writes leave no partial adventure/receipt; unchanged retry resolves uncertain success.
 - Use approved visual tokens/type roles and responsive accessible reading/entry surfaces; no fake working composer or generated content.
-- Requirements: [draft IDEA-0006/R01–R03](./requirements/DEV-002.md#idea-0006--quick-start-and-custom-openings); B5-D01/B5-D09; applicable IDEA-0051 storage, IDEA-0053 host boundaries; visual contract. Other draft requirement rows are not certified by this child.
+- Requirements: [verified IDEA-0006/R01–R03; parent inventory draft](./requirements/DEV-002.md#idea-0006--quick-start-and-custom-openings); B5-D01/B5-D09; applicable IDEA-0051 storage, IDEA-0053 host boundaries; visual contract. Other draft requirement rows are not certified by this child.
 - Checks: actual Go SQLite success/rollback/idempotency/wrong epoch/invalid input/isolation/reopen, real Firefox Wails create/resume/restart, UI error/retry, 390/768/1024/1440px screenshots and keyboard use, CI and fresh independent review.
 - No existing Gate 0 data migration. Generated prose/turn acceptance, rename/delete, shared drafts, Quick Start, full host lifecycle and platform packaging excluded. B9-D12 remains deferred.
-- Branch: `feat/dev-002a-adventure-foundation`. PR: [#4](https://github.com/Levelleor/lorebound/pull/4). Independent reviewer: `/root/independent_review`, [source/local/browser PASS](./evidence/DEV-002A-review.md). [Corrected GitHub CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41773118072); initial validation failure retained in the journal. [Local passing evidence](./evidence/DEV-002A.md). Next action: explicit merge authorisation for PR #4, then actual-main reconciliation after merge; no next child in this launch.
+- Branch: `feat/dev-002a-adventure-foundation`. PR: [#4](https://github.com/Levelleor/lorebound/pull/4). Independent reviewer: `/root/independent_review`, [source/local/browser PASS](./evidence/DEV-002A-review.md). [Final-head GitHub CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41838612434); initial validation failure retained in the journal. [Local passing evidence](./evidence/DEV-002A.md). Final head `473a957797ce8ad339435c04aad39592e61525d1` and merged main `fac5521bfbe7cd63ea3c7b85108b7d1865b678b9` have identical trees. [Post-merge reconciliation](./evidence/DEV-002A-reconciliation.md) on `docs/dev-002a-merge-reconciliation` changes documentation only. No remaining PR #4 merge-approval blocker; no next child starts in this launch.
 
-### DEV-002B — First provisional and accepted Story turn
+### DEV-002B — First provisional and accepted Story turn (NEXT)
 
-Status: QUEUED. Depends on: verified/merged DEV-002A and complete first-slice requirement audit. Add the deterministic mocked-generation coordinator, structured current passages and minimal typed events, explicit acceptance/discard, consistent reads/replay, version conflicts and uncertain-write recovery. Apply the docked composer and provisional/committed visual contract. Define bounded acceptance/tests before execution; no live-provider or map scope.
+Status: QUEUED / prerequisite audit outstanding; NOT STARTED. Depends on: verified/merged DEV-002A (**satisfied**, PR #4) and complete first-slice requirement audit (**outstanding**, 95-row draft not certified). Next action on a separately authorised launch: audit the accepted first-slice requirements, then define one bounded scope or sequential children before implementation. This reconciliation launch does not execute DEV-002B. Add the deterministic mocked-generation coordinator, structured current passages and minimal typed events, explicit acceptance/discard, consistent reads/replay, version conflicts and uncertain-write recovery. Apply the docked composer and provisional/committed visual contract. Define bounded acceptance/tests before execution; no live-provider or map scope.
 
 ### DEV-002C — Story-loop integration and parent verification
 

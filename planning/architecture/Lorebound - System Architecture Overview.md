@@ -3,7 +3,7 @@ type: architecture
 status: current-reference
 phase: "C"
 created: "2026-11-03"
-updated: "2026-11-03"
+updated: "2026-11-04"
 tags:
   - planning/architecture
   - system-overview
@@ -29,7 +29,7 @@ The experience combines:
 - **World and character views**: universal characters with optional Playing As identity, presence/status/anatomy, unique items and equipment, locations/routes/conditions and an accessible, basic **semantically scaled spatial map**.
 - A **Command Citadel visual language**: parchment editorial prose on warm charcoal, antique-gold actions, a 320px contextual rail at desktop, a docked composer, responsive alternative views and honest blue-pending/green-confirmed feedback.
 
-**Current implementation evidence (2026-11-03):** Gate 0's real **Wails v3 headless Go server, SvelteKit browser UI and Go-owned SQLite test transaction** were built and tested in merged [PR #3](https://github.com/Levelleor/lorebound/pull/3). That is a verified **technical foundation**, **not** a complete adventure, provider integration, Lorebook, map or game engine. **All 52 original ideas are in `planning/production/` (approved for implementation); zero are staged; no complete idea has been archived as implemented.** Future features must be separately built and evidenced, in small slices. **B9-D12 spatial event/schema migration is explicitly deferred** and not part of today's work.
+**Current implementation evidence (2026-11-04):** Merged [DEV-002A PR #4](https://github.com/Levelleor/lorebound/pull/4) replaces Gate 0's test screen/service with real blank adventure creation, listing and resume through **Wails v3, SvelteKit and Go-owned SQLite**. Atomic empty Turn-0 initialization, independent identities, recovery and browser/process restart have [passing evidence](../development/evidence/DEV-002A.md), including scoped Command Citadel entry/blank-reader visuals. IDEA-0006/R01–R03 are verified; IDEA-0006/0051/0053 remain partial. Generated Story turns, providers, Lorebook, map and the complete game engine remain planned. **All 52 original ideas are in `planning/production/` (approved for implementation); zero are staged; no complete idea has been archived as implemented.** Future features must be separately built and evidenced, in small slices. **B9-D12 spatial event/schema migration is explicitly deferred** and not part of today's work.
 
 ## 2. System at a glance
 
@@ -274,7 +274,7 @@ The architecture has **12 logical ownership areas**, not necessarily 12 separate
 
 ## 9. User interface and design language
 
-The approved [Command Citadel design reference](../design/README.md) is the visual target **for the finished app**, not the claim that Gate 0's minimal screen already matches it.
+The approved [Command Citadel design reference](../design/README.md) is the visual target **for the finished app**. DEV-002A verifies the implemented entry/blank-reader surfaces only; the complete composer, world UI and appearance controls remain planned.
 
 - **Desktop:** 48px header; centre-reading main pane (outer max 672px), dark 320px context rail with **Scene / Items / Lore / Context** tabs; main story and rail independently scroll; primary multi-line composer docked below reader.
 - **Responsive:** below 1024px switch between Story and World; hide location breadcrumb below 768px; simplify compact controls/forms below 640px. No sideways overflow.
@@ -286,20 +286,20 @@ For screen-by-screen states, see the [UI interaction map](../design/Lorebound%20
 
 ## 10. Current implementation status and intended development sequence
 
-| Area | Current evidenced status (as of 2026-11-03) | What remains |
+| Area | Current evidenced status (as of 2026-11-04) | What remains |
 | --- | --- | --- |
-| Wails v3 headless Go + SvelteKit ordinary browser | **Gate 0 implemented and real-browser verified on Linux** in merged [PR #3](https://github.com/Levelleor/lorebound/pull/3); [evidence report](./Gate%200%20Execution%20Evidence.md) | Expand safely beyond the narrow test-only service; harden sensitive privileged operations and platform packaging |
-| Go SQLite technical test transaction | **Real isolated commit/readback/version/epoch/idempotency/rollback/reopen verified** in Gate 0 | Final adventure library, history schema, drafts, backup/restore, full multi-tab integration |
+| Wails v3 headless Go + SvelteKit ordinary browser | **Real adventure service/browser integration verified on Linux**, merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); [evidence](../development/evidence/DEV-002A.md) | Full launcher/instance/Quit lifecycle, sensitive-service security and platform packaging |
+| Go SQLite adventure library | **Blank adventure/baseline creation, list/resume, isolation, epoch/idempotency/rollback/reopen verified** in DEV-002A; Gate 0 remains historical evidence | Accepted passage/event history, expected-version edits, drafts, backup/restore and full multi-tab integration |
 | Adventure/story turn + TypeScript coordinator | **Approved design, not yet evidenced as full working flow** | First complete Story-mode request → proposal → explicit accept → Go atomic persist → reopen/replay |
 | Direct model providers and full AI workflow | **Approved design only** | Browser adapters, settings, streaming, interpretation and context |
 | Editing, lore/memory, characters, world, map, plugins | **Approved design only** | Incremental implementation and honest tests; no blanket completion claim |
-| UI visual fidelity | **Approved design contract documented** | Actual styling and responsive visual checks against source design |
+| UI visual fidelity | **Entry/blank-reader styling and four-width responsive checks verified** in DEV-002A | Composer, full world/UI surfaces, appearance controls and complete accessibility certification |
 | Original 52 production ideas | **52 approved notes, zero staging, no completed specs/archive** | Implement and verify individually or in dependency-aligned slices |
 | Spatial event/schema migration | **Deferred by B9-D12** | No work until a distinct explicit future decision |
 
-**Recommended next integrated development:** use the verified Gate 0 foundation, and implement the smallest complete **Story-mode** loop under accepted C-D01/D04/D06, using minimal versioned accepted passages/events and mocked generation as appropriate. Then extend editing/recovery, other modes, real providers and context, character/world features, map and full verification in dependency order. **Approval to move all ideas into production was not an instruction to implement every feature simultaneously.**
+**Recommended next integrated development:** follow [NOW](../development/NOW.md) for DEV-002B's outstanding requirement-audit gate, then build on the merged blank-adventure foundation to implement the smallest complete **Story-mode** loop under accepted C-D01/D04/D06, using minimal versioned accepted passages/events and mocked generation as appropriate. Then extend editing/recovery, other modes, real providers and context, character/world features, map and full verification in dependency order. **Approval to move all ideas into production was not an instruction to implement every feature simultaneously.**
 
-**Known early risk:** a hostile local process that bypasses browser headers is not fully authenticated by Gate 0's origin checks; guard privileged/private methods before extending their scope. Evaluate epoch/idempotency order when library restore rotates the epoch. Neither is proof of a failing current narrow demo, but both require consideration during relevant slices.
+**Known early risk:** a hostile local process that bypasses browser headers is not fully authenticated by Gate 0's origin checks; guard privileged/private methods before extending their scope. Evaluate epoch/idempotency order when library restore rotates the epoch. DEV-002A tests creation-receipt epoch fencing; restore itself remains unimplemented. These are limits to consider during the relevant future slices, not evidence that current blank-adventure operations fail.
 
 ## 11. Architecture rules that must survive implementation
 
