@@ -64,3 +64,10 @@ The job-level artifact variable now uses the literal `/tmp/lorebound-evidence` o
 The evidence and trackers link open PR #4, retain the initial failed-validation run, and distinguish local/source review PASS from corrected CI pending and unmerged main. Local Markdown link checks for NOW, TASKS, FEATURES, JOURNAL and both DEV-002A evidence/review files all passed; `git diff --check` was clean. One minor handoff cleanup remains for the lead's final tracker update: NOW's Exact next action still says to implement/open the PR even though PR #4 exists; replace it with the actual remaining CI/merge-authorisation action once CI resolves.
 
 Repository files changed by reviewer: **none**. This follow-up does not assert GitHub CI PASS and does not authorise merge or DEV-002B.
+
+
+## Post-merge provenance note — 2026-11-04 (lead annotation)
+
+The preceding reviewer reports remain historical and retain their original attribution. GitHub now confirms PR #4 merged at `fac5521bfbe7cd63ea3c7b85108b7d1865b678b9`. The lead inspected [final-head CI](https://github.com/Levelleor/lorebound/actions/runs/41838612434), including job steps/logs, for `473a957797ce8ad339435c04aad39592e61525d1`; all required steps passed. The merged tree equals that final head. This annotation does not claim the original reviewer ran later CI.
+
+A fresh independent `/root/merge_audit` agent inspected original IDEA-0006/B5-D01/B5-D09 requirements, source/test coverage, prior review and Git provenance. It supports exactly IDEA-0006/R01–R03 as VERIFIED, with three partial ideas and no whole-IDEA completion. No runtime checks were rerun in that audit. Its documentation-diff review and the lead's reconciliation evidence are recorded in [DEV-002A reconciliation](./DEV-002A-reconciliation.md).

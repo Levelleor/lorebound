@@ -1,6 +1,6 @@
 ---
 type: development-evidence
-status: implemented-unmerged
+status: verified-merged
 created: "2026-11-03"
 updated: "2026-11-04"
 task: "DEV-002A"
@@ -8,9 +8,9 @@ task: "DEV-002A"
 
 # DEV-002A — Production adventure creation and resume
 
-The user explicitly redirected this launch from DEV-001 to the first bounded production replacement. This child replaces the Gate 0 test UI/service/schema with actual blank adventure creation/list/resume. It does not deliver generated Story turns or complete any whole IDEA. No merge is authorised.
+The user explicitly redirected this launch from DEV-001 to the first bounded production replacement. This child replaces the Gate 0 test UI/service/schema with actual blank adventure creation/list/resume. It does not deliver generated Story turns or complete any whole IDEA. PR #4 is merged; no further approval to merge that PR is needed.
 
-Base main: `79263d647698b86c821badd0194e8299aea23105`. Branch: `feat/dev-002a-adventure-foundation`. PR: [#4](https://github.com/Levelleor/lorebound/pull/4), open and ready for review. Implementation reviewed at `7abe54f050eedabc2a0891f88057274ff0d9b271`. CI: corrected workflow PASS at `2496367d2603a83d8f57c2d267dbca2dbc37397e`; subsequent changes only record evidence/tracker state. The PR checks remain the live final-head gate. Main remains the earlier Gate 0 baseline until an authorised merge and reconciliation.
+Base main: `79263d647698b86c821badd0194e8299aea23105`. Branch: `feat/dev-002a-adventure-foundation`. [PR #4](https://github.com/Levelleor/lorebound/pull/4) merged as `fac5521bfbe7cd63ea3c7b85108b7d1865b678b9` on 2026-11-04. Implementation reviewed at `7abe54f050eedabc2a0891f88057274ff0d9b271`, corrected workflow reviewed at `2496367d2603a83d8f57c2d267dbca2dbc37397e`. [Final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41838612434) covers head `473a957797ce8ad339435c04aad39592e61525d1`; its tree is identical to merged main. [Post-merge reconciliation](./DEV-002A-reconciliation.md) inspected actual GitHub status, job steps/logs and Git provenance; no local runtime rerun is claimed for documentation maintenance.
 
 ## Scoped requirement traceability
 
@@ -18,14 +18,14 @@ The [parent draft](../requirements/DEV-002.md) preserves 95 proposed atomic reco
 
 | Accepted source / requirement | Actual source / test evidence | Scope and status |
 | --- | --- | --- |
-| IDEA-0006/R01; [B5-D01](../../architecture/decisions/B5-D01%20-%20Durable%20Minimal%20Turn-0%20Baseline.md): unnamed, characterless, model-free independent blank adventure | `frontend/src/lib/library.ts:prepareCreate`, `LibraryService.Create`, `TestAdventureDurabilityAndIsolation`, browser keyboard blank-creation case | IMPLEMENTED / UNMERGED; no fake turn or world defaults |
-| IDEA-0006/R02; B5-D01: identity and minimal baseline atomically durable | `internal/store/store.go:create`, `TestCreationFailuresLeaveNoPartialAdventure`, `TestStorageFailureAndCancelledRequest` | IMPLEMENTED / UNMERGED; failed receipt rolls back with adventure |
-| IDEA-0006/R03; [B5-D09](../../architecture/decisions/B5-D09%20-%20Resume%20Blank%20Adventures%20Without%20Automatic%20Generation.md): visible/resumable zero-turn stories | `List`, `Read`, URL stable adventure selection; browser/process restart tests | IMPLEMENTED / UNMERGED; no automatic AI or opening |
+| IDEA-0006/R01; [B5-D01](../../architecture/decisions/B5-D01%20-%20Durable%20Minimal%20Turn-0%20Baseline.md): unnamed, characterless, model-free independent blank adventure | `frontend/src/lib/library.ts:prepareCreate`, `LibraryService.Create`, `TestAdventureDurabilityAndIsolation`, browser keyboard blank-creation case | VERIFIED / MERGED; no fake turn or world defaults |
+| IDEA-0006/R02; B5-D01: identity and minimal baseline atomically durable | `internal/store/store.go:create`, `TestCreationFailuresLeaveNoPartialAdventure`, `TestStorageFailureAndCancelledRequest` | VERIFIED / MERGED; failed receipt rolls back with adventure |
+| IDEA-0006/R03; [B5-D09](../../architecture/decisions/B5-D09%20-%20Resume%20Blank%20Adventures%20Without%20Automatic%20Generation.md): visible/resumable zero-turn stories | `List`, `Read`, URL stable adventure selection; browser/process restart tests | VERIFIED / MERGED; no automatic AI or opening |
 | IDEA-0051/R01/R04/R06/R07/R08 subsets; B3-D02/B4-D03: shared SQLite, idempotency, coherent read and technical integrity | `TestConcurrentDuplicateCreationAndEpochFencing`, `TestReadsAndUnsupportedLibraryFailClosed`, real bridge/browser tests | PARTIAL: adventure creation/read only; passage/event commits, expected-version edits, restore and full library lifecycle remain later |
 | IDEA-0053/R01–R05 subsets: headless Wails, narrow Go services, local-only operation and browser restrictions | server build, real Firefox, hostile Origin/Host/preflight/WebSocket checks | PARTIAL: no launcher handoff/auto-open/Quit/packaging or hostile-local-process authentication claim |
 | Command Citadel VIS-01–07/09, for implemented surfaces | `appearance.css`, actual screenshot/geometry checks at 390/768/1024/1440 | Entry/blank reader/empty rail only; no fake functional composer or settings |
 
-No row is marked VERIFIED before passing CI, independent review and merge. Requirements for generated prose, passages/events, stale canonical edits and replay belong to later children.
+R01–R03 now meet the CI, independent-review and merge gates. No other atomic requirement or full IDEA is certified. Requirements for generated prose, passages/events, stale canonical edits and replay belong to later children.
 
 ## Executed evidence
 
@@ -61,8 +61,8 @@ Real Firefox captures from the final passing local run: [desktop adventure](./DE
 
 Final local browser command exited 0, including `PASS: delayed adventure read cannot override newer Back navigation` and `PASS: fresh browser after process restart resumes both exact zero-turn adventure identities`. Independent reviewer inspected the retained visual states and reran the full browser suite separately with exit 0.
 
-## Final CI reconciliation — 2026-11-04
+## Historical pre-merge CI reconciliation — 2026-11-04
 
 The lead inspected the actual completed run, all job steps and job log, not merely the badge: two TypeScript tests, five Go test functions with ten rejection/conflict cases, every browser recovery/navigation/reopen PASS marker and artifact upload are present. [CI artifact](https://github.com/Levelleor/lorebound/actions/runs/41773118072/artifacts/13295059611) contains logs and all responsive screenshots (seven-day retention); selected screenshots are also retained in Git above.
 
-Independent review covers original requirements, source, local real integration and the corrected workflow delta. The lead verified GitHub CI separately; the review report's earlier CI-pending wording is chronological, not an invented later reviewer CI assertion. A requested additional reviewer CI-only follow-up hit the account usage limit, with no new source finding. There is no unresolved blocking implementation finding. All applicable executed gates pass; merge authorisation is still required. After an authorised merge, reconcile actual main/merge SHA before selecting another task. DEV-002B has not started.
+Independent review covers original requirements, source, local real integration and the corrected workflow delta. The lead verified GitHub CI separately; the review report's earlier CI-pending wording is chronological, not an invented later reviewer CI assertion. A requested additional reviewer CI-only follow-up hit the account usage limit, with no new source finding. There is no unresolved blocking implementation finding. At that pre-merge handoff, all applicable executed gates passed and merge authorisation remained outstanding. **Superseded by the confirmed merge and [reconciliation](./DEV-002A-reconciliation.md) above.** DEV-002B has not started.
