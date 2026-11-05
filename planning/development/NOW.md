@@ -2,8 +2,8 @@
 type: development-status
 status: current
 updated: "2026-11-05"
-current_task: "DEV-002B"
-current_task_status: "VERIFIED & MERGED"
+current_task: "DEV-002C"
+current_task_status: "LOCAL PASS / CI PENDING"
 next_task: "DEV-002C"
 ---
 
@@ -11,7 +11,7 @@ next_task: "DEV-002C"
 
 > **THIS IS THE ONE-PAGE HANDOFF.** Read [TASKS](./TASKS.md), [FEATURES](./FEATURES.md), [JOURNAL](./JOURNAL.md), the [runbook](./AGENT-RUNBOOK.md), and [system architecture](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md). Keep exactly one Next Task and distinguish merged application evidence from documentation prepared afterward.
 
-Last reconciled with GitHub main: **2026-11-05**, commit `f0c57b8b808308534cda1c3cb862262c813f5d11`. [PR #6](https://github.com/Levelleor/lorebound/pull/6) is **MERGED**; final head `ec7537c982e4dc91fe2f50faa11e87c983825176` and merged main have identical tree `16418710c64d5c37f15e1aab1f0155ad8f51a6ae`. GitHub reports no open PRs at reconciliation start. [DEV-002B reconciliation](./evidence/DEV-002B-reconciliation.md).
+Last reconciled with GitHub main: **2026-11-05**, commit `899678ad80adc2489ccd84502688a2e8357d6474` (merged documentation PR #7). Application merge: `f0c57b8b808308534cda1c3cb862262c813f5d11`. [PR #6](https://github.com/Levelleor/lorebound/pull/6) is **MERGED**; final head `ec7537c982e4dc91fe2f50faa11e87c983825176` and merged main have identical tree `16418710c64d5c37f15e1aab1f0155ad8f51a6ae`. GitHub reports no open PRs at reconciliation start. [DEV-002B reconciliation](./evidence/DEV-002B-reconciliation.md).
 
 ## Snapshot
 
@@ -43,9 +43,9 @@ The first Story slice has 16 TypeScript tests, 14 Go functions/43 nested cases, 
 
 ## Next Task: **DEV-002C — Story-loop integration and parent verification**
 
-**Status: QUEUED / NOT STARTED.** DEV-002B's merge dependency is satisfied. DEV-002C needs a separately authorised launch for broader first-slice failure/cancellation/recovery and cross-tab/reopen integration, remaining requirement coverage and parent verification. No live provider, map work or B9-D12 spatial migration is implied.
+**Status: LOCAL PASS / CI PENDING, unmerged.** User explicitly authorised “Launch DEV-002C” on 2026-11-05. Lead: Codex; branch `feat/dev-002c-story-integration`, based on verified main `899678ad`. Scope: audit and close remaining zero-effects Story-loop failure/cancellation/recovery, cross-tab/navigation/reopen integration and parent requirement traceability, correcting defects found within that boundary. Existing application evidence above remains merged DEV-002A/B; new [DEV-002C evidence](./evidence/DEV-002C.md) records local build, 23 TS cases, real SQLite, lead/reviewer Firefox/restart and independent review PASS. CI remains pending. No live provider, history editing, nonempty world effects, map or B9-D12 work.
 
-**Exact next action:** On a separately authorised DEV-002C launch, audit its remaining acceptance and select one bounded scope before coding.
+**Exact next action:** Publish the DEV-002C PR, verify its final-head CI, then obtain separate merge authorisation. [All 57 First-bearing rows](./evidence/DEV-002C-requirements.md) have bounded dispositions; parent closure remains contingent on merge. No later DEV task starts in this launch.
 
 ## Recent verified milestones
 

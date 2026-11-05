@@ -238,9 +238,11 @@ test('IDEA-0044/R07–R09: failed conflict refetch blocks new writes until autho
   assert.equal(f.coordinator.state.snapshot.adventure.version, 1);
 });
 
-test('IDEA-0044/R09: refresh hints never interrupt a pending candidate or uncertain operation', async () => {
+test('IDEA-0044/R09: refresh hints never interrupt a pending candidate or uncertain operation', async () =>
+{
   const f = fixture();
-  f.coordinator.setInput('Draft.'); await f.coordinator.generate();
+  f.coordinator.setInput('Draft.');
+  await f.coordinator.generate();
   const candidate = f.coordinator.state.candidate;
   assert.equal(f.coordinator.canRefresh, false);
   await f.coordinator.refresh();
@@ -248,6 +250,7 @@ test('IDEA-0044/R09: refresh hints never interrupt a pending candidate or uncert
   f.coordinator.discard();
   f.replace({ ...blank(), adventure: { ...blank().adventure, version: 1 }, turns: [turn(1)] });
   await f.coordinator.refresh();
+  await new Promise(resolve => setImmediate(resolve));
   assert.equal(f.coordinator.state.snapshot.adventure.version, 1);
   assert.equal(f.coordinator.state.input, 'Draft.');
 });
@@ -284,4 +287,184 @@ test('IDEA-0044/R04: typing during a delayed background read is retained', async
   assert.equal(f.coordinator.state.input, 'Typed while refresh is in flight');
   assert.equal(f.coordinator.state.phase, 'idle');
   assert.equal(f.writes.length, 0);
+});
+
+test('DEV-002C: a hint during a read triggers one later coherent read and retains typed input', async () =>
+{
+  const f = fixture();
+  const gate = deferred<Snapshot>();
+  const readStarted = deferred<void>();
+  const originalRead = f.storage.read;
+  let reads = 0;
+  f.storage.read = async (epoch, id) =>
+  {
+    reads++;
+    if (reads !== 1) return originalRead(epoch, id);
+    readStarted.resolve();
+    return gate.promise;
+  };
+  const refreshing = f.coordinator.refresh();
+  await readStarted.promise;
+  assert.equal(f.coordinator.state.refreshing, true);
+  f.coordinator.setInput('Typed during the first read.');
+  f.replace({ ...blank(), adventure: { ...blank().adventure, version: 1 }, turns: [turn(1)] });
+  await f.coordinator.refresh();
+  await f.coordinator.refresh();
+  await f.coordinator.generate();
+  assert.equal(f.coordinator.state.phase, 'idle', 'Generation waits until the refresh completes');
+  gate.resolve(blank());
+  await refreshing;
+  assert.equal(reads, 2, 'Multiple hints coalesce without concurrent reads');
+  assert.equal(f.coordinator.state.snapshot.adventure.version, 1);
+  assert.equal(f.coordinator.state.input, 'Typed during the first read.');
+  assert.equal(f.coordinator.state.refreshing, false);
+  assert.equal(f.writes.length, 0);
+});
+
+test('DEV-002C: candidate hints wait for Discard, then refresh without a new submission', async () =>
+{
+  const f = fixture();
+  f.coordinator.setInput('Keep my text.');
+  await f.coordinator.generate();
+  const candidate = f.coordinator.state.candidate;
+  f.replace({ ...blank(), adventure: { ...blank().adventure, version: 1 }, turns: [turn(1)] });
+  await f.coordinator.refresh();
+  assert.equal(f.coordinator.state.candidate, candidate);
+  assert.equal(f.coordinator.state.snapshot.adventure.version, 0);
+  assert.equal(f.coordinator.state.refreshing, false);
+  f.coordinator.discard();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.coordinator.state.snapshot.adventure.version, 1);
+  assert.equal(f.coordinator.state.candidate, null);
+  assert.equal(f.coordinator.state.input, 'Keep my text.');
+  assert.equal(f.writes.length, 0);
+});
+
+test('DEV-002C: generation hints drain after Stop or failure; late results cannot replace the refresh', async () =>
+{
+  for (const stop of [true, false])
+  {
+    const late = deferred<string>();
+    const f = fixture(async () => late.promise);
+    f.coordinator.setInput('Keep this failed or cancelled input.');
+    const generated = f.coordinator.generate();
+    f.replace({ ...blank(), adventure: { ...blank().adventure, version: 1 }, turns: [turn(1)] });
+    await f.coordinator.refresh();
+    assert.equal(f.coordinator.state.snapshot.adventure.version, 0);
+    if (stop)
+    {
+      f.coordinator.stop();
+      late.resolve('Late result.');
+    }
+    else late.reject(new Error('generation_failed'));
+    await generated;
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(f.coordinator.state.snapshot.adventure.version, 1);
+    assert.equal(f.coordinator.state.input, 'Keep this failed or cancelled input.');
+    assert.equal(f.coordinator.state.candidate, null);
+    if (!stop) assert.match(f.coordinator.state.error, /could not be prepared/);
+    assert.equal(f.writes.length, 0);
+  }
+});
+
+test('DEV-002C: uncertain-save hints cannot unlock or replace the pending operation', async () =>
+{
+  const f = fixture();
+  f.coordinator.setInput('Recover exactly once.');
+  await f.coordinator.generate();
+  f.dropReply();
+  await f.coordinator.accept();
+  f.replace({ ...f.head(), adventure: { ...f.head().adventure, version: 2 }, turns: [...f.head().turns, turn(2)] });
+  await f.coordinator.refresh();
+  assert.equal(f.coordinator.state.phase, 'uncertain');
+  assert.equal(f.coordinator.state.snapshot.adventure.version, 0);
+  await f.coordinator.retrySave();
+  assert.deepEqual(f.writes[0], f.writes[1]);
+  assert.equal(f.coordinator.state.snapshot.adventure.version, 2);
+  assert.equal(f.head().turns.length, 2);
+  assert.equal(f.coordinator.state.phase, 'idle');
+});
+
+test('DEV-002C: disposing a delayed refresh drops queued hints and publishes no late state', async () =>
+{
+  const f = fixture();
+  const gate = deferred<Snapshot>();
+  const readStarted = deferred<void>();
+  let reads = 0;
+  f.storage.read = async () =>
+  {
+    reads++;
+    readStarted.resolve();
+    return gate.promise;
+  };
+  const refreshing = f.coordinator.refresh();
+  await readStarted.promise;
+  await f.coordinator.refresh();
+  f.coordinator.dispose();
+  const disposedState = f.coordinator.state;
+  gate.resolve(blank());
+  await refreshing;
+  assert.equal(reads, 1);
+  assert.equal(f.coordinator.state, disposedState);
+  assert.equal(f.writes.length, 0);
+});
+
+test('DEV-002C: focus during stale-conflict refetch coalesces without hiding the conflict', async () =>
+{
+  const f = fixture();
+  f.coordinator.setInput('Retain the losing tab input.');
+  await f.coordinator.generate();
+  f.replace({ ...blank(), adventure: { ...blank().adventure, version: 1 }, turns: [turn(1)] });
+  const listStarted = deferred<void>();
+  const releaseList = deferred<void>();
+  const originalList = f.storage.list;
+  let lists = 0;
+  f.storage.list = async () =>
+  {
+    lists++;
+    if (lists === 1)
+    {
+      listStarted.resolve();
+      await releaseList.promise;
+    }
+    return originalList();
+  };
+  const accepting = f.coordinator.accept();
+  await listStarted.promise;
+  assert.equal(f.coordinator.state.refreshing, true);
+  await f.coordinator.refresh();
+  await f.coordinator.refresh();
+  assert.equal(lists, 1, 'Focus cannot start a competing conflict refetch');
+  releaseList.resolve();
+  await accepting;
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(lists, 2, 'Received hints still get a subsequent authoritative read');
+  assert.equal(f.coordinator.state.phase, 'idle');
+  assert.equal(f.coordinator.state.refreshing, false);
+  assert.equal(f.coordinator.state.snapshot.adventure.version, 1);
+  assert.equal(f.coordinator.state.input, 'Retain the losing tab input.');
+  assert.match(f.coordinator.state.error, /saved story or library changed/);
+  assert.equal(f.writes.length, 1, 'Conflict recovery never resubmits');
+});
+
+test('DEV-002C: background hints preserve technical rejection until deliberate Reload', async () =>
+{
+  const f = fixture();
+  f.coordinator.setInput('Preserve rejected input.');
+  await f.coordinator.generate();
+  f.coordinator.requestRefresh();
+  f.failCommit('invalid_request');
+  await f.coordinator.accept();
+  f.coordinator.requestRefresh();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.coordinator.state.phase, 'blocked');
+  assert.match(f.coordinator.state.error, /could not be saved in the current format/);
+  assert.equal(f.coordinator.state.input, 'Preserve rejected input.');
+  assert.equal(f.coordinator.state.refreshing, false);
+  assert.equal(f.writes.length, 1);
+  f.failCommit('');
+  await f.coordinator.refresh();
+  assert.equal(f.coordinator.state.phase, 'idle');
+  assert.equal(f.coordinator.state.error, '');
+  assert.equal(f.writes.length, 1, 'Reload does not automatically resubmit');
 });

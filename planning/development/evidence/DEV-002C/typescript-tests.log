@@ -1,0 +1,31 @@
+✔ blank creation prepares only stable identity and empty baseline, no fictional defaults (1.111199ms)
+✔ unsupported or malformed host results fail closed instead of appearing saved (0.315165ms)
+✔ IDEA-0040/R02: structured prose roundtrips paragraphs, hard breaks, Unicode and literal HTML (2.408841ms)
+✔ IDEA-0039/R04 + IDEA-0040/R01: pure replay preserves distinct passage identity and total order (0.713568ms)
+✔ IDEA-0039/R06: unknown required-core history is preserved as read-only prose and blocks generation (0.603285ms)
+✔ IDEA-0002/R01–R02: Story stays provisional until one explicit acceptance; narrator receives no internal IDs (0.667896ms)
+✔ IDEA-0044/R05: Stop prevents even an abort-ignoring late response from becoming a candidate (0.234989ms)
+✔ IDEA-0039/R05: Discard preserves authored text and never stores candidate prose (0.209141ms)
+✔ IDEA-0044/R04: rejected generation, malformed output and invalid input preserve canon and player text (0.546078ms)
+✔ IDEA-0044/R08: lost response retries identical frozen operation and reads newer canon than original receipt (0.524511ms)
+✔ IDEA-0044/R08: successful commit followed by read failure remains recoverable without a duplicate (1.024071ms)
+✔ IDEA-0044/R07: stale version and epoch reject, refetch and require deliberate fresh generation (0.714815ms)
+✔ IDEA-0044/R07–R09: failed conflict refetch blocks new writes until authoritative refresh succeeds (0.285873ms)
+✔ IDEA-0044/R09: refresh hints never interrupt a pending candidate or uncertain operation (1.523677ms)
+✔ IDEA-0044/R05: disposing a workspace ignores late generation and save replies (0.299234ms)
+✔ IDEA-0044/R04: typing during a delayed background read is retained (0.117239ms)
+✔ DEV-002C: a hint during a read triggers one later coherent read and retains typed input (0.218263ms)
+✔ DEV-002C: candidate hints wait for Discard, then refresh without a new submission (0.298866ms)
+✔ DEV-002C: generation hints drain after Stop or failure; late results cannot replace the refresh (0.413361ms)
+✔ DEV-002C: uncertain-save hints cannot unlock or replace the pending operation (0.344086ms)
+✔ DEV-002C: disposing a delayed refresh drops queued hints and publishes no late state (0.121295ms)
+✔ DEV-002C: focus during stale-conflict refetch coalesces without hiding the conflict (0.416296ms)
+✔ DEV-002C: background hints preserve technical rejection until deliberate Reload (0.270963ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 54.459063

@@ -21,7 +21,7 @@ Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies,
 | Task | Outcome | Depends on | Primary IDEA coverage | Status | PR/evidence |
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
-| **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | SPLIT: DEV-002A → DEV-002B → DEV-002C | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C not started |
+| **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | SPLIT: DEV-002A → DEV-002B → DEV-002C | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C local PASS, CI pending/unmerged |
 | **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | QUEUED | None |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
@@ -105,7 +105,11 @@ Exclusions: other input modes, candidate Retry/Undo/Fork, drafts autosave, live 
 
 ### DEV-002C — Story-loop integration and parent verification
 
-Status: QUEUED / NOT STARTED; DEV-002B merged dependency satisfied. Separate launch authorisation required. Complete first-slice failure/cancellation/recovery and cross-tab/reopen integration against original requirements, independent visual/review evidence, and reconcile the parent. Split further if needed; never automatically start in DEV-002A's launch.
+Status: **LOCAL PASS / CI PENDING / UNMERGED**. User explicitly authorised “Launch DEV-002C” on 2026-11-05. Owner: Codex lead; branch `feat/dev-002c-story-integration`; baseline `899678ad80adc2489ccd84502688a2e8357d6474`; DEV-002B merged dependency satisfied.
+
+Bounded scope: close the existing Story-only, simulated, zero-world-effects parent loop's integration and requirement-evidence gaps. Cover leaving generation/candidates, idle cross-tab refresh while typing, pending-state refresh isolation, durable commit followed by failed read, recovery after newer accepted history, and conflict/refetch failure recovery. Fix demonstrated source defects within this boundary. Reconcile every First requirement as tested slice, partial or explicitly later; do not certify nonempty event semantics from empty arrays.
+
+Required evidence: existing build/typecheck, TS unit and real SQLite contracts; expanded Firefox/Wails/Go/SQLite checks and exact process restart; responsive/keyboard screenshots; independent accepted-source audit and implementation/browser review; final-head CI. Executed [evidence](./evidence/DEV-002C.md): build/check, 23 TS cases, 14 Go functions/43 subcases, vet, lead/reviewer Firefox/Wails/SQLite and exact restart PASS; [independent review](./evidence/DEV-002C-review.md) PASS after two diagnostic race fixes. [All 57 First-bearing rows](./evidence/DEV-002C-requirements.md) have bounded dispositions. Final-head CI/publication and separate merge authorisation remain; no parent VERIFIED & MERGED claim yet. Apply the user's personal-development-style override. No live provider, other modes, full history/drafts/world effects, host packaging or B9-D12 work; no later DEV task launches automatically.
 
 ## Deferred and cross-cutting gates
 

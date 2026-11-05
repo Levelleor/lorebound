@@ -1,5 +1,13 @@
 # Lorebound agent instructions
 
+## Personal development style — 2026-11-05
+
+The user explicitly requires the **personal-development-style** skill for this project's implementation, refactoring, architectural work and code review from now on. Read the installed skill at `/home/alex/.codex/skills/personal-development-style/SKILL.md` and its relevant references. If that location changes, discover the skill by name.
+
+**Project-specific priority override:** apply the skill's preferences over existing repository style conventions where necessary. The user expressly authorised this override; the skill's default instruction to prefer existing repository conventions does not take precedence here. Keep correctness, security/reliability, platform constraints, accepted functional/architectural/visual contracts and required verification gates binding. Align conflicting formatter/linter style settings when needed for the authorised change; preserve semantic checks.
+
+Prefer straightforward, readable code, explicit ownership, pragmatic composition, early returns, minimal useful comments and safe concurrency for independent operations. For TypeScript/JavaScript use 2 spaces, Allman block braces, semicolons, single quotes and no optional trailing commas, respecting language/framework syntax. Go remains idiomatic and `gofmt`-formatted. Apply these preferences actively to new and directly affected code; this instruction does not request a repository-wide reformat or authorise subsequent development tasks.
+
 ## Development task control and agent handoff — 2026-11-03
 
 **The active development workflow lives in [planning/development/README.md](planning/development/README.md).** Before any code change, read **[planning/development/NOW.md](planning/development/NOW.md)** for the **one next task**, [TASKS](planning/development/TASKS.md) for dependency/acceptance gates, [FEATURES](planning/development/FEATURES.md) for 52 approved ideas and granular evidence, [JOURNAL](planning/development/JOURNAL.md) for ongoing context and [AGENT-RUNBOOK](planning/development/AGENT-RUNBOOK.md) for implementation/reviewer reports. Update those same control files within feature PRs and distinguish unmerged work from independently verified main. The initial DEV-001 plan was explicitly redirected by the user to **DEV-002A: replace Gate 0 with production blank adventure creation/resume**. Read NOW for its current branch, verification and merge status; no later child starts automatically. No new architecture or spatial-migration approval follows from this guidance.
