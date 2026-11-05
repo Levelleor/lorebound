@@ -2,6 +2,7 @@ import { firefox } from 'playwright';
 import assert from 'node:assert/strict';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { exerciseStory } from './check-story.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -20,20 +21,23 @@ try {
   await page.getByRole('status').getByText('Library ready', { exact: true }).waitFor();
   const list = () => page.evaluate(() => window.wails.Call.ByName('main.LibraryService.List'));
   const initial = await list();
-  assert.equal(initial.schemaVersion, 1);
+  assert.equal(initial.schemaVersion, 2);
 
   if (reopen) {
     const expected = JSON.parse(await readFile(statePath, 'utf8'));
-    assert.deepEqual(initial, expected, 'Library identity, adventure IDs, names and versions survive process restart');
+    assert.deepEqual(initial, expected.library, 'Library identity, adventure IDs, names and versions survive process restart');
     for (const adventure of initial.adventures) {
       await page.locator(`[data-adventure-id="${adventure.id}"]`).click();
       await page.getByRole('heading', { name: adventure.title, exact: true }).waitFor();
-      await page.getByText('No passages yet.', { exact: true }).waitFor();
+      if (adventure.version === 0) await page.getByText('No passages yet.', { exact: true }).waitFor();
+      else await page.locator('.accepted-turn').first().waitFor();
+      const snapshot = await page.evaluate(({ epoch, id }) => window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 2, epoch, adventureId: id }), { epoch: initial.epoch, id: adventure.id });
+      assert.deepEqual(snapshot, expected.snapshots[adventure.id], 'Exact structured history survives process restart');
       assert.equal(new URL(page.url()).searchParams.get('adventure'), adventure.id);
       await page.getByRole('button', { name: 'Library', exact: true }).click();
       await page.getByRole('heading', { name: 'Saved adventures' }).waitFor();
     }
-    console.log('PASS: fresh browser after process restart resumes both exact zero-turn adventure identities');
+    console.log('PASS: fresh browser after process restart resumes exact blank and accepted-story histories');
   } else {
     assert.deepEqual(initial.adventures, [], 'Test requires a fresh disposable library');
     // Use keyboard submission for optional-title blank creation.
@@ -95,7 +99,7 @@ try {
 
     const rejected = await page.evaluate(async () => {
       try {
-        await window.wails.Call.ByName('main.LibraryService.Create', { schemaVersion: 1, epoch: 'wrong', adventureId: 'rejected', operationId: 'rejected', title: 'Rejected', baseline: { schemaVersion: 1 } });
+        await window.wails.Call.ByName('main.LibraryService.Create', { schemaVersion: 2, epoch: 'wrong', adventureId: 'rejected', operationId: 'rejected', title: 'Rejected', baseline: { schemaVersion: 1 } });
         return false;
       } catch { return true; }
     });
@@ -103,7 +107,7 @@ try {
     const saved = await list();
     assert.equal(saved.adventures.length, 2);
     for (const adventure of saved.adventures) assert.equal(adventure.version, 0);
-    await writeFile(statePath, JSON.stringify(saved));
+
     await page.getByRole('button', { name: 'Library', exact: true }).click();
     await page.getByRole('heading', { name: 'Saved adventures' }).waitFor();
     // A delayed open must not undo a newer browser Back navigation.
@@ -141,6 +145,14 @@ try {
       }
     }
     console.log('PASS: real bridge rejects wrong library epoch; two independent adventures remain intact');
+    await exerciseStory(page, base, artifacts, firstID);
+    const finalLibrary = await list();
+    const snapshots = await page.evaluate(async library => {
+      const snapshots = {};
+      for (const adventure of library.adventures) snapshots[adventure.id] = await window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 2, epoch: library.epoch, adventureId: adventure.id });
+      return snapshots;
+    }, finalLibrary);
+    await writeFile(statePath, JSON.stringify({ library: finalLibrary, snapshots }));
   }
   assert.equal(await page.getByRole('alert').count(), 0);
   assert.deepEqual(errors, [], 'No uncaught browser exceptions');

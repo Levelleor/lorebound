@@ -148,3 +148,20 @@ tags:
 - **Next action:** DEV-002B on a separately authorised launch, beginning with the outstanding first-slice requirement audit and bounded acceptance definition. DEV-001 remains interrupted; no whole-IDEA certification, new architecture or B9-D12 spatial migration is implied.
 
 - **Publication:** [Documentation PR #5](https://github.com/Levelleor/lorebound/pull/5) opened after independent documentation review PASS and the minor M0 reference correction. Original PR #4 remains merged; PR #5 carries only reconciliation records and remains unmerged. Inspect its live checks before any authorised merge.
+
+### 2026-11-04 — DEV-002B authorised launch and bounded requirement audit
+
+- **Authority:** User explicitly answered “Launch DEV-002B”. This launch covers only DEV-002B, with no automatic DEV-002C start or merge authorisation.
+- **Main provenance:** GitHub confirms PR #5 merged at `858806acc15aa54350af11535e59a8d82e73b7a5`, no open PRs at launch, local main clean and matching. Corrected NOW/FEATURES pre-merge wording in this feature branch.
+- **Audit:** Independent `/root/requirements_audit` checked original IDEA/ADR requirements and confirmed the first-slice boundary. [Report](./evidence/DEV-002B-requirements-audit.md). Two distinct authored/generated passages per accepted turn; structured paragraph/text/hard-break documents; no invented world effects. Empty-event evidence cannot certify supported nonempty event replay/provenance.
+- **Scope/implementation decisions:** One cohesive Story-only simulated-generation vertical slice, atomic acceptance, deterministic TypeScript reconstruction, explicit cancellation/discard, stale/epoch conflict and uncertain-write recovery. Dedicated `feat/dev-002b-story-turn`; separate storage/domain file ownership. Nonspatial additive library upgrade preserves existing blank adventures; a new wire version prevents old clients from ignoring accepted history. No B9-D12 work.
+- **Evidence state:** Source implementation/checks pending; merged feature counts remain unchanged. Require actual Go/SQLite/browser/restart, responsive screenshots, final CI and fresh independent review before completion claims. No full original IDEA is archived.
+
+### 2026-11-04 — DEV-002B implementation, corrections and local evidence
+
+- **Implemented:** Real Story-only candidate/acceptance path, two structured authored/generated passages per atomic turn, deterministic TS reconstruction, additive nonspatial storage v2 and wire2 compatibility fencing, scoped operation receipts, stale/epoch and uncertain-save recovery. Generation is an explicitly simulated fixed fixture; world effects remain empty.
+- **Independent findings corrected:** Idle background refresh no longer swallows typed input; Story operation IDs are adventure scoped; uncertain-save text no longer claims “Not saved”. Lead also refetches current canon after a replayed creation receipt. Regression tests and independent source review passed.
+- **Verification:** [Evidence](./evidence/DEV-002B.md): local build/check (0 diagnostics), 16 TypeScript tests, 14 Go functions/43 subcases, vet, actual Firefox/Wails/SQLite Stop/Discard/acceptance/lost-response/conflict and exact process-restart persistence PASS. Separate reviewer browser run PASS. Dark/Bright 390/768/1024/1440 checks and screenshots retained.
+- **Test/environment history:** Initial focus assertion needed real keyboard traversal; incompatible-read fixture needed HTTP interception instead of ineffective runtime replacement. An execution-host restart removed temporary evidence before the pending run's result was collected; final build/browser/restart was repeated and retained. No incomplete run counted as PASS.
+- **Coverage:** Whole-feature counts on main remain three partial ideas and three verified atomic rows; no original IDEA archived. Empty event arrays cannot prove nonempty event replay/provenance. DEV-002C unstarted, B9-D12 deferred.
+- **Next gate:** Publish task PR, inspect final CI, obtain separate merge authorisation. Local implementation/review evidence is unmerged.
