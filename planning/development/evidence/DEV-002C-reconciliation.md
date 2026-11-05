@@ -1,6 +1,6 @@
 ---
 type: development-reconciliation
-status: main-verified-documentation-review-pending
+status: reviewed-main-verified
 created: "2026-11-05"
 updated: "2026-11-05"
 task: "DEV-002C"
@@ -24,3 +24,13 @@ All A/B/C children and the bounded Story-only simulated zero-effects parent are 
 This branch reconciles NOW/TASKS/FEATURES/JOURNAL, parent requirement/evidence records, README/development guide and current architecture pointers from actual merged main. It changes documentation only. Independent status/link/frontmatter review and final-head PR CI precede its merge; the final CI result and SHA are recorded in the finalisation PR. The user's instruction to finalize DEV-002C covers this necessary reconciliation; it does not authorise DEV-003 implementation.
 
 **Next task: DEV-003, QUEUED / NOT STARTED.** Its dependency is satisfied; a separate launch audits original acceptance and chooses one bounded child. No subsequent feature work begins in this finalisation.
+
+## Independent documentation review
+
+**PASS — Codex `/root/scope_audit`, 2026-11-05.** Independently fetched PR #8 metadata: `merged=true`, exact final head `ba9b3c346f5bd7330b5cb19763c31e95c201ebb5`, merge `9c4a615b32faee3a513467e3ecc8cf6f5d5b760a`. Fetched the final-head workflow and run jobs: run `42088907520` is completed/success, including build/typecheck, TypeScript, Go vet/SQLite, real browser/restart and artifact upload. Local final-head and merge trees both resolve to `5a313301d6c2e60cb5c2a43dbec4d6301aab01ab`; fetched `origin/main` points at the merge. The four application/test source hashes in the independent implementation review still match.
+
+Reviewed the documentation-only diff, authority/provenance statements, evidence boundaries and current status across NOW/TASKS/FEATURES/JOURNAL, parent inventory/matrix, task evidence, README, development guide and architecture overview. Checked 11 Markdown files, 298 relative links, required frontmatter keys and `git diff --check`; no broken local links or whitespace errors. Recomputed the matrix: 95 inventory rows, exactly 57 unique First-bearing dispositions and 38 later rows.
+
+Bounded DEV-002/DEV-002C closure is supported by the previously independent runtime review, successful final-head CI and actual merge. Seven PARTIAL ideas, three formally certified IDEA-0006 rows and zero complete ideas remain consistent. No nonempty world-event, whole-IDEA, platform or live-AI evidence is invented. DEV-003 remains queued/unstarted with separate launch required; B9-D12 remains deferred. Chronological pre-merge entries remain explicitly historical.
+
+No runtime rerun was needed for this documentation-only reconciliation. This PASS verifies merged application provenance and the prepared documentation; the reconciliation PR's own final-head CI and merge remain separate finalisation steps. No repository blocker found. The reviewer changed only this report.
