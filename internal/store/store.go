@@ -17,7 +17,10 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-const SchemaVersion = 1
+// Transport and storage versions are separate from the unchanged Turn-0 schema.
+const SchemaVersion = 2
+const databaseVersion = 2
+const baselineVersion = 1
 const applicationID = 0x4c4f5245
 
 var identifier = regexp.MustCompile(`^[A-Za-z0-9_-]{1,80}$`)
@@ -28,6 +31,8 @@ var (
 	ErrAdventureExists    = errors.New("adventure_exists")
 	ErrNotFound           = errors.New("adventure_not_found")
 	ErrUnsupportedLibrary = errors.New("unsupported_library")
+	ErrStaleVersion       = errors.New("stale_version")
+	ErrUnsupportedHistory = errors.New("unsupported_history")
 )
 
 // Baseline is the canonical empty starting point, not a story passage or checkpoint.
@@ -45,6 +50,7 @@ type Snapshot struct {
 	Epoch         string    `json:"epoch"`
 	Adventure     Adventure `json:"adventure"`
 	Baseline      Baseline  `json:"baseline"`
+	Turns         []Turn    `json:"turns"`
 }
 type Library struct {
 	SchemaVersion int         `json:"schemaVersion"`
@@ -109,7 +115,13 @@ func (s *Store) initialize() error {
 	if err = tx.QueryRow(`PRAGMA application_id`).Scan(&app); err != nil {
 		return err
 	}
-	if version == SchemaVersion && app == applicationID {
+	if version == databaseVersion && app == applicationID {
+		return tx.Commit()
+	}
+	if version == 1 && app == applicationID {
+		if err = addStoryTables(tx); err != nil {
+			return err
+		}
 		return tx.Commit()
 	}
 	if err = tx.QueryRow(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'`).Scan(&tables); err != nil {
@@ -131,6 +143,9 @@ func (s *Store) initialize() error {
 		return err
 	}
 	if _, err = tx.Exec(`INSERT INTO library_meta VALUES (1, ?)`, hex.EncodeToString(identity[:])); err != nil {
+		return err
+	}
+	if err = addStoryTables(tx); err != nil {
 		return err
 	}
 	return tx.Commit()
@@ -175,7 +190,7 @@ func (s *Store) List(ctx context.Context) (Library, error) {
 }
 
 func (s *Store) Read(ctx context.Context, req ReadRequest) (Snapshot, error) {
-	result := Snapshot{SchemaVersion: SchemaVersion}
+	result := Snapshot{SchemaVersion: SchemaVersion, Turns: []Turn{}}
 	if req.SchemaVersion != SchemaVersion || req.Epoch == "" || !identifier.MatchString(req.AdventureID) {
 		return result, ErrInvalidRequest
 	}
@@ -190,16 +205,8 @@ func (s *Store) Read(ctx context.Context, req ReadRequest) (Snapshot, error) {
 	if req.Epoch != result.Epoch {
 		return result, ErrWrongEpoch
 	}
-	var baseline string
-	err = tx.QueryRowContext(ctx, `SELECT id, title, version, baseline FROM adventures WHERE id=?`, req.AdventureID).Scan(&result.Adventure.ID, &result.Adventure.Title, &result.Adventure.Version, &baseline)
-	if errors.Is(err, sql.ErrNoRows) {
-		return result, ErrNotFound
-	}
-	if err != nil {
+	if err = readHistory(ctx, tx, req.AdventureID, &result); err != nil {
 		return result, err
-	}
-	if err = json.Unmarshal([]byte(baseline), &result.Baseline); err != nil || result.Baseline.SchemaVersion != SchemaVersion {
-		return result, ErrUnsupportedLibrary
 	}
 	return result, tx.Commit()
 }
@@ -209,14 +216,14 @@ func (s *Store) Create(ctx context.Context, req CreateRequest) (CreateResult, er
 }
 
 func (s *Store) create(ctx context.Context, req CreateRequest, failAfterInsert bool) (CreateResult, error) {
-	if req.SchemaVersion != SchemaVersion || req.Baseline.SchemaVersion != SchemaVersion || req.Epoch == "" || !identifier.MatchString(req.AdventureID) || !identifier.MatchString(req.OperationID) || !utf8.ValidString(req.Title) || utf8.RuneCountInString(req.Title) > 160 || strings.TrimSpace(req.Title) == "" {
+	if req.SchemaVersion != SchemaVersion || req.Baseline.SchemaVersion != baselineVersion || req.Epoch == "" || !identifier.MatchString(req.AdventureID) || !identifier.MatchString(req.OperationID) || !utf8.ValidString(req.Title) || utf8.RuneCountInString(req.Title) > 160 || strings.TrimSpace(req.Title) == "" {
 		return CreateResult{}, ErrInvalidRequest
 	}
 	encoded, err := json.Marshal(req)
 	if err != nil {
 		return CreateResult{}, err
 	}
-	fingerprint := fmt.Sprintf("%x", sha256.Sum256(encoded))
+	fingerprint := fmt.Sprintf("create:%x", sha256.Sum256(encoded))
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return CreateResult{}, err
@@ -256,7 +263,7 @@ func (s *Store) create(ctx context.Context, req CreateRequest, failAfterInsert b
 	if err != nil {
 		return CreateResult{}, err
 	}
-	snapshot := Snapshot{SchemaVersion: SchemaVersion, Epoch: currentEpoch, Adventure: Adventure{ID: req.AdventureID, Title: req.Title, Version: 0}, Baseline: req.Baseline}
+	snapshot := Snapshot{SchemaVersion: SchemaVersion, Epoch: currentEpoch, Adventure: Adventure{ID: req.AdventureID, Title: req.Title, Version: 0}, Baseline: req.Baseline, Turns: []Turn{}}
 	receiptBytes, err := json.Marshal(snapshot)
 	if err != nil {
 		return CreateResult{}, err

@@ -23,7 +23,7 @@ func openLibrary(t *testing.T) (*Store, string, Library) {
 	return s, path, library
 }
 func request(epoch, id string) CreateRequest {
-	return CreateRequest{SchemaVersion: 1, Epoch: epoch, AdventureID: id, OperationID: "create-" + id, Title: "Untitled Adventure", Baseline: Baseline{SchemaVersion: 1}}
+	return CreateRequest{SchemaVersion: SchemaVersion, Epoch: epoch, AdventureID: id, OperationID: "create-" + id, Title: "Untitled Adventure", Baseline: Baseline{SchemaVersion: 1}}
 }
 func TestAdventureDurabilityAndIsolation(t *testing.T) {
 	s, path, initial := openLibrary(t)
@@ -56,7 +56,7 @@ func TestAdventureDurabilityAndIsolation(t *testing.T) {
 		t.Fatalf("reopen: %+v", library)
 	}
 	for _, id := range []string{"first", "second"} {
-		saved, err := reopened.Read(ctx, ReadRequest{SchemaVersion: 1, Epoch: initial.Epoch, AdventureID: id})
+		saved, err := reopened.Read(ctx, ReadRequest{SchemaVersion: SchemaVersion, Epoch: initial.Epoch, AdventureID: id})
 		if err != nil || saved.Adventure.ID != id || saved.Adventure.Title != "Untitled Adventure" || saved.Adventure.Version != 0 {
 			t.Fatalf("read: %+v %v", saved, err)
 		}
@@ -79,7 +79,7 @@ func TestCreationFailuresLeaveNoPartialAdventure(t *testing.T) {
 		change func(*CreateRequest)
 		want   error
 	}{
-		{"wrong schema", func(r *CreateRequest) { r.SchemaVersion = 2 }, ErrInvalidRequest},
+		{"wrong schema", func(r *CreateRequest) { r.SchemaVersion = 999 }, ErrInvalidRequest},
 		{"wrong baseline", func(r *CreateRequest) { r.Baseline.SchemaVersion = 2 }, ErrInvalidRequest},
 		{"empty epoch", func(r *CreateRequest) { r.Epoch = "" }, ErrInvalidRequest},
 		{"wrong epoch", func(r *CreateRequest) { r.Epoch = "stale" }, ErrWrongEpoch},
@@ -159,13 +159,13 @@ func TestConcurrentDuplicateCreationAndEpochFencing(t *testing.T) {
 func TestReadsAndUnsupportedLibraryFailClosed(t *testing.T) {
 	s, path, library := openLibrary(t)
 	ctx := context.Background()
-	if _, err := s.Read(ctx, ReadRequest{1, library.Epoch, "missing"}); !errors.Is(err, ErrNotFound) {
+	if _, err := s.Read(ctx, ReadRequest{SchemaVersion, library.Epoch, "missing"}); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("missing: %v", err)
 	}
-	if _, err := s.Read(ctx, ReadRequest{1, "wrong", "missing"}); !errors.Is(err, ErrWrongEpoch) {
+	if _, err := s.Read(ctx, ReadRequest{SchemaVersion, "wrong", "missing"}); !errors.Is(err, ErrWrongEpoch) {
 		t.Fatalf("epoch: %v", err)
 	}
-	if _, err := s.Read(ctx, ReadRequest{2, library.Epoch, "missing"}); !errors.Is(err, ErrInvalidRequest) {
+	if _, err := s.Read(ctx, ReadRequest{999, library.Epoch, "missing"}); !errors.Is(err, ErrInvalidRequest) {
 		t.Fatalf("schema: %v", err)
 	}
 	if _, err := s.db.Exec(`PRAGMA user_version=999`); err != nil {

@@ -1,0 +1,26 @@
+same-origin runtime: HTTP 200
+{"schemaVersion":2,"epoch":"d9d0592296a2ea94dc574e37d37948c8","adventures":[]}
+cross-origin runtime: HTTP 403
+cross-site fetch metadata: HTTP 403
+cross-origin preflight: HTTP 405
+rebound Host: HTTP 403
+cross-origin WebSocket: HTTP 403
+
+> test:browser
+> node scripts/check-browser.mjs
+
+PASS: keyboard blank creation, durable identity and browser reload
+PASS: simulated lost response to real commit recovers through identical-request retry without duplication
+PASS: delayed adventure read cannot override newer Back navigation
+PASS: real bridge rejects wrong library epoch; two independent adventures remain intact
+PASS: real browser Stop/Discard preserve the baseline and authored input
+PASS: keyboard acceptance saves distinct structured passages; literal HTML is safe; exact reload matches
+PASS: lost real commit response recovers exactly once through unchanged-request retry
+PASS: stale second tab rejects atomically, refetches current history and retains input without resubmission
+PASS: simulated unknown core effect blocks writing while preserving readable prose; durable data unchanged
+
+> test:browser
+> node scripts/check-browser.mjs --reopen
+
+PASS: fresh browser after process restart resumes exact blank and accepted-story histories
+PASS: real browser/Go/SQLite smoke, host restrictions and restart persistence

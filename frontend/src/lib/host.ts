@@ -1,4 +1,4 @@
-import { readCreateResult, readLibrary, readSnapshot, schemaVersion, type CreateRequest } from './library';
+import { readCreateResult, readCommitResult, readLibrary, readSnapshot, schemaVersion, type CreateRequest, type CommitRequest } from './library';
 
 interface WailsRuntime { Call: { ByName(name: string, ...args: unknown[]): Promise<unknown> } }
 declare global { interface Window { wails?: WailsRuntime } }
@@ -11,5 +11,6 @@ async function call(method: string, ...args: unknown[]): Promise<unknown> {
 export const host = {
   list: async () => readLibrary(await call('List')),
   read: async (epoch: string, adventureId: string) => readSnapshot(await call('Read', { schemaVersion, epoch, adventureId })),
-  create: async (request: CreateRequest) => readCreateResult(await call('Create', request))
+  create: async (request: CreateRequest) => readCreateResult(await call('Create', request)),
+  commit: async (request: CommitRequest) => readCommitResult(await call('Commit', request))
 };

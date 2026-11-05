@@ -15,3 +15,6 @@ func (s *LibraryService) Read(req store.ReadRequest) (store.Snapshot, error) {
 func (s *LibraryService) Create(req store.CreateRequest) (store.CreateResult, error) {
 	return s.store.Create(context.Background(), req)
 }
+func (s *LibraryService) Commit(req store.CommitRequest) (store.CommitResult, error) {
+	return s.store.Commit(context.Background(), req)
+}

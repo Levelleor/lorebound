@@ -2,7 +2,7 @@
 type: development-task-queue
 status: current
 created: "2026-11-03"
-updated: "2026-11-04"
+updated: "2026-11-05"
 current_next_task: "DEV-002B"
 ---
 
@@ -21,7 +21,7 @@ Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies,
 | Task | Outcome | Depends on | Primary IDEA coverage | Status | PR/evidence |
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
-| **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | SPLIT: DEV-002A → DEV-002B → DEV-002C | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B/C not started |
+| **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | SPLIT: DEV-002A → DEV-002B → DEV-002C | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B local PASS/unmerged; C not started |
 | **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | QUEUED | None |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
@@ -89,7 +89,19 @@ Status: VERIFIED & MERGED. Owner: Codex lead. Authorisation: user explicitly sel
 
 ### DEV-002B — First provisional and accepted Story turn (NEXT)
 
-Status: QUEUED / prerequisite audit outstanding; NOT STARTED. Depends on: verified/merged DEV-002A (**satisfied**, PR #4) and complete first-slice requirement audit (**outstanding**, 95-row draft not certified). Next action on a separately authorised launch: audit the accepted first-slice requirements, then define one bounded scope or sequential children before implementation. This reconciliation launch does not execute DEV-002B. Add the deterministic mocked-generation coordinator, structured current passages and minimal typed events, explicit acceptance/discard, consistent reads/replay, version conflicts and uncertain-write recovery. Apply the docked composer and provisional/committed visual contract. Define bounded acceptance/tests before execution; no live-provider or map scope.
+Status: **PR OPEN / UNMERGED; local review and implementation CI PASS**. User authorised “Launch DEV-002B” on 2026-11-04. Owner: Codex lead; independent prerequisite audit, bounded storage/domain delegates and fresh independent review. Branch: `feat/dev-002b-story-turn`, base `858806acc15aa54350af11535e59a8d82e73b7a5`; PR: [PR #6](https://github.com/Levelleor/lorebound/pull/6). DEV-002A is merged; [first-slice audit](./evidence/DEV-002B-requirements-audit.md) governs this scope, not certification of every row in the parent inventory.
+
+Acceptance gates:
+- Story input without actor; visibly simulated deterministic generation; authored input and generated response both provisional until explicit acceptance. Stop/Discard and late completions cannot mutate canon; no automatic accept on Send.
+- One atomic append creates an ordered turn with two distinct stable structured passage IDs (authored/generated), paragraph/text/hard-break semantics and typed empty event batch. No invented entities or unsupported effects; browser replay from Turn 0 is deterministic and unknown core effects block writes while preserving readable prose.
+- Go validates technical envelopes, IDs, source/order, expected version, epoch and immutable operation receipt. Rollback leaves no partial turn or receipt; identical retry returns original result even after later commits/reopen, followed by fresh coherent read.
+- Conflicting tabs reject stale writes, refetch authoritative state and retain available authored text for a fresh decision. Read errors and uncertain writes cannot unlock a duplicate submission or pretend data was saved.
+- Additive nonspatial storage upgrade preserves DEV-002A blank adventures, baseline, epoch and receipts. Wire version fences old browser clients. B9-D12 stays deferred.
+- Actual Firefox/Wails/Go/SQLite create→generate→discard/stop→accept→resume→process-restart; lost-response and conflict recovery; unit/storage failures and coherent reads; responsive 390/768/1024/1440 Dark/Bright screenshots and keyboard controls; CI and independent source review.
+
+**Executed evidence:** [DEV-002B](./evidence/DEV-002B.md), [independent review](./evidence/DEV-002B-review.md): local build/typecheck, 16 TS cases, 14 Go functions/43 subcases, vet, real Firefox/Wails/SQLite and exact process restart PASS. Lead and reviewer each ran the browser suite with separate temporary libraries. [Implementation CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41957177037) at `daaff20384d90129e8886293829fa77953a31409`; latest-head CI remains a mandatory PR gate. User authorised merging PR #6 on 2026-11-05 if no further issue is found.
+
+Exclusions: other input modes, candidate Retry/Undo/Fork, drafts autosave, live providers, world reducers/extraction, map, Quick Start, full history/library/platform lifecycle. No complete IDEA certification. DEV-002C remains a separately launched parent integration task.
 
 ### DEV-002C — Story-loop integration and parent verification
 

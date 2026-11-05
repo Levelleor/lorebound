@@ -3,6 +3,7 @@
   import { host } from '../lib/host';
   import { prepareCreate, type Library, type Snapshot, type CreateRequest } from '../lib/library';
   import '../lib/appearance.css';
+  import StoryWorkspace from '../lib/StoryWorkspace.svelte';
 
   let library: Library | null = null;
   let current: Snapshot | null = null;
@@ -13,6 +14,8 @@
   let mobileView = 'story';
   let heading: HTMLHeadingElement;
   let loadSequence = 0;
+  let storyStatus = '✓ Saved';
+  let storyLocked = false;
 
   function message(cause: unknown) {
     const value = String(cause);
@@ -23,7 +26,7 @@
     return 'Lorebound could not reach or save to your library. Check that Lorebound is running, then retry.';
   }
 
-  async function focusHeading() { await tick(); heading?.focus(); }
+  async function focusHeading() { await tick(); document.querySelector<HTMLHeadingElement>('h1')?.focus(); }
   function setAddress(id?: string) {
     const url = new URL(window.location.href);
     if (id) url.searchParams.set('adventure', id); else url.searchParams.delete('adventure');
@@ -31,7 +34,7 @@
   }
   async function load() {
     const sequence = ++loadSequence;
-    busy = true; error = ''; current = null;
+    busy = true; error = ''; current = null; storyLocked = false; storyStatus = '✓ Saved';
     try {
       const next = await host.list();
       const id = new URL(window.location.href).searchParams.get('adventure');
@@ -64,8 +67,11 @@
     try {
       pending ??= prepareCreate(library.epoch, title, crypto.randomUUID(), crypto.randomUUID());
       const result = await host.create(pending);
+      // The original creation receipt may precede turns accepted in another tab.
+      // Keep the same pending request until a coherent current read succeeds.
+      const snapshot = await host.read(result.snapshot.epoch, result.snapshot.adventure.id);
       if (sequence !== loadSequence) return;
-      current = result.snapshot;
+      current = snapshot;
       // A lost reply is resolved by retrying this unchanged request, never a fresh ID.
       pending = null; title = ''; mobileView = 'story'; setAddress(current.adventure.id);
       await focusHeading();
@@ -73,7 +79,7 @@
     finally { if (sequence === loadSequence) busy = false; }
   }
   async function showLibrary() {
-    if (busy) return;
+    if (busy || storyLocked) return;
     setAddress(); await load(); await focusHeading();
   }
   onMount(() => {
@@ -88,8 +94,8 @@
 <header class="topbar">
   <a class="brand" href="/" onclick={(event) => { event.preventDefault(); void showLibrary(); }} aria-label="Lorebound adventure library">▤ <span>Lorebound</span></a>
   <div class="header-actions">
-    <span class="save-status" role="status">{busy ? 'Loading…' : pending ? 'Creation unconfirmed' : current && !error ? '✓ Saved' : library && !error ? 'Library ready' : 'Unavailable'}</span>
-    {#if current}<button class="quiet" onclick={showLibrary} disabled={busy}>Library</button>{/if}
+    <span class="save-status" role="status">{busy ? 'Loading…' : pending ? 'Creation unconfirmed' : current && !error ? storyStatus : library && !error ? 'Library ready' : 'Unavailable'}</span>
+    {#if current}<button class="quiet" onclick={showLibrary} disabled={busy || storyLocked}>Library</button>{/if}
   </div>
 </header>
 
@@ -108,14 +114,9 @@
     <button aria-pressed={mobileView === 'world'} onclick={() => mobileView = 'world'}>World</button>
   </nav>
   <div class="workspace">
-    <main class:mobile-hidden={mobileView !== 'story'} class="story-pane">
-      <article class="reader">
-        <p class="eyebrow">Your adventure</p>
-        <h1 bind:this={heading} tabindex="-1">{current.adventure.title}</h1>
-        <div class="empty-story"><span aria-hidden="true">✧</span><p>No passages yet.</p><p class="supporting">A blank beginning, ready for your story.</p></div>
-      </article>
-      <footer class="story-footer"><span class="confirmed">✓ Blank adventure saved</span></footer>
-    </main>
+    {#key current.adventure.id}
+      <StoryWorkspace snapshot={current} mobileHidden={mobileView !== 'story'} onUpdate={(update) => { current = update.snapshot; storyStatus = update.status; storyLocked = update.locked; }} />
+    {/key}
     <aside class:mobile-hidden={mobileView !== 'world'} class="context-rail" aria-label="World context">
       <div class="context-tabs"><span class="selected">Scene</span><span>Items</span><span>Lore</span><span>Context</span></div>
       <div class="context-body"><p class="eyebrow">Current scene</p><h2>An unwritten world</h2><p>No characters or places recorded.</p></div>
