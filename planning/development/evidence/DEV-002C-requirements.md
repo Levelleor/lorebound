@@ -1,6 +1,6 @@
 ---
 type: development-requirements-review
-status: scoped-evidence-reviewed-unmerged
+status: scoped-evidence-reviewed-merged
 created: "2026-11-05"
 updated: "2026-11-05"
 task: "DEV-002C"
@@ -11,7 +11,7 @@ baseline_commit: "899678ad80adc2489ccd84502688a2e8357d6474"
 
 The user explicitly authorised “Launch DEV-002C”. Independent `scope_audit` compared the original seven IDEA notes, accepted ADRs, current code and DEV-002B evidence. Its initial audit found no need for a new gameplay capability or architecture decision. The lead selected **first-slice integration/recovery and parent evidence closure**. The confirmed dropped-invalidation gap and reviewer-discovered conflict-message race are corrected within B1-D04/B3-D05/B4-D03 authority.
 
-This matrix accounts for **all 57 existing inventory rows whose delivery text mentions First**. It does not invent new atomic IDs or certify all 95 whole-IDEA rows. PASS scope means the bounded behavior has executed lead checks; independent review and implementation-head CI passed; latest documentation-head CI/merge are separate gates in [task evidence](./DEV-002C.md). Three previously verified IDEA-0006 rows remain the formal main count. Partial rows retain their unimplemented remainder, particularly nonempty world events; no entire IDEA is archived or marked complete.
+This matrix accounts for **all 57 existing inventory rows whose delivery text mentions First**. It does not invent new atomic IDs or certify all 95 whole-IDEA rows. PASS scope means the bounded behavior has executed lead checks, independent review and final-head CI, and is merged in PR #8; [task evidence](./DEV-002C.md) records exact provenance. Three previously verified IDEA-0006 rows remain the formal main count. Partial rows retain their unimplemented remainder, particularly nonempty world events; no entire IDEA is archived or marked complete.
 
 ## Governing scope
 
@@ -91,4 +91,4 @@ C-D06 permits zero supported world effects. Thus parent DEV-002 closure is a com
 | IDEA-0053/R10 | PARTIAL existing library/storage boundary | G/B/I/R verify current Go SQLite library; directory selection, full maintenance, backups/restores remain DEV-008. |
 | IDEA-0053/R15 | PARTIAL basic responsiveness | B four-width usable controls; I types during delayed read, waits for generation and recovers saves. No large-history scale/performance threshold or full replay workload certification; DEV-010 remains. |
 
-**Parent completion gate:** all applicable bounded checks plus independent review and final-head CI must pass, then an authorised merge must land before DEV-002/DEV-002C can be marked VERIFIED & MERGED. The remaining 38 inventory rows contain no First delivery obligation and remain assigned to their existing later tasks.
+**Parent completion gate met:** applicable bounded checks, independent review and final-head CI passed; authorised PR #8 merged. DEV-002/DEV-002C are VERIFIED & MERGED within the explicit zero-effects Story scope; [post-merge reconciliation](./DEV-002C-reconciliation.md). The remaining 38 inventory rows contain no First delivery obligation and remain assigned to their existing later tasks.

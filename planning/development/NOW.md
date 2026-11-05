@@ -3,15 +3,15 @@ type: development-status
 status: current
 updated: "2026-11-05"
 current_task: "DEV-002C"
-current_task_status: "PASS / PR OPEN / UNMERGED"
-next_task: "DEV-002C"
+current_task_status: "VERIFIED & MERGED"
+next_task: "DEV-003"
 ---
 
 # Lorebound — Current Development Status
 
 > **THIS IS THE ONE-PAGE HANDOFF.** Read [TASKS](./TASKS.md), [FEATURES](./FEATURES.md), [JOURNAL](./JOURNAL.md), the [runbook](./AGENT-RUNBOOK.md), and [system architecture](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md). Keep exactly one Next Task and distinguish merged application evidence from documentation prepared afterward.
 
-Last reconciled with GitHub main: **2026-11-05**, commit `899678ad80adc2489ccd84502688a2e8357d6474` (merged documentation PR #7). Application merge: `f0c57b8b808308534cda1c3cb862262c813f5d11`. [PR #6](https://github.com/Levelleor/lorebound/pull/6) is **MERGED**; final head `ec7537c982e4dc91fe2f50faa11e87c983825176` and merged main have identical tree `16418710c64d5c37f15e1aab1f0155ad8f51a6ae`. GitHub reports no open PRs at reconciliation start. [DEV-002B reconciliation](./evidence/DEV-002B-reconciliation.md).
+Last reconciled with GitHub main: **2026-11-05**, commit `9c4a615b32faee3a513467e3ecc8cf6f5d5b760a`. [PR #8](https://github.com/Levelleor/lorebound/pull/8) is **MERGED** after explicit user authorisation and [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088907520) at `ba9b3c346f5bd7330b5cb19763c31e95c201ebb5`. The PR head and merged main have identical tree `5a313301d6c2e60cb5c2a43dbec4d6301aab01ab`. Fetched `origin/main` and clean local main agreed before the documentation reconciliation branch. [Reconciliation](./evidence/DEV-002C-reconciliation.md).
 
 ## Snapshot
 
@@ -19,13 +19,13 @@ Last reconciled with GitHub main: **2026-11-05**, commit `899678ad80adc2489ccd84
 | --- | --- | --- |
 | Original accepted IDEA notes in production / staging | **52 / 0** | [Promotion audit](../architecture/Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md) |
 | Completely VERIFIED original feature ideas | **0 / 52** | [FEATURES](./FEATURES.md); full IDEA scopes remain incomplete |
-| Original ideas with partial implementation evidence | **7**: IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053 | Merged PRs #4/#6 and scoped independent evidence |
+| Original ideas with partial implementation evidence | **7**: IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053 | Merged PRs #4/#6/#8 and scoped independent evidence |
 | Atomic requirements individually verified | **3**: IDEA-0006/R01–R03 | [Scoped evidence](./evidence/DEV-002A.md) and [independent review](./evidence/DEV-002A-review.md); broader 95-row inventory remains draft; DEV-002B verifies a bounded Story slice without individually certifying additional rows |
-| Repository CI workflow files | **1**: `.github/workflows/verify.yml` | [DEV-002B final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42038112388) |
+| Repository CI workflow files | **1**: `.github/workflows/verify.yml` | [DEV-002C final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088907520) |
 | Approved visual direction | **Entry, Story reader/composer and provisional/committed states verified** | [Story screenshots and limits](./evidence/DEV-002B.md); full UI remains planned |
 | Spatial migration B9-D12 | **DEFERRED — NO WORK** | [Accepted closure](../architecture/decisions/P-B9-01%20-%20B9%20and%20Pass%20B%20Design%20Closure%20with%20Deferred%20Spatial%20Migration.md) |
 
-**What actually works on merged main:** Blank adventure create/list/resume and one Story-mode authored submission → explicitly simulated provisional continuation → Stop/Discard or explicit atomic Accept. Accepted turns contain distinct structured authored/generated passages and empty world effects; TypeScript replay, Go-owned SQLite, stale-version/epoch rejection and unchanged-request recovery pass real Firefox/browser-process restart checks. Full model providers, world effects, history editing and host/library lifecycle remain later work.
+**What actually works on merged main:** Blank adventure create/list/resume and one Story-mode authored submission → explicitly simulated provisional continuation → Stop/Discard or explicit atomic Accept. Accepted turns contain distinct structured authored/generated passages and empty world effects; TypeScript replay, Go-owned SQLite, stale-version/epoch rejection and unchanged-request recovery pass real Firefox/browser-process restart checks. Cross-tab hints received during pending work are coalesced into a safe later refetch; live input and conflict/rejection diagnostics survive recovery. Full model providers, world effects, history editing and host/library lifecycle remain later work.
 
 ## Completed task: DEV-002A — Production blank adventure creation and resume
 
@@ -39,15 +39,23 @@ Last reconciled with GitHub main: **2026-11-05**, commit `899678ad80adc2489ccd84
 
 The first Story slice has 16 TypeScript tests, 14 Go functions/43 nested cases, real Wails/Go/SQLite browser/restart/recovery runs by lead and reviewer, and Dark/Bright screenshots at four widths. It records zero supported world effects and uses a fixed simulated continuation. This does not complete any full original IDEA; broader per-row requirement certification remains open. B9-D12 stays deferred.
 
-**Post-merge record maintenance:** This status update was prepared on `docs/dev-002b-merge-reconciliation` after PR #6 merged. The application evidence above reflects verified merged main.
+**Post-merge record maintenance:** PR #7 merged the DEV-002B reconciliation. The application evidence above reflects verified merged main.
 
-## Next Task: **DEV-002C — Story-loop integration and parent verification**
+## Completed task: DEV-002C — Story-loop integration and parent verification
 
-**Status: PASS / PR OPEN, unmerged.** User explicitly authorised “Launch DEV-002C” on 2026-11-05. Lead: Codex; branch `feat/dev-002c-story-integration`, based on verified main `899678ad`. Scope: audit and close remaining zero-effects Story-loop failure/cancellation/recovery, cross-tab/navigation/reopen integration and parent requirement traceability, correcting defects found within that boundary. Existing application evidence above remains merged DEV-002A/B; new [DEV-002C evidence](./evidence/DEV-002C.md) records local build, 23 TS cases, real SQLite, lead/reviewer Firefox/restart and independent review PASS. [PR #8](https://github.com/Levelleor/lorebound/pull/8) implementation-head [CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088372352) at `30f153db153034e41ce1f62e85ec569a7db0be23`; final documentation-head CI is tracked in [PR checks](https://github.com/Levelleor/lorebound/pull/8/checks). No live provider, history editing, nonempty world effects, map or B9-D12 work.
+**Status: VERIFIED & MERGED.** [PR #8](https://github.com/Levelleor/lorebound/pull/8) merged as `9c4a615b32faee3a513467e3ecc8cf6f5d5b760a` on 2026-11-05 after the user said “yes we can merge it, finalize the task please”. [Final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088907520) and independent source/runtime review cover the same merged application tree. [Evidence](./evidence/DEV-002C.md), [review](./evidence/DEV-002C-review.md), [57-row first-slice matrix](./evidence/DEV-002C-requirements.md).
 
-**Exact next action:** Confirm latest [PR #8 checks](https://github.com/Levelleor/lorebound/pull/8/checks) pass and obtain separate authorisation to merge PR #8. [All 57 First-bearing rows](./evidence/DEV-002C-requirements.md) have bounded dispositions; parent closure remains contingent on merge. No later DEV task starts in this launch.
+**Parent DEV-002 is VERIFIED & MERGED within the accepted Story-only simulated zero-effects scope.** All A/B/C children are merged. The 95-row whole-IDEA inventory retains 38 Later-only rows and explicitly partial nonempty-event/mixed obligations; seven original ideas remain PARTIAL, zero complete, and the formal individually certified main count stays three IDEA-0006 rows. This documentation reconciliation records the actual merged application; its own final checks are recorded in the reconciliation PR.
+
+## Next Task: **DEV-003 — Retry, drafts, Undo/Fork and current-history prose editing**
+
+**Status: QUEUED / NOT STARTED.** The bounded DEV-002 dependency is satisfied. DEV-003 requires a separately authorised launch to audit original requirements and select one bounded child scope before coding. No later task starts as part of DEV-002C finalisation.
+
+**Exact next action:** On a separately authorised DEV-003 launch, audit its acceptance/dependencies and select one bounded implementation scope.
 
 ## Recent verified milestones
+
+- **2026-11-05 — DEV-002C / parent DEV-002:** merged PR #8; deferred invalidation/recovery and parent integration verified; 57 First-bearing rows reconciled, seven partial ideas, zero complete ideas.
 
 - **2026-11-05 — DEV-002B:** merged PR #6; Story-only simulated provisional/accepted turn, seven partial original ideas, zero complete ideas.
 - **2026-11-04 — DEV-002A:** merged PR #4; three atomic requirements verified; three partial ideas; zero complete ideas.
