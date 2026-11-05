@@ -3,7 +3,7 @@ type: development-status
 status: current
 updated: "2026-11-05"
 current_task: "DEV-002C"
-current_task_status: "LOCAL PASS / CI PENDING"
+current_task_status: "PASS / PR OPEN / UNMERGED"
 next_task: "DEV-002C"
 ---
 
@@ -43,9 +43,9 @@ The first Story slice has 16 TypeScript tests, 14 Go functions/43 nested cases, 
 
 ## Next Task: **DEV-002C — Story-loop integration and parent verification**
 
-**Status: LOCAL PASS / CI PENDING, unmerged.** User explicitly authorised “Launch DEV-002C” on 2026-11-05. Lead: Codex; branch `feat/dev-002c-story-integration`, based on verified main `899678ad`. Scope: audit and close remaining zero-effects Story-loop failure/cancellation/recovery, cross-tab/navigation/reopen integration and parent requirement traceability, correcting defects found within that boundary. Existing application evidence above remains merged DEV-002A/B; new [DEV-002C evidence](./evidence/DEV-002C.md) records local build, 23 TS cases, real SQLite, lead/reviewer Firefox/restart and independent review PASS. CI remains pending. No live provider, history editing, nonempty world effects, map or B9-D12 work.
+**Status: PASS / PR OPEN, unmerged.** User explicitly authorised “Launch DEV-002C” on 2026-11-05. Lead: Codex; branch `feat/dev-002c-story-integration`, based on verified main `899678ad`. Scope: audit and close remaining zero-effects Story-loop failure/cancellation/recovery, cross-tab/navigation/reopen integration and parent requirement traceability, correcting defects found within that boundary. Existing application evidence above remains merged DEV-002A/B; new [DEV-002C evidence](./evidence/DEV-002C.md) records local build, 23 TS cases, real SQLite, lead/reviewer Firefox/restart and independent review PASS. [PR #8](https://github.com/Levelleor/lorebound/pull/8) implementation-head [CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088372352) at `30f153db153034e41ce1f62e85ec569a7db0be23`; final documentation-head CI is tracked in [PR checks](https://github.com/Levelleor/lorebound/pull/8/checks). No live provider, history editing, nonempty world effects, map or B9-D12 work.
 
-**Exact next action:** Publish the DEV-002C PR, verify its final-head CI, then obtain separate merge authorisation. [All 57 First-bearing rows](./evidence/DEV-002C-requirements.md) have bounded dispositions; parent closure remains contingent on merge. No later DEV task starts in this launch.
+**Exact next action:** Confirm latest [PR #8 checks](https://github.com/Levelleor/lorebound/pull/8/checks) pass and obtain separate authorisation to merge PR #8. [All 57 First-bearing rows](./evidence/DEV-002C-requirements.md) have bounded dispositions; parent closure remains contingent on merge. No later DEV task starts in this launch.
 
 ## Recent verified milestones
 

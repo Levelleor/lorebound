@@ -35,7 +35,7 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | Milestone | Working capability target | Existing partial evidence / dependency |
 | --- | --- | --- |
 | **M0** | Real Wails/browser/Go + Go SQLite technical host/storage foundation | [Gate 0 merged PR #3](https://github.com/Levelleor/lorebound/pull/3), extended by [DEV-002A merged PR #4](https://github.com/Levelleor/lorebound/pull/4); broader host/storage requirements remain open |
-| **M1** | One accepted, reopened Story-mode turn and basic adventure entry | **DEV-002**: A and B merged with CI; C local integration/review PASS, final CI pending/unmerged |
+| **M1** | One accepted, reopened Story-mode turn and basic adventure entry | **DEV-002**: A and B merged with CI; C integration/review/source CI PASS, [PR #8](https://github.com/Levelleor/lorebound/pull/8) OPEN/unmerged |
 | **M2** | Edit, Retry, Undo, Fork, current-history recovery | Depends on M1 |
 | **M3** | Real browser-side model providers, streaming, interpretation and routing | Depends on M1 contract; deterministic mocked scenarios plus separate provider smoke |
 | **M4** | Lorebook, derived context/memory and author notes | Depends on canonical history and provider context |
@@ -161,3 +161,5 @@ User explicitly authorised the bounded Story-loop integration/parent verificatio
 ### 2026-11-05 — DEV-002C local evidence (unmerged)
 
 [Executed checks](./evidence/DEV-002C.md) and [independent review](./evidence/DEV-002C-review.md) pass for deferred invalidation/recovery and the bounded Story parent; [57 First-bearing requirement rows](./evidence/DEV-002C-requirements.md) now have explicit dispositions. Whole-IDEA inventory/certification remains draft beyond that slice. Main counts stay seven PARTIAL, three formally certified atomic rows, zero complete ideas. Final-head CI and merge remain pending.
+
+**Publication:** [DEV-002C PR #8](https://github.com/Levelleor/lorebound/pull/8) OPEN; [implementation-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088372352) at `30f153db153034e41ce1f62e85ec569a7db0be23`. Latest documentation-head result is tracked in PR checks. Main counts remain unchanged until authorised merge.

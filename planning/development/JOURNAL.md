@@ -201,3 +201,8 @@ tags:
 - **Executed final checks:** build/check 0 diagnostics, 23 individual TypeScript cases, Go vet and 14 SQLite functions/43 subcases PASS. Lead and independent reviewer each ran complete real Firefox/Wails/SQLite failure/recovery/restart suites on separate temporary libraries/ports after source fixes. [Evidence](./evidence/DEV-002C.md), [review](./evidence/DEV-002C-review.md).
 - **Requirement reconciliation:** [All 57 First-bearing rows](./evidence/DEV-002C-requirements.md) have explicit bounded evidence, partial or conditional-later disposition. Corrected stale inventory prose that denied merged accepted passages. The 38 Later-only rows, supported nonempty event semantics, seven partial ideas and three formally verified main rows remain distinct.
 - **Publication gate:** task PR/final-head CI pending; no merge performed or authorised. DEV-003 remains a later candidate. SSH remote main verified at unchanged `899678ad` using the existing identity with host config bypass; no secrets exposed.
+
+### 2026-11-05 — DEV-002C publication and implementation-head CI
+
+- [PR #8](https://github.com/Levelleor/lorebound/pull/8) opened from `feat/dev-002c-story-integration`; implementation commit `30f153db153034e41ce1f62e85ec569a7db0be23`. [CI run 42088372352 PASS](https://github.com/Levelleor/lorebound/actions/runs/42088372352): build/typecheck, TS unit, Go vet/SQLite, Firefox/restart and evidence upload succeeded; lead inspected job metadata.
+- This follow-up updates PR/CI links only; reviewed source is unchanged. Its final-head CI is required and the final result is recorded in PR #8. No merge authorisation was given and no merge performed. DEV-003 remains unstarted.

@@ -1,6 +1,6 @@
 ---
 type: development-requirements-review
-status: scoped-evidence-pending-final-review
+status: scoped-evidence-reviewed-unmerged
 created: "2026-11-05"
 updated: "2026-11-05"
 task: "DEV-002C"
@@ -11,7 +11,7 @@ baseline_commit: "899678ad80adc2489ccd84502688a2e8357d6474"
 
 The user explicitly authorised “Launch DEV-002C”. Independent `scope_audit` compared the original seven IDEA notes, accepted ADRs, current code and DEV-002B evidence. Its initial audit found no need for a new gameplay capability or architecture decision. The lead selected **first-slice integration/recovery and parent evidence closure**. The confirmed dropped-invalidation gap and reviewer-discovered conflict-message race are corrected within B1-D04/B3-D05/B4-D03 authority.
 
-This matrix accounts for **all 57 existing inventory rows whose delivery text mentions First**. It does not invent new atomic IDs or certify all 95 whole-IDEA rows. PASS scope means the bounded behavior has executed lead checks; final independent review/CI/merge are separate gates in [task evidence](./DEV-002C.md). Three previously verified IDEA-0006 rows remain the formal main count. Partial rows retain their unimplemented remainder, particularly nonempty world events; no entire IDEA is archived or marked complete.
+This matrix accounts for **all 57 existing inventory rows whose delivery text mentions First**. It does not invent new atomic IDs or certify all 95 whole-IDEA rows. PASS scope means the bounded behavior has executed lead checks; independent review and implementation-head CI passed; latest documentation-head CI/merge are separate gates in [task evidence](./DEV-002C.md). Three previously verified IDEA-0006 rows remain the formal main count. Partial rows retain their unimplemented remainder, particularly nonempty world events; no entire IDEA is archived or marked complete.
 
 ## Governing scope
 

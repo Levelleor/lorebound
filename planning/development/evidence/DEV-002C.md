@@ -1,6 +1,6 @@
 ---
 type: development-evidence
-status: local-pass-ci-pending-unmerged
+status: pass-reviewed-source-ci-unmerged
 created: "2026-11-05"
 updated: "2026-11-05"
 task: "DEV-002C"
@@ -10,7 +10,7 @@ base_commit: "899678ad80adc2489ccd84502688a2e8357d6474"
 
 # DEV-002C — Story-loop integration and parent verification
 
-**Local implementation, full required runtime checks and independent review PASS; CI pending, unmerged.** User explicitly authorised “Launch DEV-002C” on 2026-11-05. [Parent requirement reconciliation](./DEV-002C-requirements.md), [independent review](./DEV-002C-review.md), [task control](../TASKS.md#dev-002c--story-loop-integration-and-parent-verification). Publication reference will be recorded once created. Main remains `899678ad80adc2489ccd84502688a2e8357d6474`, merged DEV-002A/B plus PR #7 documentation.
+**Implementation, required runtime checks, independent review and implementation-head CI PASS; PR OPEN, unmerged.** User explicitly authorised “Launch DEV-002C” on 2026-11-05. [Parent requirement reconciliation](./DEV-002C-requirements.md), [independent review](./DEV-002C-review.md), [task control](../TASKS.md#dev-002c--story-loop-integration-and-parent-verification). [PR #8](https://github.com/Levelleor/lorebound/pull/8); implementation commit `30f153db153034e41ce1f62e85ec569a7db0be23`. The subsequent PR-link/evidence-only documentation commit receives its own final-head CI; the exact latest result is recorded in [PR #8 checks](https://github.com/Levelleor/lorebound/pull/8/checks). Main remains `899678ad80adc2489ccd84502688a2e8357d6474`, merged DEV-002A/B plus PR #7 documentation.
 
 ## Behavior and source changes
 
@@ -35,7 +35,7 @@ Linux x86_64; Node 24.14.0, Go 1.27.3, Playwright Firefox from the locked depend
 | Visual/responsive/accessibility | PASS, implemented scope | Existing real 390/768/1024/1440 Dark/Bright geometry, no-overflow and keyboard acceptance; new keyboard Discard, disabled Generate while refreshing and recovery states. Lead/reviewer inspected screenshots. Reduced-motion CSS is source-inspected; full appearance settings/accessibility audit remain later. |
 | Security/platform | PASS / NOT RUN | Real Host/Origin/fetch-metadata/preflight/WebSocket rejections; safe literal prose and no external requests across all opened tabs. Windows/macOS runtime/packaging NOT RUN; host restrictions are not hostile-local-process authentication. |
 | Independent review | PASS, scoped | [Report](./DEV-002C-review.md); independent 23 TS cases, typecheck, Go tests/vet and separate full browser/restart [output](./DEV-002C/independent-browser.log). Two initial source findings corrected. |
-| GitHub CI | PENDING | Required final-head build/unit/SQLite/browser/restart workflow will be linked after publication. No CI PASS inferred from local results. |
+| GitHub CI | PASS at implementation head | [Run 42088372352](https://github.com/Levelleor/lorebound/actions/runs/42088372352) on `30f153db153034e41ce1f62e85ec569a7db0be23`: build/typecheck, TS/Go/SQLite, Firefox/restart and artifact upload passed. Lead inspected run/job metadata. The later documentation-only head must also pass [PR checks](https://github.com/Levelleor/lorebound/pull/8/checks); final result recorded in PR. |
 
 Screenshots: [mobile pending keyboard focus](./DEV-002C/story-proposed-dark-390.png), [Bright desktop proposal](./DEV-002C/story-proposed-bright-1440.png), [input retained after queued refresh](./DEV-002C/story-refresh-retained-input.png), [post-commit read failure](./DEV-002C/story-post-commit-read-failure.png), [failed conflict reload](./DEV-002C/story-conflict-read-failure.png). Full width/theme set is produced in CI artifacts. Named font fallback and full appearance-control limits remain unchanged.
 
@@ -45,4 +45,4 @@ The initial unit run exposed an older test assuming Discard did not trigger a qu
 
 All 57 parent rows mentioning First now have explicit evidence/disposition. The 38 Later-only rows remain assigned to later tasks. Nonempty event-envelope/source/reducer obligations remain PARTIAL, including IDEA-0039/R02/R07 and IDEA-0040/R04. C-D06 permits the bounded zero-effects Story parent to close after its applicable gates, without certifying those broader event features. Formal merged per-row count remains three IDEA-0006 rows; seven whole ideas remain PARTIAL and zero are complete. No original IDEA was archived or promoted into implemented specs.
 
-**Remaining gate:** final-head CI and separate merge authorisation. DEV-002/DEV-002C are not VERIFIED & MERGED until the PR actually lands. DEV-003 is only the subsequent candidate, never started by this launch. Live providers, other modes, nonempty world effects, full history editing/drafts, Quick Start, backup/restore, full host lifecycle and B9-D12 spatial migration remain outside scope.
+**Remaining merge gates:** confirm the latest documentation-head CI in PR #8 checks and obtain separate merge authorisation. DEV-002/DEV-002C are not VERIFIED & MERGED until the PR actually lands. DEV-003 is only the subsequent candidate, never started by this launch. Live providers, other modes, nonempty world effects, full history editing/drafts, Quick Start, backup/restore, full host lifecycle and B9-D12 spatial migration remain outside scope.
