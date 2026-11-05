@@ -13,21 +13,47 @@
   let candidateSection: HTMLElement;
   let acceptButton: HTMLButtonElement;
 
-  async function generate() {
+  async function generate()
+  {
     await coordinator.generate();
     await tick();
     candidateSection?.scrollIntoView({ block: 'nearest' });
     if (state?.phase === 'ready') acceptButton?.focus();
   }
-  async function discard() { coordinator.discard(); await tick(); input?.focus(); }
-  async function stop() { coordinator.stop(); await tick(); input?.focus(); }
-  onMount(() => {
+
+  async function discard()
+  {
+    coordinator.discard();
+    await tick();
+    input?.focus();
+  }
+
+  async function stop()
+  {
+    coordinator.stop();
+    await tick();
+    input?.focus();
+  }
+
+  function handleInputKey(event: KeyboardEvent)
+  {
+    if (!(event.ctrlKey || event.metaKey) || event.key !== 'Enter') return;
+    if (state?.phase !== 'idle' || state.refreshing) return;
+    event.preventDefault();
+    void generate();
+  }
+
+  onMount(() =>
+  {
     const channel = typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel('lorebound-story-changes');
     let lastVersion = snapshot.adventure.version;
     let lastEpoch = snapshot.epoch;
-    const publish = (next: CoordinatorState) => {
-      if (next.snapshot.adventure.version !== lastVersion || next.snapshot.epoch !== lastEpoch) {
-        lastVersion = next.snapshot.adventure.version; lastEpoch = next.snapshot.epoch;
+    const publish = (next: CoordinatorState) =>
+    {
+      if (next.snapshot.adventure.version !== lastVersion || next.snapshot.epoch !== lastEpoch)
+      {
+        lastVersion = next.snapshot.adventure.version;
+        lastEpoch = next.snapshot.epoch;
         channel?.postMessage({ adventureId: next.snapshot.adventure.id });
       }
       state = next;
@@ -35,6 +61,7 @@
         : next.phase === 'uncertain' ? 'Save unconfirmed'
         : next.phase === 'generating' ? 'Generating · simulated'
         : next.phase === 'ready' ? 'Proposed · not saved'
+        : next.refreshing ? 'Refreshing…'
         : next.phase === 'blocked' ? 'Read only'
         : next.error ? 'Needs attention'
         : next.input ? 'Unsaved input' : '✓ Saved';
@@ -45,10 +72,18 @@
       onChange: publish
     });
     publish(coordinator.state);
-    const refresh = () => { if (coordinator.canRefresh) void coordinator.refresh(); };
-    if (channel) channel.onmessage = event => { if (event.data?.adventureId === snapshot.adventure.id) refresh(); };
+    const refresh = () => coordinator.requestRefresh();
+    if (channel) channel.onmessage = event =>
+    {
+      if (event.data?.adventureId === snapshot.adventure.id) refresh();
+    };
     window.addEventListener('focus', refresh);
-    return () => { coordinator.dispose(); channel?.close(); window.removeEventListener('focus', refresh); };
+    return () =>
+    {
+      coordinator.dispose();
+      channel?.close();
+      window.removeEventListener('focus', refresh);
+    };
   });
 </script>
 
@@ -97,7 +132,7 @@
         <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
           disabled={!state || state.phase !== 'idle'}
           oninput={(event) => coordinator.setInput(event.currentTarget.value)}
-          onkeydown={(event) => { if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && state?.phase === 'idle') { event.preventDefault(); void generate(); } }}></textarea>
+          onkeydown={handleInputKey}></textarea>
         {#if state?.phase === 'ready' || state?.phase === 'saving' || state?.phase === 'uncertain'}
           <div class="pending-overlay" aria-label="Turn acceptance">
             <p>{state.phase === 'saving' ? 'Saving your accepted turn…' : state.phase === 'uncertain' ? 'Confirm the save before continuing.' : 'Accept both passages into your story?'}</p>
@@ -112,7 +147,7 @@
         {:else if state?.phase === 'blocked'}
           <div class="pending-overlay"><p>Story writes are unavailable.</p><button onclick={() => coordinator.refresh()}>Reload story</button></div>
         {:else}
-          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={!state?.input.trim()}>↑</button>
+          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={!state?.input.trim() || state.refreshing}>↑</button>
         {/if}
       </div>
       <p class="composer-hint">{state?.phase === 'idle' ? 'Ctrl / ⌘ + Enter to generate. Input is not saved until you accept.' : 'Only accepted passages are saved. World tracking is not available yet.'}</p>

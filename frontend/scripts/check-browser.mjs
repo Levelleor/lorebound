@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { exerciseStory } from './check-story.mjs';
+import { exerciseStoryIntegration } from './check-story-integration.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -12,11 +13,17 @@ assert.ok(statePath, 'Use scripts/verify-host.sh with a disposable library');
 const browser = await firefox.launch({ headless: true });
 try {
   const context = await browser.newContext();
-  const page = await context.newPage();
   const errors = [];
   const externalRequests = [];
-  page.on('pageerror', error => errors.push(error.message));
-  page.on('request', req => { if (!req.url().startsWith(base)) externalRequests.push(req.url()); });
+  context.on('page', opened =>
+  {
+    opened.on('pageerror', error => errors.push(error.message));
+    opened.on('request', request =>
+    {
+      if (!request.url().startsWith(base)) externalRequests.push(request.url());
+    });
+  });
+  let page = await context.newPage();
   assert.equal((await page.goto(base, { waitUntil: 'networkidle' }))?.status(), 200);
   await page.getByRole('status').getByText('Library ready', { exact: true }).waitFor();
   const list = () => page.evaluate(() => window.wails.Call.ByName('main.LibraryService.List'));
@@ -146,6 +153,7 @@ try {
     }
     console.log('PASS: real bridge rejects wrong library epoch; two independent adventures remain intact');
     await exerciseStory(page, base, artifacts, firstID);
+    page = await exerciseStoryIntegration(page, base, artifacts, firstID);
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};
