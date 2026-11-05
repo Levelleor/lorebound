@@ -3,7 +3,7 @@ type: architecture
 status: current-reference
 phase: "C"
 created: "2026-11-03"
-updated: "2026-11-04"
+updated: "2026-11-05"
 tags:
   - planning/architecture
   - system-overview
@@ -29,7 +29,7 @@ The experience combines:
 - **World and character views**: universal characters with optional Playing As identity, presence/status/anatomy, unique items and equipment, locations/routes/conditions and an accessible, basic **semantically scaled spatial map**.
 - A **Command Citadel visual language**: parchment editorial prose on warm charcoal, antique-gold actions, a 320px contextual rail at desktop, a docked composer, responsive alternative views and honest blue-pending/green-confirmed feedback.
 
-**Current implementation evidence (2026-11-04):** Merged [DEV-002A PR #4](https://github.com/Levelleor/lorebound/pull/4) replaces Gate 0's test screen/service with real blank adventure creation, listing and resume through **Wails v3, SvelteKit and Go-owned SQLite**. Atomic empty Turn-0 initialization, independent identities, recovery and browser/process restart have [passing evidence](../development/evidence/DEV-002A.md), including scoped Command Citadel entry/blank-reader visuals. IDEA-0006/R01–R03 are verified; IDEA-0006/0051/0053 remain partial. Generated Story turns, providers, Lorebook, map and the complete game engine remain planned. **All 52 original ideas are in `planning/production/` (approved for implementation); zero are staged; no complete idea has been archived as implemented.** Future features must be separately built and evidenced, in small slices. **B9-D12 spatial event/schema migration is explicitly deferred** and not part of today's work.
+**Current implementation evidence (2026-11-05):** Merged [DEV-002A PR #4](https://github.com/Levelleor/lorebound/pull/4) replaces Gate 0's test screen/service with real blank adventure creation, listing and resume through **Wails v3, SvelteKit and Go-owned SQLite**. Atomic empty Turn-0 initialization, independent identities, recovery and browser/process restart have [passing evidence](../development/evidence/DEV-002A.md), including scoped Command Citadel entry/blank-reader visuals. IDEA-0006/R01–R03 are verified; IDEA-0006/0051/0053 remain partial. Merged [DEV-002B PR #6](https://github.com/Levelleor/lorebound/pull/6) adds Story input, explicitly simulated provisional continuation and atomic acceptance of separate structured authored/generated passages with zero world effects; [scoped evidence](../development/evidence/DEV-002B.md) includes final-head CI and independent real-browser/restart verification. Live providers, nonempty world events, Lorebook, map and the complete game engine remain planned. **All 52 original ideas are in `planning/production/` (approved for implementation); zero are staged; no complete idea has been archived as implemented.** Future features must be separately built and evidenced, in small slices. **B9-D12 spatial event/schema migration is explicitly deferred** and not part of today's work.
 
 ## 2. System at a glance
 
@@ -122,7 +122,7 @@ flowchart TD
 6. **Project:** pure deterministic replay creates current character, world, lore and map projections. Caches/summaries are derived and invalidated as appropriate; UI shows only confirmed accepted changes.
 7. **Recover:** Retry, Undo, selected-history edits, Fork, cancellation, stale tab/library changes and restore follow explicit versioned/active-history rules. No permanent parallel immutable passage revision archive.
 
-**First Story-mode slice** is deliberately narrower than the whole application: stable adventure/passage/turn identity, accepted prose and order, minimal typed current-event envelope (possibly **zero world effects**), Go technical commit and replay. Real host/SQLite Gate 0 verification is already evidenced, but a full working story loop is **not yet evidenced**.
+**First Story-mode slice** is deliberately narrower than the whole application: stable adventure/passage/turn identity, accepted prose and order, minimal typed current-event envelope (possibly **zero world effects**), Go technical commit and replay. Real host/SQLite Gate 0 verification is already evidenced, and this narrow zero-effects Story loop is now **verified in merged PR #6**. Full AI/provider and world-event integration remain planned.
 
 ## 5. The twelve logical subsystems
 
@@ -274,7 +274,7 @@ The architecture has **12 logical ownership areas**, not necessarily 12 separate
 
 ## 9. User interface and design language
 
-The approved [Command Citadel design reference](../design/README.md) is the visual target **for the finished app**. DEV-002A verifies the implemented entry/blank-reader surfaces only; the complete composer, world UI and appearance controls remain planned.
+The approved [Command Citadel design reference](../design/README.md) is the visual target **for the finished app**. DEV-002A verifies entry/blank-reader surfaces; DEV-002B verifies the Story-only docked composer and provisional/committed states. World UI and full appearance controls remain planned.
 
 - **Desktop:** 48px header; centre-reading main pane (outer max 672px), dark 320px context rail with **Scene / Items / Lore / Context** tabs; main story and rail independently scroll; primary multi-line composer docked below reader.
 - **Responsive:** below 1024px switch between Story and World; hide location breadcrumb below 768px; simplify compact controls/forms below 640px. No sideways overflow.
@@ -286,18 +286,18 @@ For screen-by-screen states, see the [UI interaction map](../design/Lorebound%20
 
 ## 10. Current implementation status and intended development sequence
 
-| Area | Current evidenced status (as of 2026-11-04) | What remains |
+| Area | Current evidenced status (as of 2026-11-05) | What remains |
 | --- | --- | --- |
-| Wails v3 headless Go + SvelteKit ordinary browser | **Real adventure service/browser integration verified on Linux**, merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); [evidence](../development/evidence/DEV-002A.md) | Full launcher/instance/Quit lifecycle, sensitive-service security and platform packaging |
-| Go SQLite adventure library | **Blank adventure/baseline creation, list/resume, isolation, epoch/idempotency/rollback/reopen verified** in DEV-002A; Gate 0 remains historical evidence | Accepted passage/event history, expected-version edits, drafts, backup/restore and full multi-tab integration |
-| Adventure/story turn + TypeScript coordinator | **Approved design, not yet evidenced as full working flow** | First complete Story-mode request → proposal → explicit accept → Go atomic persist → reopen/replay |
+| Wails v3 headless Go + SvelteKit ordinary browser | **Real adventure service/browser integration verified on Linux**, merged [PRs #4](https://github.com/Levelleor/lorebound/pull/4) / [#6](https://github.com/Levelleor/lorebound/pull/6); [evidence](../development/evidence/DEV-002B.md) | Full launcher/instance/Quit lifecycle, sensitive-service security and platform packaging |
+| Go SQLite adventure library | **Blank creation and atomic Story passage/receipt append, isolation, stale/epoch rejection, rollback and reopen verified** through DEV-002B; Gate 0 remains historical evidence | Nonempty world events, history edits, drafts, backup/restore and broader integration |
+| Adventure/story turn + TypeScript coordinator | **Story-only simulated proposal → explicit accept → Go atomic persist → refetch/replay/reopen verified** in [DEV-002B](../development/evidence/DEV-002B.md) | Live model, other modes, nonempty world events and parent integration verification |
 | Direct model providers and full AI workflow | **Approved design only** | Browser adapters, settings, streaming, interpretation and context |
 | Editing, lore/memory, characters, world, map, plugins | **Approved design only** | Incremental implementation and honest tests; no blanket completion claim |
-| UI visual fidelity | **Entry/blank-reader styling and four-width responsive checks verified** in DEV-002A | Composer, full world/UI surfaces, appearance controls and complete accessibility certification |
+| UI visual fidelity | **Entry and Story-only reader/composer, provisional/committed states and four-width Dark/Bright checks verified** through DEV-002B | Full world/UI surfaces, appearance controls and complete accessibility certification |
 | Original 52 production ideas | **52 approved notes, zero staging, no completed specs/archive** | Implement and verify individually or in dependency-aligned slices |
 | Spatial event/schema migration | **Deferred by B9-D12** | No work until a distinct explicit future decision |
 
-**Recommended next integrated development:** follow [NOW](../development/NOW.md) for DEV-002B's outstanding requirement-audit gate, then build on the merged blank-adventure foundation to implement the smallest complete **Story-mode** loop under accepted C-D01/D04/D06, using minimal versioned accepted passages/events and mocked generation as appropriate. Then extend editing/recovery, other modes, real providers and context, character/world features, map and full verification in dependency order. **Approval to move all ideas into production was not an instruction to implement every feature simultaneously.**
+**Recommended next integrated development:** follow [NOW](../development/NOW.md) for the separately authorised DEV-002C parent integration/coverage task. The bounded Story-only zero-effects loop is merged; later slices extend editing/recovery, other modes, real providers and context, character/world effects, map and full verification in dependency order. **Approval to move all ideas into production was not an instruction to implement every feature simultaneously.**
 
 **Known early risk:** a hostile local process that bypasses browser headers is not fully authenticated by Gate 0's origin checks; guard privileged/private methods before extending their scope. Evaluate epoch/idempotency order when library restore rotates the epoch. DEV-002A tests creation-receipt epoch fencing; restore itself remains unimplemented. These are limits to consider during the relevant future slices, not evidence that current blank-adventure operations fail.
 

@@ -11,7 +11,7 @@ verified_idea_count: 0
 
 **This is the authoritative live feature-completion ledger for the development workflow.** Exactly **52 original accepted IDEA notes** exist in [production](../production/). They are *approved scopes*, not implemented features. A partial technical foundation is **not** completion of a whole IDEA. The [current task](./NOW.md), [task queue](./TASKS.md) and [runbook](./AGENT-RUNBOOK.md) govern how evidence is added.
 
-## Reconciled completeness, 2026-11-04
+## Reconciled completeness, 2026-11-05
 
 | Measure | Current status |
 | --- | --- |
@@ -19,10 +19,10 @@ verified_idea_count: 0
 | Original IDEA notes in production | **52** |
 | Original IDEA notes in staging | **0** |
 | Fully VERIFIED complete ideas | **0** |
-| PARTIAL foundation evidence | **3**: IDEA-0006, IDEA-0051, IDEA-0053 from merged PR #4 and earlier Gate 0 PR #3 |
-| Remaining notes with no feature-level implementation evidence | **49** |
-| Accepted **atomic** requirements inventoried | **95 draft records across seven IDEAs**; full inventory review incomplete; DEV-001 retains remaining certification |
-| Atomic requirements marked VERIFIED | **3**: IDEA-0006/R01–R03, independently checked and merged in PR #4 |
+| PARTIAL foundation evidence | **7**: IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053 from merged PRs #4/#6 and earlier Gate 0 PR #3 |
+| Remaining notes with no feature-level implementation evidence | **45** |
+| Accepted **atomic** requirements inventoried | **95 draft records across seven IDEAs**; DEV-002B first-slice audit passed, whole inventory review incomplete; DEV-001 retains remaining certification |
+| Atomic requirements marked VERIFIED | **3 formally certified**: IDEA-0006/R01–R03 from PR #4. DEV-002B has tested scoped requirement coverage, with per-row whole-IDEA certification still pending |
 | New feature proposals awaiting approval | **0 recorded** |
 | Deferred spatial migration | **B9-D12 DEFERRED**, not an automatically accepted requirement |
 
@@ -35,7 +35,7 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | Milestone | Working capability target | Existing partial evidence / dependency |
 | --- | --- | --- |
 | **M0** | Real Wails/browser/Go + Go SQLite technical host/storage foundation | [Gate 0 merged PR #3](https://github.com/Levelleor/lorebound/pull/3), extended by [DEV-002A merged PR #4](https://github.com/Levelleor/lorebound/pull/4); broader host/storage requirements remain open |
-| **M1** | One accepted, reopened Story-mode turn and basic adventure entry | **DEV-002**: A merged with supporting CI; B local verification PASS, unmerged |
+| **M1** | One accepted, reopened Story-mode turn and basic adventure entry | **DEV-002**: A merged with supporting CI; A and B merged with CI; C queued/unstarted |
 | **M2** | Edit, Retry, Undo, Fork, current-history recovery | Depends on M1 |
 | **M3** | Real browser-side model providers, streaming, interpretation and routing | Depends on M1 contract; deterministic mocked scenarios plus separate provider smoke |
 | **M4** | Lorebook, derived context/memory and author notes | Depends on canonical history and provider context |
@@ -51,11 +51,11 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | Approved original IDEA | Feature | Primary subsystem | First milestone | Status | Requirement coverage | Evidence / PR |
 | --- | --- | --- | --- | --- | --- | --- |
 | [IDEA-0001](../production/Single-Player%20Account-Free%20Experience.md) | Single-player account-free experience | S01 | M1 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0002](../production/Freeform%20Player%20Action%20Modes.md) | Freeform player action modes | S03 | M1 | **PARTIAL (branch only; unmerged)** | [DEV-002B scoped audit](./evidence/DEV-002B-requirements-audit.md); remaining inventory draft | [DEV-002B local evidence](./evidence/DEV-002B.md) |
+| [IDEA-0002](../production/Freeform%20Player%20Action%20Modes.md) | Freeform player action modes | S03 | M1 | **PARTIAL** | [DEV-002B scoped audit](./evidence/DEV-002B-requirements-audit.md); remaining inventory draft | [Merged PR #6](https://github.com/Levelleor/lorebound/pull/6); [evidence](./evidence/DEV-002B.md) |
 | [IDEA-0003](../production/Direct%20Editable%20Prose%20Document.md) | Direct editable prose document | S03 | M2 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0004](../production/Retry%20Undo%20and%20Alternative%20Continuations.md) | Retry, Undo and alternate continuations | S05 | M2 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0005](../production/Adventure%20Save%20and%20Export%20Management.md) | Adventure save/export management | S02 | M7 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0006](../production/Quick%20Start%20and%20Custom%20Story%20Openings.md) | Quick Start and custom openings | S02 | M1 | **PARTIAL** | [R01–R03 VERIFIED](./evidence/DEV-002A.md); remaining parent inventory draft | [Merged PR #4](https://github.com/Levelleor/lorebound/pull/4) |
+| [IDEA-0006](../production/Quick%20Start%20and%20Custom%20Story%20Openings.md) | Quick Start and custom openings | S02 | M1 | **PARTIAL** | [R01–R03 VERIFIED](./evidence/DEV-002A.md); [DEV-002B scope](./evidence/DEV-002B.md); remaining parent inventory draft | [Merged PRs #4](https://github.com/Levelleor/lorebound/pull/4) / [#6](https://github.com/Levelleor/lorebound/pull/6) |
 | [IDEA-0007](../production/Character%20Creation%20and%20Starting%20Choices.md) | Character creation and starting choices | S10 | M5 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0008](../production/Reusable%20Scenario%20Templates%20and%20Placeholders.md) | Reusable scenario templates | S02 | M7 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0010](../production/Narration%20Style%20and%20Perspective%20Controls.md) | Narration style and perspective controls | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
@@ -85,18 +85,18 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | [IDEA-0036](../production/AI%20World%20Discovery%20and%20Expansion.md) | AI world discovery and expansion | S11 | M6 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0037](../production/Zoomable%20Node%20Map%20Canvas.md) | Zoomable node/map canvas | S04 | M6 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0038](../production/Persistent%20Location%20State%20and%20Travel%20Interactions.md) | Persistent location state/travel interactions | S11 | M6 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0039](../production/Event-Sourced%20World%20History.md) | Event-sourced world history | S05 | M1 | **PARTIAL (branch only; unmerged)** | [DEV-002B scoped audit](./evidence/DEV-002B-requirements-audit.md); remaining inventory draft | [DEV-002B local evidence](./evidence/DEV-002B.md) |
-| [IDEA-0040](../production/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md) | Versioned text blocks and stable passage IDs | S05 | M1 | **PARTIAL (branch only; unmerged)** | [DEV-002B scoped audit](./evidence/DEV-002B-requirements-audit.md); remaining inventory draft | [DEV-002B local evidence](./evidence/DEV-002B.md) |
+| [IDEA-0039](../production/Event-Sourced%20World%20History.md) | Event-sourced world history | S05 | M1 | **PARTIAL** | [DEV-002B scoped audit](./evidence/DEV-002B-requirements-audit.md); remaining inventory draft | [Merged PR #6](https://github.com/Levelleor/lorebound/pull/6); [evidence](./evidence/DEV-002B.md) |
+| [IDEA-0040](../production/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md) | Versioned text blocks and stable passage IDs | S05 | M1 | **PARTIAL** | [DEV-002B scoped audit](./evidence/DEV-002B-requirements-audit.md); remaining inventory draft | [Merged PR #6](https://github.com/Levelleor/lorebound/pull/6); [evidence](./evidence/DEV-002B.md) |
 | [IDEA-0041](../production/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md) | Historical edit confirmation/truncation | S03 | M2 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0042](../production/Snapshots%20and%20Incremental%20State%20Rebuild.md) | Snapshots and incremental rebuild | S05 | M2 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0044](../production/Deterministic%20Adventure%20Coordinator.md) | Deterministic adventure coordinator | S06 | M1 | **PARTIAL (branch only; unmerged)** | [DEV-002B scoped audit](./evidence/DEV-002B-requirements-audit.md); remaining inventory draft | [DEV-002B local evidence](./evidence/DEV-002B.md) |
+| [IDEA-0044](../production/Deterministic%20Adventure%20Coordinator.md) | Deterministic adventure coordinator | S06 | M1 | **PARTIAL** | [DEV-002B scoped audit](./evidence/DEV-002B-requirements-audit.md); remaining inventory draft | [Merged PR #6](https://github.com/Levelleor/lorebound/pull/6); [evidence](./evidence/DEV-002B.md) |
 | [IDEA-0045](../production/LLM%20State%20Interpreter%20and%20Proposed%20Operations.md) | LLM state interpreter and proposals | S07 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0046](../production/Typed%20Tool%20Rejection%20and%20Narrative%20Repair.md) | Typed tool rejection and narrative repair | S06 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0047](../production/Native%20Gameplay%20Capability%20Registry.md) | Native gameplay capability registry | S06 | M8 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0050](../production/Structured%20UI%20Game%20Actions.md) | Structured UI game actions | S03 | M8 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0051](../production/Browser-Persistent%20Story%20Database.md) | Go-owned browser-persistent story database | S12 | M0 | **PARTIAL** | [DEV-002A merged subsets](./evidence/DEV-002A.md); full inventory draft | [Merged PR #4](https://github.com/Levelleor/lorebound/pull/4); earlier [Gate 0](https://github.com/Levelleor/lorebound/pull/3) |
+| [IDEA-0051](../production/Browser-Persistent%20Story%20Database.md) | Go-owned browser-persistent story database | S12 | M0 | **PARTIAL** | [DEV-002A merged subsets](./evidence/DEV-002A.md); [DEV-002B scope](./evidence/DEV-002B.md); full inventory draft | [Merged PRs #4](https://github.com/Levelleor/lorebound/pull/4) / [#6](https://github.com/Levelleor/lorebound/pull/6); earlier [Gate 0](https://github.com/Levelleor/lorebound/pull/3) |
 | [IDEA-0052](../production/Backups%20Export%20and%20Storage%20Quotas.md) | Backup/export and storage quotas | S12 | M7 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0053](../production/Localhost%20Startup%20and%20Offline%20Mode.md) | Localhost startup and offline mode | S01 | M0 | **PARTIAL** | [DEV-002A merged subsets](./evidence/DEV-002A.md); full inventory draft | [Merged PR #4](https://github.com/Levelleor/lorebound/pull/4); earlier [Gate 0](https://github.com/Levelleor/lorebound/pull/3) |
+| [IDEA-0053](../production/Localhost%20Startup%20and%20Offline%20Mode.md) | Localhost startup and offline mode | S01 | M0 | **PARTIAL** | [DEV-002A merged subsets](./evidence/DEV-002A.md); [DEV-002B scope](./evidence/DEV-002B.md); full inventory draft | [Merged PRs #4](https://github.com/Levelleor/lorebound/pull/4) / [#6](https://github.com/Levelleor/lorebound/pull/6); earlier [Gate 0](https://github.com/Levelleor/lorebound/pull/3) |
 | [IDEA-0055](../production/Optional%20RPG%20Mechanics%20Plugins.md) | Optional RPG mechanics plugins | S06 | M8 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0061](../production/Lorebound%20Branding%20and%20Engine%20Split.md) | Lorebound branding and engine split | S01 | M8 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0062](../production/Accessibility%20and%20Customisable%20Interface.md) | Accessibility and customisable interface | S04 | M8 | **NOT STARTED** | Not yet inventoried | None |
@@ -107,9 +107,13 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 
 ## DEV-002A verified and merged
 
-Merged [PR #4](https://github.com/Levelleor/lorebound/pull/4) at `fac5521bfbe7cd63ea3c7b85108b7d1865b678b9` replaces Gate 0 scaffolding with real blank adventure creation/resume. **IDEA-0006/R01–R03 are VERIFIED** with [scoped local evidence](./evidence/DEV-002A.md), independent source/browser review and [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41838612434). [Reconciliation](./evidence/DEV-002A-reconciliation.md) confirms the tested head and merged main trees are identical. IDEA-0006, IDEA-0051 and IDEA-0053 are **PARTIAL**, with zero fully verified ideas. The [95-row seven-IDEA inventory](./requirements/DEV-002.md) remains draft beyond the three certified rows; no additional host/storage atomic requirement is upgraded. PR #5 merged the reconciliation at `858806acc15aa54350af11535e59a8d82e73b7a5`. DEV-002B is now explicitly authorised and in progress; [scoped audit](./evidence/DEV-002B-requirements-audit.md) and TASKS define the implementation boundary. Main still has exactly three verified atomic requirements. No additional branch work counts as merged evidence.
+Merged [PR #4](https://github.com/Levelleor/lorebound/pull/4) at `fac5521bfbe7cd63ea3c7b85108b7d1865b678b9` verified blank adventure creation/resume and IDEA-0006/R01–R03. [PR #5](https://github.com/Levelleor/lorebound/pull/5) merged its documentation reconciliation at `858806acc15aa54350af11535e59a8d82e73b7a5`. This remains the earlier milestone; the original 52 IDEA notes stay in production until fully verified.
 
-**DEV-002B branch evidence (unmerged, [PR #6](https://github.com/Levelleor/lorebound/pull/6)):** [Implementation and independent checks](./evidence/DEV-002B.md) now cover the bounded zero-effects Story slice. [Implementation CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41957177037); seven ideas have scoped branch coverage; the merged-main measures above remain unchanged. No full IDEA is complete; nonempty event/source association remains partial.
+## DEV-002B verified and merged
+
+[PR #6](https://github.com/Levelleor/lorebound/pull/6) merged at `f0c57b8b808308534cda1c3cb862262c813f5d11` after [independent audit/review](./evidence/DEV-002B-review.md) and [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42038112388). The Story-only simulated generation, provisional review, atomic acceptance and structured zero-effects current history now provide partial evidence for seven original ideas; zero whole original ideas are complete. [Scoped implementation evidence](./evidence/DEV-002B.md) traces tested behaviour. Empty world-effect arrays do not verify nonempty event reduction/provenance. The parent 95-row inventory remains draft outside the independently reviewed first slice; this reconciliation does not inflate the formal atomic certification count beyond the three individually recorded DEV-002A rows.
+
+**Post-merge record maintenance:** This correction was prepared on `docs/dev-002b-merge-reconciliation` after PR #6 merged. The preceding application facts are independently verified on main. DEV-002C remains queued and unstarted.
 
 ## Atomic requirement tracking (to be populated by DEV-001)
 

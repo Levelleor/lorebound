@@ -3,7 +3,7 @@ type: development-task-queue
 status: current
 created: "2026-11-03"
 updated: "2026-11-05"
-current_next_task: "DEV-002B"
+current_next_task: "DEV-002C"
 ---
 
 # Lorebound — Development Task Queue
@@ -21,7 +21,7 @@ Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies,
 | Task | Outcome | Depends on | Primary IDEA coverage | Status | PR/evidence |
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
-| **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | SPLIT: DEV-002A → DEV-002B → DEV-002C | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B local PASS/unmerged; C not started |
+| **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | SPLIT: DEV-002A → DEV-002B → DEV-002C | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C not started |
 | **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | QUEUED | None |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
@@ -87,9 +87,9 @@ Status: VERIFIED & MERGED. Owner: Codex lead. Authorisation: user explicitly sel
 - No existing Gate 0 data migration. Generated prose/turn acceptance, rename/delete, shared drafts, Quick Start, full host lifecycle and platform packaging excluded. B9-D12 remains deferred.
 - Branch: `feat/dev-002a-adventure-foundation`. PR: [#4](https://github.com/Levelleor/lorebound/pull/4). Independent reviewer: `/root/independent_review`, [source/local/browser PASS](./evidence/DEV-002A-review.md). [Final-head GitHub CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41838612434); initial validation failure retained in the journal. [Local passing evidence](./evidence/DEV-002A.md). Final head `473a957797ce8ad339435c04aad39592e61525d1` and merged main `fac5521bfbe7cd63ea3c7b85108b7d1865b678b9` have identical trees. [Post-merge reconciliation](./evidence/DEV-002A-reconciliation.md) on `docs/dev-002a-merge-reconciliation` changes documentation only. No remaining PR #4 merge-approval blocker; no next child starts in this launch.
 
-### DEV-002B — First provisional and accepted Story turn (NEXT)
+### DEV-002B — First provisional and accepted Story turn (MERGED)
 
-Status: **PR OPEN / UNMERGED; local review and implementation CI PASS**. User authorised “Launch DEV-002B” on 2026-11-04. Owner: Codex lead; independent prerequisite audit, bounded storage/domain delegates and fresh independent review. Branch: `feat/dev-002b-story-turn`, base `858806acc15aa54350af11535e59a8d82e73b7a5`; PR: [PR #6](https://github.com/Levelleor/lorebound/pull/6). DEV-002A is merged; [first-slice audit](./evidence/DEV-002B-requirements-audit.md) governs this scope, not certification of every row in the parent inventory.
+Status: **VERIFIED & MERGED**. User launched DEV-002B on 2026-11-04 and authorised merging on 2026-11-05. Owner: Codex lead; independent requirement audit, source/browser review PASS. Branch `feat/dev-002b-story-turn`, final head `ec7537c982e4dc91fe2f50faa11e87c983825176`, [PR #6](https://github.com/Levelleor/lorebound/pull/6), merged main `f0c57b8b808308534cda1c3cb862262c813f5d11`. Final head and main trees identical. [Reconciliation](./evidence/DEV-002B-reconciliation.md). The 95-row parent inventory remains draft beyond scoped evidence; no whole IDEA is complete.
 
 Acceptance gates:
 - Story input without actor; visibly simulated deterministic generation; authored input and generated response both provisional until explicit acceptance. Stop/Discard and late completions cannot mutate canon; no automatic accept on Send.
@@ -99,13 +99,13 @@ Acceptance gates:
 - Additive nonspatial storage upgrade preserves DEV-002A blank adventures, baseline, epoch and receipts. Wire version fences old browser clients. B9-D12 stays deferred.
 - Actual Firefox/Wails/Go/SQLite create→generate→discard/stop→accept→resume→process-restart; lost-response and conflict recovery; unit/storage failures and coherent reads; responsive 390/768/1024/1440 Dark/Bright screenshots and keyboard controls; CI and independent source review.
 
-**Executed evidence:** [DEV-002B](./evidence/DEV-002B.md), [independent review](./evidence/DEV-002B-review.md): local build/typecheck, 16 TS cases, 14 Go functions/43 subcases, vet, real Firefox/Wails/SQLite and exact process restart PASS. Lead and reviewer each ran the browser suite with separate temporary libraries. [Implementation CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41957177037) at `daaff20384d90129e8886293829fa77953a31409`; latest-head CI remains a mandatory PR gate. User authorised merging PR #6 on 2026-11-05 if no further issue is found.
+**Executed evidence:** [DEV-002B](./evidence/DEV-002B.md), [independent review](./evidence/DEV-002B-review.md): local build/typecheck, 16 TS cases, 14 Go functions/43 subcases, vet, real Firefox/Wails/SQLite and exact process restart PASS. Lead and reviewer each ran the browser suite with separate temporary libraries. [Implementation CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41957177037) at `daaff20384d90129e8886293829fa77953a31409`; [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42038112388) at `ec7537c982e4dc91fe2f50faa11e87c983825176`. User authorised merging PR #6 on 2026-11-05; it merged with identical reviewed tree.
 
 Exclusions: other input modes, candidate Retry/Undo/Fork, drafts autosave, live providers, world reducers/extraction, map, Quick Start, full history/library/platform lifecycle. No complete IDEA certification. DEV-002C remains a separately launched parent integration task.
 
 ### DEV-002C — Story-loop integration and parent verification
 
-Status: QUEUED. Depends on: DEV-002B. Complete first-slice failure/cancellation/recovery and cross-tab/reopen integration against original requirements, independent visual/review evidence, and reconcile the parent. Split further if needed; never automatically start in DEV-002A's launch.
+Status: QUEUED / NOT STARTED; DEV-002B merged dependency satisfied. Separate launch authorisation required. Complete first-slice failure/cancellation/recovery and cross-tab/reopen integration against original requirements, independent visual/review evidence, and reconcile the parent. Split further if needed; never automatically start in DEV-002A's launch.
 
 ## Deferred and cross-cutting gates
 

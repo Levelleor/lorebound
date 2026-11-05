@@ -1,6 +1,6 @@
 # Lorebound
 
-**Development status and next task:** [Planning Development Control Centre](planning/development/README.md) · [NOW](planning/development/NOW.md) · [all 52 feature statuses](planning/development/FEATURES.md) · [task queue](planning/development/TASKS.md). This is the working record for agent handoffs, evidence, newly discovered scope and implementation progress. The current task is **DEV-002B**, provisional Story generation and atomic acceptance. Consult NOW for review, CI and merge status.
+**Development status and next task:** [Planning Development Control Centre](planning/development/README.md) · [NOW](planning/development/NOW.md) · [all 52 feature statuses](planning/development/FEATURES.md) · [task queue](planning/development/TASKS.md). This is the working record for agent handoffs, evidence, newly discovered scope and implementation progress. **DEV-002B is merged**; **DEV-002C** is the next queued task and has not started. Consult NOW for its prerequisite and launch status.
 
 **Read the full [System Architecture Overview](planning/architecture/Lorebound%20-%20System%20Architecture%20Overview.md)** for a self-contained explanation of the player experience, all 52 approved features, twelve subsystem boundaries, AI/Go/SQLite data flows, design style and real implementation status. A short root [ARCHITECTURE.md](ARCHITECTURE.md) also points there. This is the **current architectural entry point**, unlike chronological historical review documents.
 
@@ -22,7 +22,7 @@ Gameplay rules, maps, and world-state tracking are optional tools to help the AI
 
 ## Project status
 
-This branch supports blank adventure creation/resume and Story input with explicitly simulated generation, provisional review, acceptance/discard and durable structured history through the real Wails/Go/SQLite application. The simulated continuation is a fixed fixture, not a live model. World tracking, map, other input modes and history editing remain later work. See [development setup](docs/development.md), [DEV-002B evidence](planning/development/evidence/DEV-002B.md), and [NOW](planning/development/NOW.md) for the distinction between branch work and verified main.
+Merged main supports blank adventure creation/resume and Story input with explicitly simulated generation, provisional review, acceptance/discard and durable structured history through the real Wails/Go/SQLite application. The simulated continuation is a fixed fixture, not a live model. World tracking, map, other input modes and history editing remain later work. See [development setup](docs/development.md), [DEV-002B evidence](planning/development/evidence/DEV-002B.md), and [NOW](planning/development/NOW.md) for tested scope and current development status.
 
 ## Planning
 
