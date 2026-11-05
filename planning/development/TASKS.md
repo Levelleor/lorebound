@@ -2,7 +2,7 @@
 type: development-task-queue
 status: current
 created: "2026-11-03"
-updated: "2026-11-04"
+updated: "2026-11-05"
 current_next_task: "DEV-002B"
 ---
 
@@ -89,7 +89,7 @@ Status: VERIFIED & MERGED. Owner: Codex lead. Authorisation: user explicitly sel
 
 ### DEV-002B — First provisional and accepted Story turn (NEXT)
 
-Status: **LOCAL PASS / UNMERGED; PR/CI pending**. User authorised “Launch DEV-002B” on 2026-11-04. Owner: Codex lead; independent prerequisite audit, bounded storage/domain delegates and fresh independent review. Branch: `feat/dev-002b-story-turn`, base `858806acc15aa54350af11535e59a8d82e73b7a5`; PR not yet opened. DEV-002A is merged; [first-slice audit](./evidence/DEV-002B-requirements-audit.md) governs this scope, not certification of every row in the parent inventory.
+Status: **PR OPEN / UNMERGED; local review and implementation CI PASS**. User authorised “Launch DEV-002B” on 2026-11-04. Owner: Codex lead; independent prerequisite audit, bounded storage/domain delegates and fresh independent review. Branch: `feat/dev-002b-story-turn`, base `858806acc15aa54350af11535e59a8d82e73b7a5`; PR: [PR #6](https://github.com/Levelleor/lorebound/pull/6). DEV-002A is merged; [first-slice audit](./evidence/DEV-002B-requirements-audit.md) governs this scope, not certification of every row in the parent inventory.
 
 Acceptance gates:
 - Story input without actor; visibly simulated deterministic generation; authored input and generated response both provisional until explicit acceptance. Stop/Discard and late completions cannot mutate canon; no automatic accept on Send.
@@ -99,7 +99,7 @@ Acceptance gates:
 - Additive nonspatial storage upgrade preserves DEV-002A blank adventures, baseline, epoch and receipts. Wire version fences old browser clients. B9-D12 stays deferred.
 - Actual Firefox/Wails/Go/SQLite create→generate→discard/stop→accept→resume→process-restart; lost-response and conflict recovery; unit/storage failures and coherent reads; responsive 390/768/1024/1440 Dark/Bright screenshots and keyboard controls; CI and independent source review.
 
-**Executed evidence:** [DEV-002B](./evidence/DEV-002B.md), [independent review](./evidence/DEV-002B-review.md): local build/typecheck, 16 TS cases, 14 Go functions/43 subcases, vet, real Firefox/Wails/SQLite and exact process restart PASS. Lead and reviewer each ran the browser suite with separate temporary libraries. Final CI still pending.
+**Executed evidence:** [DEV-002B](./evidence/DEV-002B.md), [independent review](./evidence/DEV-002B-review.md): local build/typecheck, 16 TS cases, 14 Go functions/43 subcases, vet, real Firefox/Wails/SQLite and exact process restart PASS. Lead and reviewer each ran the browser suite with separate temporary libraries. [Implementation CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41957177037) at `daaff20384d90129e8886293829fa77953a31409`; latest-head CI remains a mandatory PR gate. User authorised merging PR #6 on 2026-11-05 if no further issue is found.
 
 Exclusions: other input modes, candidate Retry/Undo/Fork, drafts autosave, live providers, world reducers/extraction, map, Quick Start, full history/library/platform lifecycle. No complete IDEA certification. DEV-002C remains a separately launched parent integration task.
 

@@ -1,9 +1,9 @@
 ---
 type: development-status
 status: current
-updated: "2026-11-04"
+updated: "2026-11-05"
 current_task: "DEV-002B"
-current_task_status: "LOCAL PASS / UNMERGED"
+current_task_status: "PR OPEN / REVIEW"
 next_task: "DEV-002B"
 ---
 
@@ -35,13 +35,13 @@ Last reconciled with GitHub main: **2026-11-04**, commit `858806acc15aa54350af11
 
 ## Next Task: **DEV-002B — First provisional and accepted Story turn**
 
-**Status: LOCAL PASS / UNMERGED; PR/CI pending.** User explicitly selected “Launch DEV-002B” on 2026-11-04. Branch `feat/dev-002b-story-turn`, based on main `858806acc15aa54350af11535e59a8d82e73b7a5`. DEV-002A dependency satisfied. The independent first-slice audit and bounded acceptance are recorded in [DEV-002B requirements audit](./evidence/DEV-002B-requirements-audit.md); the broader 95-row inventory remains draft outside this scope.
+**Status: PR OPEN / UNMERGED; local review and implementation CI PASS.** [PR #6](https://github.com/Levelleor/lorebound/pull/6). User explicitly selected “Launch DEV-002B” on 2026-11-04. Branch `feat/dev-002b-story-turn`, based on main `858806acc15aa54350af11535e59a8d82e73b7a5`. DEV-002A dependency satisfied. The independent first-slice audit and bounded acceptance are recorded in [DEV-002B requirements audit](./evidence/DEV-002B-requirements-audit.md); the broader 95-row inventory remains draft outside this scope.
 
 **Bounded scope:** Story-only multiline input, explicitly simulated deterministic generation, one provisional candidate and explicit acceptance/discard/stop. One accepted turn contains distinct authored/generated structured passages with stable IDs and ordering; typed event boundary supports an empty effects batch only. TypeScript replay; atomic Go/SQLite commit/read; stale/epoch rejection and unchanged-request uncertain-write recovery; Command Citadel docked composer and truthful provisional/committed states. Existing blank libraries are preserved by an additive nonspatial schema upgrade; wire version changes so stale clients fail safely.
 
-**Evidence:** [Local build/unit/SQLite/browser/restart/visual evidence PASS](./evidence/DEV-002B.md), including a separately executed [independent review/browser PASS](./evidence/DEV-002B-review.md). This remains unmerged branch work, not verified main. No live provider, full world-event reducer, Quick Start, historical editing, backup/restore or B9-D12 migration. Empty events do not prove future supported world-event replay/source association.
+**Evidence:** [Local build/unit/SQLite/browser/restart/visual evidence PASS](./evidence/DEV-002B.md), including a separately executed [independent review/browser PASS](./evidence/DEV-002B-review.md). Implementation commit `daaff20384d90129e8886293829fa77953a31409` has [implementation CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41957177037); inspect the latest PR head checks before merge. This remains unmerged branch work, not verified main. No live provider, full world-event reducer, Quick Start, historical editing, backup/restore or B9-D12 migration. Empty events do not prove future supported world-event replay/source association.
 
-**Exact next action:** Publish the reviewed DEV-002B PR and inspect final-head CI. Merge requires separate authorisation. DEV-002C does not start in this launch.
+**Exact next action:** Merge [PR #6](https://github.com/Levelleor/lorebound/pull/6) after final-head CI is green; the user authorised this merge on 2026-11-05. Reconcile trackers against the actual merge before considering DEV-002C. DEV-002C does not start in this launch.
 
 ## Recent verified milestones
 

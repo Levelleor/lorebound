@@ -165,3 +165,11 @@ tags:
 - **Test/environment history:** Initial focus assertion needed real keyboard traversal; incompatible-read fixture needed HTTP interception instead of ineffective runtime replacement. An execution-host restart removed temporary evidence before the pending run's result was collected; final build/browser/restart was repeated and retained. No incomplete run counted as PASS.
 - **Coverage:** Whole-feature counts on main remain three partial ideas and three verified atomic rows; no original IDEA archived. Empty event arrays cannot prove nonempty event replay/provenance. DEV-002C unstarted, B9-D12 deferred.
 - **Next gate:** Publish task PR, inspect final CI, obtain separate merge authorisation. Local implementation/review evidence is unmerged.
+
+- **Publication:** [PR #6](https://github.com/Levelleor/lorebound/pull/6) opened from `feat/dev-002b-story-turn`; implementation commit `daaff20384d90129e8886293829fa77953a31409`. Local and independent review PASS; CI pending. No merge performed.
+
+- **Implementation CI:** [Run 41957177037 PASS](https://github.com/Levelleor/lorebound/actions/runs/41957177037) on `daaff20384d90129e8886293829fa77953a31409`; all build/typecheck/TS/Go/SQLite/Firefox/restart/artifact steps succeeded and lead inspected job metadata/logs. Subsequent PR/evidence-link-only documentation changes receive final-head CI on PR #6. No merge authorised or performed.
+
+### 2026-11-05 — DEV-002B user merge authorisation
+
+- The user said PR #6 CI and review look good and explicitly authorised merging it if nothing more remains. The lead verified the implementation-head CI run 41957177037 PASS, independent scoped review PASS and no unresolved source blocker. One PR-link/CI documentation commit remains; merge will follow its final-head CI and GitHub mergeability check. DEV-002C is not authorised by this merge decision and remains unstarted.

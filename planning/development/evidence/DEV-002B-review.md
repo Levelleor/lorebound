@@ -2,10 +2,12 @@
 type: development-review
 status: pass-scoped-review
 created: "2026-11-04"
-updated: "2026-11-04"
+updated: "2026-11-05"
 task: "DEV-002B"
 reviewer: "Codex requirements_audit and final_review independent reviewers"
 base_commit: "858806acc15aa54350af11535e59a8d82e73b7a5"
+implementation_commit: "daaff20384d90129e8886293829fa77953a31409"
+pr: "https://github.com/Levelleor/lorebound/pull/6"
 ---
 
 # DEV-002B — Independent implementation review
@@ -49,11 +51,15 @@ Environment: Linux; Node `24.14.0` from `/home/alex/.nvm/versions/node/v24.14.0/
 
 Unit coordinator storage/provider fixtures are simulated. Go contract tests use actual SQLite but do not themselves prove Wails/browser operation. The browser script's unknown-core fixture intercepts an actual HTTP read response and is correctly labelled simulated; actual stored unknown-effect preservation is separately covered by Go tests.
 
+## PR linkage and documentation review
+
+Implementation reviewed and independently tested is committed as `daaff20384d90129e8886293829fa77953a31409` in [PR #6](https://github.com/Levelleor/lorebound/pull/6). The final reviewer inspected the subsequent uncommitted control/evidence delta: it adds PR/commit links and changes publication status to PR OPEN / CI PENDING while preserving unmerged status and scope limits. No application, test, build or runtime source changed after the independent checks. Scoped review PASS therefore remains applicable. The lead inspected [implementation CI run 41957177037 PASS](https://github.com/Levelleor/lorebound/actions/runs/41957177037) at the reviewed implementation commit. This reviewer did not independently inspect its logs; final documentation-head CI remains a merge gate.
+
 ## Final disposition
 
 **Scoped independent review PASS.** No unresolved source, test or visual blocker remains within this Story-only, zero-effects slice. The final reviewer reran 16 TypeScript cases, 14 Go functions (43 nested rejection/shape cases), frontend typecheck, Go vet and the complete real-browser/restart suite; inspected the resulting screenshots and the final README/development-documentation changes. It made no application or test changes.
 
-This is review of the current feature-branch implementation, not a claim that it has merged or that any full original IDEA is complete. Nonempty world-event semantics/provenance, live providers, durable drafts and Windows/macOS operation remain outside this evidence. Required final-head CI and applicable merge authorisation remain gates. DEV-002C and B9-D12 remain unstarted/deferred respectively.
+This is review of the current feature-branch implementation, not a claim that it has merged or that any full original IDEA is complete. Nonempty world-event semantics/provenance, live providers, durable drafts and Windows/macOS operation remain outside this evidence. Final documentation-head CI remains a gate. The user authorised merging PR #6 on 2026-11-05 if no further issue is found. DEV-002C and B9-D12 remain unstarted/deferred respectively.
 
-**Reviewer file change:** this report only. **Next action:** lead publishes the bounded PR, confirms passing final-head CI and records its URL/commit; merge only with applicable authorisation.
+**Reviewer file change:** this report only. **Next action:** lead commits the reviewed PR-link documentation, confirms passing final-head CI and records its URL/commit; merge only after final-head CI passes under the user’s 2026-11-05 authorisation.
 

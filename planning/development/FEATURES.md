@@ -2,7 +2,7 @@
 type: development-feature-ledger
 status: current
 created: "2026-11-03"
-updated: "2026-11-04"
+updated: "2026-11-05"
 baseline_idea_count: 52
 verified_idea_count: 0
 ---
@@ -109,7 +109,7 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 
 Merged [PR #4](https://github.com/Levelleor/lorebound/pull/4) at `fac5521bfbe7cd63ea3c7b85108b7d1865b678b9` replaces Gate 0 scaffolding with real blank adventure creation/resume. **IDEA-0006/R01–R03 are VERIFIED** with [scoped local evidence](./evidence/DEV-002A.md), independent source/browser review and [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41838612434). [Reconciliation](./evidence/DEV-002A-reconciliation.md) confirms the tested head and merged main trees are identical. IDEA-0006, IDEA-0051 and IDEA-0053 are **PARTIAL**, with zero fully verified ideas. The [95-row seven-IDEA inventory](./requirements/DEV-002.md) remains draft beyond the three certified rows; no additional host/storage atomic requirement is upgraded. PR #5 merged the reconciliation at `858806acc15aa54350af11535e59a8d82e73b7a5`. DEV-002B is now explicitly authorised and in progress; [scoped audit](./evidence/DEV-002B-requirements-audit.md) and TASKS define the implementation boundary. Main still has exactly three verified atomic requirements. No additional branch work counts as merged evidence.
 
-**DEV-002B branch evidence (unmerged):** [Implementation and independent checks](./evidence/DEV-002B.md) now cover the bounded zero-effects Story slice. Seven ideas have scoped branch coverage; the merged-main measures above remain unchanged. No full IDEA is complete; nonempty event/source association remains partial.
+**DEV-002B branch evidence (unmerged, [PR #6](https://github.com/Levelleor/lorebound/pull/6)):** [Implementation and independent checks](./evidence/DEV-002B.md) now cover the bounded zero-effects Story slice. [Implementation CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41957177037); seven ideas have scoped branch coverage; the merged-main measures above remain unchanged. No full IDEA is complete; nonempty event/source association remains partial.
 
 ## Atomic requirement tracking (to be populated by DEV-001)
 
