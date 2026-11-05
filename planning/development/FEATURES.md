@@ -19,10 +19,10 @@ verified_idea_count: 0
 | Original IDEA notes in production | **52** |
 | Original IDEA notes in staging | **0** |
 | Fully VERIFIED complete ideas | **0** |
-| PARTIAL foundation evidence | **7**: IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053 from merged PRs #4/#6 and earlier Gate 0 PR #3 |
+| PARTIAL foundation evidence | **7**: IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053 from merged PRs #4/#6/#8 and earlier Gate 0 PR #3 |
 | Remaining notes with no feature-level implementation evidence | **45** |
-| Accepted **atomic** requirements inventoried | **95 draft records across seven IDEAs**; DEV-002B first-slice audit passed, whole inventory review incomplete; DEV-001 retains remaining certification |
-| Atomic requirements marked VERIFIED | **3 formally certified**: IDEA-0006/R01–R03 from PR #4. DEV-002B has tested scoped requirement coverage, with per-row whole-IDEA certification still pending |
+| Accepted **atomic** requirements inventoried | **95 draft records across seven IDEAs**; DEV-002C reconciles all 57 First-bearing rows; 38 Later-only rows and whole-IDEA inventory review remain open; DEV-001 retains remaining certification |
+| Atomic requirements marked VERIFIED | **3 formally certified**: IDEA-0006/R01–R03 from PR #4. DEV-002B/C have tested scoped requirement coverage; no extra whole-row certification is inferred from mixed/later or empty-effect coverage |
 | New feature proposals awaiting approval | **0 recorded** |
 | Deferred spatial migration | **B9-D12 DEFERRED**, not an automatically accepted requirement |
 
@@ -35,7 +35,7 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | Milestone | Working capability target | Existing partial evidence / dependency |
 | --- | --- | --- |
 | **M0** | Real Wails/browser/Go + Go SQLite technical host/storage foundation | [Gate 0 merged PR #3](https://github.com/Levelleor/lorebound/pull/3), extended by [DEV-002A merged PR #4](https://github.com/Levelleor/lorebound/pull/4); broader host/storage requirements remain open |
-| **M1** | One accepted, reopened Story-mode turn and basic adventure entry | **DEV-002**: A and B merged with CI; C integration/review/source CI PASS, [PR #8](https://github.com/Levelleor/lorebound/pull/8) OPEN/unmerged |
+| **M1** | One accepted, reopened Story-mode turn and basic adventure entry | **DEV-002**: **VERIFIED & MERGED bounded scope**, A/B/C merged with final-head CI and independent review; [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
 | **M2** | Edit, Retry, Undo, Fork, current-history recovery | Depends on M1 |
 | **M3** | Real browser-side model providers, streaming, interpretation and routing | Depends on M1 contract; deterministic mocked scenarios plus separate provider smoke |
 | **M4** | Lorebook, derived context/memory and author notes | Depends on canonical history and provider context |
@@ -43,6 +43,8 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | **M6** | World locations, routes, discovery, simple semantic map | Depends on M5 grounding; **no deferred B9-D12 spatial migrations** |
 | **M7** | Adventure templates, starts, library lifecycle, full backup/restore | Integrates earlier slices; technical epoch fencing |
 | **M8** | Structured/optional mechanics, accessibility, Command Citadel fidelity and release checks | Integrated cross-cutting delivery and supported platforms |
+
+Merged DEV-002C extends the same seven partial ideas with safe deferred invalidation, recovery and first-slice integration evidence: [task report](./evidence/DEV-002C.md), [57-row matrix](./evidence/DEV-002C-requirements.md), [reconciliation](./evidence/DEV-002C-reconciliation.md). No complete IDEA is certified.
 
 ## All original approved ideas (52/52)
 
@@ -163,3 +165,7 @@ User explicitly authorised the bounded Story-loop integration/parent verificatio
 [Executed checks](./evidence/DEV-002C.md) and [independent review](./evidence/DEV-002C-review.md) pass for deferred invalidation/recovery and the bounded Story parent; [57 First-bearing requirement rows](./evidence/DEV-002C-requirements.md) now have explicit dispositions. Whole-IDEA inventory/certification remains draft beyond that slice. Main counts stay seven PARTIAL, three formally certified atomic rows, zero complete ideas. Final-head CI and merge remain pending.
 
 **Publication:** [DEV-002C PR #8](https://github.com/Levelleor/lorebound/pull/8) OPEN; [implementation-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088372352) at `30f153db153034e41ce1f62e85ec569a7db0be23`. Latest documentation-head result is tracked in PR checks. Main counts remain unchanged until authorised merge.
+
+### 2026-11-05 — DEV-002C and bounded parent merged
+
+User explicitly authorised merge/finalisation. [PR #8](https://github.com/Levelleor/lorebound/pull/8) merged as `9c4a615b32faee3a513467e3ecc8cf6f5d5b760a` with identical tested tree; [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088907520) and independent review apply. DEV-002/DEV-002C are VERIFIED & MERGED within their Story-only simulated zero-effects scope. The 57-row First matrix is reconciled; seven PARTIAL ideas, three formally certified atomic rows and zero complete ideas remain the feature counts. Earlier unmerged entries above are chronological snapshots. DEV-003 is queued and unstarted.

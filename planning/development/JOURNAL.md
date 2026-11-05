@@ -206,3 +206,11 @@ tags:
 
 - [PR #8](https://github.com/Levelleor/lorebound/pull/8) opened from `feat/dev-002c-story-integration`; implementation commit `30f153db153034e41ce1f62e85ec569a7db0be23`. [CI run 42088372352 PASS](https://github.com/Levelleor/lorebound/actions/runs/42088372352): build/typecheck, TS unit, Go vet/SQLite, Firefox/restart and evidence upload succeeded; lead inspected job metadata.
 - This follow-up updates PR/CI links only; reviewed source is unchanged. Its final-head CI is required and the final result is recorded in PR #8. No merge authorisation was given and no merge performed. DEV-003 remains unstarted.
+
+### 2026-11-05 — DEV-002C authorised merge and bounded parent closure
+
+- **Authority:** User explicitly said “yes we can merge it, finalize the task please”. This authorises PR #8 merge and necessary documentation finalisation; no later feature task launch.
+- **Gate:** Refetched PR #8: expected head `ba9b3c346f5bd7330b5cb19763c31e95c201ebb5`, mergeable, unchanged base `899678ad`. [Final-head CI run 42088907520 PASS](https://github.com/Levelleor/lorebound/actions/runs/42088907520), all build/unit/SQLite/browser/restart/artifact steps successful; independent scoped review has no remaining blocker.
+- **Merge/main proof:** [PR #8](https://github.com/Levelleor/lorebound/pull/8) merged as `9c4a615b32faee3a513467e3ecc8cf6f5d5b760a`. Fetched origin/main and clean local main match; head/main identical tree `5a313301d6c2e60cb5c2a43dbec4d6301aab01ab`. No new runtime claim derives from the act of merging.
+- **Reconciliation:** NOW/TASKS/FEATURES, requirement/evidence records, README/development guide and architecture current-status references now record merged DEV-002C and bounded parent DEV-002 closure on `docs/dev-002c-merge-reconciliation`. [Reconciliation report](./evidence/DEV-002C-reconciliation.md). Formal feature counts remain seven partial ideas, three certified atomic rows, zero complete ideas. DEV-003 queued/unstarted, requires separate launch; B9-D12 deferred.
+- **Documentation finalisation:** This documentation-only follow-up is within the user's instruction to finalize the task. Independent source/link/status review and its PR CI precede merging it; exact finalisation-head CI is recorded in that PR.
