@@ -3,7 +3,7 @@ type: architecture
 status: current-reference
 phase: "C"
 created: "2026-11-03"
-updated: "2026-11-05"
+updated: "2026-11-06"
 tags:
   - planning/architecture
   - system-overview
@@ -31,7 +31,7 @@ The experience combines:
 
 **Current implementation evidence (2026-11-05):** Merged [DEV-002A PR #4](https://github.com/Levelleor/lorebound/pull/4) replaces Gate 0's test screen/service with real blank adventure creation, listing and resume through **Wails v3, SvelteKit and Go-owned SQLite**. Atomic empty Turn-0 initialization, independent identities, recovery and browser/process restart have [passing evidence](../development/evidence/DEV-002A.md), including scoped Command Citadel entry/blank-reader visuals. IDEA-0006/R01–R03 are verified; IDEA-0006/0051/0053 remain partial. Merged [DEV-002B PR #6](https://github.com/Levelleor/lorebound/pull/6) adds Story input, explicitly simulated provisional continuation and atomic acceptance of separate structured authored/generated passages with zero world effects; [scoped evidence](../development/evidence/DEV-002B.md) includes final-head CI and independent real-browser/restart verification. Live providers, nonempty world events, Lorebook, map and the complete game engine remain planned. **All 52 original ideas are in `planning/production/` (approved for implementation); zero are staged; no complete idea has been archived as implemented.** Future features must be separately built and evidenced, in small slices. **B9-D12 spatial event/schema migration is explicitly deferred** and not part of today's work.
 
-Merged [DEV-002C PR #8](https://github.com/Levelleor/lorebound/pull/8) completes the bounded DEV-002 parent integration/verification: coalesced deferred cross-tab refetch, retained input and recovery diagnostics, expanded real-browser failures and exact restart persistence. [Evidence](../development/evidence/DEV-002C.md) includes independent review and final-head CI. This closes only the Story-only simulated zero-effects parent; full original IDEA scopes remain partial. DEV-003 is queued for a separate launch.
+Merged [DEV-002C PR #8](https://github.com/Levelleor/lorebound/pull/8) completes the bounded DEV-002 parent integration/verification: coalesced deferred cross-tab refetch, retained input and recovery diagnostics, expanded real-browser failures and exact restart persistence. [Evidence](../development/evidence/DEV-002C.md) includes independent review and final-head CI. This closes only the Story-only simulated zero-effects parent; full original IDEA scopes remain partial. Merged [DEV-003A PR #10](https://github.com/Levelleor/lorebound/pull/10) adds provisional replace-on-Retry with immediate invalidation, preserved input on failure/Stop, latest-only acceptance and existing save/conflict fencing; [evidence](../development/evidence/DEV-003A.md) includes final-head CI and independent review. Eight original ideas now have partial implementation evidence; zero complete ideas are archived. The broader DEV-003 parent remains partial, and no later child has started.
 
 ## 2. System at a glance
 
@@ -292,14 +292,14 @@ For screen-by-screen states, see the [UI interaction map](../design/Lorebound%20
 | --- | --- | --- |
 | Wails v3 headless Go + SvelteKit ordinary browser | **Real adventure service/browser integration verified on Linux**, merged [PRs #4](https://github.com/Levelleor/lorebound/pull/4) / [#6](https://github.com/Levelleor/lorebound/pull/6); [evidence](../development/evidence/DEV-002B.md) | Full launcher/instance/Quit lifecycle, sensitive-service security and platform packaging |
 | Go SQLite adventure library | **Blank creation and atomic Story passage/receipt append, isolation, stale/epoch rejection, rollback and reopen verified** through DEV-002B; Gate 0 remains historical evidence | Nonempty world events, history edits, drafts, backup/restore and broader integration |
-| Adventure/story turn + TypeScript coordinator | **Story-only simulated proposal → explicit accept → Go atomic persist → refetch/replay/reopen verified** in [DEV-002B](../development/evidence/DEV-002B.md) | Live model, other modes, nonempty world events and broader later-feature integration |
+| Adventure/story turn + TypeScript coordinator | **Story-only simulated proposal/Retry → explicit accept → Go atomic persist → refetch/replay/reopen verified** through [DEV-003A](../development/evidence/DEV-003A.md) | Live model, other modes, nonempty world events and broader later-feature integration |
 | Direct model providers and full AI workflow | **Approved design only** | Browser adapters, settings, streaming, interpretation and context |
 | Editing, lore/memory, characters, world, map, plugins | **Approved design only** | Incremental implementation and honest tests; no blanket completion claim |
 | UI visual fidelity | **Entry and Story-only reader/composer, provisional/committed states and four-width Dark/Bright checks verified** through DEV-002B | Full world/UI surfaces, appearance controls and complete accessibility certification |
 | Original 52 production ideas | **52 approved notes, zero staging, no completed specs/archive** | Implement and verify individually or in dependency-aligned slices |
 | Spatial event/schema migration | **Deferred by B9-D12** | No work until a distinct explicit future decision |
 
-**Recommended next integrated development:** follow [NOW](../development/NOW.md) for a separately authorised DEV-003 scope audit; DEV-002A/B/C and the bounded parent integration/coverage task are merged. The bounded Story-only zero-effects loop is merged; later slices extend editing/recovery, other modes, real providers and context, character/world effects, map and full verification in dependency order. **Approval to move all ideas into production was not an instruction to implement every feature simultaneously.**
+**Recommended next integrated development:** follow [NOW](../development/NOW.md) for a separately authorised selection of the next DEV-003 child; DEV-002A/B/C and DEV-003A are merged. DEV-003A finalisation starts no later slice. The bounded Story-only zero-effects loop is merged; later slices extend editing/recovery, other modes, real providers and context, character/world effects, map and full verification in dependency order. **Approval to move all ideas into production was not an instruction to implement every feature simultaneously.**
 
 **Known early risk:** a hostile local process that bypasses browser headers is not fully authenticated by Gate 0's origin checks; guard privileged/private methods before extending their scope. Evaluate epoch/idempotency order when library restore rotates the epoch. DEV-002A tests creation-receipt epoch fencing; restore itself remains unimplemented. These are limits to consider during the relevant future slices, not evidence that current blank-adventure operations fail.
 
