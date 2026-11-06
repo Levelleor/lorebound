@@ -1,6 +1,8 @@
 # Lorebound
 
-**Development status and next task:** [Planning Development Control Centre](planning/development/README.md) · [NOW](planning/development/NOW.md) · [all 52 feature statuses](planning/development/FEATURES.md) · [task queue](planning/development/TASKS.md). This is the working record for agent handoffs, evidence, newly discovered scope and implementation progress. **DEV-002 and its A/B/C children are verified and merged within the bounded Story-only simulated zero-effects scope**. **DEV-003A provisional Retry is verified and merged**; the broader DEV-003 parent remains partial. **DEV-003B bounded Story-prefix Fork is verified effective only on confirmed checked-head merge of [PR #12](https://github.com/Levelleor/lorebound/pull/12)**, approved by the user on 2026-11-06. Until that confirmation, main remains the prior verified baseline. Consult NOW for closure provenance and the separate next-child launch gate.
+**Try the current checkout:** run `bash scripts/dev.sh`, then open [http://127.0.0.1:8080](http://127.0.0.1:8080). It rebuilds and uses a separate persistent review library; stop with Ctrl+C. [Setup and options](docs/development.md).
+
+**Development status and next task:** [NOW](planning/development/NOW.md) · [development workflow](planning/development/README.md) · [feature coverage](planning/development/FEATURES.md) · [task queue](planning/development/TASKS.md). These own current work, verified scope and remaining implementation. CI owns repeatable checks and execution output; planning keeps decisions and concise PR/run links.
 
 **Read the full [System Architecture Overview](planning/architecture/Lorebound%20-%20System%20Architecture%20Overview.md)** for a self-contained explanation of the player experience, all 52 approved features, twelve subsystem boundaries, AI/Go/SQLite data flows, design style and real implementation status. A short root [ARCHITECTURE.md](ARCHITECTURE.md) also points there. This is the **current architectural entry point**, unlike chronological historical review documents.
 
@@ -22,9 +24,7 @@ Gameplay rules, maps, and world-state tracking are optional tools to help the AI
 
 ## Project status
 
-**PR #12 closure condition:** The Fork status in this section takes effect only on confirmed merge of PR #12 with its checked final head; it does not claim an open PR is already main.
-
-Merged main supports blank adventure creation/resume and Story input with explicitly simulated generation, provisional review, acceptance/discard and durable structured history through the real Wails/Go/SQLite application. On confirmed PR #12 merge, a small Fork icon beneath each accepted turn also opens an independently copied prefix in a separate browser tab/window, default `fork: [source name]`, preserving the source and its input. Safe recovery, isolated continuation and restart have [scoped evidence](planning/development/evidence/DEV-003B.md). The simulated continuation is a fixed fixture, not a live model. World tracking, map, other input modes and history editing remain later work. See [development setup](docs/development.md), [DEV-002B evidence](planning/development/evidence/DEV-002B.md), and [NOW](planning/development/NOW.md) for tested scope and current development status.
+Merged main supports blank adventure creation/resume and Story input with explicitly simulated generation, provisional review, acceptance/discard and durable structured history through the real Wails/Go/SQLite application. A small Fork icon beneath each accepted turn also opens an independently copied prefix in a separate browser tab/window, default `fork: [source name]`, preserving the source and its input. Safe recovery, isolated continuation and restart have [scoped evidence](planning/development/evidence/DEV-003B.md). The simulated continuation is a fixed fixture, not a live model. World tracking, map, other input modes and history editing remain later work. See [development setup](docs/development.md), [DEV-002B evidence](planning/development/evidence/DEV-002B.md), and [NOW](planning/development/NOW.md) for tested scope and current development status.
 
 ## Planning
 

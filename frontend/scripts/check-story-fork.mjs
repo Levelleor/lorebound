@@ -43,6 +43,9 @@ export async function exerciseFork(page, base, artifacts, sourceId)
   assert.equal(await selectedIcon.isDisabled(), true);
   await page.getByRole('button', { name: 'Discard', exact: true }).click();
   assert.equal(await input.inputValue(), 'Unsent input must stay in the original tab.');
+  await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
+  const sourceDraft = await call('ReadDraft', { schemaVersion: 2, epoch: library.epoch, adventureId: sourceId, target: 'composer_story' });
+  assert.equal(sourceDraft.text, 'Unsent input must stay in the original tab.');
 
   if (artifacts)
   {
@@ -123,9 +126,12 @@ export async function exerciseFork(page, base, artifacts, sourceId)
   const tabsBeforeRecovery = context.pages().length;
   await page.getByRole('button', { name: 'Recover fork', exact: true }).click();
   await forkTab.getByRole('heading', { name: `fork: ${source.adventure.title}`, exact: true }).waitFor();
+  await forkTab.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
   assert.deepEqual(attempts[1], attempts[0]);
   assert.equal(context.pages().length, tabsBeforeRecovery);
   assert.equal(await forkTab.getByLabel('Story input').inputValue(), '');
+  const forkDraft = await call('ReadDraft', { schemaVersion: 2, epoch: library.epoch, adventureId: forkId, target: 'composer_story' });
+  assert.equal(forkDraft.text, '', 'Fork copies no stored source draft');
   assert.equal(await forkTab.locator('.accepted-turn').count(), 2);
   if (artifacts)
   {
@@ -239,5 +245,70 @@ export async function exerciseFork(page, base, artifacts, sourceId)
   assert.deepEqual(await read(forkId), forkFuture);
   await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
   await page.unroute('**/wails/runtime');
+  await exerciseForkNavigation(page, base, sourceId, within);
   console.log('PASS: per-turn Fork icons open exact independently named prefixes in separate tabs; source/input preserved; blocked popup, closed target, lost reply and stale recovery; 8 responsive checks');
+}
+
+async function exerciseForkNavigation(page, base, sourceId, within)
+{
+  const call = (method, ...args) => page.evaluate(({ method, args }) => window.wails.Call.ByName(`main.LibraryService.${method}`, ...args), { method, args });
+  const library = await call('List');
+  const sourceRequest = { schemaVersion: 2, epoch: library.epoch, adventureId: sourceId };
+  const source = await call('Read', sourceRequest);
+  let expectedCount = library.adventures.length;
+
+  for (const navigation of ['target', 'source'])
+  {
+    const probe = await page.context().newPage();
+    await probe.goto(base, { waitUntil: 'networkidle' });
+    await probe.locator(`[data-adventure-id="${sourceId}"]`).click();
+    await probe.getByRole('button', { name: 'Fork from turn 1', exact: true }).waitFor();
+    let release;
+    let seen;
+    let request;
+    const gate = new Promise(resolve => release = resolve);
+    const ready = new Promise(resolve => seen = resolve);
+    await probe.route('**/wails/runtime', async route =>
+    {
+      if (route.request().postDataJSON()?.args?.methodName !== 'main.LibraryService.Fork') return route.continue();
+      request = route.request().postDataJSON().args.args[0];
+      const response = await route.fetch();
+      seen();
+      await gate;
+      return route.fulfill({ response });
+    });
+
+    const opened = page.context().waitForEvent('page', { timeout: 10000 });
+    await probe.getByRole('button', { name: 'Fork from turn 1', exact: true }).click();
+    const target = await opened;
+    try
+    {
+      await within(ready, `${navigation} navigation response`);
+      if (navigation === 'target') await target.goto(base, { waitUntil: 'networkidle' });
+      else await probe.goBack();
+      await target.getByRole('heading', { name: 'Saved adventures', exact: true }).waitFor();
+      const chosenUrl = target.url();
+      const completed = probe.waitForResponse(response => response.request().postDataJSON()?.args?.methodName === 'main.LibraryService.Fork', { timeout: 10000 });
+      release();
+      await (await completed).finished();
+      if (navigation === 'target') await probe.getByRole('link', { name: 'Open fork', exact: true }).waitFor();
+      else await probe.getByRole('heading', { name: 'Saved adventures', exact: true }).waitFor();
+      await probe.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      assert.equal(target.url(), chosenUrl, 'Late Fork success must preserve the target navigation');
+      assert.equal(new URL(target.url()).searchParams.has('adventure'), false);
+      if (navigation === 'source') assert.equal(new URL(probe.url()).searchParams.has('adventure'), false);
+      assert.equal((await call('List')).adventures.length, ++expectedCount, 'Navigation must not duplicate the durable Fork');
+      const fork = await call('Read', { ...sourceRequest, adventureId: request.adventureId });
+      assert.deepEqual(fork.turns, source.turns.slice(0, 1));
+      assert.deepEqual(await call('Read', sourceRequest), source);
+    }
+    finally
+    {
+      release();
+      await probe.unroute('**/wails/runtime');
+      await target.close();
+      await probe.close();
+    }
+  }
+  console.log('PASS: late Fork replies preserve target navigation and source Back teardown without duplicate copies');
 }

@@ -45,3 +45,14 @@ bin/
 *.db
 *.db-shm
 *.db-wal
+
+# Disposable verification output belongs in CI artifacts or temporary directories
+*.log
+/planning/**/*.jsonl
+/planning/development/evidence/*/
+/artifacts/
+/test-results/
+/playwright-report/
+/frontend/test-results/
+/frontend/playwright-report/
+/.local/review/

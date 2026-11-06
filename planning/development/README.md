@@ -11,109 +11,65 @@ tags:
 
 # Lorebound Development Control Centre
 
-**This directory is the live operational record for building Lorebound.** The [System Architecture Overview](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md) explains **what** the finished application must be; these files explain **what is currently being built, what is verified, what remains, what was learned and what happens next**.
+This directory records scope, decisions, remaining work and links to delivered changes. [System architecture](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md) describes the accepted application; [CI](../../.github/workflows/verify.yml) owns repeatable verification and execution output.
 
-## Start every development session here
+| File | Responsibility |
+| --- | --- |
+| [NOW](./NOW.md) | Short current handoff, active work and exactly one next development task |
+| [TASKS](./TASKS.md) | Task scope, dependencies and acceptance criteria |
+| [FEATURES](./FEATURES.md) | All 52 original IDEA notes and their completion status |
+| [JOURNAL](./JOURNAL.md) | Significant decisions, discoveries and unresolved constraints |
+| [AGENT-RUNBOOK](./AGENT-RUNBOOK.md) | Implementation, review and handoff rules |
+| [requirements](./requirements/) | Accepted requirement IDs, coverage and remaining obligations |
+| [evidence](./evidence/) | At most one concise delivery record per task, when needed beyond the PR |
 
-| File | Purpose | Authority |
-| --- | --- | --- |
-| **[NOW.md](./NOW.md)** | **Single current status and exactly one next executable task**; what is active, blocked and awaiting review | **Source of truth for current focus and handoff** |
-| **[FEATURES.md](./FEATURES.md)** | **All 52 accepted original IDEA notes**; owners, delivery milestone, progress and verified evidence, including any new scoped feature | **Source of truth for feature completion** |
-| **[TASKS.md](./TASKS.md)** | Dependency-ordered task queue with clear deliverables, ownership and acceptance gates | **Source of truth for task lifecycle** |
-| **[JOURNAL.md](./JOURNAL.md)** | Chronological discoveries, risks, constraints, decisions and links to PR/test evidence | **Append-only narrative context** |
-| **[AGENT-RUNBOOK.md](./AGENT-RUNBOOK.md)** | Workflow, review checklist, status meanings, PR and handoff response format | **Required process for development agents** |
+Read these with repository [AGENTS](../../AGENTS.md), [planning rules](../AGENTS.md), relevant production IDEAs and later accepted ADRs. An approved IDEA is implementation-ready, not shipped. Execution of a later slice still needs separate user authority. B9-D12 spatial migration remains deferred.
 
-Read these alongside repository [AGENTS.md](../../AGENTS.md), [planning rules](../AGENTS.md), [approved design](../design/README.md), actual source/tests and the relevant [production IDEA notes](../production/) and [accepted architecture decisions](../architecture/decisions/). If a summary differs from a later explicit user-approved ADR, the **approved specific decision wins**. Do not quietly reinterpret it.
+## Development loop
 
-## Minimal development loop
+1. Select the authorised task from NOW and confirm dependencies against code and merged PRs.
+2. Define observable acceptance criteria and add maintainable automated regression checks where the change warrants them. Inventory only the affected requirements; do not rewrite all 52 ideas before coding.
+3. Implement one cohesive slice. Use focused local checks for feedback or diagnosis; CI runs the repeatable build, unit, SQLite, real-browser, recovery and restart checks.
+4. Update each control file only where its facts change. Put scope and requirement coverage in their owning record; link to them elsewhere instead of copying the same report.
+5. Review the accepted requirements, diff, test adequacy and CI result for the reviewed revision. Reuse passing CI; a reviewer does not routinely rerun the full suite. Address missing coverage in the automated suite.
+6. Hand the user a working preview URL or single launch command and a short task-specific demo with expected results. Address their feedback before named-PR merge approval. Close in the primary PR using the workflow below; work becomes verified-main truth only after confirmed merge.
 
-1. **Choose one task:** Start with the single **Next Task** in [NOW.md](./NOW.md). Read the linked TASK entry, IDEA notes, ADRs and relevant code. Confirm dependencies and that execution is actually authorised. If a necessary permission is absent, request it rather than treating a planning record as permission to code.
-2. **Establish evidence target:** Break the task into observable normal, failure and edge-case behaviours. Name stable requirement IDs such as `IDEA-0039/R01` once actually inventoried. Define unit, contract, real integration, browser, visual and regression checks as applicable. **NOT RUN is not PASS.**
-3. **Implement a vertical slice:** Small branch, cohesive real runtime behaviour, supported browser TypeScript ↔ Wails/Go ↔ SQLite boundaries, no speculative features. Include deterministic mocks for model-dependent workflows; run real host checks when claiming real integration.
-4. **Keep the control files current in the same PR:** Update the task, feature/requirement evidence, current status and chronological journal as findings arrive. **New functionality or scope changes must be recorded as they appear**, not only at the very end. The reviewer can see why changes were made.
-5. **Verify independently:** Implementer records exact commands, environment, outputs, artifact links and remaining limits. Reviewer works from **accepted requirements**, checks omissions and reruns applicable tests (or marks them **NOT RUN/BLOCKED**). Required CI and real-browser proof must not be replaced by build-only or mock-only results.
-6. **Close through the primary PR:** Follow the verbal-approval workflow below. Reconciliation and closure records belong in the same PR before its final checks and merge. After merge, verify the resulting main/PR provenance and deliver the usual report. A feature only becomes VERIFIED when all its in-scope accepted requirements are independently satisfied and the PR is actually merged.
+## CI and evidence policy
 
-**Operational convention:** the control files are kept **in the same PR as the work that changes their truth**, avoiding a second, drifting dashboard. For simultaneous tasks, keep a single Next Task and list any already-authorised parallel work under Active Work; coordinate edits/rebase to avoid overwriting status. An unmerged PR does not count as completed/verified in the main-branch snapshot.
+**User direction, 2026-11-06:** generated build/test output belongs in CI, not planning or instruction documents. This supersedes earlier demands to preserve local logs, screenshots, command transcripts, source-hash tables and separate execution/reconciliation reports.
+
+- GitHub Actions job logs are the execution record. Record a PR/run link, checked revision, brief result and material limitations; do not paste or commit their output. Inspect individual logs when investigating a failure, uncertainty or suspicious result, rather than transcribing every successful run.
+- CI checks local Markdown file links and rejects generated verification files in planning. Application/tooling changes run the headless suite; documentation-only changes run repository checks. A manual workflow dispatch runs the full suite.
+- Browser captures and failed-host diagnostics are short-lived CI artifacts, retained for seven days. Console build/unit/test output stays in the job log. Databases and user libraries are never uploaded. Artifact expiry does not require a repository copy or a new report; source tests and PR/run links retain the durable context.
+- Keep tests, fixtures, accepted decisions, requirement coverage and meaningful limitations in Git. Do not commit screenshots from test runs, logs, traces, reports, recordings, copied environment dumps or ad hoc temporary probes. Deliberate design references and essential regression fixtures are source material, not execution output.
+- Local verification is for focused development, reproducing a defect or a check CI cannot perform. Use a disposable library and temporary output outside the repository. Do not duplicate full local runs for each agent, documentation update or closure commit.
+- For UI changes, review the relevant CI captures and automated responsive/accessibility checks. Passing geometry assertions alone do not establish visual fidelity. Manual checks require a short result and limitation in the PR, with any temporary captures in artifacts, not planning.
+- Preserve truthful boundaries: simulated providers do not prove live-provider support; actual Linux Firefox/Go/SQLite tests do not prove Windows/macOS packaging. Missing applicable coverage stays NOT RUN or BLOCKED until resolved.
 
 ## Single-PR closure and verbal approval
 
-**User-approved workflow, 2026-11-06: one primary PR includes implementation, evidence, reconciliation and task closure.** For DEV-003A this would have meant completing everything in PR #10. The already-merged #10/#11 pair remains historical; future tasks follow this rule.
+1. Complete implementation, applicable CI and independent source/coverage review in one primary PR. Prepare a concrete scope/result/limitations summary and [hands-on review handoff](./AGENT-RUNBOOK.md#user-review-before-merge): running URL or one launch command, starting state, demo steps and expected results. Give the user a chance to try it and address feedback. CI does not replace user acceptance.
+2. Obtain one clear verbal approval in chat to **finalise and merge that named PR**. Implementation authority alone is not merge authority.
+3. Finish routine reconciliation on the same branch: update NOW/TASKS/FEATURES/JOURNAL and affected requirements only as needed, plus the PR description. Keep any prepared closure explicitly conditional on confirmed merge. Routine closure within the approved scope needs no second approval; material scope changes do.
+4. Review the closure additions and pass the checks applicable to the final head. Reuse the reviewed application CI when only documentation changes; final-head repository checks still run. Source/tooling changes require fresh application CI.
+5. Merge that same PR, confirm its actual merge/head/tree provenance, sync local main and record the actual merge SHA and CI in the PR/final report. No routine post-merge repository write, separate reconciliation PR or automatic next slice follows.
 
-1. Complete the implementation, applicable tests and independent review in the primary PR. Keep control files current and prepare a concrete closure summary for the user to review.
-2. Ask once for clear **verbal approval in chat to finalise and merge that named PR**. Launch/implementation approval alone is not merge approval. Wait for the reply; elapsed time is not approval.
-3. After approval, finish reconciliation on the same branch: NOW, TASKS, FEATURES, JOURNAL, requirement/evidence records and any affected current-status documentation. Update the primary PR description with the final scope, evidence and remaining limits. The approval covers these routine closure changes and merging the same PR once its gates pass; do not ask again for each documentation commit.
-4. Have the closure additions reviewed and pass required checks on the final PR head. Preserve existing evidence gates; a failed check must be resolved before merging. A materially changed scope requires fresh approval.
-5. Merge that same PR, verify its actual merge/head/tree and local-main state, then close out with the usual report. Record the actual merge SHA and final-head CI in the PR and report. No next slice starts automatically.
+Earlier reconciliation PR pairs remain historical. Do not repeat that workflow or invent a future merge SHA. Full-IDEA archival still requires all its accepted requirements to be implemented and verified.
 
-**Truth before and after merge:** Keep the verified-main snapshot distinct from prepared closure records. State the latter as **effective only when PR #N is confirmed merged with its checked head**. They do not claim completion while the PR remains open; the same committed closure record takes effect when it reaches main. Use the stable PR link and reviewed-source evidence rather than inventing a future merge SHA or CI result. After merge, confirm that condition and report the real provenance; routine closure requires no additional repository commit or reconciliation PR. Full-IDEA certification and archival still require all their accepted evidence gates.
+## Status and traceability
 
-Do not create a separate reconciliation/finalisation PR unless the user explicitly requests one. This replaces older instructions to write ordinary tracker reconciliation after merge; preserve those historical records rather than rewriting their events.
-
-## Traceability chain
-
-```text
-Approved IDEA note + later accepted ADRs
-                 |
-      atomic requirement IDs
-                 |
-        DEV task / slice ID
-                 |
-       source code + test cases
-                 |
-  real CI/browser/integration evidence
-                 |
-      independent reviewer sign-off
-                 |
-          merged PR / commit
-                 |
-    VERIFIED requirement / feature
-```
-
-- **Architecture reference**: [Lorebound — System Architecture Overview](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md).
-- **Original approved scope**: 52 items in [production](../production/); [promotion audit](../architecture/Pass%20C%20-%20All%20Accepted%20Ideas%20Production%20Promotion%20Register.md). Production status means **approved for implementation**, not finished.
-- **Design reference**: [Command Citadel visual contract](../design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md). UI work needs real responsive/browser evidence.
-- **First actual integrated foundation**: merged [Gate 0 PR #3](https://github.com/Levelleor/lorebound/pull/3), [recorded evidence](../architecture/Gate%200%20Execution%20Evidence.md) for the narrow Wails/browser/Go and SQLite service; it is not proof that the broader host/storage ideas are complete.
-
-## Requirements and scope changes during implementation
-
-For each approved IDEA, inventory **all normative accepted behaviours**, exclusions, edge cases, applicable superseding ADRs, dependencies and testable acceptance criteria. `IDEA-NNNN/R##` identifies an atomic requirement **within the same original idea**, not a new IDEA or architecture decision. Record that breakdown and evidence in [FEATURES.md](./FEATURES.md) or a linked per-feature detail file **only when it is actually complete**. Initially the list is **idea-level coverage only**; requirements have not yet been exhaustively inventoried.
-
-When an agent discovers a new requirement, implementation detail, incompatibility, risk or suggested feature:
-
-- Record the observation and source in [JOURNAL.md](./JOURNAL.md), and relevant impact/blocker in [TASKS.md](./TASKS.md) and [NOW.md](./NOW.md).
-- A **clarification within already-approved behaviour** can refine requirement/test details with traceability. An **unapproved capability or changed contract** remains `PROPOSED` and is **not implemented silently**; seek explicit user approval via the existing IDEA/ADR process.
-- Do **not** erase the original proposal or deferral history. Annotate subsequent decisions and links. Preserve **B9-D12 spatial migration deferred/no work**.
-- Update the central overview only for material accepted system/design or verified status changes, not every small implementation note.
-
-## Reliable status semantics
+Accepted IDEA/ADR → stable requirement ID → task → source/test → PR/CI → reviewed merge is the traceability chain. Use test-file/symbol references for coverage and PR/run links for execution; raw artifacts are not a second specification.
 
 | Status | Meaning |
 | --- | --- |
-| `NOT STARTED` | Approved/planned but no corresponding implementation evidence |
-| `IN PROGRESS` | Assigned and being implemented on a named branch/PR |
-| `IMPLEMENTED / UNVERIFIED` | Code exists, but some required test or independent-review gate has not passed |
-| `PARTIAL` | Some bounded functionality has real evidence, but **the complete IDEA or slice is not certified** |
-| `BLOCKED` | Specific dependency or failing required check prevents progress |
-| `VERIFIED` | All in-scope atomic requirements pass applicable evidence and independent review, merged into main |
-| `DEFERRED` | Explicitly put off with recorded user authority; not quietly counted as complete |
+| NOT STARTED | No corresponding implementation |
+| IN PROGRESS | Active authorised branch work |
+| IMPLEMENTED / UNVERIFIED | Code exists; applicable verification or review is incomplete |
+| PARTIAL | A bounded part works; the complete IDEA or parent remains unfinished |
+| BLOCKED | A specific unmet dependency or required check prevents progress |
+| VERIFIED | All in-scope requirements are checked, reviewed and merged |
+| DEFERRED | Explicitly postponed by the user |
 
-All test/evidence cells use `PASS`, `FAIL`, `NOT RUN`, `BLOCKED` or `N/A (reason)`. A test plan or verbal assertion is **not** a PASS.
+Results use PASS, FAIL, NOT RUN, BLOCKED or N/A with a reason. Empty world-effect arrays do not certify nonempty reducers or provenance. Preserve current-only history, TypeScript domain authority, Go-owned SQLite atomicity, the shared pending composer, and the accepted map restrictions.
 
-## Delivery principle
-
-**A feature is not finished because an agent says it is, a PR exists, or a mock passes.** Completed means it is in `main`, its accepted details are accounted for, relevant real runtime/browser/SQLite behaviour and failure paths are verified, visual requirements are checked for UI, and independent evidence is linked. Do not archive a production IDEA as an implemented spec until the repository's verified implementation/archive gate is met.
-
-**Do not create a second canonical implementation store; do not silently accept model output; do not bypass the shared pending composer; do not add map keyboard gestures or visible scale bar; and do not start B9-D12 spatial migrations.**
-
-## Maintenance and update cadence
-
-- **Start of a task:** update NOW and TASKS to record task ID, scope, branch, owner and `IN PROGRESS`.
-- **Every meaningful discovery or decision:** append to JOURNAL immediately, link ADRs/issues and note requirement/priority changes. No fabricated timestamps or evidence.
-- **Every PR opened/updated:** update requirement statuses and test evidence on the branch, with exact commits/URLs.
-- **After verbal closure approval, before merge:** include final requirement dispositions, feature counts, task closure and exactly one next-task candidate in the primary PR, explicitly effective on its confirmed merge. Review the additions and verify the final head.
-- **After merge:** verify the condition against actual GitHub/Git provenance, sync local main and provide the report with the real SHA/CI. Do not open a routine reconciliation PR or start the next task.
-- **Every new accepted IDEA or design change:** add a new feature row (or supersession note) and assign a milestone/task before implementation. No scope should exist solely in chat.
-- **Before any release:** audit **all accepted active atomic requirements** for `VERIFIED` or an explicit approved exception, and run cross-feature real integration/browser/platform checks.
-
-*Created 2026-11-03 as development process documentation. No source implementation, new CI workflow or runtime test is performed by this document.*
+Record significant findings and changed scope in JOURNAL; preserve original accepted IDEA/ADR provenance. Routine commands, retries, agent interruptions and passing build inventories belong in the PR/CI, unless they explain an unresolved constraint or lasting decision.

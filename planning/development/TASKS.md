@@ -8,15 +8,7 @@ current_next_task: "DEV-003"
 
 # Lorebound — Development Task Queue
 
-**One next task, clear dependencies, no anonymous work.** The single operational Next Task lives in [NOW.md](./NOW.md); this file owns task scope, delivery order, evidence and review state. The [52-idea feature ledger](./FEATURES.md) owns whole-feature coverage. This queue is **not another architecture approval round**.
-
-**PR #12 closure condition:** The post-merge status below is effective only when [PR #12](https://github.com/Levelleor/lorebound/pull/12) is confirmed merged with its checked final head. Before that confirmation, verified main remains `f66b169ec210d3782833994c4455ad4debe51c4e`, with eight partial ideas, zero complete ideas and three formally certified IDEA-0006 rows. The user approved finalising and merging this same PR on 2026-11-06: “yes finish the task”. No later child is authorised.
-
-## Task lifecycle
-
-`READY` → `IN PROGRESS` → `PR OPEN / REVIEW` → `VERIFIED & MERGED`; alternatively `BLOCKED`, `SPLIT` or `DEFERRED` with reason, owner and next action. **Do not mark a task complete merely because an agent wrote code or submitted a PR.**
-
-Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies, acceptance criteria, test/evidence requirements, branch/PR, outstanding risks, independent reviewer, and one next action. Add newly discovered work here, not only in conversation.
+[NOW](./NOW.md) owns the single next development task. This queue owns scope/dependencies; [FEATURES](./FEATURES.md) owns IDEA completion, requirement records own coverage, and PR/CI owns execution details. Split large tasks into bounded children when separately authorised; closing a child never launches another.
 
 ## Ordered execution queue
 
@@ -24,7 +16,7 @@ Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies,
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
 | **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | **VERIFIED & MERGED — bounded Story-only zero-effects scope** | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C merged [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
-| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A verified/merged, DEV-003B verified on confirmed PR #12 merge; other children unstarted | [Merged PR #10](https://github.com/Levelleor/lorebound/pull/10) |
+| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A/B verified/merged; DEV-003C active | [PR #10](https://github.com/Levelleor/lorebound/pull/10), [PR #12](https://github.com/Levelleor/lorebound/pull/12) |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
 | **DEV-006** | Universal characters, Playing As, status, anatomy, items and equipment | DEV-002; supported typed entity events | IDEA-0007, IDEA-0026, IDEA-0027, IDEA-0029–IDEA-0031, IDEA-0034, IDEA-0064 | QUEUED | None |
@@ -33,135 +25,70 @@ Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies,
 | **DEV-009** | Structured actions, optional capabilities, full Command Citadel UI, accessibility | Integrates prior player-facing slices | IDEA-0001, IDEA-0037, IDEA-0047, IDEA-0050, IDEA-0055, IDEA-0061, IDEA-0062 and cross-cutting UI | QUEUED | None |
 | **DEV-010** | End-to-end product verification, platform/release audit and outstanding feature closure | All relevant slices | **All 52 original IDEAs and all active atomic requirements** | QUEUED | None |
 
-**This is a working order, not a mandate to implement entire tasks in one giant PR.** Split large DEV-003–DEV-010 work into bounded subtasks or slices (e.g. `DEV-004A`) as implementation starts, link parent ID, preserve evidence and explicitly record changes. Cross-cutting ideas may appear under more than one task; use [FEATURES](./FEATURES.md) to ensure every required behaviour is verified exactly once with cross-feature regression coverage.
+This is a working order, not permission to implement all tasks together. Cross-cutting IDEAs may span tasks; DEV-010 must audit all accepted requirements rather than trusting task titles.
 
-**Missing one-to-one task rows is not missing features:** some IDEA scopes are cross-cutting (S01 host lifecycle, S04 presentation, S06 coordinator, S12 storage), and are validated across slices. DEV-010 must check every IDEA against its atomic requirements rather than trusting this table.
+## DEV-001 — CI and first-slice traceability
 
-## DEV-001 — Implement CI and first-slice requirement traceability
+**INTERRUPTED / REPRIORITISED.** The user redirected its 2026-11-03 launch to DEV-002A's production replacement. CI was integrated in that child; broader inventory certification remains unfinished. [Original draft inventory](./requirements/DEV-002.md), [short record](./evidence/DEV-001.md).
 
-**Status:** INTERRUPTED / REPRIORITISED by the user; not complete. **Execution:** Initial CI work retained only as supporting verification for DEV-002A. **Owner:** Codex lead, with bounded CI implementation and requirement research delegates. **Branch:** `feat/dev-001-verification-controls`, based on main `79263d647698b86c821badd0194e8299aea23105`. **PR:** Not yet opened. **Independent reviewer:** To be assigned after implementation. No merge authority granted.
-
-**2026-11-03 redirection:** User selected “Change this launch to production replacement”. The former DEV-001-before-product sequencing is replaced for this launch by DEV-002A with its own mandatory build/storage/browser/CI/review gates. Remaining DEV-001 inventory certification is outstanding; the seven-IDEA draft is [preserved](./requirements/DEV-002.md), not independently certified.
-
-**Historical rationale (2026-11-03, before DEV-002A):** Main then contained merged Gate 0 host/SQLite and one Go test package/browser verification script, but no `.github/workflows/` files. The next Story-mode implementation should be automatically checked rather than relying on one subagent's local results. Full 52-idea inventory already exists, so **do not delay first product coding to exhaustively rewrite the remaining 50 idea documents into atomic requirements all at once**.
-
-**Expected deliverables:**
-
-1. **Minimal reliable GitHub Actions workflow(s)** for the supported headless Go server build/tests (`-tags server`), frontend install/typecheck/static build and a real browser-host smoke check when the runner/browser dependencies permit. Use pinned compatible runtimes and a disposable test database. Never report a skipped/blocked browser check as PASS. Keep CI reasonably fast for deadline pressure.
-2. **Traceability format working in the repository:** the current 52-row [FEATURES](./FEATURES.md) inventory must remain complete; create and validate `IDEA-NNNN/R##` atomic requirement records for the **specific IDEAs used by DEV-002**, linking relevant late ADRs, non-goals and future verification tests. Do **not** claim the other ideas' atomic breakdowns are finished. Put their status clearly as **NOT YET INVENTORIED** until their tasks.
-3. **PR/agent handoff discipline:** submit a small PR documenting actual CI run URLs, test statuses, missing checks, requirement coverage and outstanding security/host issues. Update [NOW](./NOW.md), [FEATURES](./FEATURES.md), this task and [JOURNAL](./JOURNAL.md).
-4. **No speculative rearchitecture:** preserve Wails v3 ordinary-browser host, Go-owned SQLite, current-only history decisions, user-approved [Command Citadel design](../design/README.md) and B9-D12 spatial migration deferral.
-
-**Verification gate:** CI actually runs for the feature branch/PR and reports build/tests truthfully (PASS/FAIL/BLOCKED). Required Go/frontend checks pass; browser smoke evidence is run where practical, with exact blockers otherwise; every first Story-mode requirement has a source trace and planned test case, explicitly `NOT RUN` until executed. Independent reviewer confirms the coverage and CI design.
-
-**Non-goals:** Shipping the full Story-mode loop in this task, introducing AI provider credentials, world simulation, all 52 atomic inventories, or declaring all host/storage requirements complete.
-
-**If CI cannot run on available runners:** document the environmental reason, a reproducible fallback and the minimum remediation; mark task `BLOCKED` if the mandatory verification gate cannot be satisfied. Do not use an unaudited mock to claim real runtime success.
-
-**Next after verified merge:** DEV-002, the first actual Story-mode vertical slice.
+Remaining requirement work is incremental: inventory affected accepted clauses, superseding ADRs, exclusions and objective criteria before their implementation. Do not delay product delivery to create empty inventories for every idea. CI coverage is now maintained under the [verification workflow](../../.github/workflows/verify.yml), rather than as repeated manual execution reports.
 
 ## DEV-002 — First accepted Story-mode turn
 
-**Status:** **VERIFIED & MERGED within the bounded Story-only simulated zero-effects scope** after A/B/C child merges. The following decomposition preserves the explicit 2026-11-03 user redirection. **Owner:** Codex lead. **Depends on:** merged Gate 0 foundation and actual verification gates within each child; uncompleted DEV-001 inventory remains visible.
-
-Build in the actual SvelteKit browser and Go SQLite app:
-
-- Minimal adventure identity; Story action input; deterministic **mocked generation** producing a visibly **provisional** candidate; explicit accept/discard/Retry where supported, without silent acceptance.
-- Stable passage/turn IDs, ordered accepted prose, technical version/epoch/idempotency and a **minimal typed current event envelope**; **empty world effects allowed**.
-- Pure TypeScript current-history replay; technical canonical write/rollback is Go-owned. Verify real browser→Go→SQLite→reopen, stale version rejection, retry and failure states, no partial commits.
-- Apply the approved [Command Citadel visual contract](../design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md) to the implemented story reader/composer, including responsive and pending/confirmed states. Do not pretend the rest of the 52 features are present.
-
-**Scope restriction:** B9-D12 spatial migration remains deferred; no live-model scenario test required, no browser canonical database, no new map keyboard controls, no extra map-local Commit bar.
-
-**Evidence:** unit + contract + real SQLite host + actual browser E2E + appropriate visual screenshots, independent review and CI link. Only then can any atomic requirements be marked VERIFIED; the broader IDEA titles remain PARTIAL until their entire accepted scope works.
+**VERIFIED & MERGED within simulated Story-only, zero-effects scope.** Children A/B/C implement blank entry, provisional authored/generated passages, explicit acceptance, atomic Go/SQLite persistence, pure TypeScript replay and integrated recovery. Distinct stable passage IDs, coherent reads, version/epoch/idempotency fencing and unsupported-effect safe failure are binding. No live-model or nonempty-world implementation is implied.
 
 ### DEV-002A — Production blank adventure creation and resume
 
-Status: VERIFIED & MERGED. Owner: Codex lead. Authorisation: user explicitly selected production replacement, 2026-11-03; user reported PR #4 merged on 2026-11-04, independently confirmed against GitHub and fetched main.
+**VERIFIED & MERGED.** [PR #4](https://github.com/Levelleor/lorebound/pull/4); [delivery record](./evidence/DEV-002A.md).
 
-- Replace runtime Gate 0 test UI, service, record schema, binary/script naming with the actual adventure library path; preserve Wails/browser TS/Go/SQLite boundaries.
-- Create an independent stable-ID adventure and minimal valid empty Turn-0 baseline atomically. Missing title uses `Untitled Adventure`; no AI, protagonist, fake passage or setup questionnaire required.
-- List and resume zero-turn adventures from the same library, including after browser and process restart; unrelated adventures remain isolated.
-- Narrow versioned service requests, library-epoch validation, idempotent creation and truthful recoverable errors. Failed writes leave no partial adventure/receipt; unchanged retry resolves uncertain success.
-- Use approved visual tokens/type roles and responsive accessible reading/entry surfaces; no fake working composer or generated content.
-- Requirements: [verified IDEA-0006/R01–R03; parent inventory draft](./requirements/DEV-002.md#idea-0006--quick-start-and-custom-openings); B5-D01/B5-D09; applicable IDEA-0051 storage, IDEA-0053 host boundaries; visual contract. Other draft requirement rows are not certified by this child.
-- Checks: actual Go SQLite success/rollback/idempotency/wrong epoch/invalid input/isolation/reopen, real Firefox Wails create/resume/restart, UI error/retry, 390/768/1024/1440px screenshots and keyboard use, CI and fresh independent review.
-- No existing Gate 0 data migration. Generated prose/turn acceptance, rename/delete, shared drafts, Quick Start, full host lifecycle and platform packaging excluded. B9-D12 remains deferred.
-- Branch: `feat/dev-002a-adventure-foundation`. PR: [#4](https://github.com/Levelleor/lorebound/pull/4). Independent reviewer: `/root/independent_review`, [source/local/browser PASS](./evidence/DEV-002A-review.md). [Final-head GitHub CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41838612434); initial validation failure retained in the journal. [Local passing evidence](./evidence/DEV-002A.md). Final head `473a957797ce8ad339435c04aad39592e61525d1` and merged main `fac5521bfbe7cd63ea3c7b85108b7d1865b678b9` have identical trees. [Post-merge reconciliation](./evidence/DEV-002A-reconciliation.md) on `docs/dev-002a-merge-reconciliation` changes documentation only. No remaining PR #4 merge-approval blocker; no next child starts in this launch.
+Acceptance: independent blank adventure with optional title/default, atomic minimal empty Turn-0 baseline, list/resume after browser/process restart, isolation, unchanged-request uncertain-create recovery, technical validation/rollback and responsive accessible entry UI. No actor/model/generated opening required. Certifies IDEA-0006/R01–R03 only; storage/host ideas remain partial.
 
 ### DEV-002B — First provisional and accepted Story turn (MERGED)
 
-Status: **VERIFIED & MERGED**. User launched DEV-002B on 2026-11-04 and authorised merging on 2026-11-05. Owner: Codex lead; independent requirement audit, source/browser review PASS. Branch `feat/dev-002b-story-turn`, final head `ec7537c982e4dc91fe2f50faa11e87c983825176`, [PR #6](https://github.com/Levelleor/lorebound/pull/6), merged main `f0c57b8b808308534cda1c3cb862262c813f5d11`. Final head and main trees identical. [Reconciliation](./evidence/DEV-002B-reconciliation.md). The 95-row parent inventory remains draft beyond scoped evidence; no whole IDEA is complete.
+**VERIFIED & MERGED.** [PR #6](https://github.com/Levelleor/lorebound/pull/6); [accepted-source scope](./requirements/DEV-002B.md), [delivery record](./evidence/DEV-002B.md).
 
-Acceptance gates:
-- Story input without actor; visibly simulated deterministic generation; authored input and generated response both provisional until explicit acceptance. Stop/Discard and late completions cannot mutate canon; no automatic accept on Send.
-- One atomic append creates an ordered turn with two distinct stable structured passage IDs (authored/generated), paragraph/text/hard-break semantics and typed empty event batch. No invented entities or unsupported effects; browser replay from Turn 0 is deterministic and unknown core effects block writes while preserving readable prose.
-- Go validates technical envelopes, IDs, source/order, expected version, epoch and immutable operation receipt. Rollback leaves no partial turn or receipt; identical retry returns original result even after later commits/reopen, followed by fresh coherent read.
-- Conflicting tabs reject stale writes, refetch authoritative state and retain available authored text for a fresh decision. Read errors and uncertain writes cannot unlock a duplicate submission or pretend data was saved.
-- Additive nonspatial storage upgrade preserves DEV-002A blank adventures, baseline, epoch and receipts. Wire version fences old browser clients. B9-D12 stays deferred.
-- Actual Firefox/Wails/Go/SQLite create→generate→discard/stop→accept→resume→process-restart; lost-response and conflict recovery; unit/storage failures and coherent reads; responsive 390/768/1024/1440 Dark/Bright screenshots and keyboard controls; CI and independent source review.
-
-**Executed evidence:** [DEV-002B](./evidence/DEV-002B.md), [independent review](./evidence/DEV-002B-review.md): local build/typecheck, 16 TS cases, 14 Go functions/43 subcases, vet, real Firefox/Wails/SQLite and exact process restart PASS. Lead and reviewer each ran the browser suite with separate temporary libraries. [Implementation CI PASS](https://github.com/Levelleor/lorebound/actions/runs/41957177037) at `daaff20384d90129e8886293829fa77953a31409`; [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42038112388) at `ec7537c982e4dc91fe2f50faa11e87c983825176`. User authorised merging PR #6 on 2026-11-05; it merged with identical reviewed tree.
-
-Exclusions: other input modes, candidate Retry/Undo/Fork, drafts autosave, live providers, world reducers/extraction, map, Quick Start, full history/library/platform lifecycle. No complete IDEA certification. DEV-002C remains a separately launched parent integration task.
+Acceptance: characterless multiline Story input, explicitly simulated generation, provisional authored/generated passages, Stop/Discard/explicit Accept, atomic ordered structured passage/empty-effect commit and coherent replay/read. Technical malformed/stale/epoch/rollback/isolation/idempotency/receipt-recovery cases apply. Nonspatial upgrade preserves blank adventures; wire version rejects incompatible old readers. No silent acceptance/rebase or second browser canon.
 
 ### DEV-002C — Story-loop integration and parent verification
 
-Status: **VERIFIED & MERGED** as `9c4a615b32faee3a513467e3ecc8cf6f5d5b760a` on 2026-11-05, following explicit user merge/finalisation authorisation. [PR #8](https://github.com/Levelleor/lorebound/pull/8). User explicitly authorised “Launch DEV-002C” on 2026-11-05. Owner: Codex lead; branch `feat/dev-002c-story-integration`; baseline `899678ad80adc2489ccd84502688a2e8357d6474`; DEV-002B merged dependency satisfied.
+**VERIFIED & MERGED, including bounded parent DEV-002.** [PR #8](https://github.com/Levelleor/lorebound/pull/8); [57-row first-slice matrix](./requirements/DEV-002C.md), [delivery record](./evidence/DEV-002C.md).
 
-Bounded scope: close the existing Story-only, simulated, zero-world-effects parent loop's integration and requirement-evidence gaps. Cover leaving generation/candidates, idle cross-tab refresh while typing, pending-state refresh isolation, durable commit followed by failed read, recovery after newer accepted history, and conflict/refetch failure recovery. Fix demonstrated source defects within this boundary. Reconcile every First requirement as tested slice, partial or explicitly later; do not certify nonempty event semantics from empty arrays.
-
-Required evidence: existing build/typecheck, TS unit and real SQLite contracts; expanded Firefox/Wails/Go/SQLite checks and exact process restart; responsive/keyboard screenshots; independent accepted-source audit and implementation/browser review; final-head CI. Executed [evidence](./evidence/DEV-002C.md): build/check, 23 TS cases, 14 Go functions/43 subcases, vet, lead/reviewer Firefox/Wails/SQLite and exact restart PASS; [independent review](./evidence/DEV-002C-review.md) PASS after two diagnostic race fixes. [All 57 First-bearing rows](./evidence/DEV-002C-requirements.md) have bounded dispositions. [Implementation-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088372352) at `30f153db153034e41ce1f62e85ec569a7db0be23`. [Final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088907520) at `ba9b3c346f5bd7330b5cb19763c31e95c201ebb5`; merged tree matches. Parent DEV-002 is VERIFIED & MERGED only within the accepted Story-only simulated zero-effects scope. Broader original IDEA obligations remain partial/later. Apply the user's personal-development-style override. No live provider, other modes, full history/drafts/world effects, host packaging or B9-D12 work; no later DEV task launches automatically.
+Acceptance: safe coalesced cross-tab refresh, typing during reads, pending-state isolation, navigation/cancellation, post-commit read failure, original receipt after newer history, conflict/refetch failure and last-tab closure. Technical/conflict diagnostics survive background hints. Every First-bearing parent row has a tested/partial/later disposition. Empty effects cannot certify nonempty reducers/provenance; broader inventory remains draft.
 
 ### DEV-003 — Retry, drafts, Undo/Fork and current-history editing
 
-Status: **PARTIAL; DEV-003A VERIFIED & MERGED, DEV-003B verified on confirmed PR #12 merge**. User authorised launch on 2026-11-05. DEV-002 dependency satisfied; [audit and child boundary](./requirements/DEV-003.md). DEV-003B now implements bounded Story-prefix Fork; shared drafts, temporary editor undo, committed Undo and historical edits remain unstarted; completing Retry does not complete this parent.
+**PARTIAL.** DEV-002 dependency is satisfied; [scope/dependency audit](./requirements/DEV-003.md). A/B are merged. Shared drafts, temporary editor undo, committed Undo and historical editing remain unstarted. The next separate launch selects one bounded child after its acceptance/dependency audit.
 
 ### DEV-003A — Replace the provisional Story candidate on Retry
 
-Status: **VERIFIED & MERGED**, bounded Story-only simulated zero-effects scope. [PR #10](https://github.com/Levelleor/lorebound/pull/10) merged as `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145`; final head `75384544377b4de982514549976619ad368b5f56`, identical tree `b8527e09c20ec15c653aa360d262cdc221471cb1`. Owner: Codex lead; independent source/unit/runtime review and publication/merge audit. [Reconciliation](./evidence/DEV-003A-reconciliation.md).
+**VERIFIED & MERGED, bounded simulated Story-only scope.** [PR #10](https://github.com/Levelleor/lorebound/pull/10); [delivery record](./evidence/DEV-003A.md).
 
-Scope: bounded portions of IDEA-0004/R01–R05 with existing coordinator/commit guards and shared composer UI. Immediate prior-candidate invalidation, repeated latest-only replacement, failure/Stop/input safety, cancellation/late-response fencing, explicit atomic latest acceptance, unchanged uncertain-save receipt recovery and stale version/epoch rejection are verified. Simulated generation, empty world effects; no schema or persistence API change. Nonempty effects, drafts, temporary editor undo, committed Undo/Fork and historical editing remain later work. No full IDEA/archive certification; B9-D12 remains deferred.
-
-[Executed evidence](./evidence/DEV-003A.md): zero build/typecheck diagnostics; 30 TypeScript cases; 14 Go functions/43 SQLite subcases; Go vet; lead/reviewer real Firefox/Wails/Go/SQLite, failure/recovery and exact restart; eight responsive theme/width checks PASS. [Independent review PASS](./evidence/DEV-003A-review.md). [Final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42141159906). No remaining scoped blocker.
-
-User reported the merge and then explicitly instructed “do not start the next slice, finish this one and provide the report as usual”. That previous launch finished DEV-003A records/report only. Its next action after finalisation was: **DEV-003**, on separate user authorisation, select its next bounded child; no child has been selected or started here.
-
-## Deferred and cross-cutting gates
-
-- **B9-D12**: spatial schema/event migration **DEFERRED**. This is **not** a covert DEV task and is not part of DEV-007 without a new explicit user decision.
-- **Sensitive privileged service**: Gate 0 origin restrictions do not authenticate all hostile local processes. Before future sensitive Go operations, document/test the narrow local access boundary.
-- **Library epoch rotation / idempotency**: Recheck duplicate operation replay across restore or epoch changes before implementing those operations.
-- **UI visual acceptance**: use the [visual contract](../design/Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md) and [interaction mapping](../design/Lorebound%20UI%20Interaction%20and%20State%20Mapping.md); actual browser evidence, not a design-only document.
-- **Full release**: do not call Lorebound complete until all active accepted atomic requirements are VERIFIED or explicitly waived by user approval and real integrated workflows pass.
-
-## Record template for newly split tasks
-
-```markdown
-### DEV-### — Short observable outcome
-Status: READY | IN PROGRESS | PR OPEN / REVIEW | BLOCKED | VERIFIED & MERGED
-Owner: ...
-Dependencies: DEV-..., IDEA-.../R..., ADR...
-Authorisation: explicit approval / prior permitted scope / pending
-Branch/PR/commit: ...
-Acceptance criteria: ...
-Tests: unit / contract / real host / browser E2E / visual / failure
-Evidence links and actual PASS/FAIL/NOT RUN/BLOCKED: ...
-Discovered context / risks: ...
-Independent review: ...
-Next action: ...
-```
-
-The next executable action must always be copied into [NOW.md](./NOW.md), with no competing “top priority” in another file.
+Acceptance: immediate old-candidate invalidation, repeated provisional replacement, latest-only explicit acceptance, input preservation on failure/Stop, late-result fencing and existing uncertain-write/stale-version/epoch safeguards. IDEA-0004/R01–R05 have bounded coverage; nonempty effects and full later-history obligations remain unfinished.
 
 ### DEV-003B — Independent committed Story-prefix Fork
 
-Status: **VERIFIED & MERGED within bounded scope, effective only on confirmed checked-head merge of [primary PR #12](https://github.com/Levelleor/lorebound/pull/12)**. Approval: requesting user, 2026-11-06, “yes finish the task”, in direct reply to the named PR finalise/merge question. Branch `feat/dev-003b-story-fork`; revised source `f86dec286538e3c029536e77162477a4f4946b2a`; [readiness CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42243295778). Final closure-head checks and actual merge provenance are recorded in PR #12 and the handoff. Owner Codex; independent revised source/runtime and publication review, plus closure review.
+**VERIFIED & MERGED, bounded simulated Story-only scope.** [PR #12](https://github.com/Levelleor/lorebound/pull/12); [scoped requirements](./requirements/DEV-003B.md), [delivery record and confirmed merge](./evidence/DEV-003B.md).
 
-Dependency subset: merged DEV-002A/B/C and DEV-003A provide adventure-scoped persistence, current structured history, replay and commit guards. This does not complete Duplicate/export, Undo or world systems. [Scope](./requirements/DEV-003B.md).
+Acceptance: accessible small icon beneath each accepted turn; complete supported prefix/baseline in an independent adventure and separate browser tab/window; default `fork: [source name]`, codepoint-safe to 160; source URL/history/live input preserved. Blocked popup makes no write; lost-response/closed/navigated-target recovery does not recopy; stale rejection requires a new deliberate decision. Atomic copy/rollback, source version/epoch/idempotency guards, isolation and restart apply. No turn/title form, rename, schema migration, source receipts or provisional/draft copy.
 
-Verified child behavior under the merge condition: a small accessible icon beneath any accepted turn copies exactly its supported Story-only zero-effects prefix/baseline into a separate adventure/tab, default `fork: [source name]`, preserving source URL/history/live input. No selector/title form or rename feature. Names truncate by codepoints to 160. Atomic source-version/epoch/idempotency guards, rollback, independent future acceptance/restart and popup/closed-target/lost-response/stale recovery pass. No schema change, drafts/provisional copying, nonempty effects, branch tree or B9-D12 work.
+IDEA-0011 is PARTIAL, not complete. World/Lorebook/memory/plugin copying and rename/edit/delete integration remain later. Its merge approval authorised this child alone.
 
-37 TS cases; 19 Go functions/62 nested cases; build/typecheck/vet; real Firefox/Wails/Go/SQLite/restart; eight responsive checks and two destination captures; independent probes/reviews PASS. [Evidence](./evidence/DEV-003B.md), [UX review](./evidence/DEV-003B-ux-review.md), [publication review](./evidence/DEV-003B-publication-review.md), [same-PR closure/reconciliation](./evidence/DEV-003B-reconciliation.md). Prior dialog evidence is historical.
+### DEV-003C — Shared latest Story composer draft
 
-**Next task candidate: DEV-003**, requiring a separate user-authorised launch to audit/select one remaining child. Parent remains PARTIAL. No later child starts through this approval and no separate reconciliation PR is required.
+**IMPLEMENTED / VERIFICATION IN PROGRESS.** The user's 2026-11-06 launch authorises this bounded child and one primary PR. [Requirement/dependency audit](./requirements/DEV-003C.md) owns acceptance and test references. Depends on merged DEV-003A/B and Go-owned SQLite; includes pending workflow maintenance below as a prerequisite. Debounced noncanonical Story input, latest-value recovery on reopen/focus, truthful failure/retry status, atomic matching-input consumption and epoch/upgrade/isolation safety. Other editor/history work and B9-D12 remain outside scope. Publication, CI, independent review and user acceptance remain pending; no next child is launched.
+
+## Prerequisite maintenance: CI, concise controls and hands-on review
+
+User-requested removal of generated planning output, consolidation of repeated writeups and stable task-neutral instructions is carried in DEV-003C's primary PR. CI keeps routine output in job logs, retains selected artifacts for seven days, checks repository hygiene/links and skips the application suite for documentation-only changes. A single development command builds/launches a persistent isolated review library; handoffs provide a URL/command and demo before merge sign-off. [NOW](./NOW.md) owns readiness. This maintenance does not complete DEV-001's outstanding requirement certification.
+
+## Verification and cross-cutting gates
+
+Use [CI and the evidence policy](./README.md#ci-and-evidence-policy) for repeatable checks and short-lived captures. Reviewers reuse passing application CI for the reviewed revision; focused local checks address specific concerns. Keep scope, test references, CI/review links and missing coverage in the task/PR, without execution transcripts or separate reconciliation reports.
+
+- **B9-D12:** spatial event/schema migration remains DEFERRED, requiring separate explicit authority.
+- **Sensitive Go services:** current browser Origin/Host restrictions do not authenticate arbitrary hostile local processes; review the access boundary before sensitive extensions.
+- **Epoch rotation:** validate original-operation replay across restore/library changes when those workflows are implemented.
+- **UI:** automate relevant responsive/keyboard/state checks and review CI captures against the accepted visual contract. No whole-application accessibility claim from narrow geometry checks.
+- **Release:** all active accepted requirements need verification or an explicit user exception, including relevant cross-feature and platform checks.
+
+For a newly split task, record its ID/parent, authorisation, dependency/scope/acceptance, branch/PR, requirement/test references, CI/review result, material limits and one next action. Update NOW only when the current handoff changes. Follow single-primary-PR closure and separate launch authority.

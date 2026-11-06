@@ -21,3 +21,9 @@ func (s *LibraryService) Commit(req store.CommitRequest) (store.CommitResult, er
 func (s *LibraryService) Fork(req store.ForkRequest) (store.ForkResult, error) {
 	return s.store.Fork(context.Background(), req)
 }
+func (s *LibraryService) ReadDraft(req store.DraftRequest) (store.Draft, error) {
+	return s.store.ReadDraft(context.Background(), req)
+}
+func (s *LibraryService) SaveDraft(req store.SaveDraftRequest) (store.Draft, error) {
+	return s.store.SaveDraft(context.Background(), req)
+}

@@ -210,6 +210,8 @@ Future UI work must verify, and record **PASS / FAIL / NOT RUN**, at **390px, 76
 8. Text/layout overflow, truncation and wrapping; screen-reader discoverability of icon-only actions; reduced-motion handling.
 9. No new canonical world operations, migration work or “implemented spec” claim from style alone.
 
+Use CI for repeatable responsive/keyboard/state checks and short-lived browser captures. Review relevant captures for visual fidelity; keep a concise result and intentional deviations in the PR, without committing generated output. Reuse passing CI for the reviewed revision.
+
 For each UI change, document intentional departures and whether they are **design adaptation** or a **functional decision requiring separate approval**. The kit is a source-inspected design reference, **not a pixel-perfect screenshot baseline**; visual screenshot comparison to real browser output should be performed when the UI is implemented.
 
 ## Implementation and delivery boundary

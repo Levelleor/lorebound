@@ -101,11 +101,13 @@ export async function exerciseStoryIntegration(page, base, artifacts, adventureI
 
   await openStory(page, base, adventureId);
   await generate(page, 'A ready proposal abandoned through the Library.');
+  await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
   await page.getByRole('button', { name: 'Library', exact: true }).click();
   await page.locator(`[data-adventure-id="${adventureId}"]`).click();
   await shown(page, version);
+  await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
   assert.equal(await page.getByRole('region', { name: 'Proposed turn', exact: true }).count(), 0);
-  assert.equal(await page.getByLabel('Story input').inputValue(), '');
+  assert.equal(await page.getByLabel('Story input').inputValue(), 'A ready proposal abandoned through the Library.');
   assert.deepEqual(await readStory(page, adventureId), initial);
   console.log('PASS: leaving generating and ready proposals never accepts them or leaks them into another adventure');
 
@@ -280,15 +282,17 @@ export async function exerciseStoryIntegration(page, base, artifacts, adventureI
   assert.deepEqual(await readStory(page, otherId), isolated, 'All Story integration cases preserve the other adventure exactly');
   const durable = await readStory(page, adventureId);
   await generate(page, 'A provisional turn abandoned by closing the last tab.');
+  await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
   assert.equal(context.pages().length, 1);
   await page.close();
   assert.equal(context.pages().length, 0);
   const reopened = await context.newPage();
   await openStory(reopened, base, adventureId);
   await shown(reopened, version);
+  await reopened.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
   assert.deepEqual(await readStory(reopened, adventureId), durable);
   assert.equal(await reopened.getByRole('region', { name: 'Proposed turn', exact: true }).count(), 0);
-  assert.equal(await reopened.getByLabel('Story input').inputValue(), '');
-  console.log('PASS: closing the last browser tab leaves the real host alive and preserves only accepted history');
+  assert.equal(await reopened.getByLabel('Story input').inputValue(), 'A provisional turn abandoned by closing the last tab.');
+  console.log('PASS: closing the last browser tab leaves the real host alive; accepted history and saved input survive, generated candidates do not');
   return reopened;
 }

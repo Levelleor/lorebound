@@ -38,7 +38,7 @@ cleanup() {
   trap - EXIT
   stop_host
   if (( result != 0 )); then cat "$data_dir"/*.log >&2 || true; fi
-  if [[ -n ${LOREBOUND_ARTIFACT_DIR:-} ]]; then
+  if (( result != 0 )) && [[ -n ${LOREBOUND_ARTIFACT_DIR:-} ]]; then
     if ! { mkdir -p "$LOREBOUND_ARTIFACT_DIR" && cp "$data_dir"/*.log "$LOREBOUND_ARTIFACT_DIR/"; }; then
       echo 'Could not retain host logs; still removing the disposable database' >&2
       result=1

@@ -1,10 +1,18 @@
 import type { ForkRequest } from './fork';
+import { readDraft, type Draft, type DraftRequest } from './draft';
 import { readCreateResult, readCommitResult, readLibrary, readSnapshot, schemaVersion, type CreateRequest, type CommitRequest } from './library';
 
-interface WailsRuntime { Call: { ByName(name: string, ...args: unknown[]): Promise<unknown> } }
-declare global { interface Window { wails?: WailsRuntime } }
+interface WailsRuntime
+{
+  Call: { ByName(name: string, ...args: unknown[]): Promise<unknown> };
+}
+declare global
+{
+  interface Window { wails?: WailsRuntime }
+}
 
-async function call(method: string, ...args: unknown[]): Promise<unknown> {
+async function call(method: string, ...args: unknown[]): Promise<unknown>
+{
   if (!window.wails) throw new Error('host_unavailable');
   return window.wails.Call.ByName(`main.LibraryService.${method}`, ...args);
 }
@@ -14,5 +22,7 @@ export const host = {
   read: async (epoch: string, adventureId: string) => readSnapshot(await call('Read', { schemaVersion, epoch, adventureId })),
   create: async (request: CreateRequest) => readCreateResult(await call('Create', request)),
   fork: async (request: ForkRequest) => readCommitResult(await call('Fork', request)),
+  readDraft: async (request: DraftRequest) => readDraft(await call('ReadDraft', request), request),
+  saveDraft: async (request: Draft) => readDraft(await call('SaveDraft', request), request),
   commit: async (request: CommitRequest) => readCommitResult(await call('Commit', request))
 };
