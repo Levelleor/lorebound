@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: implemented-unverified
+status: awaiting-review
 created: "2026-11-06"
 updated: "2026-11-06"
 task: "DEV-003D"
@@ -12,7 +12,7 @@ tags:
 
 # DEV-003D — Temporary Story input Undo/Redo
 
-The user's 2026-11-06 launch authorises auditing DEV-003, selecting and implementing one bounded child, and publishing one primary PR. It does not authorise merge before the named-PR verbal approval. This child adds bounded, ephemeral Undo/Redo to **unfinished Story composer input**. Application verification and independent review are pending; no merged-main claim follows.
+The user's 2026-11-06 launch authorises auditing DEV-003, selecting and implementing one bounded child, and publishing one primary PR. It does not authorise merge before the named-PR verbal approval. This child adds bounded, ephemeral Undo/Redo to **unfinished Story composer input**. Implementation is published in [primary PR #14](https://github.com/Levelleor/lorebound/pull/14). Application CI passes; independent reviewer sign-off and hands-on acceptance remain pending. No merged-main claim follows.
 
 ## Accepted-source and dependency audit
 
@@ -40,6 +40,14 @@ These are child acceptance criteria under the existing IDEA-0004/R06 and R12 IDs
 | D05 — canonical isolation | Repeated temporary Undo exhausts without changing accepted turns, IDs, version or candidates. New explicit acceptance still uses the existing expected-version/epoch/receipt path. | Coordinator no-write assertions and browser exact snapshot comparison; existing SQLite/host/recovery suite remains CI regression coverage. |
 
 Source: [input history](../../../frontend/src/lib/inputHistory.ts), [coordinator](../../../frontend/src/lib/coordinator.ts), [workspace](../../../frontend/src/lib/StoryWorkspace.svelte). Tests: [history unit](../../../frontend/tests/inputHistory.test.ts), [coordinator](../../../frontend/tests/story.test.ts), [browser](../../../frontend/scripts/check-input-history.mjs) integrated into the existing [CI browser/restart harness](../../../frontend/scripts/check-browser.mjs). CI owns output and temporary captures.
+
+## Verification and review status
+
+[Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42303322677) covers `3e359913e70dc9cc45554def7c9bd7b91da90f52`: repository checks, build/typecheck, TypeScript, vet, real SQLite, actual Linux Firefox/Wails/Go integration, origin restrictions and exact process restart. Focused local development checks also passed; routine suite output stays in CI. Actual CI captures at 390 Dark / 1440 Bright were inspected: quiet controls fit, focus remains visible and the composer stays docked; automation covers all four widths/themes.
+
+The implementing agent completed a separate requirements/diff/coverage pass with no blocking finding. **Independent reviewer sign-off remains pending**; the user was asked whether to use a separate reviewer agent or provide that review. This session requires an explicit request before spawning another agent. No independent-agent PASS or user acceptance is claimed.
+
+The preview at `http://127.0.0.1:8081` was verified reachable through Firefox/Wails and its served index matched the current build. It uses the separate persistent `.local/review/dev003d` library. The disposable test host was stopped. The PR/chat contains the walkthrough; named-PR verbal approval has not been requested or given before independent review.
 
 ## Limits and remaining scope
 

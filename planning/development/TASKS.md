@@ -16,7 +16,7 @@ current_next_task: "DEV-003"
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
 | **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | **VERIFIED & MERGED — bounded Story-only zero-effects scope** | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C merged [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
-| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A/B/C merged; DEV-003D implementation/review active | [PR #10](https://github.com/Levelleor/lorebound/pull/10), [PR #12](https://github.com/Levelleor/lorebound/pull/12), [PR #13](https://github.com/Levelleor/lorebound/pull/13) |
+| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A/B/C merged; DEV-003D CI passed; independent/user review pending | [PR #10](https://github.com/Levelleor/lorebound/pull/10), [PR #12](https://github.com/Levelleor/lorebound/pull/12), [PR #13](https://github.com/Levelleor/lorebound/pull/13) |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
 | **DEV-006** | Universal characters, Playing As, status, anatomy, items and equipment | DEV-002; supported typed entity events | IDEA-0007, IDEA-0026, IDEA-0027, IDEA-0029–IDEA-0031, IDEA-0034, IDEA-0064 | QUEUED | None |
@@ -79,7 +79,7 @@ IDEA-0011 is PARTIAL, not complete. World/Lorebook/memory/plugin copying and ren
 
 ### DEV-003D — Temporary Story input Undo/Redo
 
-**IMPLEMENTED / VERIFICATION AND INDEPENDENT REVIEW PENDING.** [Accepted-source audit, dependency dispositions and criteria](./requirements/DEV-003D.md). Selected under the user's separate 2026-11-06 launch.
+**CI PASS / INDEPENDENT AND USER REVIEW PENDING — [PR #14](https://github.com/Levelleor/lorebound/pull/14).** [Accepted-source audit, dependency dispositions and criteria](./requirements/DEV-003D.md). Selected under the user's separate 2026-11-06 launch.
 
 Acceptance: bounded in-memory Story input edits, named buttons/keyboard controls and selection recovery, latest-draft autosave, empty histories on reload/generation/acceptance/canonical replacement/disposal, and no canonical mutations or candidate recovery. Committed Undo, passage editing and B9-D12 remain unselected/deferred. One primary PR carries implementation, evidence and closure; named-PR verbal merge approval remains required.
 
