@@ -70,7 +70,9 @@ After the hands-on handoff, the user approved finalising/merging [PR #13](https:
 
 The user separately authorised auditing remaining DEV-003 requirements and selecting one bounded child. DEV-003C's PR #13 merge is confirmed. [DEV-003D](./requirements/DEV-003D.md) selects temporary Undo/Redo for the existing Story composer, covering part of IDEA-0004/R06 and the R12 distinction from Retry/committed rollback. Committed Undo needs version/count decoupling and new atomic removal/recovery; passage editing needs passage drafts/confirmation. Both remain later.
 
-Engineering choices within the accepted finite-history contract: at most 50 edits and 500,000 retained UTF-16 units, IME composition grouping, and reset on generation start, different restored draft, changed canon or disposal. Undo/Redo autosaves only its latest result through the existing draft path. It never stores a candidate, canonical revision or durable draft history. Verification/review are pending; no new formal certification, complete IDEA or next-child authority follows.
+Engineering choices within the accepted finite-history contract: at most 50 edits and 500,000 retained UTF-16 units, IME composition grouping, and reset on generation start, different restored draft, changed canon or disposal. Undo/Redo autosaves only its latest result through the existing draft path. It never stores a candidate, canonical revision or durable draft history. Readiness-head CI passes; no new formal certification, complete IDEA or next-child authority follows.
+
+After the named PR #14/preview/demo handoff, the user instructed: “yes, proceed with a separate subagent for review and finalize the task please”. This authorises a separate reviewer and routine finalisation/merge of that same PR after review/checks. It does not claim the user personally ran manual tests. Independent implementation review passed with no blocking finding or source change. Prepared closure stays conditional on final closure review, applicable final-head checks and confirmed merge; parent/counts and deferrals remain unchanged. No next child starts.
 
 ## Persistent constraints for later authorised work
 

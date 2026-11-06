@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: awaiting-review
+status: verified-on-confirmed-merge
 created: "2026-11-06"
 updated: "2026-11-06"
 task: "DEV-003D"
@@ -12,7 +12,7 @@ tags:
 
 # DEV-003D — Temporary Story input Undo/Redo
 
-The user's 2026-11-06 launch authorises auditing DEV-003, selecting and implementing one bounded child, and publishing one primary PR. It does not authorise merge before the named-PR verbal approval. This child adds bounded, ephemeral Undo/Redo to **unfinished Story composer input**. Implementation is published in [primary PR #14](https://github.com/Levelleor/lorebound/pull/14). Application CI passes; independent reviewer sign-off and hands-on acceptance remain pending. No merged-main claim follows.
+The user's 2026-11-06 launch authorises auditing DEV-003, selecting and implementing one bounded child, and publishing one primary PR. It does not authorise merge before the named-PR verbal approval. This child adds bounded, ephemeral Undo/Redo to **unfinished Story composer input**. Implementation is published in [primary PR #14](https://github.com/Levelleor/lorebound/pull/14). Readiness-head CI passes. After the preview/demo handoff, the user explicitly requested independent subagent review and task finalisation. Independent implementation review passes; routine closure is conditional on its final review/checks and confirmed merge; no merged-main claim follows before confirmed merge.
 
 ## Accepted-source and dependency audit
 
@@ -45,9 +45,11 @@ Source: [input history](../../../frontend/src/lib/inputHistory.ts), [coordinator
 
 [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42303322677) covers `3e359913e70dc9cc45554def7c9bd7b91da90f52`: repository checks, build/typecheck, TypeScript, vet, real SQLite, actual Linux Firefox/Wails/Go integration, origin restrictions and exact process restart. Focused local development checks also passed; routine suite output stays in CI. Actual CI captures at 390 Dark / 1440 Bright were inspected: quiet controls fit, focus remains visible and the composer stays docked; automation covers all four widths/themes.
 
-The implementing agent completed a separate requirements/diff/coverage pass with no blocking finding. **Independent reviewer sign-off remains pending**; the user was asked whether to use a separate reviewer agent or provide that review. This session requires an explicit request before spawning another agent. No independent-agent PASS or user acceptance is claimed.
+[Readiness-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42303803167) also covers `1333fa1fbe68ba8b6a616229e418d5d4f92ed431`, including repository and full application jobs, with unchanged application sources. The implementing agent completed a separate requirements/diff/coverage pass with no blocking finding. Independent subagent `/root/dev003d_review` reviewed accepted contracts, source, coverage, lifecycle/draft/canonical isolation and actual CI captures: **PASS for `1333fa1`, no blocking findings or required source changes**. Linux Firefox/Wails/Go/SQLite scope and synthetic IME/native-menu limits remain explicit. Final closure additions still require review and applicable final-head checks before merge.
 
-The preview at `http://127.0.0.1:8081` was verified reachable through Firefox/Wails and its served index matched the current build. It uses the separate persistent `.local/review/dev003d` library. The disposable test host was stopped. The PR/chat contains the walkthrough; named-PR verbal approval has not been requested or given before independent review.
+The preview at `http://127.0.0.1:8081` was verified through Firefox/Wails and its served index matched the build. It used the separate persistent `.local/review/dev003d` library. After the named PR #14/preview/demo handoff, the user instructed on 2026-11-06: “yes, proceed with a separate subagent for review and finalize the task please”. In this context, this authorises review and routine finalisation/merge of PR #14 once checks/review pass. It is not a claim the user personally performed the demo.
+
+**Conditional closure:** DEV-003D becomes VERIFIED only after independent review, applicable final-head checks and confirmed merge of this same primary PR. Actual final head, merge SHA/tree provenance and CI belong in PR #14/final handoff. No separate reconciliation PR or post-merge repository write is required.
 
 ## Limits and remaining scope
 
