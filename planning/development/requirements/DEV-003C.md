@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: implemented-unverified
+status: awaiting-user-review
 created: "2026-11-06"
 updated: "2026-11-06"
 task: "DEV-003C"
@@ -12,7 +12,7 @@ tags:
 
 # DEV-003C — Shared latest Story composer draft
 
-The user's 2026-11-06 launch authorises auditing DEV-003 and selecting one bounded child. This child saves and restores unfinished **Story composer input** in the existing Go-owned library. It also carries the previously requested, uncommitted workflow/evidence maintenance as its prerequisite in the same primary PR. Implementation exists; remote CI, independent review and user acceptance remain pending. Nothing here declares verified-main behavior.
+The user's 2026-11-06 launch authorises auditing DEV-003 and selecting one bounded child. This child saves and restores unfinished **Story composer input** in the existing Go-owned library. It also carries the previously requested workflow/evidence maintenance as its prerequisite in [primary PR #13](https://github.com/Levelleor/lorebound/pull/13). [CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42264622826) and independent source/coverage review PASS for `1cd6ed4`; actual CI Dark/Bright draft captures were reviewed. User acceptance and finalise/merge approval remain pending. Nothing here declares verified-main behavior.
 
 ## Source audit and dependency choice
 

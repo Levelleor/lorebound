@@ -4,7 +4,7 @@ status: current
 created: "2026-11-03"
 updated: "2026-11-06"
 current_task: "DEV-003C — Story composer draft recovery"
-current_task_status: "IMPLEMENTED / VERIFICATION IN PROGRESS"
+current_task_status: "READY FOR USER REVIEW — PR #13"
 next_task: "DEV-003"
 ---
 
@@ -23,15 +23,15 @@ Read the [workflow](./README.md), relevant [task](./TASKS.md), [feature coverage
 
 ## Active child — DEV-003C
 
-The user's 2026-11-06 launch selected shared latest Story composer draft autosave/recovery after the [parent dependency audit](./requirements/DEV-003.md). [Scope and coverage](./requirements/DEV-003C.md) owns the bounded requirements and remaining obligations. Implementation exists locally; application/browser verification, independent review and primary-PR publication are in progress. User review and named-PR finalise/merge approval remain pending. No verified-main coverage is inferred.
+The user's 2026-11-06 launch selected shared latest Story composer draft autosave/recovery after the [parent dependency audit](./requirements/DEV-003.md). [Scope and coverage](./requirements/DEV-003C.md) owns the bounded requirements and remaining obligations. [Primary PR #13](https://github.com/Levelleor/lorebound/pull/13) contains implementation and prerequisite maintenance. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42264622826) and independent source/coverage review PASS for `1cd6ed4`; CI captures reviewed. User hands-on acceptance and verbal approval to finalise/merge PR #13 remain pending. No verified-main coverage is inferred.
 
 ## Prerequisite maintenance — same primary PR
 
-The user requested CI-owned verification output, removal of generated planning clutter, consolidation of repeated writeups and task-neutral standing instructions. Local changes remove generated files, condense delivery records/control files, update agent guidance and add CI repository checks. Local repository/link/frontmatter, workflow routing/syntax and browser regression/restart checks pass, including both newly automated Fork navigation cases. These changes are not merged or remotely CI-verified. No gameplay child is launched by this maintenance.
+The previously requested CI/evidence consolidation, stable instructions, repository checks and review launcher are included in PR #13 and its passing CI. Generated output remains outside planning; requirement matrices and concise historic PR/run links are preserved. This prerequisite does not complete DEV-001 or launch another child.
 
 CI owns repeatable checks and short-lived artifacts. Agents/reviewers reuse passing results for the reviewed revision; focused local checks support implementation/debugging. Do not recreate logs, screenshots or separate review/reconciliation reports in planning. See the [evidence policy](./README.md#ci-and-evidence-policy).
 
-**Hands-on review:** `bash scripts/dev.sh` builds the current checkout and launches a separate persistent `.local/review` library. A prior maintenance preview may still be on port 8080; it must be rebuilt/restarted before presenting DEV-003C. The current task authorises commit/push/one primary PR; user acceptance and merge approval remain separate.
+**Hands-on review:** [http://127.0.0.1:8081](http://127.0.0.1:8081) serves the reviewed application, checked through Firefox/Wails with bundle contents compared to this checkout. Its separate persistent library is `.local/review/dev003c`; no review stories were created by the reachability check. Relaunch from the repository with `bash scripts/dev.sh -port 8081 -data-dir "$PWD/.local/review/dev003c"` (stop the prior process first; Ctrl+C for a foreground launch). Type and wait for Draft saved, reload to recover input, then try Generate/Discard and Generate/Accept/reload. Only acceptance adds a turn; generation is simulated. Final unsaved keystrokes/overwritten drafts and generated candidates have no new durability promise. Confirm reachability again on resumption.
 
 ## Next development task: DEV-003 — select one remaining bounded child
 

@@ -75,7 +75,7 @@ IDEA-0011 is PARTIAL, not complete. World/Lorebook/memory/plugin copying and ren
 
 ### DEV-003C — Shared latest Story composer draft
 
-**IMPLEMENTED / VERIFICATION IN PROGRESS.** The user's 2026-11-06 launch authorises this bounded child and one primary PR. [Requirement/dependency audit](./requirements/DEV-003C.md) owns acceptance and test references. Depends on merged DEV-003A/B and Go-owned SQLite; includes pending workflow maintenance below as a prerequisite. Debounced noncanonical Story input, latest-value recovery on reopen/focus, truthful failure/retry status, atomic matching-input consumption and epoch/upgrade/isolation safety. Other editor/history work and B9-D12 remain outside scope. Publication, CI, independent review and user acceptance remain pending; no next child is launched.
+**READY FOR USER REVIEW — [PR #13](https://github.com/Levelleor/lorebound/pull/13), UNMERGED.** The user's 2026-11-06 launch authorises this bounded child and one primary PR. [Requirement/dependency audit](./requirements/DEV-003C.md) owns acceptance, test references and passing CI/review. Depends on merged DEV-003A/B and Go-owned SQLite; includes workflow maintenance below as a prerequisite. Debounced noncanonical Story input, latest-value recovery on reopen/focus, truthful failure/retry status, atomic matching-input consumption and epoch/upgrade/isolation safety. User acceptance and finalise/merge approval remain pending. Other editor/history work and B9-D12 remain outside scope; no next child is launched.
 
 ## Prerequisite maintenance: CI, concise controls and hands-on review
 
