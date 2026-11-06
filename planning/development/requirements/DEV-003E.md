@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: in-progress
+status: awaiting-user-review
 created: "2026-11-06"
 updated: "2026-11-06"
 task: "DEV-003E"
@@ -24,7 +24,7 @@ Engineering contract: canonical operations increment a monotonic adventure versi
 
 ## Bounded acceptance and maintained coverage
 
-Uses existing IDEA-0004/R07–R10 and R12 IDs from [the parent inventory](./DEV-003.md). Whole-IDEA certification remains incomplete.
+Uses existing IDEA-0004/R07–R10 and R12 IDs from [the parent inventory](./DEV-003.md), plus the affected reconstruction requirement below. Whole-IDEA certification remains incomplete.
 
 | Criterion | Observable requirement | Coverage target |
 | --- | --- | --- |
@@ -36,11 +36,27 @@ Uses existing IDEA-0004/R07–R10 and R12 IDs from [the parent inventory](./DEV-
 | E06 — drafts and interaction | Undo retains available input and the latest shared saved draft. Pending generation/acceptance/uncertain writes cannot be bypassed; cancellation makes no canonical write. Keyboard confirmation/Cancel/Escape/focus and Dark/Bright four-width checks apply. | Coordinator/draft gating and browser input/focus/confirmation/responsive scenarios. |
 | E07 — user review gate | One primary PR contains scope/code/evidence/controls; CI and independent review precede a current verified review URL, explanation and demo. Await user feedback and explicit named-PR finalise/merge approval. | PR/chat handoff and NOW ready/awaiting review; no merge authority inferred from this launch. |
 
+## Affected IDEA-0042 reconstruction requirement
+
+The original [IDEA-0042](../../production/Snapshots%20and%20Incremental%20State%20Rebuild.md), **Reconstruct committed Undo to the immediately previous active turn**, explicitly accepts this deletion/reconstruction path. Earlier append/Fork display alone did not certify it. This child supplies newly tested bounded foundation evidence; it does not certify nonempty world or derived/module state.
+
+| Stable ID | Full accepted obligation | Current disposition / evidence |
+| --- | --- | --- |
+| IDEA-0042/R01 | Committed Undo reconstructs all supported authoritative state and derived context at N−1 from the accepted baseline/surviving current history, repeatably to baseline; invalidates affected derived records, preserves source/version consistency, rejects incomplete rollback atomically, and makes a newly committed continuation the sole active future. B2-D03/B3-D04/B6-D01 qualify older checkpoint/revision prose. | **IMPLEMENTED / UNVERIFIED, PARTIAL scoped coverage** for existing Story-only zero-effects state: E02–E05; coordinator exact-prefix/replacement-generation-context tests, SQLite 75-step/reopen/rollback/receipt tests and real browser Undo/restart. Nonempty entities/world, corrections, summaries/memory/cache/module invalidation remain later. No full-row certification; verified-main feature counts stay unchanged until merge. |
+
 ## Maintained implementation and verification
 
 Source owners: [atomic Commit/Undo and technical history validation](../../../internal/store/story.go), [version fence](../../../internal/store/store.go), [Fork](../../../internal/store/fork.go), [coordinator/preflight/recovery](../../../frontend/src/lib/coordinator.ts), [wire contracts](../../../frontend/src/lib/library.ts), [replay](../../../frontend/src/lib/story.ts), [UI](../../../frontend/src/lib/StoryWorkspace.svelte). Existing draft storage remains separate and unchanged.
 
-Maintained coverage: [SQLite Undo/upgrade/recovery tests](../../../internal/store/undo_test.go), [coordinator/replay tests](../../../frontend/tests/story.test.ts), [Fork recovery tests](../../../frontend/tests/fork.test.ts), [real browser Undo scenarios](../../../frontend/scripts/check-story-undo.mjs) integrated into the [browser/exact restart harness](../../../frontend/scripts/check-browser.mjs). Focused SQLite, unit, typecheck/build and browser checks passed during development; the final version-limit guard is covered by a focused unit regression. IME key coverage is synthetic; no actual OS IME certification is claimed. Independent source/coverage review is provisionally passing after restoring its IME guard finding; publication CI and CI-capture review remain pending. No generated output is committed.
+Maintained coverage: [SQLite Undo/upgrade/recovery tests](../../../internal/store/undo_test.go), [coordinator/replay tests](../../../frontend/tests/story.test.ts), [Fork recovery tests](../../../frontend/tests/fork.test.ts), [real browser Undo scenarios](../../../frontend/scripts/check-story-undo.mjs) integrated into the [browser/exact restart harness](../../../frontend/scripts/check-browser.mjs). Focused SQLite, unit, typecheck/build and browser checks passed during development; the final version-limit guard is covered by a focused unit regression. IME key coverage is synthetic; no actual OS IME certification is claimed. Independent subagent `/root/dev003e_review` reviewed the exact published source/coverage and CI captures: **PASS for `97fe7ab8ae30ce426ce42da772ccb090ed622f62`, no remaining blocking finding**, after the IME guard finding was fixed. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42309007148) covers that revision: repository, build/typecheck, units, vet, real SQLite, actual Firefox/Wails/Go integration, host restrictions and exact restart. The reviewer inspected actual CI 390 Dark / 1440 Bright captures; automation covers all four widths/themes. User functional review and finalise/merge approval remain pending. No generated output is committed.
+
+## Review preview
+
+The published application at `97fe7ab8ae30ce426ce42da772ccb090ed622f62` is served at **http://127.0.0.1:8082**, with the separate persistent `.local/review/dev003e` library. Firefox/Wails reachability, wire v3, served index and Story bundle were verified against the checkout. Its two-turn sample is [A lantern-lit station](http://127.0.0.1:8082/?adventure=4094003c-48c1-437b-b091-c17d6eaa432a). Only an empty review library was seeded; existing review/user data was not reset. Port 8081 was occupied, so this preview uses 8082. The disposable test listener was stopped.
+
+Demo: type unfinished input and wait for Draft saved; click Undo turn 2, review the Turn 1 boundary, Cancel/Escape once, then Confirm Undo. Only Turn 1 remains and the input stays. Reload retains the prefix; generate/accept creates a different Turn 2. Repeated Undo reaches the unchanged beginning. Fork first if retaining the original future matters. Generation is simulated; no live world/provider claim.
+
+Relaunch from the checkout with `bash scripts/dev.sh -port 8082 -data-dir "$PWD/.local/review/dev003e"`; Ctrl+C stops it, and review data persists. The PR/chat handoff requests actual user functional review/feedback before named-PR finalise/merge approval; both are still pending. No acceptance is inferred from automated PASS or a running preview.
 
 ## Remaining obligations
 

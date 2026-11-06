@@ -4,7 +4,7 @@ status: current
 created: "2026-11-03"
 updated: "2026-11-06"
 current_task: "DEV-003E — Committed Story turn Undo and composer correction"
-current_task_status: "IN PROGRESS"
+current_task_status: "READY / AWAITING USER FUNCTIONAL REVIEW"
 next_task: "DEV-003"
 ---
 
@@ -22,12 +22,12 @@ Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](.
 
 The user authorised the corrective slice and explicitly requires review of the added functionality, with context and a reachable site address, before PR acceptance/merge. [Scope, accepted sources, dependencies and coverage](./requirements/DEV-003E.md): remove custom input Undo/Redo; atomically Undo the latest accepted Story turn; reconstruct the supported prefix/baseline; continue differently in the same adventure; preserve drafts/Forks and recover uncertain operations safely. History order and monotonic concurrency versions become independent.
 
-Implementation/verification are in progress. One primary PR will contain code/evidence/controls/reconciliation. **This launch is not merge approval.** When ready, provide a verified running local URL, task-specific demo and limits, explicitly ask for hands-on feedback, and wait before requesting approval to finalise/merge that named PR.
+Implementation is in [primary PR #15](https://github.com/Levelleor/lorebound/pull/15). [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42309007148) covers `97fe7ab`; independent source/coverage/CI-capture review PASS with no blocking finding. [Requirements](./requirements/DEV-003E.md) owns coverage and limits. Readiness reconciliation stays in this same PR. **This launch is not merge approval.** The chat/PR handoff explicitly requests hands-on feedback before any request to finalise/merge this named PR. User functional review and merge approval are still pending; do not infer either from CI or the running server.
 
 No nonempty world effects, standalone corrections, passage/history editing, other modes or live providers are selected. **B9-D12 remains DEFERRED — NO WORK.**
 
 ## Review and next task
 
-Review preview is not yet launched for this slice. The forthcoming handoff will identify its checked revision and separate persistent review library; older previews do not establish current behavior.
+Verified local preview: **[A lantern-lit station — two-turn sample](http://127.0.0.1:8082/?adventure=4094003c-48c1-437b-b091-c17d6eaa432a)**. The served index/Story bundle match the published source. It uses the separate persistent `.local/review/dev003e` library; generation is simulated. Relaunch: `bash scripts/dev.sh -port 8082 -data-dir "$PWD/.local/review/dev003e"` (Ctrl+C stops it; data persists). Port 8081 was occupied, so this preview uses 8082. The disposable test host is stopped. The PR/chat contains the Undo/Cancel/reload/new-continuation walkthrough; the review sample has two accepted turns and no custom input Undo/Redo.
 
 **Exactly one next task: DEV-003 — audit/select one remaining bounded child only after this child closes and a separate user launch.** No next slice starts through closure approval. Existing review data remains preserved.
