@@ -1,8 +1,8 @@
 ---
 type: development-evidence
-status: pr-open-implementation-ci-pass
+status: verified-merged-scoped
 created: "2026-11-05"
-updated: "2026-11-05"
+updated: "2026-11-06"
 task: "DEV-003A"
 branch: "feat/dev-003a-provisional-retry"
 baseline_commit: "34f25a0fa841827b0b4486106e411c9d28bad2ab"
@@ -10,7 +10,7 @@ baseline_commit: "34f25a0fa841827b0b4486106e411c9d28bad2ab"
 
 # DEV-003A — Provisional Story Retry evidence
 
-**Lead checks and independent review PASS; [PR #10](https://github.com/Levelleor/lorebound/pull/10) open, implementation CI PASS, unmerged.** This extends the existing simulated Story-only, zero-world-effects loop with replacement of the current provisional candidate. It does not complete DEV-003, IDEA-0004, durable drafts, committed Undo/Fork or historical editing. [Accepted-source audit and stable requirement IDs](../requirements/DEV-003.md); [independent review](./DEV-003A-review.md). Main remains at the previous seven partial ideas and three formally certified atomic rows.
+**DEV-003A VERIFIED & MERGED, bounded scope.** [PR #10](https://github.com/Levelleor/lorebound/pull/10) merged as `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145`; final head `75384544377b4de982514549976619ad368b5f56` and main have identical tree. [Final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42141159906), [independent review](./DEV-003A-review.md), [reconciliation](./DEV-003A-reconciliation.md). This extends the existing simulated Story-only, zero-world-effects loop with replacement of the current provisional candidate. It does not complete DEV-003, IDEA-0004, durable drafts, committed Undo/Fork or historical editing. [Accepted-source audit and stable requirement IDs](../requirements/DEV-003.md); [independent review](./DEV-003A-review.md). Main now has eight partial original ideas, three formally certified atomic rows and zero complete original ideas.
 
 ## What changed
 
@@ -34,7 +34,7 @@ All host tests use their own disposable SQLite directory. No user adventure libr
 | Visual/responsive/keyboard | PASS, scoped | Eight actual proposed-state captures at 390/768/1024/1440 in Dark/Bright. Asserted 48px header, ≤672px reader, 320px desktop rail, docked composer, no overflow and visible keyboard Retry; inspected 390 Dark/1440 Bright images. |
 | Host security | PASS, scoped | Same-origin runtime succeeds; cross-origin runtime/WS, cross-site fetch, rebound Host and cross-origin preflight denied by existing host checks. No new privileged service. |
 | Independent review | PASS, scoped | [Review](./DEV-003A-review.md): accepted-source/diff audit, 30 units and separate complete real-host run. [Independent runtime log](./DEV-003A/independent-host-smoke.log). |
-| Publication CI / merge | PASS (implementation head) / NOT MERGED | [PR #10](https://github.com/Levelleor/lorebound/pull/10), implementation `e422d8093cde4c1a4f8432a1caf0739885884c5d`; [CI run 42140685316 PASS](https://github.com/Levelleor/lorebound/actions/runs/42140685316). Latest documentation-head CI is tracked in PR checks. |
+| Publication CI / merge | PASS / MERGED | [Final-head CI 42141159906 PASS](https://github.com/Levelleor/lorebound/actions/runs/42141159906) at `75384544377b4de982514549976619ad368b5f56`; [PR #10](https://github.com/Levelleor/lorebound/pull/10) merged as `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145`, identical reviewed tree. |
 | Windows/macOS / live AI | NOT RUN | No packaging/provider changes; outside this bounded Linux simulated slice. |
 
 ## Requirement-to-evidence map
@@ -50,10 +50,10 @@ On this machine prepend `/home/alex/.nvm/versions/node/v24.14.0/bin` to PATH. In
 
 Screenshots: [390 Dark](./DEV-003A/story-proposed-dark-390.png), [768 Dark](./DEV-003A/story-proposed-dark-768.png), [1024 Dark](./DEV-003A/story-proposed-dark-1024.png), [1440 Dark](./DEV-003A/story-proposed-dark-1440.png), [390 Bright](./DEV-003A/story-proposed-bright-390.png), [768 Bright](./DEV-003A/story-proposed-bright-768.png), [1024 Bright](./DEV-003A/story-proposed-bright-1024.png), [1440 Bright](./DEV-003A/story-proposed-bright-1440.png). These verify the scoped Retry surface, not full product visual/accessibility conformance. Bright retains the existing source-contract gradient; no appearance redesign was attempted.
 
-B9-D12 remains deferred. Reviewed source identity is recorded in the independent report. Implementation published as `e422d8093cde4c1a4f8432a1caf0739885884c5d`; independent source continuity confirms the committed files match the reviewed hashes. This remains an unmerged implementation claim.
+B9-D12 remains deferred. Reviewed source identity is recorded in the independent report. Implementation published as `e422d8093cde4c1a4f8432a1caf0739885884c5d`; independent source continuity confirms the committed files match the reviewed hashes. The identical reviewed tree is now merged; this is scoped merged-main evidence.
 
 ## Inspected publication CI — 2026-11-05
 
 Run [42140685316](https://github.com/Levelleor/lorebound/actions/runs/42140685316) and job `127639959541` completed successfully for implementation `e422d8093cde4c1a4f8432a1caf0739885884c5d`. Lead inspected the actual steps and decoded logs: build/typecheck zero errors/warnings; **30 tests, 30 pass, zero fail**; Go vet; real SQLite suite; Firefox installation; actual Retry/Stop/reload/latest-only acceptance, lost-response recovery, stale conflicts and exact process restart all PASS. Artifact [13468172297](https://github.com/Levelleor/lorebound/actions/runs/42140685316/artifacts/13468172297) retains logs/screenshots (GitHub retention applies). This is executed remote evidence, not an inference from local checks.
 
-A documentation-only follow-up reconciles PR/CI status and independent source continuity without changing application/tests. Its final-head CI is inspected through PR #10 checks before handoff. PR remains unmerged; no later DEV-003 child has started.
+A documentation-only follow-up reconciles PR/CI status and independent source continuity without changing application/tests. Final documentation head `75384544377b4de982514549976619ad368b5f56` passed [CI 42141159906](https://github.com/Levelleor/lorebound/actions/runs/42141159906); lead inspected its actual logs and all job steps. [Logs/screenshots](https://github.com/Levelleor/lorebound/actions/runs/42141159906/artifacts/13467134726). PR #10 is now merged as `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145`. No later DEV-003 child has started.

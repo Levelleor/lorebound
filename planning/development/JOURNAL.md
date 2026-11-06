@@ -245,3 +245,16 @@ tags:
 - [CI 42140685316](https://github.com/Levelleor/lorebound/actions/runs/42140685316) completed successfully. Lead inspected actual job steps/logs: zero frontend diagnostics; 30 TS cases; Go vet; real SQLite contracts; actual Firefox/Wails/Go/SQLite Retry, recovery/concurrency and process restart PASS. Artifact `13468172297` retained.
 - Current controls and requirement/evidence status now name the actual open PR and passing implementation CI. Earlier local/unpublished entries remain chronological history. This final documentation update will run CI again on the latest PR head; no application/test source changed.
 - Next action after latest-head CI: user merge decision for PR #10. Main remains `34f25a0fa841827b0b4486106e411c9d28bad2ab`; seven partial ideas, three formally verified atomic rows, zero whole IDEAs complete. No later child or B9-D12 work starts.
+
+### 2026-11-05 — DEV-003A confirmed merge and bounded finalisation
+
+- User reported “merged, proceed”, then clarified “do not start the next slice, finish this one and provide the report as usual”. No next-child audit, selection or implementation started; this launch is limited to DEV-003A reconciliation/report.
+- GitHub confirms PR #10 merged as `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145`. Fetched `origin/main` and clean local main match. Final reviewed head `75384544377b4de982514549976619ad368b5f56` and merge have identical tree `b8527e09c20ec15c653aa360d262cdc221471cb1`; previous source/unit/runtime review and actual [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42141159906) apply to the merged application.
+- Reconciliation branch `docs/dev-003a-merge-reconciliation` updates current controls, scoped requirement/evidence, README and architecture status from actual main. IDEA-0004 becomes PARTIAL: eight partial ideas, 44 with no feature-level evidence, zero whole ideas complete; formal atomic certification remains three IDEA-0006 rows. No original IDEA archived.
+- Documentation-only finalisation requires independent provenance/status/link review and its PR CI before merge. This is necessary completion of the current task under the user's instruction; no new application code/runtime evidence is invented, and no later child or B9-D12 work is authorised.
+
+### 2026-11-06 — DEV-003A finalisation resumed, no later slice
+
+- User reiterated “finish the task”. Current work remains documentation reconciliation and the usual report for already-merged DEV-003A; no later child is selected or started.
+- Prior independent reviewer completed merge/source/CI/count provenance audit, then hit an account usage limit before final documentation review. That completed audit is retained; the interrupted review is not counted as PASS. A replacement reviewer is assigned only the remaining documentation diff/status/link checks.
+- Necessary documentation publication/CI/merge complete this same authorised finalisation. No application code changes or extra runtime claims are introduced.

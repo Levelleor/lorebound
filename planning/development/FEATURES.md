@@ -2,7 +2,7 @@
 type: development-feature-ledger
 status: current
 created: "2026-11-03"
-updated: "2026-11-05"
+updated: "2026-11-06"
 baseline_idea_count: 52
 verified_idea_count: 0
 ---
@@ -11,7 +11,7 @@ verified_idea_count: 0
 
 **This is the authoritative live feature-completion ledger for the development workflow.** Exactly **52 original accepted IDEA notes** exist in [production](../production/). They are *approved scopes*, not implemented features. A partial technical foundation is **not** completion of a whole IDEA. The [current task](./NOW.md), [task queue](./TASKS.md) and [runbook](./AGENT-RUNBOOK.md) govern how evidence is added.
 
-## Reconciled completeness, 2026-11-05
+## Reconciled completeness, 2026-11-06
 
 | Measure | Current status |
 | --- | --- |
@@ -19,10 +19,10 @@ verified_idea_count: 0
 | Original IDEA notes in production | **52** |
 | Original IDEA notes in staging | **0** |
 | Fully VERIFIED complete ideas | **0** |
-| PARTIAL foundation evidence | **7**: IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053 from merged PRs #4/#6/#8 and earlier Gate 0 PR #3 |
-| Remaining notes with no feature-level implementation evidence | **45** |
-| Accepted **atomic** requirements inventoried | **95 draft records across seven IDEAs**; DEV-002C reconciles all 57 First-bearing rows; 38 Later-only rows and whole-IDEA inventory review remain open; DEV-001 retains remaining certification |
-| Atomic requirements marked VERIFIED | **3 formally certified**: IDEA-0006/R01–R03 from PR #4. DEV-002B/C have tested scoped requirement coverage; no extra whole-row certification is inferred from mixed/later or empty-effect coverage |
+| PARTIAL foundation evidence | **8**: IDEA-0002, IDEA-0004, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053 from merged PRs #4/#6/#8/#10 and earlier Gate 0 PR #3 |
+| Remaining notes with no feature-level implementation evidence | **44** |
+| Accepted **atomic** requirements inventoried | **95 DEV-002 draft records across seven IDEAs, plus 12 IDEA-0004 rows in the DEV-003 scoped audit** (107 recorded rows across eight IDEAs); DEV-002C reconciles 57 First-bearing rows; whole-IDEA inventory/certification remains incomplete |
+| Atomic requirements marked VERIFIED | **3 formally certified**: IDEA-0006/R01–R03 from PR #4. DEV-002B/C and DEV-003A have tested scoped requirement coverage; no extra whole-row certification is inferred from mixed/later or empty-effect coverage |
 | New feature proposals awaiting approval | **0 recorded** |
 | Deferred spatial migration | **B9-D12 DEFERRED**, not an automatically accepted requirement |
 
@@ -36,7 +36,7 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | --- | --- | --- |
 | **M0** | Real Wails/browser/Go + Go SQLite technical host/storage foundation | [Gate 0 merged PR #3](https://github.com/Levelleor/lorebound/pull/3), extended by [DEV-002A merged PR #4](https://github.com/Levelleor/lorebound/pull/4); broader host/storage requirements remain open |
 | **M1** | One accepted, reopened Story-mode turn and basic adventure entry | **DEV-002**: **VERIFIED & MERGED bounded scope**, A/B/C merged with final-head CI and independent review; [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
-| **M2** | Edit, Retry, Undo, Fork, current-history recovery | Depends on M1 |
+| **M2** | Edit, Retry, Undo, Fork, current-history recovery | Provisional Retry verified/merged in [DEV-003A PR #10](https://github.com/Levelleor/lorebound/pull/10); remaining children unstarted |
 | **M3** | Real browser-side model providers, streaming, interpretation and routing | Depends on M1 contract; deterministic mocked scenarios plus separate provider smoke |
 | **M4** | Lorebook, derived context/memory and author notes | Depends on canonical history and provider context |
 | **M5** | Characters, playing-as, scene, statuses, items/equipment | Depends on stable IDs, current events |
@@ -55,7 +55,7 @@ Merged DEV-002C extends the same seven partial ideas with safe deferred invalida
 | [IDEA-0001](../production/Single-Player%20Account-Free%20Experience.md) | Single-player account-free experience | S01 | M1 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0002](../production/Freeform%20Player%20Action%20Modes.md) | Freeform player action modes | S03 | M1 | **PARTIAL** | [DEV-002B scoped audit](./evidence/DEV-002B-requirements-audit.md); remaining inventory draft | [Merged PR #6](https://github.com/Levelleor/lorebound/pull/6); [evidence](./evidence/DEV-002B.md) |
 | [IDEA-0003](../production/Direct%20Editable%20Prose%20Document.md) | Direct editable prose document | S03 | M2 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0004](../production/Retry%20Undo%20and%20Alternative%20Continuations.md) | Retry, Undo and alternate continuations | S05 | M2 | **IMPLEMENTED / UNVERIFIED (Retry only, PR open)** | [DEV-003A Retry audit](./requirements/DEV-003.md); full Undo/editing obligations remain | [PR #10](https://github.com/Levelleor/lorebound/pull/10); [evidence](./evidence/DEV-003A.md), [review PASS](./evidence/DEV-003A-review.md); implementation CI PASS/unmerged |
+| [IDEA-0004](../production/Retry%20Undo%20and%20Alternative%20Continuations.md) | Retry, Undo and alternate continuations | S05 | M2 | **PARTIAL** | [DEV-003A Retry audit](./requirements/DEV-003.md); full Undo/editing obligations remain | [Merged PR #10](https://github.com/Levelleor/lorebound/pull/10); [evidence](./evidence/DEV-003A.md), [review PASS](./evidence/DEV-003A-review.md), [reconciliation](./evidence/DEV-003A-reconciliation.md) |
 | [IDEA-0005](../production/Adventure%20Save%20and%20Export%20Management.md) | Adventure save/export management | S02 | M7 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0006](../production/Quick%20Start%20and%20Custom%20Story%20Openings.md) | Quick Start and custom openings | S02 | M1 | **PARTIAL** | [R01–R03 VERIFIED](./evidence/DEV-002A.md); [DEV-002B scope](./evidence/DEV-002B.md); remaining parent inventory draft | [Merged PRs #4](https://github.com/Levelleor/lorebound/pull/4) / [#6](https://github.com/Levelleor/lorebound/pull/6) |
 | [IDEA-0007](../production/Character%20Creation%20and%20Starting%20Choices.md) | Character creation and starting choices | S10 | M5 | **NOT STARTED** | Not yet inventoried | None |
@@ -185,3 +185,7 @@ The user authorised the recorded next action: commit/push/PR and final-head CI. 
 ### 2026-11-05 — DEV-003A published with passing implementation CI
 
 [PR #10](https://github.com/Levelleor/lorebound/pull/10) is OPEN. Implementation `e422d8093cde4c1a4f8432a1caf0739885884c5d` passed [CI run 42140685316](https://github.com/Levelleor/lorebound/actions/runs/42140685316): zero frontend diagnostics, 30 TS cases, real SQLite contracts, Go vet, real Firefox/Wails/Go/SQLite and exact restart. Independent review/source continuity PASS. This documentation follow-up carries the PR status and evidence; its latest-head checks are visible on the PR. Merge remains outstanding, so merged-main counts and formal requirement certification stay unchanged.
+
+### 2026-11-05 — DEV-003A verified and merged
+
+[PR #10](https://github.com/Levelleor/lorebound/pull/10) merged as `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145`. Final head `75384544377b4de982514549976619ad368b5f56` and merged main have identical tree; [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42141159906) and independent source/unit/runtime review cover the bounded simulated Story Retry behavior. IDEA-0004 is now PARTIAL, giving **eight PARTIAL ideas, 44 without feature-level implementation evidence, zero complete IDEAs**. Its R01–R05 scoped evidence does not certify nonempty effects or every full original requirement; the three formally certified IDEA-0006 rows remain the formal count. All 52 original notes remain in production. Parent DEV-003 is PARTIAL; no later child was selected or started. Earlier local/unmerged entries above retain their dated historical meaning.
