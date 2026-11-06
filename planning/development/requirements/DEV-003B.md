@@ -38,3 +38,7 @@ Technical recovery obligations also use B3-D02/D05 and IDEA-0051: freeze request
 Build/typecheck, TypeScript boundary/lifecycle tests, real SQLite atomicity/fencing/isolation/concurrency tests, real Firefox → Wails → Go → disposable SQLite including lost-response recovery and exact process restart, Dark/Bright at 390/768/1024/1440 with dialog focus/Escape and no overflow, independent source/runtime review, primary PR CI. Local lead status: **PASS** for typecheck/build, 36 TS cases, 19 Go functions/62 nested cases, vet, real host/browser/restart/recovery and eight responsive theme/width checks. [Evidence](../evidence/DEV-003B.md). Independent [review PASS](../evidence/DEV-003B-review.md); publication CI pending; no merged verification is claimed.
 
 No full IDEA or additional atomic row certification is inferred from bounded coverage. B9-D12 is **DEFERRED — NO WORK**. Live AI, nonempty effects, persisted checkpoints, Undo/history edits, shared drafts, export/backup, credentials and Windows/macOS packaging are excluded.
+
+## Publication snapshot
+
+[Primary PR #12](https://github.com/Levelleor/lorebound/pull/12) is OPEN, implementation commit `085e53fb3fe6207e3cc506947f217b036b78399c`; independent source hashes match. Publication CI is pending at this record's write. Exact-head checks and verbal finalise/merge approval remain required. [Conditional closure](../evidence/DEV-003B-reconciliation.md) remains ineffective until confirmed checked-head merge.

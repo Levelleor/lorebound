@@ -61,7 +61,7 @@ Merged DEV-002C extends the same seven partial ideas with safe deferred invalida
 | [IDEA-0007](../production/Character%20Creation%20and%20Starting%20Choices.md) | Character creation and starting choices | S10 | M5 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0008](../production/Reusable%20Scenario%20Templates%20and%20Placeholders.md) | Reusable scenario templates | S02 | M7 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0010](../production/Narration%20Style%20and%20Perspective%20Controls.md) | Narration style and perspective controls | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0011](../production/Manual%20Generation%20Branches.md) | Manual generation branches | S02 | M2 | **IN PROGRESS / UNMERGED** | [DEV-003B scoped inventory](./requirements/DEV-003B.md) | Implementation/testing on `feat/dev-003b-story-fork`; main unchanged |
+| [IDEA-0011](../production/Manual%20Generation%20Branches.md) | Manual generation branches | S02 | M2 | **IN PROGRESS / UNMERGED** | [DEV-003B scoped inventory](./requirements/DEV-003B.md) | [PR #12](https://github.com/Levelleor/lorebound/pull/12), [scoped evidence](./evidence/DEV-003B.md), [independent review PASS](./evidence/DEV-003B-review.md); unmerged, main unchanged |
 | [IDEA-0012](../production/Cloud%20LLM%20Provider%20Connectors.md) | Cloud LLM provider connectors | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0013](../production/Local%20LLM%20Server%20Connections.md) | Local LLM server connections | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0014](../production/Provider%20Connection%20Profiles%20and%20Discovery.md) | Provider profiles and discovery | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
@@ -194,3 +194,7 @@ The user authorised the recorded next action: commit/push/PR and final-head CI. 
 ### 2026-11-06 — DEV-003B authorised launch (unmerged)
 
 IDEA-0011's bounded Story-only committed-prefix Fork is IN PROGRESS on `feat/dev-003b-story-fork`; [scoped inventory](./requirements/DEV-003B.md). Existing IDEA-0004/R09 and storage/history subsets are related. Main retains eight PARTIAL ideas, zero complete ideas and three formally certified IDEA-0006 rows. Full world/Lorebook/memory/plugin copying, rename/delete operations and other DEV-003 children remain later. No original idea is archived.
+
+### 2026-11-06 — DEV-003B primary PR open, independent local PASS
+
+[PR #12](https://github.com/Levelleor/lorebound/pull/12) contains implementation, scope/evidence, independent review, controls and prepared conditional closure. Source commit `085e53fb3fe6207e3cc506947f217b036b78399c`; independently reviewed source hashes match. Publication CI and verbal finalise/merge approval remain pending at this record's write. IDEA-0011 remains unmerged IN PROGRESS; main retains eight partial ideas/zero complete and three certified atomic rows. On confirmed checked-head merge only, prepared closure will make IDEA-0011 PARTIAL (nine total). No next child is selected.

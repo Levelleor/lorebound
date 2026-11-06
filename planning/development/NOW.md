@@ -3,7 +3,7 @@ type: development-status
 status: current
 updated: "2026-11-06"
 current_task: "DEV-003B"
-current_task_status: "IN PROGRESS / UNMERGED"
+current_task_status: "PR OPEN / REVIEW"
 next_task: "DEV-003B"
 ---
 
@@ -74,6 +74,10 @@ Retry immediately discards the preceding unaccepted candidate, repeated replacem
 
 ## Next Task: **DEV-003B — Independent committed Story-prefix Fork**
 
-**IN PROGRESS**, branch `feat/dev-003b-story-fork`, owner Codex; independent reviewer `/root/fork_review`. The user explicitly authorised auditing the remaining DEV-003 dependencies, selecting one child, implementation, testing, independent review and one primary PR on 2026-11-06. This supersedes the previous launch's stop instruction for this launch only.
+**PR OPEN / REVIEW**, [primary PR #12](https://github.com/Levelleor/lorebound/pull/12), implementation commit `085e53fb3fe6207e3cc506947f217b036b78399c`, branch `feat/dev-003b-story-fork`, owner Codex; independent reviewer `/root/fork_review`. The user explicitly authorised auditing the remaining DEV-003 dependencies, selecting one child, implementation, testing, independent review and one primary PR on 2026-11-06. This supersedes the previous launch's stop instruction for this launch only.
 
-**Exactly one executable next task: DEV-003B.** Implement an explicit story-level Fork from any accepted turn into a separately listed/resumable adventure, copying the complete supported Story-only zero-effects prefix and baseline atomically with source-version/epoch fencing and unchanged-request recovery. Scope audit: [DEV-003B](./requirements/DEV-003B.md). DEV-003A and the verified-main counts above remain unchanged. No other child or B9-D12 work starts. Merge/final closure requires verbal approval of the named PR after implementation and review.
+**Exactly one active task: DEV-003B.** Implemented scope: an explicit story-level Fork from any accepted turn into a separately listed/resumable adventure, copying the complete supported Story-only zero-effects prefix and baseline atomically with source-version/epoch fencing and unchanged-request recovery. Scope audit: [DEV-003B](./requirements/DEV-003B.md). DEV-003A and the verified-main counts above remain unchanged. No other child or B9-D12 work starts. Merge/final closure requires verbal approval of the named PR after implementation and review.
+
+Local implementation and independent review PASS: 36 TS cases, 19 Go functions/62 nested cases, typecheck/build/vet, real Firefox/Wails/Go/SQLite, exact restart, failure/recovery and eight responsive checks. [Evidence](./evidence/DEV-003B.md), [review](./evidence/DEV-003B-review.md), [conditional closure preparation](./evidence/DEV-003B-reconciliation.md). Publication CI is pending at this record's write; inspect PR #12 checks on its exact head. **Verbal approval to finalise and merge PR #12 remains PENDING.** No completion claim or merge is made here.
+
+**Exact next action:** inspect exact-head publication CI and obtain the user's verbal approval to finalise and merge PR #12; then finish/review conditional closure on this same branch, pass final-head checks and merge the same PR. No later child starts.

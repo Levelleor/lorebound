@@ -291,3 +291,9 @@ tags:
 - Independent reviewer `/root/fork_review` audited accepted requirements and final source, independently reran 36 TS cases, 19 Go functions/62 named nested cases, typecheck/vet, the real browser/Go/SQLite/restart suite on separate port 18086 and direct held-request focus probe. Scoped PASS; [review with hashes and independent logs](./evidence/DEV-003B-review.md). No remaining scoped implementation blocker.
 - Final named-handler/style changes preserve behavior and pass typecheck/units/build; reviewer inspected them and recorded final hashes. Required published-head CI will execute the whole real browser suite on that exact source. Main remains `f66b169`; eight partial ideas/zero complete and three certified rows unchanged.
 - Prepared [single-primary-PR closure scope](./evidence/DEV-003B-reconciliation.md), explicitly pending verbal approval and effective only upon confirmed checked-head merge. No second reconciliation PR, full-IDEA certification, later child or B9-D12 work.
+
+### 2026-11-06 — DEV-003B primary PR #12 publication
+
+- Published independently reviewed implementation `085e53fb3fe6207e3cc506947f217b036b78399c` on `feat/dev-003b-story-fork`, opened [PR #12](https://github.com/Levelleor/lorebound/pull/12) against unchanged fetched main `f66b169`. Git commit permission review first timed out with no safety finding; its permitted retry succeeded.
+- All 11 independently reviewed source/test hashes match the published source. Primary PR includes implementation/evidence/review/controls and prepared conditional reconciliation. Publication CI started; its exact-head result must pass before approval handoff and again after final closure additions.
+- Verbal approval to finalise and merge **PR #12 is PENDING**. No merge/final closure or next slice is authorised by publication. B9-D12 remains deferred.

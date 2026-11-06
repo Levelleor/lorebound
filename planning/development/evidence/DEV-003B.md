@@ -8,7 +8,7 @@ task: "DEV-003B"
 
 # DEV-003B — Independent committed Story-prefix Fork evidence
 
-**Implementation and independent review PASS locally; PR/CI pending. Unmerged work does not change verified-main counts.** Scope: [requirements](../requirements/DEV-003B.md), IDEA-0011/R01–R08 bounded to currently supported Story-only zero-effects history. No full original IDEA certification or archival. Merge/finalisation requires the user's verbal approval of the primary PR.
+**Implementation and independent review PASS locally; [PR #12](https://github.com/Levelleor/lorebound/pull/12) OPEN; publication CI pending at record write. Unmerged work does not change verified-main counts.** Scope: [requirements](../requirements/DEV-003B.md), IDEA-0011/R01–R08 bounded to currently supported Story-only zero-effects history. No full original IDEA certification or archival. Merge/finalisation requires the user's verbal approval of the primary PR.
 
 ## Result and ownership
 
@@ -32,7 +32,7 @@ Linux, Node 24.14.0, Go 1.27.3-X:nodwarf5, Playwright Firefox; disposable librar
 | Visual/responsive | PASS: 390/768/1024/1440, Dark/Bright | Eight [Fork images](./DEV-003B/); lead inspected Dark 390 and Bright 1440, automation checks bounds, 90vh maximum and keyboard wrap. Existing shell/reader/composer regressions rerun. |
 | Host restrictions | PASS | Same-origin runtime; cross-origin runtime, fetch metadata, preflight, Host and WebSocket rejection in the real host suite |
 | Independent review | PASS for bounded scope | Reviewer `/root/fork_review` independently audited accepted requirements/source, reran units/Go/typecheck/real browser/restart and held-request focus probe; [report and final source hashes](./DEV-003B-review.md) |
-| PR final-head CI | NOT RUN | Publication pending |
+| PR final-head CI | NOT RUN (result not yet observed at record write) | [PR #12 checks](https://github.com/Levelleor/lorebound/pull/12/checks); implementation source `085e53fb3fe6207e3cc506947f217b036b78399c`. Actual current-head result must be inspected before closure/merge. |
 | Windows/macOS/live models | NOT RUN (outside bounded scope) | No packaging or provider claim |
 
 ## Integrity and recovery coverage

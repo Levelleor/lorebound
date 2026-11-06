@@ -8,7 +8,7 @@ task: "DEV-003B"
 
 # DEV-003B — Primary-PR closure preparation
 
-**PENDING verbal approval and confirmed merge. This record does not claim verified main.** Implementation, [local evidence](./DEV-003B.md), [independent review](./DEV-003B-review.md), [requirement dispositions](../requirements/DEV-003B.md), controls and this reconciliation belong in the single primary PR. No reconciliation PR is authorised or needed.
+**PENDING verbal approval and confirmed merge. This record does not claim verified main.** Implementation, [local evidence](./DEV-003B.md), [independent review](./DEV-003B-review.md), [requirement dispositions](../requirements/DEV-003B.md), controls and this reconciliation belong in the [primary PR #12](https://github.com/Levelleor/lorebound/pull/12). No reconciliation PR is authorised or needed.
 
 ## Concrete closure scope for approval
 
@@ -22,4 +22,4 @@ task: "DEV-003B"
 
 Finish conditional closure details in NOW/TASKS/FEATURES/JOURNAL, requirement/evidence and affected current-status documentation on this branch; review those additions and pass required CI on the final head. Then merge this same primary PR. Verify actual PR/head/main tree provenance, sync local main and record actual merge SHA and final-head CI in the PR and final handoff. No routine follow-up repository commit is required.
 
-Approval: **PENDING**. Primary PR and final-head CI: **publication pending**. Merge SHA: **unknown until confirmed merge**.
+Approval: **PENDING**. Primary PR: [#12 OPEN](https://github.com/Levelleor/lorebound/pull/12); implementation `085e53fb3fe6207e3cc506947f217b036b78399c`. Final-head CI: **pending at record write; inspect PR checks before merge**. Merge SHA: **unknown until confirmed merge**.
