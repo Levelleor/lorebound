@@ -2,7 +2,7 @@
 type: development-agent-runbook
 status: current
 created: "2026-11-03"
-updated: "2026-11-03"
+updated: "2026-11-06"
 tags:
   - planning/development
   - agents
@@ -37,6 +37,12 @@ Before coding, report what will be touched, what is already verified, what tests
 7. **Record context as it emerges:** New risks, missing interface details, discovered contradictions, provider restrictions, version issues and scope changes go into JOURNAL immediately. Add specific blockers/next actions to TASKS/NOW. If a *new capability* is suggested, log as a proposed candidate in FEATURES, not secretly implement it.
 8. **Open PR with traceability:** Include task ID, IDEA/R requirement IDs, accepted ADRs, changed paths, test matrix (real vs mocked vs not run), screenshots for relevant design, actual limitations and a reproduction recipe. Include control-file updates in the **same PR**. Do not merge your own unreviewed work when independent review is required.
 
+9. **Obtain verbal closure approval:** Once the implementation, applicable checks and independent review are ready, present a concrete closure summary and ask the user to approve finalising and merging the named primary PR. Wait for a clear reply. Permission to launch or implement a task is not permission to merge it.
+10. **Reconcile in that same PR:** After approval, finish NOW/TASKS/FEATURES/JOURNAL, requirement/evidence records and affected status documents on its existing branch. Add the final details to its description. Review the closure changes and pass required checks on the final head. Routine finalisation within the approved scope needs no repeated approval; material scope changes do.
+11. **Merge once and report:** Merge the same approved PR only after its gates pass. Confirm actual merge/head/tree provenance, sync local main and provide the usual handoff with the real SHA/CI. Do not create a separate routine reconciliation PR or start the next slice.
+
+Prepare closure records **effective only on confirmed merge of the named PR with its checked head**. Keep them separate from the pre-merge verified-main snapshot; do not label an open PR as already merged or invent a future merge SHA. The committed closure record becomes effective on main when the condition is confirmed. Actual merge provenance belongs in the PR and final report, avoiding a routine post-merge documentation commit. [Full workflow](./README.md#single-pr-closure-and-verbal-approval). This supersedes older after-merge tracker-writing instructions; historical reconciliation PRs remain historical evidence.
+
 Do not conflate implementation with verification. `IMPLEMENTED / UNVERIFIED` is a legitimate honest status while checks/review are outstanding.
 
 ## 3. Independent verification-agent workflow
@@ -49,7 +55,7 @@ The reviewing agent **must not simply accept the implementation agent's final re
 4. Rerun applicable tests on the PR commit if the environment permits; report exact runner and results. Browser UI must be interacted with in a real browser for a browser/E2E PASS; static build or HTML fetch is insufficient.
 5. Check that the **Command Citadel** design is represented for implemented UI, including 390/768/1024/1440px where relevant, actual screenshots and responsive/accessible states. A reference design kit is not a pixel-proof test.
 6. Compare code, CI results, coverage docs and PR claims. Record `PASS/FAIL/NOT RUN/BLOCKED/N/A + reason` per gate. Demand corrections for unmet accepted requirements, unverified claims or missing test evidence.
-7. Sign off only the scope actually verified and record reviewer attribution. Unverified cross-platform work remains an explicit limitation, not a hidden PASS. If possible, attach review directly to PR.
+7. Review the reconciliation/closure additions in the primary PR, including conditional merge wording, evidence/counts, the next-task boundary and consistency of its final description. Sign off only the scope actually verified and record reviewer attribution. Unverified cross-platform work remains an explicit limitation, not a hidden PASS. If possible, attach review directly to PR.
 
 **Critical rule:** A Go mock or fake HTTP service cannot establish real Wails/browser/Go integration. A successful Firefox/browser script cannot establish Windows/macOS packaging. Neither makes a complete feature automatically VERIFIED.
 
@@ -65,7 +71,9 @@ A DEV task is **VERIFIED & MERGED** only if all *applicable* gates are satisfied
 - Failure paths, retry/idempotency, concurrency/history and rollback are tested when relevant.
 - No high-severity unresolved blockers remain within the completed scope; limitations and exclusions are explicit.
 - Independent verification agent reviewed the PR against original requirements and recorded evidence.
-- PR is merged to main. Requirement/task/feature tracker and NOW/JOURNAL are updated to the *merged* state.
+- The user has verbally approved finalising and merging the named primary PR.
+- Reconciliation/closure records are reviewed and included in that same PR; required checks pass on its final head.
+- The primary PR is merged to main and the conditional closure records are confirmed effective from actual merge provenance. The final report records the real merge SHA and CI; no routine follow-up reconciliation PR is needed.
 
 An IDEA becomes **VERIFIED** only if all of its **current accepted atomic requirements**, not merely one slice, meet these gates. `N/A` is permitted only with a specific reason; `NOT RUN` or `BLOCKED` must never be converted into `PASS` for convenience.
 
@@ -88,6 +96,7 @@ Branch:
 Commit SHA:
 PR URL:
 Merge state: OPEN | MERGED | NOT CREATED
+Closure approval: <user reply and date, or PENDING>
 Main source files changed:
 Planning control files changed:
 
@@ -143,7 +152,7 @@ A `PASS` in this handoff means the **assigned task's accepted and evidenced scop
 
 - Prefer **one implementation agent and one independent reviewer per bounded task**. When parallel work is justified, assign distinct task/branch IDs and distinct files or coordinate carefully. The [NOW](./NOW.md) primary Next Task remains singular.
 - Do not overwrite changes to control files from another branch; fetch main, rebase/merge, and reconcile human-readable counts/status before merging.
-- When a PR merges, update the tracker using its actual commit/CI evidence rather than an agent's stated completion. Distinguish merged verified work from open PRs.
+- Put tracker reconciliation in the primary PR after verbal closure approval and before its final checks/merge. After merging, verify the prepared closure condition using actual commit/CI evidence and record provenance in the PR/report; do not create a routine follow-up reconciliation PR. Distinguish merged verified work from open PRs.
 - On conflict between historical design prose and later accepted ADR: document in JOURNAL and implement the **later accepted authority**, without erasing history.
 - Do not create new official IDEA IDs for unapproved additions; propose candidate scope and seek approval.
 - Never promote `planning/production/` notes to implemented `planning/specs/` without the verified gate mandated by repository planning rules.

@@ -2,7 +2,7 @@
 type: development-guide
 status: current
 created: "2026-11-03"
-updated: "2026-11-03"
+updated: "2026-11-06"
 tags:
   - planning/development
   - implementation
@@ -32,9 +32,23 @@ Read these alongside repository [AGENTS.md](../../AGENTS.md), [planning rules](.
 3. **Implement a vertical slice:** Small branch, cohesive real runtime behaviour, supported browser TypeScript ↔ Wails/Go ↔ SQLite boundaries, no speculative features. Include deterministic mocks for model-dependent workflows; run real host checks when claiming real integration.
 4. **Keep the control files current in the same PR:** Update the task, feature/requirement evidence, current status and chronological journal as findings arrive. **New functionality or scope changes must be recorded as they appear**, not only at the very end. The reviewer can see why changes were made.
 5. **Verify independently:** Implementer records exact commands, environment, outputs, artifact links and remaining limits. Reviewer works from **accepted requirements**, checks omissions and reruns applicable tests (or marks them **NOT RUN/BLOCKED**). Required CI and real-browser proof must not be replaced by build-only or mock-only results.
-6. **Merge only after the gate:** Tests and review meet [AGENT-RUNBOOK](./AGENT-RUNBOOK.md) Definition of Done. After merge, update [NOW.md](./NOW.md) to the next **single** task, the [TASKS](./TASKS.md) record and [FEATURES](./FEATURES.md) evidence. A feature only becomes VERIFIED when **all its in-scope accepted requirements** are independently satisfied.
+6. **Close through the primary PR:** Follow the verbal-approval workflow below. Reconciliation and closure records belong in the same PR before its final checks and merge. After merge, verify the resulting main/PR provenance and deliver the usual report. A feature only becomes VERIFIED when all its in-scope accepted requirements are independently satisfied and the PR is actually merged.
 
 **Operational convention:** the control files are kept **in the same PR as the work that changes their truth**, avoiding a second, drifting dashboard. For simultaneous tasks, keep a single Next Task and list any already-authorised parallel work under Active Work; coordinate edits/rebase to avoid overwriting status. An unmerged PR does not count as completed/verified in the main-branch snapshot.
+
+## Single-PR closure and verbal approval
+
+**User-approved workflow, 2026-11-06: one primary PR includes implementation, evidence, reconciliation and task closure.** For DEV-003A this would have meant completing everything in PR #10. The already-merged #10/#11 pair remains historical; future tasks follow this rule.
+
+1. Complete the implementation, applicable tests and independent review in the primary PR. Keep control files current and prepare a concrete closure summary for the user to review.
+2. Ask once for clear **verbal approval in chat to finalise and merge that named PR**. Launch/implementation approval alone is not merge approval. Wait for the reply; elapsed time is not approval.
+3. After approval, finish reconciliation on the same branch: NOW, TASKS, FEATURES, JOURNAL, requirement/evidence records and any affected current-status documentation. Update the primary PR description with the final scope, evidence and remaining limits. The approval covers these routine closure changes and merging the same PR once its gates pass; do not ask again for each documentation commit.
+4. Have the closure additions reviewed and pass required checks on the final PR head. Preserve existing evidence gates; a failed check must be resolved before merging. A materially changed scope requires fresh approval.
+5. Merge that same PR, verify its actual merge/head/tree and local-main state, then close out with the usual report. Record the actual merge SHA and final-head CI in the PR and report. No next slice starts automatically.
+
+**Truth before and after merge:** Keep the verified-main snapshot distinct from prepared closure records. State the latter as **effective only when PR #N is confirmed merged with its checked head**. They do not claim completion while the PR remains open; the same committed closure record takes effect when it reaches main. Use the stable PR link and reviewed-source evidence rather than inventing a future merge SHA or CI result. After merge, confirm that condition and report the real provenance; routine closure requires no additional repository commit or reconciliation PR. Full-IDEA certification and archival still require all their accepted evidence gates.
+
+Do not create a separate reconciliation/finalisation PR unless the user explicitly requests one. This replaces older instructions to write ordinary tracker reconciliation after merge; preserve those historical records rather than rewriting their events.
 
 ## Traceability chain
 
@@ -97,7 +111,8 @@ All test/evidence cells use `PASS`, `FAIL`, `NOT RUN`, `BLOCKED` or `N/A (reason
 - **Start of a task:** update NOW and TASKS to record task ID, scope, branch, owner and `IN PROGRESS`.
 - **Every meaningful discovery or decision:** append to JOURNAL immediately, link ADRs/issues and note requirement/priority changes. No fabricated timestamps or evidence.
 - **Every PR opened/updated:** update requirement statuses and test evidence on the branch, with exact commits/URLs.
-- **After reviewer sign-off and merge:** mark merged requirements VERIFIED, adjust feature-level completion honestly, close the task, and advance NOW to exactly one next task.
+- **After verbal closure approval, before merge:** include final requirement dispositions, feature counts, task closure and exactly one next-task candidate in the primary PR, explicitly effective on its confirmed merge. Review the additions and verify the final head.
+- **After merge:** verify the condition against actual GitHub/Git provenance, sync local main and provide the report with the real SHA/CI. Do not open a routine reconciliation PR or start the next task.
 - **Every new accepted IDEA or design change:** add a new feature row (or supersession note) and assign a milestone/task before implementation. No scope should exist solely in chat.
 - **Before any release:** audit **all accepted active atomic requirements** for `VERIFIED` or an explicit approved exception, and run cross-feature real integration/browser/platform checks.
 

@@ -1,5 +1,13 @@
 # Lorebound agent instructions
 
+## One primary PR and verbal closure approval — 2026-11-06
+
+The user explicitly requires **implementation, evidence, reconciliation and task closure in the same primary PR**. Complete the implementation and applicable checks/review, then obtain one clear verbal approval in chat to **finalise and merge that named PR**. After approval, add the final control-file/evidence/closure details to its existing branch, review those additions and pass required checks on the final head, then merge that same PR and provide the usual report. Routine reconciliation within the approved scope needs no second approval. A materially changed scope still needs its own approval.
+
+**Do not merge the implementation first and open a separate reconciliation/finalisation PR.** Prepare closure records in the primary PR with completion explicitly conditional on its confirmed merge; do not claim unmerged work is already verified main. After merge, verify provenance, sync local main and record the actual merge SHA in the PR and final report. No routine follow-up repository write or PR is needed. See [the closure workflow](planning/development/README.md#single-pr-closure-and-verbal-approval).
+
+This supersedes older instructions to perform routine tracker reconciliation after merging. Earlier PR pairs, including #10/#11, remain historical evidence, not the workflow to repeat. Closing a task never authorises the next slice automatically.
+
 ## Personal development style — 2026-11-05
 
 The user explicitly requires the **personal-development-style** skill for this project's implementation, refactoring, architectural work and code review from now on. Read the installed skill at `/home/alex/.codex/skills/personal-development-style/SKILL.md` and its relevant references. If that location changes, discover the skill by name.

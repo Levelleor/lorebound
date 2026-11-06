@@ -258,3 +258,10 @@ tags:
 - User reiterated “finish the task”. Current work remains documentation reconciliation and the usual report for already-merged DEV-003A; no later child is selected or started.
 - Prior independent reviewer completed merge/source/CI/count provenance audit, then hit an account usage limit before final documentation review. That completed audit is retained; the interrupted review is not counted as PASS. A replacement reviewer is assigned only the remaining documentation diff/status/link checks.
 - Necessary documentation publication/CI/merge complete this same authorised finalisation. No application code changes or extra runtime claims are introduced.
+
+### 2026-11-06 — User-directed primary-PR reconciliation and verbal closure approval
+
+- User explicitly requested that future reconciliation be included in the primary PR (PR #10 for the DEV-003A example), with verbal approval before proceeding to finalisation, task closure and merging that same PR.
+- Updated root/planning agent instructions, development guide/runbook and feature update protocol: complete implementation/checks/review, ask once for verbal approval to finalise and merge the named PR, then add final reconciliation details on its existing branch, review/check its final head, merge once and provide the usual report. Routine closure changes within that scope need no second approval.
+- Prepared closure records are explicitly effective only on confirmed merge; actual merge SHA/CI are recorded in the PR and final report. This preserves truthful main/PR separation without a routine post-merge repository write or separate reconciliation PR.
+- Older after-merge reconciliation directions are superseded prospectively. Existing merged PRs and dated evidence remain unchanged. No later feature slice is selected or started by this workflow update.

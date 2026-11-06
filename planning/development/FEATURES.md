@@ -151,7 +151,8 @@ When implementation reveals an **additional feature** not already accepted, reco
 - **Before implementing a slice:** identify affected IDEA IDs and create/update their actual atomic requirements. Link the DEV task and branch; use `IN PROGRESS` only after code work begins.
 - **As behaviour is implemented:** mark `IMPLEMENTED / UNVERIFIED` or `PARTIAL` where appropriate. Link code/PR/tests; do **not** mark a feature verified on a mock or agent assertion.
 - **After execution:** record actual `PASS/FAIL/NOT RUN/BLOCKED/N/A + reason` and evidence URI for each applicable acceptance check.
-- **After independent review and merge:** mark completed atomic requirements `VERIFIED`; only then recalculate whole-idea status, current totals, task status and the [NOW](./NOW.md) next task.
+- **After verbal closure approval, before merge:** put the final requirement/feature dispositions, totals and next-task candidate in the primary PR, explicitly effective only on its confirmed merge. Review the closure additions and pass final-head checks.
+- **After merge:** confirm that closure condition against actual merge/CI provenance and report it. Only then are qualifying atomic requirements formally `VERIFIED`; do not create a routine reconciliation PR. [Workflow](./README.md#single-pr-closure-and-verbal-approval).
 - **On new accepted idea or corrected scope:** add/link the new IDEA or updated requirement before coding, preserve approvals/supersession and keep total denominators current.
 
 **Source integrity:** Baseline 52 ID/title/owner links were checked against the [System Architecture Overview](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md), which links to original `planning/production/` notes. No application code or tests were created in establishing this document.

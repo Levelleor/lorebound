@@ -1,5 +1,9 @@
 # Planning vault rules
 
+## Primary PR closure after verbal approval — 2026-11-06
+
+Follow [single-PR closure](development/README.md#single-pr-closure-and-verbal-approval): obtain the user's verbal approval to finalise and merge the named primary PR, add reconciliation/closure details to that same PR, review and verify its final head, then merge it. Routine closure must not create a separate reconciliation PR. Pre-merge closure records are explicitly conditional on confirmed merge; only actual merged work counts as verified main. Historical post-merge reconciliation instructions are superseded for future tasks. No later slice starts from closure approval alone.
+
 ## Live implementation state, tasks and verification — 2026-11-03
 
 Before implementing any accepted IDEA, open **[development/README.md](development/README.md)** and **[development/NOW.md](development/NOW.md)**. The [feature ledger](development/FEATURES.md) tracks **all 52 production IDEAs**, their atomic requirement coverage and independently verified evidence; the [task queue](development/TASKS.md) records scope and dependencies; the [development journal](development/JOURNAL.md) records on-the-go context; the [agent runbook](development/AGENT-RUNBOOK.md) defines evidence/PR/reviewer handoff. **NOW is authoritative for the singular next task**, not earlier architecture batch proposals. Keep updates in the same PR as relevant implementation; never claim a feature verified on an unmerged PR, unrun mock or partial host test. This policy adds documentation, not actual tests or code authorisation. B9-D12 spatial migrations remain deferred.
