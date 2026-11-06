@@ -1,0 +1,2 @@
+PASS: target navigated by user stays on library; confirmed Fork does not redirect it; source URL/input retained
+PASS: source popstate teardown directs owned waiting tab to library; late successful reply does not override either page or duplicate Fork

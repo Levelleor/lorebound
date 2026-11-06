@@ -1,0 +1,8 @@
+
+> check
+> svelte-kit sync && svelte-check --tsconfig ./tsconfig.json
+
+Loading svelte-check in workspace: /home/alex/Playground/lorebound/frontend
+Getting Svelte diagnostics...
+
+svelte-check found 0 errors and 0 warnings

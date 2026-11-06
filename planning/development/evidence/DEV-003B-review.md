@@ -1,6 +1,6 @@
 ---
 type: development-review
-status: pass-scoped-local-review
+status: historical-ui-review
 created: "2026-11-06"
 updated: "2026-11-06"
 task: "DEV-003B"
@@ -10,6 +10,8 @@ branch: "feat/dev-003b-story-fork"
 ---
 
 # DEV-003B — Independent committed-prefix Fork review
+
+> **Historical first-iteration UI review.** The user rejected the dialog interaction after this review, before merge approval. Go/SQLite and unchanged controller integrity findings remain evidence for their reviewed source, but modal/visual checks below do not certify the current per-turn icon/separate-tab UI. See [revised UX review](./DEV-003B-ux-review.md) for the current interface and source identity. Preserve this report as chronological evidence.
 
 **PASS for the bounded local implementation and independently executed checks.** This is Story-only, simulated generation and zero world effects. It is not full IDEA-0011/DEV-003 certification, merged-main verification, publication CI or permission to merge. The user's verbal approval of the named primary PR and the final-head checks/closure review remain required.
 

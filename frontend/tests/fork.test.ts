@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ForkController, prepareFork, type ForkRequest, type ForkResult, type ForkStorage } from '../src/lib/fork.ts';
+import { ForkController, prepareFork, defaultForkTitle, type ForkRequest, type ForkResult, type ForkStorage } from '../src/lib/fork.ts';
 import type { Snapshot } from '../src/lib/library.ts';
 import { plainTextToDocument, type Turn } from '../src/lib/story.ts';
 
@@ -144,4 +144,11 @@ test('malformed/mismatched Fork receipt cannot be treated as confirmed', async (
   f.storage.fork = async () => ({ schemaVersion: 2, epoch: 'other', adventureId: 'wrong', operationId: 'wrong', version: 2, turnId: 'turn-2', replayed: false });
   assert.equal(await f.controller.submit('turn-2', 'Fork'), null);
   assert.equal(f.controller.state.phase, 'uncertain');
+});
+
+test('default Fork title uses the source name with a Unicode-safe storage limit', () =>
+{
+  assert.equal(defaultForkTitle('A winter road'), 'fork: A winter road');
+  assert.equal(defaultForkTitle('🦉'.repeat(160)), 'fork: ' + '🦉'.repeat(154));
+  assert.equal([...defaultForkTitle('x'.repeat(160))].length, 160);
 });

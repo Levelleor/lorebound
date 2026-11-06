@@ -78,16 +78,6 @@
     } catch (cause) { if (sequence === loadSequence) error = message(cause); }
     finally { if (sequence === loadSequence) busy = false; }
   }
-  async function openFork(snapshot: Snapshot)
-  {
-    ++loadSequence;
-    current = snapshot;
-    storyLocked = false;
-    storyStatus = '✓ Saved';
-    mobileView = 'story';
-    setAddress(snapshot.adventure.id);
-    await focusHeading();
-  }
   async function showLibrary() {
     if (busy || storyLocked) return;
     setAddress(); await load(); await focusHeading();
@@ -125,7 +115,7 @@
   </nav>
   <div class="workspace">
     {#key current.adventure.id}
-      <StoryWorkspace snapshot={current} onFork={openFork} mobileHidden={mobileView !== 'story'} onUpdate={(update) => { current = update.snapshot; storyStatus = update.status; storyLocked = update.locked; }} />
+      <StoryWorkspace snapshot={current} mobileHidden={mobileView !== 'story'} onUpdate={(update) => { current = update.snapshot; storyStatus = update.status; storyLocked = update.locked; }} />
     {/key}
     <aside class:mobile-hidden={mobileView !== 'world'} class="context-rail" aria-label="World context">
       <div class="context-tabs"><span class="selected">Scene</span><span>Items</span><span>Lore</span><span>Context</span></div>

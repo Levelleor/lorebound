@@ -8,11 +8,11 @@ task: "DEV-003B"
 
 # DEV-003B — Primary-PR closure preparation
 
-**PENDING verbal approval and confirmed merge. This record does not claim verified main.** Implementation, [local evidence](./DEV-003B.md), [independent review](./DEV-003B-review.md), [requirement dispositions](../requirements/DEV-003B.md), controls and this reconciliation belong in the [primary PR #12](https://github.com/Levelleor/lorebound/pull/12). No reconciliation PR is authorised or needed.
+**PENDING verbal approval and confirmed merge. This record does not claim verified main.** Implementation, [local evidence](./DEV-003B.md), [revised independent review](./DEV-003B-ux-review.md), [requirement dispositions](../requirements/DEV-003B.md), controls and this reconciliation belong in the [primary PR #12](https://github.com/Levelleor/lorebound/pull/12). No reconciliation PR is authorised or needed.
 
 ## Concrete closure scope for approval
 
-- Close DEV-003B only, within supported Story-only zero-effects committed-prefix Fork: explicit accepted-turn selection, independent complete prefix/baseline, separately listed/resumable destination, source/future isolation, atomic/version/epoch/idempotency guards and recovery, accessible responsive dialog.
+- Close DEV-003B only, within supported Story-only zero-effects committed-prefix Fork: direct small icon beneath the chosen accepted turn, independent complete prefix/baseline in a separate browser tab/window with default `fork: [source name]`, separately listed/resumable destination, source/future isolation, atomic/version/epoch/idempotency guards and recovery, accessible responsive turn actions, source/input preservation and safe pop-up/closed-target recovery.
 - Parent DEV-003 remains PARTIAL. Retry and this Fork child do not complete shared drafts, temporary editor undo, committed Undo, historical editing or complete reconstruction of nonempty world state.
 - Once the same primary PR is confirmed merged with its checked final head, IDEA-0011 becomes PARTIAL, making nine partial original ideas and 43 without feature-level implementation evidence. Zero whole ideas complete; all 52 original notes remain production-stage. Three formally certified IDEA-0006 rows remain unchanged.
 - Recorded inventory is 115 rows across nine IDEAs, including eight IDEA-0011 scoped rows. Bounded evidence does not certify full mixed/later obligations. No original IDEA is archived and no current full-feature spec is invented.
@@ -22,4 +22,6 @@ task: "DEV-003B"
 
 Finish conditional closure details in NOW/TASKS/FEATURES/JOURNAL, requirement/evidence and affected current-status documentation on this branch; review those additions and pass required CI on the final head. Then merge this same primary PR. Verify actual PR/head/main tree provenance, sync local main and record actual merge SHA and final-head CI in the PR and final handoff. No routine follow-up repository commit is required.
 
-Approval: **PENDING**. Primary PR: [#12 OPEN](https://github.com/Levelleor/lorebound/pull/12); implementation `085e53fb3fe6207e3cc506947f217b036b78399c`. Final-head CI: **pending at record write; inspect PR checks before merge**. Merge SHA: **unknown until confirmed merge**.
+Approval: **PENDING**. Primary PR: [#12 OPEN](https://github.com/Levelleor/lorebound/pull/12); initial historical implementation `085e53fb3fe6207e3cc506947f217b036b78399c` (dialog iteration; revised publication follows). Final-head CI: **pending at record write; inspect PR checks before merge**. Merge SHA: **unknown until confirmed merge**.
+
+User correction before approval: the first dialog iteration was rejected. Its UI/review/CI are historical. Current closure scope uses the per-turn icon and separate-tab/default-name behavior; revised local evidence and independent review pass; revised-head CI must pass before a fresh approval request. No verbal merge approval has been given.

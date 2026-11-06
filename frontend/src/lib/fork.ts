@@ -24,6 +24,11 @@ export interface ForkState
   error: string;
 }
 
+export function defaultForkTitle(sourceTitle: string): string
+{
+  return [...`fork: ${sourceTitle}`].slice(0, 160).join('');
+}
+
 export function prepareFork(source: Snapshot, turnId: string, title: string, adventureId: string, operationId: string): ForkRequest
 {
   readSnapshot(source);
@@ -78,7 +83,7 @@ export class ForkController
     }
     catch
     {
-      this.update('editing', 'Choose an accepted turn and a title of 160 characters or fewer.');
+      this.update('editing', 'This turn could not be prepared for forking. Reload the story and try again.');
       return null;
     }
     const request = this.pending;
@@ -109,7 +114,7 @@ export class ForkController
       if (!copied && /stale_version|wrong_epoch|invalid_request|operation_id_conflict|adventure_exists|adventure_not_found|unsupported_history|unsupported_library/.test(String(cause)))
       {
         this.pending = null;
-        this.update('rejected', 'The fork was rejected. Close this dialog to reload the story, then review it before choosing a fresh fork.');
+        this.update('rejected', 'The fork was rejected. Review the reloaded story before choosing a fresh fork.');
       }
       else
       {

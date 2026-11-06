@@ -1,0 +1,45 @@
+✔ IDEA-0011/R01-R03: request pins actual accepted boundary and source version without prose or input payload (1.88697ms)
+✔ IDEA-0011/R04-R06: lost reply recovers identical frozen request and reads destination current head (0.791897ms)
+✔ failed destination read keeps request recoverable; corrupt or mismatched read cannot open as saved (0.495781ms)
+✔ B3-D05: stale source/epoch or definitive rejection requires close and explicit fresh choice, never automatic rebase (0.821054ms)
+✔ pending Fork is single flight and disposed work cannot reopen a destination (0.253898ms)
+✔ malformed/mismatched Fork receipt cannot be treated as confirmed (0.201434ms)
+✔ default Fork title uses the source name with a Unicode-safe storage limit (0.092933ms)
+✔ blank creation prepares only stable identity and empty baseline, no fictional defaults (0.22442ms)
+✔ unsupported or malformed host results fail closed instead of appearing saved (0.256712ms)
+✔ IDEA-0040/R02: structured prose roundtrips paragraphs, hard breaks, Unicode and literal HTML (1.975281ms)
+✔ IDEA-0039/R04 + IDEA-0040/R01: pure replay preserves distinct passage identity and total order (0.509431ms)
+✔ IDEA-0039/R06: unknown required-core history is preserved as read-only prose and blocks generation (0.505197ms)
+✔ IDEA-0002/R01–R02: Story stays provisional until one explicit acceptance; narrator receives no internal IDs (0.589123ms)
+✔ IDEA-0044/R05: Stop prevents even an abort-ignoring late response from becoming a candidate (0.17171ms)
+✔ IDEA-0039/R05: Discard preserves authored text and never stores candidate prose (0.143625ms)
+✔ IDEA-0044/R04: rejected generation, malformed output and invalid input preserve canon and player text (0.427922ms)
+✔ IDEA-0044/R08: lost response retries identical frozen operation and reads newer canon than original receipt (0.414307ms)
+✔ IDEA-0044/R08: successful commit followed by read failure remains recoverable without a duplicate (0.310876ms)
+✔ IDEA-0044/R07: stale version and epoch reject, refetch and require deliberate fresh generation (0.699023ms)
+✔ IDEA-0044/R07–R09: failed conflict refetch blocks new writes until authoritative refresh succeeds (0.290051ms)
+✔ IDEA-0044/R09: refresh hints never interrupt a pending candidate or uncertain operation (2.110991ms)
+✔ IDEA-0044/R05: disposing a workspace ignores late generation and save replies (0.323734ms)
+✔ IDEA-0044/R04: typing during a delayed background read is retained (0.116016ms)
+✔ DEV-002C: a hint during a read triggers one later coherent read and retains typed input (0.211004ms)
+✔ DEV-002C: candidate hints wait for Discard, then refresh without a new submission (0.263024ms)
+✔ DEV-002C: generation hints drain after Stop or failure; late results cannot replace the refresh (0.380723ms)
+✔ DEV-002C: uncertain-save hints cannot unlock or replace the pending operation (0.323855ms)
+✔ DEV-002C: disposing a delayed refresh drops queued hints and publishes no late state (0.115994ms)
+✔ DEV-002C: focus during stale-conflict refetch coalesces without hiding the conflict (0.349163ms)
+✔ DEV-002C: background hints preserve technical rejection until deliberate Reload (0.271263ms)
+✔ IDEA-0004/R01–R02: Retry invalidates immediately and only the latest replacement can accept (0.382739ms)
+✔ IDEA-0004/R03: rejected and malformed replacements never revive old prose or mutate accepted history (0.918949ms)
+✔ IDEA-0004/R04: Stop fences late replacement resolve or reject even after a newer candidate is ready (0.415371ms)
+✔ IDEA-0004/R04: abandoning a replacement aborts it and publishes no late candidate (0.145925ms)
+✔ IDEA-0004/R05: saving and uncertain outcomes reject generation Retry and recover the identical latest request (0.979061ms)
+✔ IDEA-0004/R05: a replacement cannot silently rebase over a newer version or library epoch (0.815099ms)
+✔ IDEA-0004/R03–R05: failed replacement drains deferred hints; Retry cannot bypass idle, refresh or blocked states (0.371947ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 63.520468

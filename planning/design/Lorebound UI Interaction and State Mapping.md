@@ -3,7 +3,7 @@ type: design
 status: approved-visual-direction
 phase: "C"
 created: "2026-11-03"
-updated: "2026-11-03"
+updated: "2026-11-06"
 source: "User-supplied lorebound-design-only-kit(1).zip / UX_INTERACTION_MAP.md"
 tags:
   - planning/design
@@ -40,6 +40,7 @@ This is the **visual and user-feedback companion** to the [approved Command Cita
 | Retry | provisional styling restarts for new attempt, old canon unchanged | Retry may not silently accept or mutate accepted text |
 | Discard candidate | blue temporary block disappears | Existing canonical passages/facts unchanged |
 | Stop | stop control disappears and progress ceases | Cancellation must be real/accurately reported; no claim rollback without evidence |
+| Fork accepted turn (user correction 2026-11-06) | Small fork icon beneath each accepted turn; visible focus and accessible turn-specific name | Clicking pins that turn and opens its copied prefix in a separate browser tab/window, default `fork: [source name]`; source tab/input retained; no selector/title form, branch tree or automatic rename. Pending/recovery feedback stays by the initiating turn. |
 | Edit committed prose | 2px gold left marker and muted editing state; small status banner may appear | Noncanonical draft; actual confirmation through accepted shared composer overlay, guarded by expected version |
 | Discard/confirm edit | pending visual clears or becomes accepted, with truthful status | No extra map-local Commit bar; historical Keep Later/Truncate decisions as separately approved |
 | Lorebook search | compact list filters immediately, subtle row hover | Search only supported recorded fields; no fabricated results |
