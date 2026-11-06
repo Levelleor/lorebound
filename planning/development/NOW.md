@@ -2,16 +2,16 @@
 type: development-status
 status: current
 updated: "2026-11-06"
-current_task: "DEV-003A"
-current_task_status: "VERIFIED & MERGED"
-next_task: "DEV-003"
+current_task: "DEV-003B"
+current_task_status: "IN PROGRESS / UNMERGED"
+next_task: "DEV-003B"
 ---
 
 # Lorebound — Current Development Status
 
 > **THIS IS THE ONE-PAGE HANDOFF.** Read [TASKS](./TASKS.md), [FEATURES](./FEATURES.md), [JOURNAL](./JOURNAL.md), the [runbook](./AGENT-RUNBOOK.md), and [system architecture](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md). Keep exactly one Next Task and distinguish merged application evidence from documentation prepared afterward.
 
-Last reconciled with fetched GitHub main: **2026-11-06**, commit `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145`. [PR #10](https://github.com/Levelleor/lorebound/pull/10) is **MERGED**, as reported by the user and confirmed by GitHub. Final reviewed head `75384544377b4de982514549976619ad368b5f56` and merged main have identical tree `b8527e09c20ec15c653aa360d262cdc221471cb1`; [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42141159906) and [independent review](./evidence/DEV-003A-review.md) cover that application tree. [Reconciliation](./evidence/DEV-003A-reconciliation.md). This documentation finalisation changes no application code.
+Last reconciled with fetched GitHub main: **2026-11-06**, commit `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145`. [PR #10](https://github.com/Levelleor/lorebound/pull/10) is **MERGED**, as reported by the user and confirmed by GitHub. Final reviewed head `75384544377b4de982514549976619ad368b5f56` and merged main have identical tree `b8527e09c20ec15c653aa360d262cdc221471cb1`; [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42141159906) and [independent review](./evidence/DEV-003A-review.md) cover that application tree. [Reconciliation](./evidence/DEV-003A-reconciliation.md). That historical DEV-003A documentation finalisation changed no application code; the active DEV-003B launch below adds new unmerged Fork code.
 
 ## Snapshot
 
@@ -53,9 +53,9 @@ The first Story slice has 16 TypeScript tests, 14 Go functions/43 nested cases, 
 
 Retry immediately discards the preceding unaccepted candidate, repeated replacement stays provisional, failure/Stop preserves available authored input, and only the latest validated result may accept. Saving/uncertain recovery and stale version/epoch fencing remain intact. Evidence covers 30 TypeScript cases, 14 Go functions/43 SQLite subcases, separate lead/reviewer real Firefox/Wails/SQLite runs with exact restart, and Dark/Bright at four widths. IDEA-0004 is now PARTIAL; eight original ideas have partial evidence, zero complete. Formal whole-row atomic certification remains the three existing IDEA-0006 rows; R02's nonempty effects and later editing/Undo/Fork obligations remain outside this child.
 
-**Parent DEV-003 remains PARTIAL.** No later slice has been selected or started. The user's latest instruction expressly limits this launch to finalising DEV-003A and reporting it.
+**Parent DEV-003 remains PARTIAL.** The prior launch ended with DEV-003A finalisation. The separately authorised 2026-11-06 launch below selects DEV-003B only; no further child starts automatically.
 
-## Next Task: **DEV-003 — Select the next bounded child on a separately authorised launch**
+## Historical handoff before the 2026-11-06 launch: DEV-003 child selection
 
 **Status: NOT STARTED for the next child.** DEV-003A is complete; drafts, temporary editor undo, committed Undo/Fork and historical editing remain later work. No new child ID or implementation scope is selected by this reconciliation. B9-D12 remains deferred.
 
@@ -71,3 +71,9 @@ Retry immediately discards the preceding unaccepted candidate, repeated replacem
 - **2026-11-04 — DEV-002A:** merged PR #4; three atomic requirements verified; three partial ideas; zero complete ideas.
 - **Gate 0:** [merged PR #3](https://github.com/Levelleor/lorebound/pull/3), implementation commit `610b7b77b0f4ff04eb63543f4c1aee6dea2acf30`; [historical evidence](../architecture/Gate%200%20Execution%20Evidence.md). Its test UI/service were replaced by DEV-002A.
 - **2026-11-03:** all 52 accepted ideas promoted to production; [visual reference](../design/README.md) and development controls recorded. Promotion is implementation readiness, not completed functionality.
+
+## Next Task: **DEV-003B — Independent committed Story-prefix Fork**
+
+**IN PROGRESS**, branch `feat/dev-003b-story-fork`, owner Codex; independent reviewer `/root/fork_review`. The user explicitly authorised auditing the remaining DEV-003 dependencies, selecting one child, implementation, testing, independent review and one primary PR on 2026-11-06. This supersedes the previous launch's stop instruction for this launch only.
+
+**Exactly one executable next task: DEV-003B.** Implement an explicit story-level Fork from any accepted turn into a separately listed/resumable adventure, copying the complete supported Story-only zero-effects prefix and baseline atomically with source-version/epoch fencing and unchanged-request recovery. Scope audit: [DEV-003B](./requirements/DEV-003B.md). DEV-003A and the verified-main counts above remain unchanged. No other child or B9-D12 work starts. Merge/final closure requires verbal approval of the named PR after implementation and review.

@@ -3,8 +3,10 @@
   import { host } from './host';
   import { StoryCoordinator, type CoordinatorState } from './coordinator';
   import type { Snapshot } from './library';
+  import ForkDialog from './ForkDialog.svelte';
 
   export let snapshot: Snapshot;
+  export let onFork: (snapshot: Snapshot) => void;
   export let mobileHidden = false;
   export let onUpdate: (value: { snapshot: Snapshot; status: string; locked: boolean }) => void;
   let coordinator: StoryCoordinator;
@@ -13,6 +15,26 @@
   let candidateSection: HTMLElement;
   let acceptButton: HTMLButtonElement;
   let stopButton: HTMLButtonElement;
+  let forkButton: HTMLButtonElement;
+  let forkOpen = false;
+  let publish: (next: CoordinatorState) => void;
+
+  function openFork()
+  {
+    if (!state || state.phase !== 'idle' || state.refreshing || state.projection.blocked) return;
+    forkOpen = true;
+    publish(state);
+  }
+
+  async function closeFork()
+  {
+    forkOpen = false;
+    publish(coordinator.state);
+    await coordinator.refresh();
+    await tick();
+    if (!forkButton?.disabled) forkButton?.focus();
+    else document.querySelector<HTMLElement>('h1')?.focus();
+  }
 
   async function generate()
   {
@@ -51,7 +73,7 @@
   function handleInputKey(event: KeyboardEvent)
   {
     if (!(event.ctrlKey || event.metaKey) || event.key !== 'Enter') return;
-    if (state?.phase !== 'idle' || state.refreshing) return;
+    if (forkOpen || state?.phase !== 'idle' || state.refreshing) return;
     event.preventDefault();
     void generate();
   }
@@ -61,7 +83,7 @@
     const channel = typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel('lorebound-story-changes');
     let lastVersion = snapshot.adventure.version;
     let lastEpoch = snapshot.epoch;
-    const publish = (next: CoordinatorState) =>
+    publish = (next: CoordinatorState) =>
     {
       if (next.snapshot.adventure.version !== lastVersion || next.snapshot.epoch !== lastEpoch)
       {
@@ -78,14 +100,17 @@
         : next.phase === 'blocked' ? 'Read only'
         : next.error ? 'Needs attention'
         : next.input ? 'Unsaved input' : '✓ Saved';
-      onUpdate({ snapshot: next.snapshot, status, locked: next.phase === 'saving' || next.phase === 'uncertain' });
+      onUpdate({ snapshot: next.snapshot, status, locked: forkOpen || next.phase === 'saving' || next.phase === 'uncertain' });
     };
     coordinator = new StoryCoordinator(snapshot, {
       storage: host,
       onChange: publish
     });
     publish(coordinator.state);
-    const refresh = () => coordinator.requestRefresh();
+    const refresh = () =>
+    {
+      if (!forkOpen) coordinator.requestRefresh();
+    };
     if (channel) channel.onmessage = event =>
     {
       if (event.data?.adventureId === snapshot.adventure.id) refresh();
@@ -105,6 +130,9 @@
     <p class="eyebrow">Your adventure</p>
     <h1 tabindex="-1">{snapshot.adventure.title}</h1>
     {#if state}
+      {#if state.snapshot.turns.length > 0}
+        <button class="quiet" bind:this={forkButton} onclick={openFork} disabled={forkOpen || state.phase !== 'idle' || state.refreshing}>Fork story</button>
+      {/if}
       {#if state.snapshot.turns.length === 0}
         <div class="empty-story"><span aria-hidden="true">✧</span><p>No passages yet.</p><p class="supporting">A blank beginning, ready for your story.</p></div>
       {/if}
@@ -143,7 +171,7 @@
       <div class="composer-input">
         <label class="sr-only" for="story-input">Story input</label>
         <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
-          disabled={!state || state.phase !== 'idle'}
+          disabled={forkOpen || !state || state.phase !== 'idle'}
           oninput={(event) => coordinator.setInput(event.currentTarget.value)}
           onkeydown={handleInputKey}></textarea>
         {#if state?.phase === 'ready' || state?.phase === 'saving' || state?.phase === 'uncertain'}
@@ -161,10 +189,14 @@
         {:else if state?.phase === 'blocked'}
           <div class="pending-overlay"><p>Story writes are unavailable.</p><button onclick={() => coordinator.refresh()}>Reload story</button></div>
         {:else}
-          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={!state?.input.trim() || state.refreshing}>↑</button>
+          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={forkOpen || !state?.input.trim() || state.refreshing}>↑</button>
         {/if}
       </div>
       <p class="composer-hint">{state?.phase === 'idle' ? 'Ctrl / ⌘ + Enter to generate. Input is not saved until you accept.' : 'Only accepted passages are saved. World tracking is not available yet.'}</p>
     </div>
   </div>
 </main>
+
+{#if forkOpen && state}
+  <ForkDialog snapshot={state.snapshot} onClose={closeFork} onCreated={onFork} />
+{/if}

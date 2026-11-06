@@ -1,0 +1,15 @@
+before {
+  tag: 'DIALOG',
+  text: 'Fork story Create a separate adventure throug',
+  inside: true
+}
+Tab {
+  tag: 'DIALOG',
+  text: 'Fork story Create a separate adventure throug',
+  inside: true
+}
+Shift+Tab {
+  tag: 'DIALOG',
+  text: 'Fork story Create a separate adventure throug',
+  inside: true
+}

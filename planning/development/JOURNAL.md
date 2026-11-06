@@ -265,3 +265,29 @@ tags:
 - Updated root/planning agent instructions, development guide/runbook and feature update protocol: complete implementation/checks/review, ask once for verbal approval to finalise and merge the named PR, then add final reconciliation details on its existing branch, review/check its final head, merge once and provide the usual report. Routine closure changes within that scope need no second approval.
 - Prepared closure records are explicitly effective only on confirmed merge; actual merge SHA/CI are recorded in the PR and final report. This preserves truthful main/PR separation without a routine post-merge repository write or separate reconciliation PR.
 - Older after-merge reconciliation directions are superseded prospectively. Existing merged PRs and dated evidence remain unchanged. No later feature slice is selected or started by this workflow update.
+
+### 2026-11-06 — DEV-003B authorised launch and dependency audit
+
+- User explicitly launched the next task, requested remaining-requirement/dependency audit and one bounded child, implementation/tests/independent review and one primary PR with verbal approval before finalisation/merge.
+- Selected independent committed Story-prefix Fork. Shared drafts need a new draft lifecycle; committed Undo/history edits must decouple version from turn count. Fork reuses the existing adventure-scoped composite keys and append-only histories without schema change. This is an accepted dependency subset, not a change to parent scope/order authority.
+- Read IDEA-0011, B4-D05, related history/storage contracts and existing store/coordinator/UI. Independent reviewer confirms eligible committed boundaries, full current supported prefix, no mutable sharing, atomic expected-source-version/epoch fence and receipt recovery before source revalidation but after epoch validation.
+- Branch `feat/dev-003b-story-fork`, base `f66b169`. B9-D12 remains deferred. Nonempty effects and unbuilt world/context/plugin state are excluded and fail closed. No full IDEA certification or later child follows.
+
+### 2026-11-06 — DEV-003B implementation and first verification findings
+
+- Implemented typed Fork storage/service/browser boundary, independently copied baseline/turn/passage rows, lightweight receipt, captured source version and epoch; current source history is validated and unsupported effects fail closed. Fork and append share the same adventure-scoped receipt namespace; reviewer caught cross-kind operation-ID reuse in the first draft, now rejected both ways.
+- Added explicit story-level native Fork dialog and accepted-turn selection, frozen request/recovery, coherent destination refetch and guards against pending Story work/navigation results. No provisional/input data crosses into the new adventure.
+- Local TypeScript 36 cases, Go/SQLite suite and Go vet pass. Default Go build cache writes failed read-only, so lead used `GOCACHE=/tmp/lorebound-dev003b-go-cache`; reviewer used approved existing cache access. Frontend typecheck/build pass.
+- First actual Firefox suite found Escape focus restoration lost when immediate canonical refetch disabled the triggering action. Fixed close ordering to refresh before restoring focus (with heading fallback for blocked state); subsequent real suite is being rerun. No failed run is counted as PASS.
+
+### 2026-11-06 — DEV-003B corrected-source real verification
+
+- Lead final corrected-source suite PASS: actual Firefox → Wails → Go → disposable SQLite on port 18085, exact host restart and complete history comparison; eight Dark/Bright viewport checks. Stored [evidence](./evidence/DEV-003B.md). Existing origin/security, Story, Retry and uncertain-save regressions also pass.
+- Independent full suite passed, then additional held-request probe found disabled controls let focus leave the dialog while saving. Added phase-aware focus with disposed/stale-update guards and a held-real-copy-response regression. Final lead suite verifies Tab/Shift+Tab while saving and focus on Recover after lost response; corrected modal screenshots inspected. Reviewer reruns final source independently.
+- Local gate totals: 36 TS cases; 19 Go test functions/62 named nested cases; Go vet; zero typecheck diagnostics; frontend and headless binary build. Requirements inventory now records 115 rows across nine IDEAs (eight new IDEA-0011 rows scoped/unmerged); three formal certified rows/zero whole ideas remain unchanged. No primary PR created or merge authorised yet.
+
+### 2026-11-06 — DEV-003B independent scoped PASS and publication preparation
+
+- Independent reviewer `/root/fork_review` audited accepted requirements and final source, independently reran 36 TS cases, 19 Go functions/62 named nested cases, typecheck/vet, the real browser/Go/SQLite/restart suite on separate port 18086 and direct held-request focus probe. Scoped PASS; [review with hashes and independent logs](./evidence/DEV-003B-review.md). No remaining scoped implementation blocker.
+- Final named-handler/style changes preserve behavior and pass typecheck/units/build; reviewer inspected them and recorded final hashes. Required published-head CI will execute the whole real browser suite on that exact source. Main remains `f66b169`; eight partial ideas/zero complete and three certified rows unchanged.
+- Prepared [single-primary-PR closure scope](./evidence/DEV-003B-reconciliation.md), explicitly pending verbal approval and effective only upon confirmed checked-head merge. No second reconciliation PR, full-IDEA certification, later child or B9-D12 work.

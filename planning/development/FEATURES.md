@@ -21,7 +21,7 @@ verified_idea_count: 0
 | Fully VERIFIED complete ideas | **0** |
 | PARTIAL foundation evidence | **8**: IDEA-0002, IDEA-0004, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053 from merged PRs #4/#6/#8/#10 and earlier Gate 0 PR #3 |
 | Remaining notes with no feature-level implementation evidence | **44** |
-| Accepted **atomic** requirements inventoried | **95 DEV-002 draft records across seven IDEAs, plus 12 IDEA-0004 rows in the DEV-003 scoped audit** (107 recorded rows across eight IDEAs); DEV-002C reconciles 57 First-bearing rows; whole-IDEA inventory/certification remains incomplete |
+| Accepted **atomic** requirements inventoried | **95 DEV-002 draft records across seven IDEAs, plus 12 IDEA-0004 rows in the DEV-003 scoped audit** plus eight scoped/unmerged IDEA-0011 rows in DEV-003B (**115 recorded rows across nine IDEAs**); DEV-002C reconciles 57 First-bearing rows; whole-IDEA inventory/certification remains incomplete |
 | Atomic requirements marked VERIFIED | **3 formally certified**: IDEA-0006/R01–R03 from PR #4. DEV-002B/C and DEV-003A have tested scoped requirement coverage; no extra whole-row certification is inferred from mixed/later or empty-effect coverage |
 | New feature proposals awaiting approval | **0 recorded** |
 | Deferred spatial migration | **B9-D12 DEFERRED**, not an automatically accepted requirement |
@@ -36,7 +36,7 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | --- | --- | --- |
 | **M0** | Real Wails/browser/Go + Go SQLite technical host/storage foundation | [Gate 0 merged PR #3](https://github.com/Levelleor/lorebound/pull/3), extended by [DEV-002A merged PR #4](https://github.com/Levelleor/lorebound/pull/4); broader host/storage requirements remain open |
 | **M1** | One accepted, reopened Story-mode turn and basic adventure entry | **DEV-002**: **VERIFIED & MERGED bounded scope**, A/B/C merged with final-head CI and independent review; [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
-| **M2** | Edit, Retry, Undo, Fork, current-history recovery | Provisional Retry verified/merged in [DEV-003A PR #10](https://github.com/Levelleor/lorebound/pull/10); remaining children unstarted |
+| **M2** | Edit, Retry, Undo, Fork, current-history recovery | Provisional Retry verified/merged in [DEV-003A PR #10](https://github.com/Levelleor/lorebound/pull/10); DEV-003B Fork in progress; other children unstarted |
 | **M3** | Real browser-side model providers, streaming, interpretation and routing | Depends on M1 contract; deterministic mocked scenarios plus separate provider smoke |
 | **M4** | Lorebook, derived context/memory and author notes | Depends on canonical history and provider context |
 | **M5** | Characters, playing-as, scene, statuses, items/equipment | Depends on stable IDs, current events |
@@ -61,7 +61,7 @@ Merged DEV-002C extends the same seven partial ideas with safe deferred invalida
 | [IDEA-0007](../production/Character%20Creation%20and%20Starting%20Choices.md) | Character creation and starting choices | S10 | M5 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0008](../production/Reusable%20Scenario%20Templates%20and%20Placeholders.md) | Reusable scenario templates | S02 | M7 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0010](../production/Narration%20Style%20and%20Perspective%20Controls.md) | Narration style and perspective controls | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0011](../production/Manual%20Generation%20Branches.md) | Manual generation branches | S02 | M2 | **NOT STARTED** | Not yet inventoried | None |
+| [IDEA-0011](../production/Manual%20Generation%20Branches.md) | Manual generation branches | S02 | M2 | **IN PROGRESS / UNMERGED** | [DEV-003B scoped inventory](./requirements/DEV-003B.md) | Implementation/testing on `feat/dev-003b-story-fork`; main unchanged |
 | [IDEA-0012](../production/Cloud%20LLM%20Provider%20Connectors.md) | Cloud LLM provider connectors | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0013](../production/Local%20LLM%20Server%20Connections.md) | Local LLM server connections | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0014](../production/Provider%20Connection%20Profiles%20and%20Discovery.md) | Provider profiles and discovery | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
@@ -190,3 +190,7 @@ The user authorised the recorded next action: commit/push/PR and final-head CI. 
 ### 2026-11-05 — DEV-003A verified and merged
 
 [PR #10](https://github.com/Levelleor/lorebound/pull/10) merged as `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145`. Final head `75384544377b4de982514549976619ad368b5f56` and merged main have identical tree; [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42141159906) and independent source/unit/runtime review cover the bounded simulated Story Retry behavior. IDEA-0004 is now PARTIAL, giving **eight PARTIAL ideas, 44 without feature-level implementation evidence, zero complete IDEAs**. Its R01–R05 scoped evidence does not certify nonempty effects or every full original requirement; the three formally certified IDEA-0006 rows remain the formal count. All 52 original notes remain in production. Parent DEV-003 is PARTIAL; no later child was selected or started. Earlier local/unmerged entries above retain their dated historical meaning.
+
+### 2026-11-06 — DEV-003B authorised launch (unmerged)
+
+IDEA-0011's bounded Story-only committed-prefix Fork is IN PROGRESS on `feat/dev-003b-story-fork`; [scoped inventory](./requirements/DEV-003B.md). Existing IDEA-0004/R09 and storage/history subsets are related. Main retains eight PARTIAL ideas, zero complete ideas and three formally certified IDEA-0006 rows. Full world/Lorebook/memory/plugin copying, rename/delete operations and other DEV-003 children remain later. No original idea is archived.

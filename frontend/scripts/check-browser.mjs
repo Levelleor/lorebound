@@ -4,6 +4,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { exerciseStory } from './check-story.mjs';
 import { exerciseStoryIntegration } from './check-story-integration.mjs';
+import { exerciseFork } from './check-story-fork.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -154,6 +155,7 @@ try {
     console.log('PASS: real bridge rejects wrong library epoch; two independent adventures remain intact');
     await exerciseStory(page, base, artifacts, firstID);
     page = await exerciseStoryIntegration(page, base, artifacts, firstID);
+    await exerciseFork(page, base, artifacts, firstID);
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};

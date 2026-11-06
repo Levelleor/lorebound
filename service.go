@@ -18,3 +18,6 @@ func (s *LibraryService) Create(req store.CreateRequest) (store.CreateResult, er
 func (s *LibraryService) Commit(req store.CommitRequest) (store.CommitResult, error) {
 	return s.store.Commit(context.Background(), req)
 }
+func (s *LibraryService) Fork(req store.ForkRequest) (store.ForkResult, error) {
+	return s.store.Fork(context.Background(), req)
+}

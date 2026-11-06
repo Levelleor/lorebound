@@ -3,7 +3,7 @@ type: development-task-queue
 status: current
 created: "2026-11-03"
 updated: "2026-11-06"
-current_next_task: "DEV-003"
+current_next_task: "DEV-003B"
 ---
 
 # Lorebound — Development Task Queue
@@ -22,7 +22,7 @@ Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies,
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
 | **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | **VERIFIED & MERGED — bounded Story-only zero-effects scope** | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C merged [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
-| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A verified/merged, remaining children unstarted | [Merged PR #10](https://github.com/Levelleor/lorebound/pull/10) |
+| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A verified/merged, DEV-003B IN PROGRESS; other children unstarted | [Merged PR #10](https://github.com/Levelleor/lorebound/pull/10) |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
 | **DEV-006** | Universal characters, Playing As, status, anatomy, items and equipment | DEV-002; supported typed entity events | IDEA-0007, IDEA-0026, IDEA-0027, IDEA-0029–IDEA-0031, IDEA-0034, IDEA-0064 | QUEUED | None |
@@ -113,7 +113,7 @@ Required evidence: existing build/typecheck, TS unit and real SQLite contracts; 
 
 ### DEV-003 — Retry, drafts, Undo/Fork and current-history editing
 
-Status: **PARTIAL; DEV-003A VERIFIED & MERGED, remaining children unstarted**. User authorised launch on 2026-11-05. DEV-002 dependency satisfied; [audit and child boundary](./requirements/DEV-003.md). Shared drafts, temporary editor undo, committed Undo, Fork and historical edits remain unstarted; completing Retry does not complete this parent.
+Status: **PARTIAL; DEV-003A VERIFIED & MERGED, DEV-003B IN PROGRESS / UNMERGED**. User authorised launch on 2026-11-05. DEV-002 dependency satisfied; [audit and child boundary](./requirements/DEV-003.md). DEV-003B now implements bounded Story-prefix Fork; shared drafts, temporary editor undo, committed Undo and historical edits remain unstarted; completing Retry does not complete this parent.
 
 ### DEV-003A — Replace the provisional Story candidate on Retry
 
@@ -123,7 +123,7 @@ Scope: bounded portions of IDEA-0004/R01–R05 with existing coordinator/commit 
 
 [Executed evidence](./evidence/DEV-003A.md): zero build/typecheck diagnostics; 30 TypeScript cases; 14 Go functions/43 SQLite subcases; Go vet; lead/reviewer real Firefox/Wails/Go/SQLite, failure/recovery and exact restart; eight responsive theme/width checks PASS. [Independent review PASS](./evidence/DEV-003A-review.md). [Final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42141159906). No remaining scoped blocker.
 
-User reported the merge and then explicitly instructed “do not start the next slice, finish this one and provide the report as usual”. This launch finishes DEV-003A records/report only. Next action after finalisation: **DEV-003**, on separate user authorisation, select its next bounded child; no child has been selected or started here.
+User reported the merge and then explicitly instructed “do not start the next slice, finish this one and provide the report as usual”. That previous launch finished DEV-003A records/report only. Its next action after finalisation was: **DEV-003**, on separate user authorisation, select its next bounded child; no child has been selected or started here.
 
 ## Deferred and cross-cutting gates
 
@@ -151,3 +151,9 @@ Next action: ...
 ```
 
 The next executable action must always be copied into [NOW.md](./NOW.md), with no competing “top priority” in another file.
+
+### DEV-003B — Independent committed Story-prefix Fork
+
+Status: **IN PROGRESS**, owner Codex; independent reviewer `/root/fork_review`; branch `feat/dev-003b-story-fork`. User launch 2026-11-06 explicitly authorises this bounded child and primary PR. Dependency subset: merged DEV-002A/B/C and DEV-003A provide independently scoped persistence, current structured history, replay and commit guards. Full Duplicate/export, Undo and world systems are not prerequisites for this supported Story-only prefix.
+
+Acceptance: any accepted turn can seed an independently listed/resumed adventure with exactly its supported prefix/baseline, source intact, independent continuation, atomic rollback, source version/epoch fencing and same-request recovery. No drafts/provisional copying, revision archive, branch tree, nonempty effects or B9-D12. [Requirement audit](./requirements/DEV-003B.md). Build, units, real SQLite, actual Firefox/Wails, exact restart, failure/recovery, eight visual checks and independent review required. Merge approval pending.
