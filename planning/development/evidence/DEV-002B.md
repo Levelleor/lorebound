@@ -1,30 +1,20 @@
 ---
 type: development-evidence
-status: verified-merged-scope
+status: verified-merged-scoped
 created: "2026-11-04"
-updated: "2026-11-05"
+updated: "2026-11-06"
 task: "DEV-002B"
-branch: "feat/dev-002b-story-turn"
-base_commit: "858806acc15aa54350af11535e59a8d82e73b7a5"
 ---
 
-# DEV-002B — First provisional and accepted Story turn
+# DEV-002B — Provisional and accepted Story turn
 
-**Bounded implementation, independent verification and final-head CI PASS; PR MERGED.** [PR #6](https://github.com/Levelleor/lorebound/pull/6). Implementation commit `daaff20384d90129e8886293829fa77953a31409`; final head `ec7537c982e4dc91fe2f50faa11e87c983825176`; merged main `f0c57b8b808308534cda1c3cb862262c813f5d11` with identical tree. [Post-merge reconciliation](./DEV-002B-reconciliation.md). The user explicitly authorised DEV-002B on 2026-11-04. This is one bounded task, not a full IDEA completion or DEV-002C launch. [Prerequisite audit](./DEV-002B-requirements-audit.md), [independent review](./DEV-002B-review.md), [task acceptance](../TASKS.md#dev-002b--first-provisional-and-accepted-story-turn-merged) and [parent inventory](../requirements/DEV-002.md).
+[PR #6](https://github.com/Levelleor/lorebound/pull/6) merged on 2026-11-05 as `f0c57b8b808308534cda1c3cb862262c813f5d11`. Checked head: `ec7537c982e4dc91fe2f50faa11e87c983825176`; reviewed and merged trees match. [Final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42038112388).
 
-## Implemented scope and contracts
+Story input produces an explicitly simulated fixed continuation. Authored/generated passages remain provisional until explicit Accept; Stop/Discard never writes them. Go atomically saves separate structured passages, the ordered turn, empty effects, version and receipt. TypeScript prepares/replays; SQLite remains Go-owned. Schema/wire version 2 protects old blank-only clients and preserves existing blank adventures through a nonspatial upgrade.
 
-The actual app accepts characterless multiline Story input, runs a visibly **simulated deterministic fixed continuation**, displays both authored/generated passages provisionally, and supports Stop, Discard and explicit Accept. Only acceptance calls the real Wails `LibraryService.Commit` and atomically saves the ordered turn, two distinct structured passages, empty event batch, version and receipt. It does not call a live AI model or claim generative quality.
+## Requirement coverage
 
-TypeScript owns structured document preparation, candidate lifecycle and pure reconstruction from the durable empty Turn-0 baseline/current turns. Paragraphs, text and hard breaks roundtrip; literal HTML stays text. Go owns technical schema/identity/order/reference/version/epoch validation and the SQLite transaction. Reads include baseline, current passages/events and version in one transaction. There are no revision archives, persisted replay checkpoints, fabricated entities or competing world store.
-
-Story receipts use an adventure-scoped operation key and immutable request fingerprint. Identical retry returns the original result even after later commits; altered payload reuse rejects. A receipt is followed by a current authoritative read. Uncertain writes retain the original request and block new submissions until recovery. Stale/version or epoch conflicts refetch and retain live authored input for a fresh decision, with no automatic rebase/resubmit. Idle focus/BroadcastChannel hints refetch without treating messages as canon or swallowing typing. Disposed/stopped generation ignores late results; cancellation cannot undo an already durable write.
-
-Wire version **2** intentionally rejects old blank-only readers. Baseline version remains **1**. The atomic **nonspatial** database v1→v2 extension adds Story tables while preserving existing blank adventures, baseline, epoch and creation receipts. Unsupported libraries are not replaced. B9-D12 spatial migration remains deferred.
-
-## Requirement traceability and evidence limits
-
-Rows below are **merged, scoped tested behaviour**, not whole-IDEA certification. Exactly three earlier IDEA-0006 rows remain verified on merged main; the 95-row parent inventory retains broader unreviewed/Later obligations.
+[Accepted-source audit](../requirements/DEV-002B.md) and [parent inventory](../requirements/DEV-002.md) retain the requirements and exclusions.
 
 | Requirements | Tested scope | Source / executed evidence |
 | --- | --- | --- |
@@ -36,31 +26,12 @@ Rows below are **merged, scoped tested behaviour**, not whole-IDEA certification
 | IDEA-0051/R01–R08 | Adventure isolation, typed one-call append, real transaction/receipt rollback, scoped idempotency, stale races, coherent read, reopen | `internal/store/story_test.go` (9 new top-level functions); actual Firefox/Wails/Go/SQLite browser/restart |
 | IDEA-0006/R04/R09/R11 and IDEA-0053/R01–R05/R10/R15 subsets | Baseline protection/no invented actor, host/storage authority, no provider prerequisite, tab/process persistence, browser restrictions and responsive controls | Existing blank tests retained; Story suite; actual Host/Origin/preflight/WebSocket checks; no full host lifecycle/platform claim |
 
-**No supported nonempty world-event reducer is implemented.** `EventEnvelope` defines the future typed boundary and stored unknown effects are retained for safe failure, but this slice accepts only `events: []`. Empty arrays cannot prove supported world-event roundtrip, reduction or source association: IDEA-0039/R02/R07 and the event-association part of IDEA-0040/R04 remain partial. Optional-plugin compatibility is not implemented. No whole IDEA is archived or fully VERIFIED.
+Empty effects do not certify nonempty reduction/provenance: IDEA-0039/R02/R07 and event-association parts of IDEA-0040/R04 remain partial. Seven whole IDEAs were partial at this milestone; formal certification remained the three IDEA-0006 rows.
 
-## Executed verification
+## Review and verification
 
-Linux, Node **24.14.0**, Go **1.27.3**, real Playwright Firefox; Node added to PATH. Lead cache `/tmp/lorebound-dev002b-go-cache`, reviewer cache `/tmp/lorebound-dev002b-review-go-cache`. All databases were temporary. No user library or live model was used. The execution host restarted during verification; the incomplete pending run was not counted, and the final build/browser/restart run was repeated successfully afterward.
+Independent `requirements_audit` and `final_review` passed scoped source/runtime review. Corrected findings: idle refresh preserves newly typed input, Story receipts are adventure-scoped, uncertain saves say “Save unconfirmed”, and creation-receipt recovery refetches current history. Regression sources: [story tests](../../../frontend/tests/story.test.ts), [SQLite tests](../../../internal/store/story_test.go), [Story browser scenarios](../../../frontend/scripts/check-story.mjs).
 
-| Gate | Result | Actual method / evidence |
-| --- | --- | --- |
-| Build/typecheck | PASS | `npm --prefix frontend run build`, `npm --prefix frontend run check` (0 errors/warnings), `CGO_ENABLED=0 go build -tags server -o bin/lorebound .`; `go vet -tags server ./...` |
-| TypeScript unit | PASS, 16 cases | `node --test --test-isolation=none frontend/tests/*.test.ts`; [retained output](./DEV-002B/typescript-tests.log). Provider/storage fixtures explicitly simulated |
-| SQLite contracts | PASS, 14 top-level functions / 43 subcases | `CGO_ENABLED=0 go test -count=1 -tags server -v ./...`; [retained output](./DEV-002B/sqlite-tests.log). Includes rollback, original receipt, concurrent writes/read consistency, malformed payloads, old-client rejection, upgrade success/failure and scoped IDs |
-| Real Wails/Go/SQLite + browser | PASS | `LOREBOUND_ARTIFACT_DIR=/tmp/dev002b-browser-evidence bash scripts/verify-host.sh`; [lead output](./DEV-002B/browser.log), disposable port 18080 |
-| Failure/recovery | PASS | Real commit followed by deliberately dropped response, same-payload recovery with no duplicate; two real browser tabs reject stale acceptance; Stop/Discard preserve durable state. Provider failure and abort-ignoring late replies are unit fixtures |
-| Browser/process restart | PASS | Fresh browser after host restart compares exact library identity, versions, both passage documents/IDs/order and empty effects; unrelated blank adventure remains blank |
-| Visual/responsive | PASS, scoped | Real 390/768/1024/1440 Dark/Bright screenshots; 48px header, ≤672px reader, 320px rail, fixed composer, no horizontal overflow, mobile view switch and keyboard focus/acceptance |
-| Security/platform | PASS / NOT RUN | Origin/Host/fetch-metadata/preflight/WebSocket rejection and literal-HTML-as-text pass; Windows/macOS runtime and packaging NOT RUN |
-| Independent review | PASS, scoped | [Source/test review](./DEV-002B-review.md), fresh independent unit/Go/check/vet; separate real browser run on port 18081; [independent output](./DEV-002B/independent-browser.log) |
-| GitHub CI | PASS at final PR head | [Final-head run 42038112388](https://github.com/Levelleor/lorebound/actions/runs/42038112388) at `ec7537c982e4dc91fe2f50faa11e87c983825176`; build/typecheck, 16 TS cases, Go vet/SQLite, Firefox/restart, artifact upload all succeeded; job steps/logs inspected. A separate main-push run is not claimed |
+Linked CI covers build/typecheck, TS, Go vet/real SQLite, actual Linux Firefox/Wails/Go acceptance/recovery/conflicting tabs and exact restart. Independent visual review covered responsive Dark/Bright states and keyboard acceptance. Fault interception is simulated over real storage; generation is a fixed fixture. Other modes, live providers, nonempty effects, durable drafts, editing/Undo/Fork, broader host lifecycle and Windows/macOS packaging were outside this child. B9-D12 remains deferred.
 
-Representative screenshots: [mobile proposed/focus](./DEV-002B/story-proposed-dark-390.png), [desktop proposed](./DEV-002B/story-proposed-dark-1440.png), [mobile accepted](./DEV-002B/story-accepted-dark-390.png), [Bright desktop accepted](./DEV-002B/story-accepted-bright-1440.png), [uncertain save](./DEV-002B/story-save-unconfirmed.png), [stale-tab conflict](./DEV-002B/story-conflict.png). Full width/theme matrix is generated by the CI artifact workflow. Approved font fallback stacks remain in use; the full appearance-settings UI is later work.
-
-## Review corrections and limitations
-
-Independent review identified and verified corrections for input lost during background refresh, globally scoped Story operation IDs and a misleading “Not saved” label during uncertain saves. The lead also made creation receipt recovery refetch current history. The first browser pass exposed a test-only focus-visible assumption; actual Tab/Shift+Tab now exercises keyboard focus. An ineffective runtime-method replacement fixture was replaced with explicit HTTP interception and a fixture-hit assertion. The final complete run passed.
-
-Live providers, streaming configuration, nonempty world effects, map, Do/Say/Continue, candidate Retry, Undo/Fork/history editing, durable drafts, full Quick Start, backup/restore and platform lifecycle remain outside this task. Unsaved input/candidates are not promised to survive tab closure. The simulated response is a fixed fixture. Document bounds are technical (20,000 codepoints per passage, 1,000 paragraphs, 2,000 inline nodes), not a complete editor feature. **No spatial migration work.**
-
-**Next action:** complete post-merge record maintenance, then launch DEV-002C only with separate authorisation. DEV-002C has not started.
+Historical reconciliation was merged in PR #7; future closure uses one primary PR. Execution logs and temporary captures belong in CI.

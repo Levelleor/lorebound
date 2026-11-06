@@ -87,6 +87,8 @@ Recommended presentation defaults **when features exist**: Dark, Comfortable, de
 
 ## Future visual QA (not yet executed)
 
-At **390px, 768px, 1024px and 1440px**, verify Dark and Bright at minimum. Capture browser screenshots and record **PASS / FAIL / NOT RUN** for shell geometry, scroll zones, type, colour, responsive switch, docked composer, candidate/confirmed differentiation, dialog focus/Escape, keyboard controls outside map, disabled states, current-context consistency, truthfulness of status labels and non-overflow. Track intentional deviations from the [visual contract](./Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md). Do not claim this reference was rendered or tested simply because the Markdown/CSS was committed.
+At **390px, 768px, 1024px and 1440px**, automate relevant Dark/Bright checks in CI and review its temporary browser captures. Record a concise PR result and any limits for shell geometry, scroll zones, type, colour, responsive switch, docked composer, candidate/confirmed differentiation, dialog focus/Escape, keyboard controls outside map, disabled states, current-context consistency, truthfulness of status labels and non-overflow. Track intentional deviations from the [visual contract](./Lorebound%20Command%20Citadel%20Visual%20Design%20Contract.md). Do not claim this reference was rendered or tested simply because the Markdown/CSS was committed.
 
 **Authority:** User-approved 2026-11-03 visual style from uploaded design-only kit. B1–B9/C domain and persistence approvals remain operative. **Deferred B9-D12 spatial migration stays deferred.**
+
+Verification follows the [CI/evidence policy](../development/README.md#ci-and-evidence-policy). Keep generated captures in short-lived CI artifacts; do not commit screenshots or repeat full local browser runs for routine review/documentation changes.

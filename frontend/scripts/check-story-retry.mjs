@@ -9,6 +9,7 @@ export async function exerciseRetry(page, read)
   await input.fill('Keep this input after stopping a replacement.');
   await page.getByRole('button', { name: 'Generate continuation', exact: true }).click();
   await retry.waitFor();
+  await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
   const firstId = await proposal.getAttribute('data-turn-id');
   await retry.focus();
   await page.keyboard.press('Enter');
@@ -34,9 +35,9 @@ export async function exerciseRetry(page, read)
   await input.waitFor();
   await page.waitForTimeout(550);
   assert.equal(await proposal.count(), 0, 'Reload abandons replacement');
-  assert.equal(await input.inputValue(), '', 'No durable draft recovery is claimed');
+  assert.equal(await input.inputValue(), 'Keep this input after stopping a replacement.', 'Saved authored input survives; generated candidates do not');
   assert.deepEqual(await read(), before);
-  console.log('PASS: real browser keyboard Retry immediately invalidates; Stop retains input; reload abandons replacement without a durable write');
+  console.log('PASS: real browser keyboard Retry immediately invalidates; Stop retains input; reload restores saved input and abandons generated replacement');
 }
 
 export async function replaceProposal(page)

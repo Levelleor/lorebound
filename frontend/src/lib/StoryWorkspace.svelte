@@ -173,11 +173,16 @@
         : next.refreshing ? 'Refreshing…'
         : next.phase === 'blocked' ? 'Read only'
         : next.error ? 'Needs attention'
-        : next.input ? 'Unsaved input' : '✓ Saved';
+        : next.draftStatus === 'loading' ? 'Loading draft…'
+        : next.draftStatus === 'saving' ? 'Saving draft…'
+        : next.draftStatus === 'error' ? 'Draft needs attention'
+        : next.draftStatus === 'unsaved' ? 'Unsaved input'
+        : next.input ? 'Draft saved' : '✓ Saved';
       onUpdate({ snapshot: next.snapshot, status, locked: forkBusy || next.phase === 'saving' || next.phase === 'uncertain' });
     };
     coordinator = new StoryCoordinator(snapshot, {
       storage: host,
+      draftStorage: host,
       onChange: publish
     });
     publish(coordinator.state);
@@ -286,7 +291,11 @@
           <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={forkBusy || !state?.input.trim() || state.refreshing}>↑</button>
         {/if}
       </div>
-      <p class="composer-hint">{state?.phase === 'idle' ? 'Ctrl / ⌘ + Enter to generate. Input is not saved until you accept.' : 'Only accepted passages are saved. World tracking is not available yet.'}</p>
+      <p class="composer-hint" role="status" aria-label="Draft status">{state?.draftError || (state?.draftStatus === 'saved' ? 'Draft saved · Not accepted story.' : state?.draftStatus === 'saving' ? 'Saving draft…' : state?.draftStatus === 'loading' ? 'Loading saved draft…' : 'Input autosaves after a short pause.')}</p>
+      {#if state?.draftError}
+        <button class="quiet" onclick={() => coordinator.draft?.retry()}>Retry draft</button>
+      {/if}
+      <p class="composer-hint">Ctrl / ⌘ + Enter to generate. Only accepted passages join your story. Generation is simulated.</p>
     </div>
   </div>
 </main>

@@ -1,5 +1,6 @@
 import { readCommitResult, readSnapshot, schemaVersion, type CommitRequest, type CommitResult, type Library, type Snapshot } from './library.ts';
 import { documentToText, plainTextToDocument, reconstruct, type Projection, type Turn } from './story.ts';
+import { ComposerDraft, type DraftStatus, type DraftStorage } from './draft.ts';
 
 export interface GenerationInput
 {
@@ -22,10 +23,13 @@ export interface CoordinatorState
   error: string;
   projection: Projection;
   refreshing: boolean;
+  draftStatus: DraftStatus;
+  draftError: string;
 }
 interface Dependencies
 {
   storage: StoryStorage;
+  draftStorage?: DraftStorage;
   generate?: Generator;
   newId?: () => string;
   onChange?: (state: CoordinatorState) => void;
@@ -76,7 +80,10 @@ export class StoryCoordinator
   private disposed = false;
   private abort: AbortController | null = null;
   private pending: CommitRequest | null = null;
+  private draftFlushed = false;
   private refreshRequested = false;
+  readonly draft: ComposerDraft | null;
+  private readonly draftEpoch: string;
 
   constructor(snapshot: Snapshot, dependencies: Dependencies)
   {
@@ -89,12 +96,23 @@ export class StoryCoordinator
       phase: projection.blocked ? 'blocked' : 'idle',
       candidate: null,
       error: projection.error,
-      refreshing: false
+      refreshing: false,
+      draftStatus: dependencies.draftStorage ? 'loading' : 'unsaved',
+      draftError: ''
     };
     this.storage = dependencies.storage;
     this.generator = dependencies.generate ?? simulatedGeneration;
     this.newId = dependencies.newId ?? (() => crypto.randomUUID());
     this.changed = dependencies.onChange ?? (() => {});
+    this.draftEpoch = source.epoch;
+    this.draft = dependencies.draftStorage ? new ComposerDraft(source.epoch, source.adventure.id,
+      dependencies.draftStorage,
+      input =>
+      {
+        if (this.state.phase === 'idle') this.update({ input });
+      },
+      (draftStatus, draftError) => this.update({ draftStatus, draftError })) : null;
+    if (this.state.phase === 'idle') void this.draft?.restore();
   }
 
   private update(next: Partial<CoordinatorState>): void
@@ -118,7 +136,9 @@ export class StoryCoordinator
   setInput(input: string): void
   {
     // Background canonical reads must not swallow edits to noncanonical input.
-    if (this.state.phase === 'idle') this.update({ input, error: '' });
+    if (this.state.phase !== 'idle') return;
+    this.update({ input, error: '' });
+    this.draft?.edit(input);
   }
 
   async generate(): Promise<void>
@@ -221,6 +241,7 @@ export class StoryCoordinator
   async accept(): Promise<void>
   {
     if (this.disposed || this.state.phase !== 'ready' || !this.state.candidate) return;
+    this.draftFlushed = false;
     this.pending = frozenCopy({
       schemaVersion,
       epoch: this.state.snapshot.epoch,
@@ -248,6 +269,13 @@ export class StoryCoordinator
     let committed = false;
     try
     {
+      // Finish older autosaves before the canonical transaction consumes input.
+      if (this.draft && !this.draftFlushed)
+      {
+        await this.draft.flush();
+        if (!this.live(sequence)) return;
+        this.draftFlushed = true;
+      }
       const result = readCommitResult(await this.storage.commit(request));
       if (!this.live(sequence)) return;
       if (result.epoch !== request.epoch || result.adventureId !== request.adventureId
@@ -263,6 +291,7 @@ export class StoryCoordinator
         || !snapshot.turns.some(turn => turn.id === result.turnId)) throw new Error('inconsistent_commit_read');
       const projection = reconstruct(snapshot);
       this.pending = null;
+      this.draft?.consumed();
       this.update({
         snapshot: frozenCopy(snapshot),
         projection,
@@ -320,12 +349,16 @@ export class StoryCoordinator
       if (!this.live(sequence)) return;
       if (snapshot.epoch !== library.epoch || snapshot.adventure.id !== this.state.snapshot.adventure.id) throw new Error('inconsistent_story_read');
       const projection = reconstruct(snapshot);
+      const preserveInput = Boolean(this.state.input && (message || this.state.error
+        || snapshot.adventure.version !== this.state.snapshot.adventure.version
+        || snapshot.epoch !== this.state.snapshot.epoch));
       this.update({
         snapshot: frozenCopy(snapshot),
         projection,
         phase: projection.blocked ? 'blocked' : 'idle',
         error: projection.error || message
       });
+      if (!projection.blocked && !preserveInput && snapshot.epoch === this.draftEpoch) await this.draft?.restore();
     }
     catch
     {
@@ -377,5 +410,6 @@ export class StoryCoordinator
     ++this.sequence;
     this.abort?.abort();
     this.abort = null;
+    this.draft?.dispose();
   }
 }

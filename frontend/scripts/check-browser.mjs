@@ -5,6 +5,7 @@ import path from 'node:path';
 import { exerciseStory } from './check-story.mjs';
 import { exerciseStoryIntegration } from './check-story-integration.mjs';
 import { exerciseFork } from './check-story-fork.mjs';
+import { exerciseDrafts } from './check-story-draft.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -41,6 +42,8 @@ try {
       else await page.locator('.accepted-turn').first().waitFor();
       const snapshot = await page.evaluate(({ epoch, id }) => window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 2, epoch, adventureId: id }), { epoch: initial.epoch, id: adventure.id });
       assert.deepEqual(snapshot, expected.snapshots[adventure.id], 'Exact structured history survives process restart');
+      await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
+      assert.equal(await page.getByLabel('Story input').inputValue(), expected.drafts[adventure.id], 'Latest noncanonical input survives real process restart');
       assert.equal(new URL(page.url()).searchParams.get('adventure'), adventure.id);
       await page.getByRole('button', { name: 'Library', exact: true }).click();
       await page.getByRole('heading', { name: 'Saved adventures' }).waitFor();
@@ -156,13 +159,24 @@ try {
     await exerciseStory(page, base, artifacts, firstID);
     page = await exerciseStoryIntegration(page, base, artifacts, firstID);
     await exerciseFork(page, base, artifacts, firstID);
+    await exerciseDrafts(page, base, artifacts, firstID);
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};
       for (const adventure of library.adventures) snapshots[adventure.id] = await window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 2, epoch: library.epoch, adventureId: adventure.id });
       return snapshots;
     }, finalLibrary);
-    await writeFile(statePath, JSON.stringify({ library: finalLibrary, snapshots }));
+    const drafts = await page.evaluate(async library =>
+    {
+      const drafts = {};
+      for (const adventure of library.adventures)
+      {
+        const draft = await window.wails.Call.ByName('main.LibraryService.ReadDraft', { schemaVersion: 2, epoch: library.epoch, adventureId: adventure.id, target: 'composer_story' });
+        drafts[adventure.id] = draft.text;
+      }
+      return drafts;
+    }, finalLibrary);
+    await writeFile(statePath, JSON.stringify({ library: finalLibrary, snapshots, drafts }));
   }
   assert.equal(await page.getByRole('alert').count(), 0);
   assert.deepEqual(errors, [], 'No uncaught browser exceptions');

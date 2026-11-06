@@ -352,6 +352,11 @@ func (s *Store) commit(ctx context.Context, req CommitRequest, failBeforeReceipt
 	if _, err = tx.ExecContext(ctx, `UPDATE adventures SET version=? WHERE id=?`, req.ExpectedVersion+1, req.AdventureID); err != nil {
 		return CommitResult{}, err
 	}
+	// Consume only the input being accepted. Another context's different latest
+	// draft survives; replaying an old receipt never clears a newer draft.
+	if _, err = tx.ExecContext(ctx, `DELETE FROM drafts WHERE adventure_id=? AND target='composer_story' AND text=?`, req.AdventureID, documentText(req.Turn.Passages[0].Body)); err != nil {
+		return CommitResult{}, err
+	}
 	result := CommitResult{SchemaVersion: SchemaVersion, Epoch: currentEpoch, AdventureID: req.AdventureID, OperationID: req.OperationID, Version: req.ExpectedVersion + 1, TurnID: req.Turn.ID}
 	receiptBytes, err := json.Marshal(result)
 	if err != nil {

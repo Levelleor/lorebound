@@ -14,8 +14,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  repository:
+    name: Repository checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      application: ${{ steps.changes.outputs.application }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Check documentation links and generated-file policy
+        run: python3 scripts/check_repository.py
+      - name: Check shell script syntax
+        run: for script in scripts/*.sh; do bash -n "$script"; done
+      - name: Determine whether application checks are needed
+        id: changes
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          application=false
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]]; then
+            application=true
+          else
+            git diff --name-only -z "$BASE_SHA" HEAD > "$RUNNER_TEMP/lorebound-changed-files"
+            while IFS= read -r -d '' file; do
+              case "$file" in
+                frontend/*|internal/*|scripts/*|.github/*) application=true ;;
+                planning/*|docs/*|*.md|.gitignore) ;;
+                *) application=true ;;
+              esac
+            done < "$RUNNER_TEMP/lorebound-changed-files"
+          fi
+          echo "application=$application" >> "$GITHUB_OUTPUT"
   headless:
     name: Headless host and browser
+    needs: repository
+    if: needs.repository.outputs.application == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     defaults:
@@ -24,7 +61,7 @@ jobs:
     env:
       CGO_ENABLED: '0'
       GOTOOLCHAIN: local
-      LOREBOUND_ARTIFACT_DIR: /tmp/lorebound-evidence
+      LOREBOUND_ARTIFACT_DIR: /tmp/lorebound-artifacts
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -35,32 +72,37 @@ jobs:
           cache-dependency-path: go.sum
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
-          node-version: '24.14.0'
+          node-version-file: .nvmrc
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - name: Record environment
+      - name: Show environment
         run: |
           mkdir -p "$LOREBOUND_ARTIFACT_DIR"
-          { uname -a; go version; node --version; npm --version; } | tee "$LOREBOUND_ARTIFACT_DIR/environment.log"
+          uname -a
+          go version
+          node --version
+          npm --version
       - name: Install, typecheck and build the real host
-        run: bash scripts/build.sh 2>&1 | tee "$LOREBOUND_ARTIFACT_DIR/build.log"
+        run: bash scripts/build.sh
       - name: TypeScript library contracts
-        run: npm --prefix frontend run test:unit 2>&1 | tee "$LOREBOUND_ARTIFACT_DIR/ts-test.log"
+        run: npm --prefix frontend run test:unit
       - name: Static Go checks
-        run: go vet -tags server ./... 2>&1 | tee "$LOREBOUND_ARTIFACT_DIR/vet.log"
+        run: go vet -tags server ./...
       - name: Real SQLite contract and recovery tests
-        run: go test -count=1 -tags server -v ./... 2>&1 | tee "$LOREBOUND_ARTIFACT_DIR/go-test.log"
+        run: go test -count=1 -tags server -v ./...
       - name: Install Firefox and system dependencies
         working-directory: frontend
         run: npx --no-install playwright install --with-deps firefox
       - name: Real browser, host restrictions and restart persistence
         timeout-minutes: 3
-        run: bash scripts/verify-host.sh 2>&1 | tee "$LOREBOUND_ARTIFACT_DIR/host-smoke.log"
-      - name: Retain verification logs
+        run: bash scripts/verify-host.sh
+      - name: Retain browser captures and failure diagnostics
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: headless-verification-${{ github.run_attempt }}
-          path: ${{ env.LOREBOUND_ARTIFACT_DIR }}
-          if-no-files-found: warn
+          name: browser-diagnostics-${{ github.run_attempt }}
+          path: |
+            ${{ env.LOREBOUND_ARTIFACT_DIR }}/*.png
+            ${{ env.LOREBOUND_ARTIFACT_DIR }}/*.log
+          if-no-files-found: ignore
           retention-days: 7

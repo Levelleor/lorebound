@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { documentToText, plainTextToDocument, readDocument, reconstruct, type Turn } from '../src/lib/story.ts';
 import { readSnapshot, type Snapshot, type CommitRequest, type CommitResult } from '../src/lib/library.ts';
 import { StoryCoordinator, type Generator, type StoryStorage } from '../src/lib/coordinator.ts';
+import type { Draft, DraftStorage } from '../src/lib/draft.ts';
 
 function blank(): Snapshot {
   return { schemaVersion: 2, epoch: 'epoch', adventure: { id: 'adventure', title: 'Story', version: 0 }, baseline: { schemaVersion: 1 }, turns: [] };
@@ -25,7 +26,7 @@ function deferred<T>() {
 
 // Deliberately simulated storage for coordinator unit contracts. Actual durable
 // Wails/SQLite operation is verified independently by Go and real browser tests.
-function fixture(generate: Generator = async () => 'A provisional response.') {
+function fixture(generate: Generator = async () => 'A provisional response.', draftStorage?: DraftStorage) {
   let current = blank();
   let ids = 0;
   let readFailure = false;
@@ -58,9 +59,75 @@ function fixture(generate: Generator = async () => 'A provisional response.') {
       return result;
     }
   };
-  const coordinator = new StoryCoordinator(blank(), { storage, generate, newId: () => `id-${++ids}` });
+  const coordinator = new StoryCoordinator(blank(), { storage, draftStorage, generate, newId: () => `id-${++ids}` });
   return { coordinator, storage, writes, head: () => current, replace: (next: Snapshot) => { current = next; }, failRead: (fail: boolean) => { readFailure = fail; }, dropReply: () => { dropResponse = true; }, failCommit: (message: string) => { commitFailure = message; } };
 }
+
+test('IDEA-0005/R05: acceptance waits for the active draft save before consuming its input', async () =>
+{
+  const write = deferred<Draft>();
+  let saved: Draft | null = null;
+  const f = fixture(undefined, {
+    readDraft: async request => ({ ...request, text: '' }),
+    saveDraft: request =>
+    {
+      saved = request;
+      return write.promise;
+    }
+  });
+  f.coordinator.setInput('Accept only after the draft write settles.');
+  await f.coordinator.generate();
+  const accepting = f.coordinator.accept();
+  assert.equal(f.coordinator.state.phase, 'saving');
+  assert.equal(f.writes.length, 0);
+  write.resolve(saved!);
+  await accepting;
+  assert.equal(f.writes.length, 1);
+  assert.equal(f.coordinator.state.input, '');
+  assert.equal(f.coordinator.state.draftStatus, 'saved');
+  f.coordinator.dispose();
+});
+
+test('IDEA-0005/R05: uncertain canonical recovery never resaves consumed input', async () =>
+{
+  let saves = 0;
+  const f = fixture(undefined, {
+    readDraft: async request => ({ ...request, text: '' }),
+    saveDraft: async () =>
+    {
+      ++saves;
+      throw new Error('draft_response_lost');
+    }
+  });
+  f.coordinator.setInput('Recover the same accepted turn.');
+  await f.coordinator.generate();
+  f.dropReply();
+  await f.coordinator.accept();
+  assert.equal(f.coordinator.state.phase, 'uncertain');
+  assert.equal(f.head().adventure.version, 1);
+  await f.coordinator.retrySave();
+  assert.equal(f.coordinator.state.phase, 'idle');
+  assert.equal(f.head().adventure.version, 1);
+  assert.equal(saves, 1, 'A recovery retry must not recreate a draft after its canonical write');
+  f.coordinator.dispose();
+});
+
+test('IDEA-0005/R06: stale canonical recovery retains available input after shared draft consumption', async () =>
+{
+  const f = fixture(undefined, {
+    readDraft: async request => ({ ...request, text: '' }),
+    saveDraft: async request => request
+  });
+  f.coordinator.setInput('The losing tab keeps this text.');
+  await f.coordinator.generate();
+  f.replace({ ...blank(), adventure: { ...blank().adventure, version: 1 }, turns: [turn(1, 'winner')] });
+  await f.coordinator.accept();
+  assert.equal(f.coordinator.state.phase, 'idle');
+  assert.equal(f.coordinator.state.input, 'The losing tab keeps this text.');
+  await f.coordinator.refresh();
+  assert.equal(f.coordinator.state.input, 'The losing tab keeps this text.');
+  f.coordinator.dispose();
+});
 
 test('IDEA-0040/R02: structured prose roundtrips paragraphs, hard breaks, Unicode and literal HTML', () => {
   const text = '<script>alert("text only")</script>\nA line.\n\n\nA second paragraph. 🦉';
