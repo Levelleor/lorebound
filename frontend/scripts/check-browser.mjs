@@ -6,6 +6,7 @@ import { exerciseStory } from './check-story.mjs';
 import { exerciseStoryIntegration } from './check-story-integration.mjs';
 import { exerciseFork } from './check-story-fork.mjs';
 import { exerciseDrafts } from './check-story-draft.mjs';
+import { exerciseInputHistory } from './check-input-history.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -160,6 +161,7 @@ try {
     page = await exerciseStoryIntegration(page, base, artifacts, firstID);
     await exerciseFork(page, base, artifacts, firstID);
     await exerciseDrafts(page, base, artifacts, firstID);
+    await exerciseInputHistory(page, base, artifacts, firstID);
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};

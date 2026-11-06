@@ -1,6 +1,7 @@
 import { readCommitResult, readSnapshot, schemaVersion, type CommitRequest, type CommitResult, type Library, type Snapshot } from './library.ts';
 import { documentToText, plainTextToDocument, reconstruct, type Projection, type Turn } from './story.ts';
 import { ComposerDraft, type DraftStatus, type DraftStorage } from './draft.ts';
+import { InputHistory, type InputSelection } from './inputHistory.ts';
 
 export interface GenerationInput
 {
@@ -25,6 +26,8 @@ export interface CoordinatorState
   refreshing: boolean;
   draftStatus: DraftStatus;
   draftError: string;
+  canUndoInput: boolean;
+  canRedoInput: boolean;
 }
 interface Dependencies
 {
@@ -84,6 +87,7 @@ export class StoryCoordinator
   private refreshRequested = false;
   readonly draft: ComposerDraft | null;
   private readonly draftEpoch: string;
+  private readonly inputHistory = new InputHistory();
 
   constructor(snapshot: Snapshot, dependencies: Dependencies)
   {
@@ -98,7 +102,9 @@ export class StoryCoordinator
       error: projection.error,
       refreshing: false,
       draftStatus: dependencies.draftStorage ? 'loading' : 'unsaved',
-      draftError: ''
+      draftError: '',
+      canUndoInput: false,
+      canRedoInput: false
     };
     this.storage = dependencies.storage;
     this.generator = dependencies.generate ?? simulatedGeneration;
@@ -109,7 +115,9 @@ export class StoryCoordinator
       dependencies.draftStorage,
       input =>
       {
-        if (this.state.phase === 'idle') this.update({ input });
+        if (this.state.phase !== 'idle') return;
+        if (input !== this.state.input) this.inputHistory.reset(input);
+        this.update({ input });
       },
       (draftStatus, draftError) => this.update({ draftStatus, draftError })) : null;
     if (this.state.phase === 'idle') void this.draft?.restore();
@@ -118,7 +126,13 @@ export class StoryCoordinator
   private update(next: Partial<CoordinatorState>): void
   {
     if (this.disposed) return;
-    this.state = { ...this.state, ...next };
+    const phase = next.phase ?? this.state.phase;
+    this.state = {
+      ...this.state,
+      ...next,
+      canUndoInput: phase === 'idle' && this.inputHistory.canUndo,
+      canRedoInput: phase === 'idle' && this.inputHistory.canRedo
+    };
     this.changed(this.state);
   }
 
@@ -133,12 +147,38 @@ export class StoryCoordinator
       && (this.state.phase === 'idle' || this.state.phase === 'blocked');
   }
 
-  setInput(input: string): void
+  setInput(input: string, selection?: InputSelection, extend = false): void
   {
     // Background canonical reads must not swallow edits to noncanonical input.
-    if (this.state.phase !== 'idle') return;
+    if (this.disposed || this.state.phase !== 'idle') return;
+    this.inputHistory.edit(input, selection, extend);
     this.update({ input, error: '' });
     this.draft?.edit(input);
+  }
+
+  selectInput(selection: InputSelection): void
+  {
+    if (!this.disposed && this.state.phase === 'idle') this.inputHistory.select(selection);
+  }
+
+  undoInput(): InputSelection | null
+  {
+    return this.moveInputHistory('undo');
+  }
+
+  redoInput(): InputSelection | null
+  {
+    return this.moveInputHistory('redo');
+  }
+
+  private moveInputHistory(direction: 'undo' | 'redo'): InputSelection | null
+  {
+    if (this.disposed || this.state.phase !== 'idle') return null;
+    const edit = this.inputHistory[direction]();
+    if (!edit) return null;
+    this.update({ input: edit.text, error: '' });
+    this.draft?.edit(edit.text);
+    return edit.selection;
   }
 
   async generate(): Promise<void>
@@ -156,6 +196,7 @@ export class StoryCoordinator
 
   private async prepareCandidate(): Promise<void>
   {
+    this.inputHistory.reset(this.state.input);
     const sequence = ++this.sequence;
     const snapshot = this.state.snapshot;
     this.abort?.abort();
@@ -291,6 +332,7 @@ export class StoryCoordinator
         || !snapshot.turns.some(turn => turn.id === result.turnId)) throw new Error('inconsistent_commit_read');
       const projection = reconstruct(snapshot);
       this.pending = null;
+      this.inputHistory.reset('');
       this.draft?.consumed();
       this.update({
         snapshot: frozenCopy(snapshot),
@@ -349,6 +391,9 @@ export class StoryCoordinator
       if (!this.live(sequence)) return;
       if (snapshot.epoch !== library.epoch || snapshot.adventure.id !== this.state.snapshot.adventure.id) throw new Error('inconsistent_story_read');
       const projection = reconstruct(snapshot);
+      if (snapshot.epoch !== this.state.snapshot.epoch
+        || snapshot.adventure.version !== this.state.snapshot.adventure.version)
+        this.inputHistory.reset(this.state.input);
       const preserveInput = Boolean(this.state.input && (message || this.state.error
         || snapshot.adventure.version !== this.state.snapshot.adventure.version
         || snapshot.epoch !== this.state.snapshot.epoch));
@@ -405,6 +450,7 @@ export class StoryCoordinator
 
   dispose(): void
   {
+    this.inputHistory.reset('');
     this.disposed = true;
     this.refreshRequested = false;
     ++this.sequence;

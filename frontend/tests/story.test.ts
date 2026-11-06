@@ -746,3 +746,119 @@ test('IDEA-0004/R03–R05: failed replacement drains deferred hints; Retry canno
   assert.equal(calls, 2);
   assert.deepEqual(f.writes, []);
 });
+
+test('DEV-003D: input Undo/Redo autosaves latest text without canonical writes', async () =>
+{
+  let draft: Draft | null = null;
+  const f = fixture(undefined, {
+    readDraft: async request => ({ ...request, text: 'Restored input' }),
+    saveDraft: async request => { draft = request; return request; }
+  });
+  await f.coordinator.draft!.restore();
+  assert.equal(f.coordinator.state.canUndoInput, false);
+  f.coordinator.setInput('Edited once');
+  f.coordinator.setInput('Edited twice');
+  f.coordinator.undoInput();
+  assert.equal(f.coordinator.state.input, 'Edited once');
+  assert.equal(f.coordinator.state.canRedoInput, true);
+  await f.coordinator.draft!.flush();
+  assert.equal(draft!.text, 'Edited once');
+  f.coordinator.undoInput();
+  assert.equal(f.coordinator.state.input, 'Restored input');
+  assert.equal(f.coordinator.undoInput(), null);
+  f.coordinator.redoInput();
+  f.coordinator.setInput('A fresh edit');
+  assert.equal(f.coordinator.redoInput(), null);
+  assert.equal(f.writes.length, 0);
+  assert.deepEqual(f.head(), blank());
+  f.coordinator.dispose();
+});
+
+test('DEV-003D: unchanged focus restores retain history; a different shared draft replaces it', async () =>
+{
+  let text = '';
+  const f = fixture(undefined, {
+    readDraft: async request => ({ ...request, text }),
+    saveDraft: async request => { text = request.text; return request; }
+  });
+  await f.coordinator.draft!.restore();
+  f.coordinator.setInput('First');
+  f.coordinator.setInput('Second');
+  await f.coordinator.draft!.flush();
+  await f.coordinator.refresh();
+  assert.equal(f.coordinator.state.canUndoInput, true);
+  text = 'Different latest draft';
+  await f.coordinator.refresh();
+  assert.equal(f.coordinator.state.input, text);
+  assert.equal(f.coordinator.undoInput(), null);
+  assert.equal(f.coordinator.redoInput(), null);
+  f.coordinator.dispose();
+});
+
+test('DEV-003D: generation, Stop, Discard and Retry cannot revive old input edits or candidates', async () =>
+{
+  const gate = deferred<string>();
+  const f = fixture(() => gate.promise);
+  f.coordinator.setInput('Earlier input');
+  f.coordinator.setInput('Input sent for generation');
+  const generating = f.coordinator.generate();
+  assert.equal(f.coordinator.state.canUndoInput, false);
+  assert.equal(f.coordinator.undoInput(), null);
+  f.coordinator.stop();
+  assert.equal(f.coordinator.state.input, 'Input sent for generation');
+  assert.equal(f.coordinator.undoInput(), null);
+  gate.resolve('Generated candidate');
+  await generating;
+  await f.coordinator.generate();
+  const candidate = f.coordinator.state.candidate;
+  assert.ok(candidate);
+  f.coordinator.redoInput();
+  assert.deepEqual(f.coordinator.state.candidate, candidate);
+  await f.coordinator.retry();
+  f.coordinator.discard();
+  assert.equal(f.coordinator.undoInput(), null);
+  assert.equal(f.coordinator.redoInput(), null);
+  assert.equal(f.coordinator.state.candidate, null);
+  assert.equal(f.writes.length, 0);
+  f.coordinator.dispose();
+});
+
+test('DEV-003D: successful and uncertain acceptance never expose consumed input through Undo', async () =>
+{
+  const f = fixture();
+  f.coordinator.setInput('Earlier draft');
+  f.coordinator.setInput('Accepted input');
+  await f.coordinator.generate();
+  f.dropReply();
+  await f.coordinator.accept();
+  assert.equal(f.coordinator.state.phase, 'uncertain');
+  assert.equal(f.coordinator.undoInput(), null);
+  assert.equal(f.coordinator.redoInput(), null);
+  await f.coordinator.retrySave();
+  assert.equal(f.coordinator.state.input, '');
+  assert.equal(f.coordinator.undoInput(), null);
+  f.coordinator.setInput('Next unfinished input');
+  f.coordinator.undoInput();
+  assert.equal(f.coordinator.state.input, '');
+  assert.equal(f.head().adventure.version, 1);
+  assert.equal(f.writes[0].operationId, f.writes[1].operationId);
+  f.coordinator.dispose();
+});
+
+test('DEV-003D: canonical refresh and disposed adventure clear temporary edit history', async () =>
+{
+  const f = fixture();
+  f.coordinator.setInput('Older local input');
+  f.coordinator.setInput('Still available input');
+  f.replace({ ...blank(), adventure: { ...blank().adventure, version: 1 }, turns: [turn(1)] });
+  await f.coordinator.refresh();
+  assert.equal(f.coordinator.state.input, 'Still available input');
+  assert.equal(f.coordinator.undoInput(), null);
+  assert.equal(f.coordinator.redoInput(), null);
+  f.coordinator.setInput('Another edit');
+  f.coordinator.dispose();
+  f.coordinator.setInput('Must not be applied');
+  assert.equal(f.coordinator.undoInput(), null);
+  assert.equal(f.coordinator.redoInput(), null);
+  assert.equal(f.coordinator.state.input, 'Another edit');
+});

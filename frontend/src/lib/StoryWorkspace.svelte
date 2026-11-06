@@ -4,6 +4,7 @@
   import { StoryCoordinator, type CoordinatorState } from './coordinator';
   import type { Snapshot } from './library';
   import { ForkController, defaultForkTitle, type ForkState } from './fork';
+  import type { InputSelection } from './inputHistory';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -22,6 +23,8 @@
   let forkError = '';
   let forkBusy = false;
   let publish: (next: CoordinatorState) => void;
+  let composing = false;
+  let compositionChanged = false;
 
   function waitingForkTab(): Window | null
   {
@@ -146,10 +149,60 @@
 
   function handleInputKey(event: KeyboardEvent)
   {
+    if (event.isComposing || composing || event.altKey) return;
+    if ((event.ctrlKey || event.metaKey) && ['z', 'y'].includes(event.key.toLowerCase()))
+    {
+      event.preventDefault();
+      void moveInputHistory(event.key.toLowerCase() === 'y' || event.shiftKey);
+      return;
+    }
     if (!(event.ctrlKey || event.metaKey) || event.key !== 'Enter') return;
     if (forkBusy || state?.phase !== 'idle' || state.refreshing) return;
     event.preventDefault();
     void generate();
+  }
+
+  function inputSelection(): InputSelection
+  {
+    return { start: input.selectionStart, end: input.selectionEnd, direction: input.selectionDirection };
+  }
+
+  async function moveInputHistory(redo: boolean)
+  {
+    if (forkBusy || composing || state?.phase !== 'idle') return;
+    const selection = redo ? coordinator.redoInput() : coordinator.undoInput();
+    await tick();
+    // Also override an uncancellable native history input at an exhausted boundary.
+    input.value = coordinator.state.input;
+    input.focus();
+    if (selection) input.setSelectionRange(selection.start, selection.end, selection.direction);
+  }
+
+  function handleBeforeInput(event: InputEvent)
+  {
+    if (event.inputType === 'historyUndo' || event.inputType === 'historyRedo')
+    {
+      if (event.cancelable)
+      {
+        event.preventDefault();
+        void moveInputHistory(event.inputType === 'historyRedo');
+      }
+      return;
+    }
+    coordinator.selectInput(inputSelection());
+  }
+
+  function handleInput(event: Event)
+  {
+    const inputType = (event as InputEvent).inputType;
+    if (inputType === 'historyUndo' || inputType === 'historyRedo')
+    {
+      void moveInputHistory(inputType === 'historyRedo');
+      return;
+    }
+    const changed = input.value !== coordinator.state.input;
+    coordinator.setInput(input.value, inputSelection(), composing && compositionChanged);
+    if (composing && changed) compositionChanged = true;
   }
 
   onMount(() =>
@@ -271,7 +324,11 @@
         <label class="sr-only" for="story-input">Story input</label>
         <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
           disabled={forkBusy || !state || state.phase !== 'idle'}
-          oninput={(event) => coordinator.setInput(event.currentTarget.value)}
+          oninput={handleInput}
+          onbeforeinput={handleBeforeInput}
+          onselect={() => coordinator.selectInput(inputSelection())}
+          oncompositionstart={() => { composing = true; compositionChanged = false; }}
+          oncompositionend={() => { composing = false; }}
           onkeydown={handleInputKey}></textarea>
         {#if state?.phase === 'ready' || state?.phase === 'saving' || state?.phase === 'uncertain'}
           <div class="pending-overlay" aria-label="Turn acceptance">
@@ -291,6 +348,11 @@
           <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={forkBusy || !state?.input.trim() || state.refreshing}>↑</button>
         {/if}
       </div>
+      <div class="input-history" role="group" aria-label="Temporary input history">
+        <button class="quiet" aria-label="Undo input edit" onclick={() => moveInputHistory(false)} disabled={forkBusy || composing || !state?.canUndoInput}>↶ Undo input</button>
+        <button class="quiet" aria-label="Redo input edit" onclick={() => moveInputHistory(true)} disabled={forkBusy || composing || !state?.canRedoInput}>↷ Redo input</button>
+        <span class="supporting">Temporary edits only</span>
+      </div>
       <p class="composer-hint" role="status" aria-label="Draft status">{state?.draftError || (state?.draftStatus === 'saved' ? 'Draft saved · Not accepted story.' : state?.draftStatus === 'saving' ? 'Saving draft…' : state?.draftStatus === 'loading' ? 'Loading saved draft…' : 'Input autosaves after a short pause.')}</p>
       {#if state?.draftError}
         <button class="quiet" onclick={() => coordinator.draft?.retry()}>Retry draft</button>
@@ -301,6 +363,9 @@
 </main>
 
 <style>
+  .input-history { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .input-history button { padding: 4px 8px; font-size: 12px; }
+  .input-history .supporting { font-size: 11px; }
   .turn-actions { display: flex; align-items: center; gap: 12px; margin-top: 12px; min-height: 32px; }
   .fork-action { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 6px; }
   .turn-actions a { color: var(--primary); font-size: 12px; }
