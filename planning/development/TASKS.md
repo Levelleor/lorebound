@@ -117,15 +117,15 @@ Status: **IN PROGRESS through DEV-003A**. User authorised launch on 2026-11-05. 
 
 ### DEV-003A — Replace the provisional Story candidate on Retry
 
-Status: **PUBLICATION IN PROGRESS (LOCAL CHECKS AND REVIEW PASS; UNMERGED)**. Owner: Codex lead; independent reviewer assigned under the runbook. Branch `feat/dev-003a-provisional-retry`, base main `34f25a0fa841827b0b4486106e411c9d28bad2ab`. Authority: user “Proceed to next task.”
+Status: **PR OPEN / REVIEW (UNMERGED)**. [PR #10](https://github.com/Levelleor/lorebound/pull/10), implementation commit `e422d8093cde4c1a4f8432a1caf0739885884c5d`; local checks and independent review PASS. Owner: Codex lead; independent reviewer assigned under the runbook. Branch `feat/dev-003a-provisional-retry`, base main `34f25a0fa841827b0b4486106e411c9d28bad2ab`. Authority: user “Proceed to next task.”
 
 Scope: IDEA-0004/R01–R05, existing coordinator concurrency/commit guards and shared composer UI. Retry immediately invalidates the prior candidate; repeated replacements remain provisional; failure/Stop retain input and canon; only the latest validated result may accept. B3-D02 identical save recovery is distinct from Retry, B3-D05 stale rejection remains binding. Simulated generation, zero world effects, no persistence/schema changes.
 
-Gates: build/typecheck, targeted TypeScript races, existing real SQLite regressions, Firefox/Wails/SQLite replacement/Stop/reload/accept/reopen and stale/uncertain-write checks; Dark/Bright at 390/768/1024/1440; independent source/runtime review. CI/PR/merge pending separate publication instruction. No full IDEA/archive claim; B9-D12 remains deferred.
+Gates: build/typecheck, targeted TypeScript races, existing real SQLite regressions, Firefox/Wails/SQLite replacement/Stop/reload/accept/reopen and stale/uncertain-write checks; Dark/Bright at 390/768/1024/1440; independent source/runtime review. Publication is authorised and [PR #10](https://github.com/Levelleor/lorebound/pull/10) is open; [implementation-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42140685316) at `e422d8093cde4c1a4f8432a1caf0739885884c5d`; latest documentation-head checks are tracked in PR #10. Merge remains outstanding. No full IDEA/archive claim; B9-D12 remains deferred.
 
 Executed [evidence](./evidence/DEV-003A.md): zero build/typecheck diagnostics; 30 TypeScript cases; 14 Go functions/43 SQLite subcases; vet; lead/reviewer real Firefox/Wails/Go/SQLite, failure/recovery and exact restart; eight responsive theme/width checks PASS. [Independent review](./evidence/DEV-003A-review.md) PASS. No scoped source blocker.
 
-Publication authorised by the user on 2026-11-05: “proceed with next task”, following the explicit DEV-003A publication/CI handoff. Next action: commit/push, open PR and inspect final-head CI. Merge remains a later explicit action; later children remain unstarted.
+Publication authorised by the user on 2026-11-05: “proceed with next task”, following the explicit DEV-003A publication/CI handoff. Publication completed. Next action: inspect final-head CI, then obtain the user’s merge decision. Merge remains a later explicit action; later children remain unstarted.
 
 ## Deferred and cross-cutting gates
 

@@ -238,3 +238,10 @@ tags:
 - User said “proceed with next task” after the handoff named DEV-003A publication and CI as next. This authorises committing/pushing the reviewed branch and opening its PR; no new implementation child or merge is launched.
 - Fetched current `origin/main`: still `34f25a0fa841827b0b4486106e411c9d28bad2ab`; branch base matches exactly. All four independently recorded implementation/test source hashes remain identical, and `git diff --check` passes.
 - Publication checks will be inspected on GitHub. Existing local evidence is reused because the reviewed application source has not changed; CI will rebuild and rerun the complete workflow on the published branch.
+
+### 2026-11-05 — DEV-003A PR #10 / implementation CI PASS
+
+- Published implementation `e422d8093cde4c1a4f8432a1caf0739885884c5d` on `feat/dev-003a-provisional-retry`, opened [PR #10](https://github.com/Levelleor/lorebound/pull/10) against main. Independent reviewer checked the published commit against all four previously reviewed source hashes: exact matches.
+- [CI 42140685316](https://github.com/Levelleor/lorebound/actions/runs/42140685316) completed successfully. Lead inspected actual job steps/logs: zero frontend diagnostics; 30 TS cases; Go vet; real SQLite contracts; actual Firefox/Wails/Go/SQLite Retry, recovery/concurrency and process restart PASS. Artifact `13468172297` retained.
+- Current controls and requirement/evidence status now name the actual open PR and passing implementation CI. Earlier local/unpublished entries remain chronological history. This final documentation update will run CI again on the latest PR head; no application/test source changed.
+- Next action after latest-head CI: user merge decision for PR #10. Main remains `34f25a0fa841827b0b4486106e411c9d28bad2ab`; seven partial ideas, three formally verified atomic rows, zero whole IDEAs complete. No later child or B9-D12 work starts.

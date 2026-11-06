@@ -47,3 +47,19 @@ Runtime command: `PATH=/home/alex/.nvm/versions/node/v24.14.0/bin:$PATH LOREBOUN
 | `frontend/scripts/check-story-retry.mjs` | `be2415ad1b27ec9a5c2bad39026410d4fc4e888f665c4d0d0cd3660f4b7766e2` |
 
 Draft persistence, editor undo, committed Undo, Fork, direct/history editing, nonempty world effects and Quick Start remain later work. B9-D12 remains deferred. No full original IDEA is eligible for archival; final CI and authorised merge remain outstanding. Reviewer changed only this report; lead owns final controls and portable artifact reconciliation.
+
+## Publication source continuity — 2026-11-05
+
+Independent reviewer `/root/requirements_review` compared the committed contents at `e422d8093cde4c1a4f8432a1caf0739885884c5d` with every SHA-256 above using `git show <commit>:<path> | sha256sum`. All four match exactly. Previously passing source/unit/runtime evidence therefore continues to cover the published implementation; no runtime rerun was needed for publication alone.
+
+GitHub metadata independently confirms [PR #10](https://github.com/Levelleor/lorebound/pull/10) is **OPEN, unmerged**, with that head and base `34f25a0fa841827b0b4486106e411c9d28bad2ab`. Local `main` and `origin/main` also remain at that base. The PR description accurately limits the behavior to simulated Story Retry with empty effects and preserves later-feature/platform exclusions. CI completion has not been independently inspected in this continuity audit; the lead owns final CI evidence and final-head status reconciliation. No merge authority follows from publication.
+
+The publication audit identified stale pre-publication wording in NOW's next action, TASKS' publication permission/gates, the IDEA-0004 feature row and requirement/evidence publication status. The lead was notified to reconcile those current-status entries with the actual PR and eventual CI result while preserving chronological launch records and unchanged merged-main feature counts. This reviewer modified only this report.
+
+### Publication documentation follow-up
+
+The reviewer inspected the reconciled NOW/TASKS/FEATURES/JOURNAL, scoped requirements and implementation evidence. Current DEV-003A entries correctly identify PR #10 as open/unmerged, implementation-head CI as passing, and latest documentation-head CI/merge as remaining gates. Historical local/unpublished entries retain their dated context; no stale current publication-permission requirement remains. All 188 relative Markdown links checked across changed documents resolve, and `git diff --check` passes. One minor NOW introduction clarification was requested: explicitly tie the historical identical-tree statement to PR #8's head and merge commit, rather than today's reconciliation main.
+
+The reviewer independently fetched job `127639959541` for [run 42140685316](https://github.com/Levelleor/lorebound/actions/runs/42140685316): completed successfully, including build/typecheck, TypeScript contracts, Go static checks, SQLite tests, real browser/restart and artifact retention. This confirms the implementation-head CI step results; the lead's decoded-log inspection remains separately attributed. The upcoming documentation commit still requires its own final-head check. No runtime rerun or application change was needed.
+
+**Publication documentation audit PASS:** the lead clarified NOW's historical tree statement to name PR #8's original head and merge commit explicitly. No remaining documentation blocker was found in this follow-up; merged-main counts and unmerged requirement limits remain accurate.
