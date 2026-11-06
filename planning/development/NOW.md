@@ -2,16 +2,16 @@
 type: development-status
 status: current
 updated: "2026-11-05"
-current_task: "DEV-002C"
-current_task_status: "VERIFIED & MERGED"
-next_task: "DEV-003"
+current_task: "DEV-003A"
+current_task_status: "PR OPEN / REVIEW"
+next_task: "DEV-003A"
 ---
 
 # Lorebound — Current Development Status
 
 > **THIS IS THE ONE-PAGE HANDOFF.** Read [TASKS](./TASKS.md), [FEATURES](./FEATURES.md), [JOURNAL](./JOURNAL.md), the [runbook](./AGENT-RUNBOOK.md), and [system architecture](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md). Keep exactly one Next Task and distinguish merged application evidence from documentation prepared afterward.
 
-Last reconciled with GitHub main: **2026-11-05**, commit `9c4a615b32faee3a513467e3ecc8cf6f5d5b760a`. [PR #8](https://github.com/Levelleor/lorebound/pull/8) is **MERGED** after explicit user authorisation and [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088907520) at `ba9b3c346f5bd7330b5cb19763c31e95c201ebb5`. The PR head and merged main have identical tree `5a313301d6c2e60cb5c2a43dbec4d6301aab01ab`. Fetched `origin/main` and clean local main agreed before the documentation reconciliation branch. [Reconciliation](./evidence/DEV-002C-reconciliation.md).
+Last reconciled with fetched GitHub main: **2026-11-05**, commit `34f25a0fa841827b0b4486106e411c9d28bad2ab` (merged reconciliation PR #9). The application milestone below was merged in PR #8. [PR #8](https://github.com/Levelleor/lorebound/pull/8) is **MERGED** after explicit user authorisation and [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088907520) at `ba9b3c346f5bd7330b5cb19763c31e95c201ebb5`. PR #8 head and its merge commit `9c4a615b32faee3a513467e3ecc8cf6f5d5b760a` had identical tree `5a313301d6c2e60cb5c2a43dbec4d6301aab01ab`; later documentation PR #9 changes the full repository tree. Fetched `origin/main` and clean local main agreed before the DEV-003A launch. [Reconciliation](./evidence/DEV-002C-reconciliation.md).
 
 ## Snapshot
 
@@ -47,11 +47,13 @@ The first Story slice has 16 TypeScript tests, 14 Go functions/43 nested cases, 
 
 **Parent DEV-002 is VERIFIED & MERGED within the accepted Story-only simulated zero-effects scope.** All A/B/C children are merged. The 95-row whole-IDEA inventory retains 38 Later-only rows and explicitly partial nonempty-event/mixed obligations; seven original ideas remain PARTIAL, zero complete, and the formal individually certified main count stays three IDEA-0006 rows. This documentation reconciliation records the actual merged application; its own final checks are recorded in the reconciliation PR.
 
-## Next Task: **DEV-003 — Retry, drafts, Undo/Fork and current-history prose editing**
+## Next Task: **DEV-003A — Replace the provisional Story candidate on Retry**
 
-**Status: QUEUED / NOT STARTED.** The bounded DEV-002 dependency is satisfied. DEV-003 requires a separately authorised launch to audit original requirements and select one bounded child scope before coding. No later task starts as part of DEV-002C finalisation.
+**Status: PR OPEN / REVIEW; local checks and independent review PASS; unmerged.** [PR #10](https://github.com/Levelleor/lorebound/pull/10), implementation commit `e422d8093cde4c1a4f8432a1caf0739885884c5d`. User authorised DEV-003 launch on 2026-11-05 with “Proceed to next task.” Owner: Codex lead; branch `feat/dev-003a-provisional-retry`, based on reconciliation main `34f25a0fa841827b0b4486106e411c9d28bad2ab`. Bounded DEV-002 dependency is satisfied.
 
-**Exact next action:** On a separately authorised DEV-003 launch, audit its acceptance/dependencies and select one bounded implementation scope.
+DEV-003A adds replace-on-retry for the current unaccepted Story candidate using the existing explicitly simulated generator and zero-effects history. [Requirement audit](./requirements/DEV-003.md). Immediate invalidation, failure/cancellation/input safety, latest-only acceptance and existing stale/uncertain-save fencing pass 30 TypeScript cases, 14 Go functions/43 subcases and lead/reviewer real Firefox/Wails/SQLite runs including exact restart. Eight Dark/Bright viewport captures pass scoped checks. [Evidence](./evidence/DEV-003A.md), [independent review PASS](./evidence/DEV-003A-review.md). Draft autosave, temporary editor undo, committed Undo/Fork and historical editing remain later children; no full IDEA completion or B9-D12 work.
+
+**Exact next action:** Inspect the latest PR-head CI, then request the user’s merge decision for PR #10. User authorised this recorded next action on 2026-11-05 with “proceed with next task”. Publication is complete; [implementation-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42140685316) covers `e422d8093cde4c1a4f8432a1caf0739885884c5d`. Latest documentation-head checks are tracked on [PR #10](https://github.com/Levelleor/lorebound/pull/10); merge remains outstanding. No later child starts automatically. Main feature counts above remain unchanged.
 
 ## Recent verified milestones
 

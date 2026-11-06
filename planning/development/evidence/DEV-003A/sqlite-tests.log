@@ -1,0 +1,122 @@
+?   	github.com/Levelleor/lorebound	[no test files]
+=== RUN   TestAdventureDurabilityAndIsolation
+    store_test.go:68: two independent zero-turn adventures and idempotency receipt survive SQLite close/reopen
+--- PASS: TestAdventureDurabilityAndIsolation (0.00s)
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure/wrong_schema
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure/wrong_baseline
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure/empty_epoch
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure/wrong_epoch
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure/invalid_id
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure/empty_operation
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure/blank_title
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure/long_title
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure/existing_adventure
+=== RUN   TestCreationFailuresLeaveNoPartialAdventure/reused_operation
+=== NAME  TestCreationFailuresLeaveNoPartialAdventure
+    store_test.go:114: invalid/epoch/identity conflicts and injected failure preserve prior adventure; same request recovers
+--- PASS: TestCreationFailuresLeaveNoPartialAdventure (0.00s)
+    --- PASS: TestCreationFailuresLeaveNoPartialAdventure/wrong_schema (0.00s)
+    --- PASS: TestCreationFailuresLeaveNoPartialAdventure/wrong_baseline (0.00s)
+    --- PASS: TestCreationFailuresLeaveNoPartialAdventure/empty_epoch (0.00s)
+    --- PASS: TestCreationFailuresLeaveNoPartialAdventure/wrong_epoch (0.00s)
+    --- PASS: TestCreationFailuresLeaveNoPartialAdventure/invalid_id (0.00s)
+    --- PASS: TestCreationFailuresLeaveNoPartialAdventure/empty_operation (0.00s)
+    --- PASS: TestCreationFailuresLeaveNoPartialAdventure/blank_title (0.00s)
+    --- PASS: TestCreationFailuresLeaveNoPartialAdventure/long_title (0.00s)
+    --- PASS: TestCreationFailuresLeaveNoPartialAdventure/existing_adventure (0.00s)
+    --- PASS: TestCreationFailuresLeaveNoPartialAdventure/reused_operation (0.00s)
+=== RUN   TestConcurrentDuplicateCreationAndEpochFencing
+    store_test.go:157: eight concurrent identical requests create one adventure; old receipt cannot bypass epoch
+--- PASS: TestConcurrentDuplicateCreationAndEpochFencing (0.00s)
+=== RUN   TestReadsAndUnsupportedLibraryFailClosed
+--- PASS: TestReadsAndUnsupportedLibraryFailClosed (0.00s)
+=== RUN   TestStorageFailureAndCancelledRequest
+--- PASS: TestStorageFailureAndCancelledRequest (0.00s)
+=== RUN   TestStoryAtomicDurabilityAndOriginalReceipt
+    story_test.go:93: two typed turns/four structured passages survive reopen; replay returns original V1 after V2; epoch fences receipts
+--- PASS: TestStoryAtomicDurabilityAndOriginalReceipt (0.00s)
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/old_wire
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/wrong_epoch
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/empty_epoch
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/negative_version
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/unsafe_version
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/wrong_kind
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/empty_operation
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/bad_adventure
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/missing_adventure
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/turn_schema
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/turn_order
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/turn_id
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/missing_passage
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/duplicate_passage
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/bad_source
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/body_schema
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/body_type
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/blank_body
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/missing_content
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/unknown_node
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/hard_break_text
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/long_body
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/many_paragraphs
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/many_nodes
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/nil_effects
+=== RUN   TestStoryRejectsMalformedPayloadWithoutPartialWrites/unsupported_effects
+--- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/old_wire (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/wrong_epoch (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/empty_epoch (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/negative_version (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/unsafe_version (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/wrong_kind (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/empty_operation (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/bad_adventure (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/missing_adventure (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/turn_schema (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/turn_order (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/turn_id (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/missing_passage (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/duplicate_passage (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/bad_source (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/body_schema (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/body_type (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/blank_body (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/missing_content (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/unknown_node (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/hard_break_text (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/long_body (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/many_paragraphs (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/many_nodes (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/nil_effects (0.00s)
+    --- PASS: TestStoryRejectsMalformedPayloadWithoutPartialWrites/unsupported_effects (0.00s)
+=== RUN   TestStoryRequestJSONRejectsUnknownAndMissingFields
+=== RUN   TestStoryRequestJSONRejectsUnknownAndMissingFields/schemaVersion
+=== RUN   TestStoryRequestJSONRejectsUnknownAndMissingFields/epoch
+=== RUN   TestStoryRequestJSONRejectsUnknownAndMissingFields/operationId
+=== RUN   TestStoryRequestJSONRejectsUnknownAndMissingFields/adventureId
+=== RUN   TestStoryRequestJSONRejectsUnknownAndMissingFields/expectedVersion
+=== RUN   TestStoryRequestJSONRejectsUnknownAndMissingFields/kind
+=== RUN   TestStoryRequestJSONRejectsUnknownAndMissingFields/turn
+--- PASS: TestStoryRequestJSONRejectsUnknownAndMissingFields (0.00s)
+    --- PASS: TestStoryRequestJSONRejectsUnknownAndMissingFields/schemaVersion (0.00s)
+    --- PASS: TestStoryRequestJSONRejectsUnknownAndMissingFields/epoch (0.00s)
+    --- PASS: TestStoryRequestJSONRejectsUnknownAndMissingFields/operationId (0.00s)
+    --- PASS: TestStoryRequestJSONRejectsUnknownAndMissingFields/adventureId (0.00s)
+    --- PASS: TestStoryRequestJSONRejectsUnknownAndMissingFields/expectedVersion (0.00s)
+    --- PASS: TestStoryRequestJSONRejectsUnknownAndMissingFields/kind (0.00s)
+    --- PASS: TestStoryRequestJSONRejectsUnknownAndMissingFields/turn (0.00s)
+=== RUN   TestStoryRollbackAndStorageFailureRecovery
+--- PASS: TestStoryRollbackAndStorageFailureRecovery (0.00s)
+=== RUN   TestConcurrentStoryWritesAndCoherentReads
+--- PASS: TestConcurrentStoryWritesAndCoherentReads (0.02s)
+=== RUN   TestUnknownStoredEventsPreserveReadableHistoryAndBlockAppend
+--- PASS: TestUnknownStoredEventsPreserveReadableHistoryAndBlockAppend (0.00s)
+=== RUN   TestUpgradeBlankV1LibraryPreservesIdentityAndReceipts
+--- PASS: TestUpgradeBlankV1LibraryPreservesIdentityAndReceipts (0.00s)
+=== RUN   TestUpgradeFailureRollsBackSchema
+--- PASS: TestUpgradeFailureRollsBackSchema (0.00s)
+=== RUN   TestStoryOperationIDsAreAdventureScoped
+--- PASS: TestStoryOperationIDsAreAdventureScoped (0.00s)
+PASS
+ok  	github.com/Levelleor/lorebound/internal/store	0.036s

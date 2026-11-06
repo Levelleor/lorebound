@@ -124,6 +124,23 @@ export class StoryCoordinator
   async generate(): Promise<void>
   {
     if (this.disposed || this.state.phase !== 'idle' || this.state.refreshing || this.state.projection.blocked) return;
+    await this.prepareCandidate();
+  }
+
+  async retry(): Promise<void>
+  {
+    if (this.disposed || this.state.phase !== 'ready' || !this.state.candidate
+      || this.pending || this.state.refreshing || this.state.projection.blocked) return;
+    await this.prepareCandidate();
+  }
+
+  private async prepareCandidate(): Promise<void>
+  {
+    const sequence = ++this.sequence;
+    const snapshot = this.state.snapshot;
+    this.abort?.abort();
+    this.abort = new AbortController();
+    this.update({ phase: 'generating', candidate: null, error: '' });
     let authored;
     try
     {
@@ -131,14 +148,12 @@ export class StoryCoordinator
     }
     catch
     {
-      this.update({ error: 'Enter a story passage of 20,000 characters or fewer.' });
+      this.abort = null;
+      this.update({ phase: 'idle', error: 'Enter a story passage of 20,000 characters or fewer.' });
+      this.refreshIfRequested();
       return;
     }
 
-    const sequence = ++this.sequence;
-    const snapshot = this.state.snapshot;
-    this.abort = new AbortController();
-    this.update({ phase: 'generating', candidate: null, error: '' });
     try
     {
       // Provider-facing input contains natural prose only, never internal IDs.
