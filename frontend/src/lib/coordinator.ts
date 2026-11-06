@@ -1,7 +1,6 @@
 import { readCommitResult, readSnapshot, schemaVersion, type CommitRequest, type CommitResult, type Library, type Snapshot } from './library.ts';
 import { documentToText, plainTextToDocument, reconstruct, type Projection, type Turn } from './story.ts';
 import { ComposerDraft, type DraftStatus, type DraftStorage } from './draft.ts';
-import { InputHistory, type InputSelection } from './inputHistory.ts';
 
 export interface GenerationInput
 {
@@ -19,15 +18,15 @@ export interface CoordinatorState
 {
   snapshot: Snapshot;
   input: string;
-  phase: 'idle' | 'generating' | 'ready' | 'saving' | 'uncertain' | 'blocked';
+  phase: 'idle' | 'generating' | 'ready' | 'undo-ready' | 'saving' | 'uncertain' | 'blocked';
   candidate: Turn | null;
+  undoTurn: { id: string; order: number } | null;
+  notice: string;
   error: string;
   projection: Projection;
   refreshing: boolean;
   draftStatus: DraftStatus;
   draftError: string;
-  canUndoInput: boolean;
-  canRedoInput: boolean;
 }
 interface Dependencies
 {
@@ -87,7 +86,6 @@ export class StoryCoordinator
   private refreshRequested = false;
   readonly draft: ComposerDraft | null;
   private readonly draftEpoch: string;
-  private readonly inputHistory = new InputHistory();
 
   constructor(snapshot: Snapshot, dependencies: Dependencies)
   {
@@ -99,12 +97,12 @@ export class StoryCoordinator
       input: '',
       phase: projection.blocked ? 'blocked' : 'idle',
       candidate: null,
+      undoTurn: null,
+      notice: '',
       error: projection.error,
       refreshing: false,
       draftStatus: dependencies.draftStorage ? 'loading' : 'unsaved',
-      draftError: '',
-      canUndoInput: false,
-      canRedoInput: false
+      draftError: ''
     };
     this.storage = dependencies.storage;
     this.generator = dependencies.generate ?? simulatedGeneration;
@@ -115,9 +113,7 @@ export class StoryCoordinator
       dependencies.draftStorage,
       input =>
       {
-        if (this.state.phase !== 'idle') return;
-        if (input !== this.state.input) this.inputHistory.reset(input);
-        this.update({ input });
+        if (this.state.phase === 'idle') this.update({ input });
       },
       (draftStatus, draftError) => this.update({ draftStatus, draftError })) : null;
     if (this.state.phase === 'idle') void this.draft?.restore();
@@ -126,13 +122,7 @@ export class StoryCoordinator
   private update(next: Partial<CoordinatorState>): void
   {
     if (this.disposed) return;
-    const phase = next.phase ?? this.state.phase;
-    this.state = {
-      ...this.state,
-      ...next,
-      canUndoInput: phase === 'idle' && this.inputHistory.canUndo,
-      canRedoInput: phase === 'idle' && this.inputHistory.canRedo
-    };
+    this.state = { ...this.state, ...next };
     this.changed(this.state);
   }
 
@@ -147,44 +137,55 @@ export class StoryCoordinator
       && (this.state.phase === 'idle' || this.state.phase === 'blocked');
   }
 
-  setInput(input: string, selection?: InputSelection, extend = false): void
+  setInput(input: string): void
   {
     // Background canonical reads must not swallow edits to noncanonical input.
     if (this.disposed || this.state.phase !== 'idle') return;
-    this.inputHistory.edit(input, selection, extend);
-    this.update({ input, error: '' });
+    this.update({ input, error: '', notice: '' });
     this.draft?.edit(input);
-  }
-
-  selectInput(selection: InputSelection): void
-  {
-    if (!this.disposed && this.state.phase === 'idle') this.inputHistory.select(selection);
-  }
-
-  undoInput(): InputSelection | null
-  {
-    return this.moveInputHistory('undo');
-  }
-
-  redoInput(): InputSelection | null
-  {
-    return this.moveInputHistory('redo');
-  }
-
-  private moveInputHistory(direction: 'undo' | 'redo'): InputSelection | null
-  {
-    if (this.disposed || this.state.phase !== 'idle') return null;
-    const edit = this.inputHistory[direction]();
-    if (!edit) return null;
-    this.update({ input: edit.text, error: '' });
-    this.draft?.edit(edit.text);
-    return edit.selection;
   }
 
   async generate(): Promise<void>
   {
     if (this.disposed || this.state.phase !== 'idle' || this.state.refreshing || this.state.projection.blocked) return;
     await this.prepareCandidate();
+  }
+
+  requestUndo(): void
+  {
+    if (this.disposed || this.state.phase !== 'idle' || this.state.refreshing
+      || this.pending || this.state.projection.blocked || this.state.draftStatus === 'loading') return;
+    const snapshot = this.state.snapshot;
+    const turn = snapshot.turns.at(-1);
+    if (!turn) return;
+    if (snapshot.adventure.version === Number.MAX_SAFE_INTEGER)
+    {
+      this.update({ error: 'Undo could not be prepared because the adventure version limit was reached.' });
+      return;
+    }
+    const prefix = readSnapshot({
+      ...snapshot,
+      adventure: { ...snapshot.adventure, version: snapshot.adventure.version + 1 },
+      turns: snapshot.turns.slice(0, -1)
+    });
+    if (reconstruct(prefix).blocked) return;
+    this.update({ phase: 'undo-ready', undoTurn: { id: turn.id, order: turn.order }, error: '', notice: '' });
+  }
+
+  async confirmUndo(): Promise<void>
+  {
+    if (this.disposed || this.state.phase !== 'undo-ready' || !this.state.undoTurn || this.pending) return;
+    this.draftFlushed = false;
+    this.pending = frozenCopy({
+      schemaVersion,
+      epoch: this.state.snapshot.epoch,
+      adventureId: this.state.snapshot.adventure.id,
+      operationId: this.newId(),
+      expectedVersion: this.state.snapshot.adventure.version,
+      kind: 'undo_story_turn',
+      turnId: this.state.undoTurn.id
+    });
+    await this.save();
   }
 
   async retry(): Promise<void>
@@ -196,12 +197,11 @@ export class StoryCoordinator
 
   private async prepareCandidate(): Promise<void>
   {
-    this.inputHistory.reset(this.state.input);
     const sequence = ++this.sequence;
     const snapshot = this.state.snapshot;
     this.abort?.abort();
     this.abort = new AbortController();
-    this.update({ phase: 'generating', candidate: null, error: '' });
+    this.update({ phase: 'generating', candidate: null, error: '', notice: '' });
     let authored;
     try
     {
@@ -226,7 +226,7 @@ export class StoryCoordinator
       const candidate: Turn = {
         schemaVersion: 1,
         id: this.newId(),
-        order: snapshot.adventure.version + 1,
+        order: snapshot.turns.length + 1,
         passages: [
           { id: this.newId(), source: 'authored', body: authored },
           { id: this.newId(), source: 'generated', body: plainTextToDocument(text) }
@@ -268,6 +268,12 @@ export class StoryCoordinator
 
   discard(): void
   {
+    if (this.state.phase === 'undo-ready')
+    {
+      this.update({ phase: 'idle', undoTurn: null, error: '' });
+      this.refreshIfRequested();
+      return;
+    }
     if (this.state.phase === 'generating')
     {
       this.stop();
@@ -319,8 +325,10 @@ export class StoryCoordinator
       }
       const result = readCommitResult(await this.storage.commit(request));
       if (!this.live(sequence)) return;
+      const appended = request.kind === 'append_story_turn';
+      const turnId = appended ? request.turn.id : request.turnId;
       if (result.epoch !== request.epoch || result.adventureId !== request.adventureId
-        || result.operationId !== request.operationId || result.turnId !== request.turn.id
+        || result.operationId !== request.operationId || result.turnId !== turnId
         || result.version !== request.expectedVersion + 1) throw new Error('unsupported_commit_response');
       committed = true;
       // A replayed receipt can refer to an older version. Always read current canon.
@@ -328,17 +336,26 @@ export class StoryCoordinator
       const snapshot = readSnapshot(await this.storage.read(request.epoch, request.adventureId));
       if (!this.live(sequence)) return;
       if (snapshot.epoch !== request.epoch || snapshot.adventure.id !== request.adventureId
-        || snapshot.adventure.version < result.version
-        || !snapshot.turns.some(turn => turn.id === result.turnId)) throw new Error('inconsistent_commit_read');
+        || snapshot.adventure.version < result.version) throw new Error('inconsistent_commit_read');
+      const expectedTurns = appended
+        ? [...this.state.snapshot.turns, request.turn]
+        : this.state.snapshot.turns.slice(0, -1);
+      if (snapshot.adventure.version === result.version
+        && JSON.stringify(snapshot.turns) !== JSON.stringify(expectedTurns)) throw new Error('inconsistent_commit_read');
       const projection = reconstruct(snapshot);
       this.pending = null;
-      this.inputHistory.reset('');
-      this.draft?.consumed();
+      if (appended) this.draft?.consumed();
+      const wasRemoved = appended && !snapshot.turns.some(turn => turn.id === result.turnId);
+      const notice = appended
+        ? wasRemoved ? 'The original save is confirmed. Its turn was later undone; the current story is shown.' : ''
+        : `Undo confirmed. Continuing from ${snapshot.turns.length ? `Turn ${snapshot.turns.length}` : 'the initial beginning'}.`;
       this.update({
         snapshot: frozenCopy(snapshot),
         projection,
-        input: '',
+        input: appended ? '' : this.state.input,
         candidate: null,
+        undoTurn: null,
+        notice,
         phase: projection.blocked ? 'blocked' : 'idle',
         error: projection.error
       });
@@ -350,11 +367,11 @@ export class StoryCoordinator
       if (!committed && (reason.includes('stale_version') || reason.includes('wrong_epoch')))
       {
         this.pending = null;
-        this.update({ candidate: null, phase: 'blocked', refreshing: true });
+        this.update({ candidate: null, undoTurn: null, phase: 'blocked', refreshing: true });
         this.refreshRequested = false;
         try
         {
-          await this.refetch(sequence, 'The saved story or library changed. Your text is retained. Review the current story, then send it again to make a fresh proposal.');
+          await this.refetch(sequence, 'The saved story or library changed. Your input is retained. Review the current story before choosing a fresh action.');
         }
         finally
         {
@@ -367,7 +384,8 @@ export class StoryCoordinator
         this.update({
           phase: 'blocked',
           candidate: null,
-          error: 'This turn could not be saved in the current format. Your text is retained. Reload the story before continuing.'
+          undoTurn: null,
+          error: 'This change could not be saved in the current format. Your text is retained. Reload the story before continuing.'
         });
       }
       else
@@ -391,9 +409,6 @@ export class StoryCoordinator
       if (!this.live(sequence)) return;
       if (snapshot.epoch !== library.epoch || snapshot.adventure.id !== this.state.snapshot.adventure.id) throw new Error('inconsistent_story_read');
       const projection = reconstruct(snapshot);
-      if (snapshot.epoch !== this.state.snapshot.epoch
-        || snapshot.adventure.version !== this.state.snapshot.adventure.version)
-        this.inputHistory.reset(this.state.input);
       const preserveInput = Boolean(this.state.input && (message || this.state.error
         || snapshot.adventure.version !== this.state.snapshot.adventure.version
         || snapshot.epoch !== this.state.snapshot.epoch));
@@ -450,7 +465,6 @@ export class StoryCoordinator
 
   dispose(): void
   {
-    this.inputHistory.reset('');
     this.disposed = true;
     this.refreshRequested = false;
     ++this.sequence;

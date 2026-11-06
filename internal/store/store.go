@@ -18,8 +18,8 @@ import (
 )
 
 // Transport and storage versions are separate from the unchanged Turn-0 schema.
-const SchemaVersion = 2
-const databaseVersion = 3
+const SchemaVersion = 3
+const databaseVersion = 4
 const baselineVersion = 1
 const applicationID = 0x4c4f5245
 
@@ -128,6 +128,13 @@ func (s *Store) initialize() error {
 		if err = addDraftTable(tx); err != nil {
 			return err
 		}
+		version = 3
+	}
+	if version == 3 && app == applicationID {
+		// Fence older binaries that equate the concurrency version with turn count.
+		if _, err = tx.Exec(`PRAGMA user_version = 4`); err != nil {
+			return err
+		}
 		return tx.Commit()
 	}
 	if err = tx.QueryRow(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'`).Scan(&tables); err != nil {
@@ -155,6 +162,9 @@ func (s *Store) initialize() error {
 		return err
 	}
 	if err = addDraftTable(tx); err != nil {
+		return err
+	}
+	if _, err = tx.Exec(`PRAGMA user_version = 4`); err != nil {
 		return err
 	}
 	return tx.Commit()

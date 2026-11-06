@@ -6,7 +6,7 @@ import { exerciseStory } from './check-story.mjs';
 import { exerciseStoryIntegration } from './check-story-integration.mjs';
 import { exerciseFork } from './check-story-fork.mjs';
 import { exerciseDrafts } from './check-story-draft.mjs';
-import { exerciseInputHistory } from './check-input-history.mjs';
+import { exerciseUndo } from './check-story-undo.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -31,7 +31,7 @@ try {
   await page.getByRole('status').getByText('Library ready', { exact: true }).waitFor();
   const list = () => page.evaluate(() => window.wails.Call.ByName('main.LibraryService.List'));
   const initial = await list();
-  assert.equal(initial.schemaVersion, 2);
+  assert.equal(initial.schemaVersion, 3);
 
   if (reopen) {
     const expected = JSON.parse(await readFile(statePath, 'utf8'));
@@ -39,9 +39,9 @@ try {
     for (const adventure of initial.adventures) {
       await page.locator(`[data-adventure-id="${adventure.id}"]`).click();
       await page.getByRole('heading', { name: adventure.title, exact: true }).waitFor();
-      if (adventure.version === 0) await page.getByText('No passages yet.', { exact: true }).waitFor();
+      if (expected.snapshots[adventure.id].turns.length === 0) await page.getByText('No passages yet.', { exact: true }).waitFor();
       else await page.locator('.accepted-turn').first().waitFor();
-      const snapshot = await page.evaluate(({ epoch, id }) => window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 2, epoch, adventureId: id }), { epoch: initial.epoch, id: adventure.id });
+      const snapshot = await page.evaluate(({ epoch, id }) => window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 3, epoch, adventureId: id }), { epoch: initial.epoch, id: adventure.id });
       assert.deepEqual(snapshot, expected.snapshots[adventure.id], 'Exact structured history survives process restart');
       await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
       assert.equal(await page.getByLabel('Story input').inputValue(), expected.drafts[adventure.id], 'Latest noncanonical input survives real process restart');
@@ -111,7 +111,7 @@ try {
 
     const rejected = await page.evaluate(async () => {
       try {
-        await window.wails.Call.ByName('main.LibraryService.Create', { schemaVersion: 2, epoch: 'wrong', adventureId: 'rejected', operationId: 'rejected', title: 'Rejected', baseline: { schemaVersion: 1 } });
+        await window.wails.Call.ByName('main.LibraryService.Create', { schemaVersion: 3, epoch: 'wrong', adventureId: 'rejected', operationId: 'rejected', title: 'Rejected', baseline: { schemaVersion: 1 } });
         return false;
       } catch { return true; }
     });
@@ -161,11 +161,11 @@ try {
     page = await exerciseStoryIntegration(page, base, artifacts, firstID);
     await exerciseFork(page, base, artifacts, firstID);
     await exerciseDrafts(page, base, artifacts, firstID);
-    await exerciseInputHistory(page, base, artifacts, firstID);
+    await exerciseUndo(page, base, artifacts);
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};
-      for (const adventure of library.adventures) snapshots[adventure.id] = await window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 2, epoch: library.epoch, adventureId: adventure.id });
+      for (const adventure of library.adventures) snapshots[adventure.id] = await window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 3, epoch: library.epoch, adventureId: adventure.id });
       return snapshots;
     }, finalLibrary);
     const drafts = await page.evaluate(async library =>
@@ -173,7 +173,7 @@ try {
       const drafts = {};
       for (const adventure of library.adventures)
       {
-        const draft = await window.wails.Call.ByName('main.LibraryService.ReadDraft', { schemaVersion: 2, epoch: library.epoch, adventureId: adventure.id, target: 'composer_story' });
+        const draft = await window.wails.Call.ByName('main.LibraryService.ReadDraft', { schemaVersion: 3, epoch: library.epoch, adventureId: adventure.id, target: 'composer_story' });
         drafts[adventure.id] = draft.text;
       }
       return drafts;

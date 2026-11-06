@@ -1,0 +1,47 @@
+---
+type: development-requirements
+status: in-progress
+created: "2026-11-06"
+updated: "2026-11-06"
+task: "DEV-003E"
+parent: "DEV-003"
+tags:
+  - planning/development
+  - requirements
+---
+
+# DEV-003E — Committed Story turn Undo and composer correction
+
+The user rejected DEV-003D's composer-only interpretation and explicitly accepted one corrective PR: remove custom input Undo/Redo, implement Undo of accepted story turns, continue differently in the same adventure, verify persistence/atomicity/conflicts, independently review, and provide a reachable review address and explanation **before requesting finalise/merge approval**. This launch authorises implementation/publication, not merge. [PR #14](https://github.com/Levelleor/lorebound/pull/14) is confirmed merged at `e31cad1d60e4d99cc3d45592b03fbca954524e61`; its historical delivery is preserved rather than relabelled as turn Undo.
+
+## Accepted authority and dependency audit
+
+[IDEA-0004](../../production/Retry%20Undo%20and%20Alternative%20Continuations.md), Accepted direction / Committed Undo / Same adventure may continue differently, requires deleting the latest accepted turn and reconstructing the surviving story/state back to Turn 0, without a temporary-editor depth limit. [B3-D04](../../architecture/decisions/B3-D04%20-%20Single%20Current%20History%20Without%20Revisions.md) governs current-only deletion and no canonical Redo/archive; [B3-D02](../../architecture/decisions/B3-D02%20-%20Idempotent%20Canonical%20Commit%20Attempts.md) and [B3-D05](../../architecture/decisions/B3-D05%20-%20Reject%20Stale%20Canonical%20Submissions%20and%20Refetch.md) require original-operation recovery and fresh decisions after stale rejection. [B3-D03](../../architecture/decisions/B3-D03%20-%20Atomic%20Historical%20Selection%20and%20Undo.md) is qualified by the later current-only decision. [B4-D06](../../architecture/decisions/B4-D06%20-%20Preflight%20Structural%20Integrity%20of%20Current%20History%20Mutations.md), [B2-D03](../../architecture/decisions/B2-D03%20-%20Turn-0%20Replay%20for%20Authoritative%20Reconstruction.md) and [B6-D01](../../architecture/decisions/B6-D01%20-%20Narrative%20First%20Declarative%20Outcome%20Events.md) govern deterministic preflight/reconstruction without AI. [IDEA-0042](../../production/Snapshots%20and%20Incremental%20State%20Rebuild.md) covers complete supported-state replay, not invented world/module functionality.
+
+Source inspection: merged code has only a minimal empty baseline, ordered structured authored/generated passages and zero world effects. Adventure version previously equalled turn count. No characters/world/lore/memory/plugin records or independent state corrections exist; [B4-D02](../../architecture/decisions/B4-D02%20-%20Undo%20and%20Truncation%20Boundaries%20for%20Independent%20Corrections.md)'s correction boundaries remain later. This child reconstructs **all currently supported state**, not nonempty world effects. Unknown effects stay read-only. Existing latest-draft autosave and independent Fork remain.
+
+Engineering contract: canonical operations increment a monotonic adventure version while turn order remains contiguous in the surviving current story. Typed `undo_story_turn` uses the existing atomic Commit path with expected version, epoch, operation ID and pinned latest turn ID. Receipts retain technical metadata only; replay never repeats a deletion or resurrects prose. Wire v3 rejects old tabs; a transactional nonspatial database v3→v4 metadata upgrade fences binaries that still assume version equals count, preserving existing identity/history/drafts/receipts. No spatial migration, new event schema or persisted checkpoint.
+
+## Bounded acceptance and maintained coverage
+
+Uses existing IDEA-0004/R07–R10 and R12 IDs from [the parent inventory](./DEV-003.md). Whole-IDEA certification remains incomplete.
+
+| Criterion | Observable requirement | Coverage target |
+| --- | --- | --- |
+| E01 — correct feature | Custom input-history owner/buttons/hotkey interception are removed; ordinary textarea editing and draft autosave remain. Only the latest accepted turn offers Undo; confirmation names the turn/boundary and explains permanent removal. Shared composer overlay blocks input until Confirm/Cancel. | UI/native input/browser checks; accepted B3-D07 pattern and design contract. |
+| E02 — surviving prefix | Undo Turn 2 removes its authored/generated passages and returns to exact Turn 1; repeated Undo reaches the unchanged baseline without a small depth cap. Restart/resume retains the result. No inactive body/event archive or canonical Redo. | Real SQLite deep/repeated rollback and reopen; TypeScript replay and real browser exact-prefix/restart scenarios. |
+| E03 — independent continuation | A new Turn 2 after Undo has new identities and only surviving history as generation context; old prose never returns. Existing independent Forks retain their original history and can still fork a source whose version exceeds count. | SQLite and coordinator continuation/Fork tests; real browser independent-future checks. |
+| E04 — atomic/conflict fencing | Delete/version/receipt are atomic; failure leaves canon/receipts unchanged. Wrong epoch, stale versions (including equal-count ABA), wrong target/baseline, malformed shapes and unsupported effects reject without writes. | SQLite rollback/rejection/concurrency/upgrade tests; coordinator stale/refetch and browser cross-tab race. |
+| E05 — uncertain operations | Lost Undo success/read failure blocks fresh writes and recovers the identical request without deleting the next turn. Old append/Fork receipt recovery after later Undo returns current canon without resurrection or permanent uncertainty. | SQLite receipt/reopen/cross-kind tests, coordinator/Fork recovery tests, real browser lost-response and changed-history scenarios. |
+| E06 — drafts and interaction | Undo retains available input and the latest shared saved draft. Pending generation/acceptance/uncertain writes cannot be bypassed; cancellation makes no canonical write. Keyboard confirmation/Cancel/Escape/focus and Dark/Bright four-width checks apply. | Coordinator/draft gating and browser input/focus/confirmation/responsive scenarios. |
+| E07 — user review gate | One primary PR contains scope/code/evidence/controls; CI and independent review precede a current verified review URL, explanation and demo. Await user feedback and explicit named-PR finalise/merge approval. | PR/chat handoff and NOW ready/awaiting review; no merge authority inferred from this launch. |
+
+## Maintained implementation and verification
+
+Source owners: [atomic Commit/Undo and technical history validation](../../../internal/store/story.go), [version fence](../../../internal/store/store.go), [Fork](../../../internal/store/fork.go), [coordinator/preflight/recovery](../../../frontend/src/lib/coordinator.ts), [wire contracts](../../../frontend/src/lib/library.ts), [replay](../../../frontend/src/lib/story.ts), [UI](../../../frontend/src/lib/StoryWorkspace.svelte). Existing draft storage remains separate and unchanged.
+
+Maintained coverage: [SQLite Undo/upgrade/recovery tests](../../../internal/store/undo_test.go), [coordinator/replay tests](../../../frontend/tests/story.test.ts), [Fork recovery tests](../../../frontend/tests/fork.test.ts), [real browser Undo scenarios](../../../frontend/scripts/check-story-undo.mjs) integrated into the [browser/exact restart harness](../../../frontend/scripts/check-browser.mjs). Focused SQLite, unit, typecheck/build and browser checks passed during development; the final version-limit guard is covered by a focused unit regression. IME key coverage is synthetic; no actual OS IME certification is claimed. Independent source/coverage review is provisionally passing after restoring its IME guard finding; publication CI and CI-capture review remain pending. No generated output is committed.
+
+## Remaining obligations
+
+Nonempty world effects, independent correction Undo boundaries, module/lore/memory reconstruction, historical prose edits, other modes/providers and broader library lifecycle remain later. Temporary passage-editor history remains later; removing DEV-003D does not erase its original acceptance history or certify IDEA-0004/R06. B9-D12 remains **DEFERRED — NO WORK**. Parent DEV-003 and IDEA-0004 remain PARTIAL; original notes stay in production. No next child starts automatically.

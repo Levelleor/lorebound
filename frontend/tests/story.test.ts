@@ -6,7 +6,7 @@ import { StoryCoordinator, type Generator, type StoryStorage } from '../src/lib/
 import type { Draft, DraftStorage } from '../src/lib/draft.ts';
 
 function blank(): Snapshot {
-  return { schemaVersion: 2, epoch: 'epoch', adventure: { id: 'adventure', title: 'Story', version: 0 }, baseline: { schemaVersion: 1 }, turns: [] };
+  return { schemaVersion: 3, epoch: 'epoch', adventure: { id: 'adventure', title: 'Story', version: 0 }, baseline: { schemaVersion: 1 }, turns: [] };
 }
 function turn(order: number, suffix = String(order)): Turn {
   return {
@@ -35,7 +35,7 @@ function fixture(generate: Generator = async () => 'A provisional response.', dr
   const writes: CommitRequest[] = [];
   const receipts = new Map<string, { request: string; result: CommitResult }>();
   const storage: StoryStorage = {
-    list: async () => ({ schemaVersion: 2, epoch: current.epoch, adventures: [current.adventure] }),
+    list: async () => ({ schemaVersion: 3, epoch: current.epoch, adventures: [current.adventure] }),
     read: async (epoch, id) => {
       if (readFailure) throw new Error('read_failed');
       if (epoch !== current.epoch) throw new Error('wrong_epoch');
@@ -52,8 +52,10 @@ function fixture(generate: Generator = async () => 'A provisional response.', dr
         return { ...old.result, replayed: true };
       }
       if (request.expectedVersion !== current.adventure.version) throw new Error('stale_version');
-      current = { ...current, adventure: { ...current.adventure, version: current.adventure.version + 1 }, turns: [...current.turns, structuredClone(request.turn)] };
-      const result: CommitResult = { schemaVersion: 2, epoch: request.epoch, adventureId: request.adventureId, operationId: request.operationId, version: current.adventure.version, turnId: request.turn.id, replayed: false };
+      const appended = request.kind === 'append_story_turn';
+      if (!appended && current.turns.at(-1)?.id !== request.turnId) throw new Error('invalid_request');
+      current = { ...current, adventure: { ...current.adventure, version: current.adventure.version + 1 }, turns: appended ? [...current.turns, structuredClone(request.turn)] : current.turns.slice(0, -1) };
+      const result: CommitResult = { schemaVersion: 3, epoch: request.epoch, adventureId: request.adventureId, operationId: request.operationId, version: current.adventure.version, turnId: request.kind === 'append_story_turn' ? request.turn.id : request.turnId, replayed: false };
       receipts.set(request.operationId, { request: JSON.stringify(request), result });
       if (dropResponse) { dropResponse = false; throw new Error('lost_response'); }
       return result;
@@ -138,7 +140,7 @@ test('IDEA-0040/R02: structured prose roundtrips paragraphs, hard breaks, Unicod
   for (const invalid of ['', ' \n\n ', 'a'.repeat(20001), '\ud800', ...Array.from({ length: 1 }, () => 'a\n'.repeat(2001))]) assert.throws(() => plainTextToDocument(invalid), /invalid_passage_document/);
   assert.equal(documentToText(plainTextToDocument('🦉'.repeat(20000))).length, 40000);
   for (const invalid of [
-    { schemaVersion: 2, type: 'doc', content: document.content },
+    { schemaVersion: 3, type: 'doc', content: document.content },
     { ...document, html: '<b>hidden</b>' },
     { schemaVersion: 1, type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'raw\nline' }] }] },
     { schemaVersion: 1, type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'hard_break', text: 'hidden' }] }] }
@@ -160,7 +162,7 @@ test('IDEA-0039/R04 + IDEA-0040/R01: pure replay preserves distinct passage iden
     (s: Snapshot) => { s.turns[1].order = 1; },
     (s: Snapshot) => { s.turns[1].passages[1].id = s.turns[0].passages[0].id; },
     (s: Snapshot) => { s.turns[1].passages[1].source = 'authored'; },
-    (s: Snapshot) => { s.adventure.version = 3; }
+    (s: Snapshot) => { s.adventure.version = 1; }
   ]) { const invalid = structuredClone(snapshot); mutate(invalid); assert.throws(() => readSnapshot(invalid)); }
 });
 
@@ -747,34 +749,142 @@ test('IDEA-0004/R03–R05: failed replacement drains deferred hints; Retry canno
   assert.deepEqual(f.writes, []);
 });
 
-test('DEV-003D: input Undo/Redo autosaves latest text without canonical writes', async () =>
+async function acceptInput(coordinator: StoryCoordinator, input: string)
 {
-  let draft: Draft | null = null;
-  const f = fixture(undefined, {
-    readDraft: async request => ({ ...request, text: 'Restored input' }),
-    saveDraft: async request => { draft = request; return request; }
-  });
-  await f.coordinator.draft!.restore();
-  assert.equal(f.coordinator.state.canUndoInput, false);
-  f.coordinator.setInput('Edited once');
-  f.coordinator.setInput('Edited twice');
-  f.coordinator.undoInput();
-  assert.equal(f.coordinator.state.input, 'Edited once');
-  assert.equal(f.coordinator.state.canRedoInput, true);
-  await f.coordinator.draft!.flush();
-  assert.equal(draft!.text, 'Edited once');
-  f.coordinator.undoInput();
-  assert.equal(f.coordinator.state.input, 'Restored input');
-  assert.equal(f.coordinator.undoInput(), null);
-  f.coordinator.redoInput();
-  f.coordinator.setInput('A fresh edit');
-  assert.equal(f.coordinator.redoInput(), null);
-  assert.equal(f.writes.length, 0);
-  assert.deepEqual(f.head(), blank());
+  coordinator.setInput(input);
+  await coordinator.generate();
+  await coordinator.accept();
+  assert.equal(coordinator.state.phase, 'idle');
+}
+
+test('IDEA-0004/R07–R08: confirmed Undo reconstructs the prefix and continues with a new turn in the same adventure', async () =>
+{
+  let history: string[] = [];
+  const f = fixture(async request => { history = request.history; return `Continuation for ${request.input}`; });
+  await acceptInput(f.coordinator, 'First accepted passage');
+  await acceptInput(f.coordinator, 'Original second passage');
+  const original = structuredClone(f.head());
+  f.coordinator.setInput('Unfinished next input');
+  f.coordinator.requestUndo();
+  assert.equal(f.coordinator.state.phase, 'undo-ready');
+  assert.equal(f.writes.length, 2, 'Preparing Undo never writes');
+  f.coordinator.setInput('Blocked typing');
+  await f.coordinator.generate();
+  await f.coordinator.accept();
+  assert.equal(f.coordinator.state.input, 'Unfinished next input');
+  assert.equal(f.writes.length, 2);
+  f.coordinator.discard();
+  assert.equal(f.coordinator.state.phase, 'idle');
+  assert.deepEqual(f.head(), original);
+  f.coordinator.requestUndo();
+  await f.coordinator.confirmUndo();
+  assert.equal(f.coordinator.state.snapshot.adventure.id, original.adventure.id);
+  assert.equal(f.head().adventure.version, 3);
+  assert.deepEqual(f.head().turns, original.turns.slice(0, 1));
+  assert.deepEqual(f.coordinator.state.projection.passages, original.turns[0].passages);
+  assert.equal(f.coordinator.state.input, 'Unfinished next input');
+  await acceptInput(f.coordinator, 'Different second passage');
+  assert.equal(f.head().adventure.version, 4);
+  assert.equal(f.head().turns[1].order, 2);
+  assert.notEqual(f.head().turns[1].id, original.turns[1].id);
+  assert.deepEqual(history, original.turns[0].passages.map(passage => documentToText(passage.body)));
+  assert.equal(JSON.stringify(f.head()).includes('Original second passage'), false);
+  for (let i = 0; i < 2; ++i)
+  {
+    f.coordinator.requestUndo();
+    await f.coordinator.confirmUndo();
+  }
+  assert.deepEqual(f.head().turns, []);
+  assert.equal(f.head().adventure.version, 6);
+  f.coordinator.requestUndo();
+  await f.coordinator.confirmUndo();
+  assert.equal(f.writes.length, 6, 'Baseline has no earlier turn');
   f.coordinator.dispose();
 });
 
-test('DEV-003D: unchanged focus restores retain history; a different shared draft replaces it', async () =>
+test('IDEA-0004/R10: lost Undo reply recovers the same deletion after a newer continuation without removing that turn', async () =>
+{
+  const f = fixture();
+  await acceptInput(f.coordinator, 'One');
+  await acceptInput(f.coordinator, 'Two');
+  f.coordinator.setInput('Keep unfinished input');
+  f.coordinator.requestUndo();
+  f.dropReply();
+  await f.coordinator.confirmUndo();
+  assert.equal(f.coordinator.state.phase, 'uncertain');
+  const request = structuredClone(f.writes.at(-1));
+  f.coordinator.requestUndo();
+  await f.coordinator.confirmUndo();
+  await f.coordinator.generate();
+  assert.equal(f.writes.length, 3);
+  f.replace({ ...f.head(), adventure: { ...f.head().adventure, version: 4 }, turns: [...f.head().turns, turn(2, 'new-future')] });
+  await f.coordinator.retrySave();
+  assert.deepEqual(f.writes.at(-1), request);
+  assert.equal(f.coordinator.state.phase, 'idle');
+  assert.equal(f.coordinator.state.snapshot.turns.at(-1)!.id, 'turn-new-future');
+  assert.equal(f.coordinator.state.input, 'Keep unfinished input');
+  assert.equal(f.head().adventure.version, 4);
+  f.coordinator.dispose();
+});
+
+test('IDEA-0004/R10: failed Undo refetch remains uncertain and uses the original receipt', async () =>
+{
+  const f = fixture();
+  await acceptInput(f.coordinator, 'One');
+  f.coordinator.requestUndo();
+  f.failRead(true);
+  await f.coordinator.confirmUndo();
+  assert.equal(f.coordinator.state.phase, 'uncertain');
+  assert.equal(f.head().turns.length, 0);
+  f.failRead(false);
+  await f.coordinator.retrySave();
+  assert.equal(f.coordinator.state.phase, 'idle');
+  assert.equal(f.head().adventure.version, 2);
+  assert.deepEqual(f.writes[1], f.writes[2]);
+  f.coordinator.dispose();
+});
+
+test('IDEA-0004/R10: stale equal-count Undo refetches without automatically removing the new future', async () =>
+{
+  const f = fixture();
+  await acceptInput(f.coordinator, 'Original first turn');
+  f.coordinator.setInput('Keep this input');
+  f.coordinator.requestUndo();
+  f.replace({ ...f.head(), adventure: { ...f.head().adventure, version: 3 }, turns: [turn(1, 'replacement')] });
+  await f.coordinator.confirmUndo();
+  assert.equal(f.coordinator.state.phase, 'idle');
+  assert.equal(f.coordinator.state.undoTurn, null);
+  assert.match(f.coordinator.state.error, /saved story or library changed/);
+  assert.equal(f.coordinator.state.input, 'Keep this input');
+  assert.equal(f.head().turns[0].id, 'turn-replacement');
+  assert.equal(f.writes.length, 2);
+  await f.coordinator.confirmUndo();
+  assert.equal(f.writes.length, 2);
+  f.coordinator.requestUndo();
+  await f.coordinator.confirmUndo();
+  assert.notEqual(f.writes[1].operationId, f.writes[2].operationId);
+  assert.equal(f.head().turns.length, 0);
+  f.coordinator.dispose();
+});
+
+test('IDEA-0004/R10: original append receipt after later Undo resolves current canon without resurrecting the removed turn', async () =>
+{
+  const f = fixture();
+  f.coordinator.setInput('Accepted then removed elsewhere');
+  await f.coordinator.generate();
+  f.dropReply();
+  await f.coordinator.accept();
+  const originalRequest = structuredClone(f.writes[0]);
+  f.replace({ ...f.head(), adventure: { ...f.head().adventure, version: 2 }, turns: [] });
+  await f.coordinator.retrySave();
+  assert.deepEqual(f.writes[1], originalRequest);
+  assert.equal(f.coordinator.state.phase, 'idle');
+  assert.deepEqual(f.coordinator.state.snapshot.turns, []);
+  assert.match(f.coordinator.state.notice, /later undone/);
+  f.coordinator.dispose();
+});
+
+test('IDEA-0004/R10: Undo flushes pending input without consuming the latest saved draft', async () =>
 {
   let text = '';
   const f = fixture(undefined, {
@@ -782,83 +892,42 @@ test('DEV-003D: unchanged focus restores retain history; a different shared draf
     saveDraft: async request => { text = request.text; return request; }
   });
   await f.coordinator.draft!.restore();
-  f.coordinator.setInput('First');
-  f.coordinator.setInput('Second');
-  await f.coordinator.draft!.flush();
-  await f.coordinator.refresh();
-  assert.equal(f.coordinator.state.canUndoInput, true);
-  text = 'Different latest draft';
-  await f.coordinator.refresh();
-  assert.equal(f.coordinator.state.input, text);
-  assert.equal(f.coordinator.undoInput(), null);
-  assert.equal(f.coordinator.redoInput(), null);
+  await acceptInput(f.coordinator, 'One');
+  f.coordinator.setInput('Do not consume this input');
+  f.coordinator.requestUndo();
+  await f.coordinator.confirmUndo();
+  assert.equal(f.coordinator.state.input, 'Do not consume this input');
+  assert.equal(text, 'Do not consume this input');
+  assert.equal(f.coordinator.state.draftStatus, 'saved');
+  assert.equal(f.head().turns.length, 0);
   f.coordinator.dispose();
 });
 
-test('DEV-003D: generation, Stop, Discard and Retry cannot revive old input edits or candidates', async () =>
+test('IDEA-0004/R12: Undo cannot bypass generating, provisional or unsupported-history states', async () =>
 {
   const gate = deferred<string>();
   const f = fixture(() => gate.promise);
-  f.coordinator.setInput('Earlier input');
-  f.coordinator.setInput('Input sent for generation');
+  f.coordinator.setInput('In progress');
   const generating = f.coordinator.generate();
-  assert.equal(f.coordinator.state.canUndoInput, false);
-  assert.equal(f.coordinator.undoInput(), null);
-  f.coordinator.stop();
-  assert.equal(f.coordinator.state.input, 'Input sent for generation');
-  assert.equal(f.coordinator.undoInput(), null);
-  gate.resolve('Generated candidate');
+  f.coordinator.requestUndo();
+  assert.equal(f.coordinator.state.phase, 'generating');
+  gate.resolve('Provisional');
   await generating;
-  await f.coordinator.generate();
-  const candidate = f.coordinator.state.candidate;
-  assert.ok(candidate);
-  f.coordinator.redoInput();
-  assert.deepEqual(f.coordinator.state.candidate, candidate);
-  await f.coordinator.retry();
-  f.coordinator.discard();
-  assert.equal(f.coordinator.undoInput(), null);
-  assert.equal(f.coordinator.redoInput(), null);
-  assert.equal(f.coordinator.state.candidate, null);
+  f.coordinator.requestUndo();
+  assert.equal(f.coordinator.state.phase, 'ready');
   assert.equal(f.writes.length, 0);
   f.coordinator.dispose();
 });
 
-test('DEV-003D: successful and uncertain acceptance never expose consumed input through Undo', async () =>
+test('DEV-003E: exhausted version budget rejects Undo preparation without an uncaught error', () =>
 {
   const f = fixture();
-  f.coordinator.setInput('Earlier draft');
-  f.coordinator.setInput('Accepted input');
-  await f.coordinator.generate();
-  f.dropReply();
-  await f.coordinator.accept();
-  assert.equal(f.coordinator.state.phase, 'uncertain');
-  assert.equal(f.coordinator.undoInput(), null);
-  assert.equal(f.coordinator.redoInput(), null);
-  await f.coordinator.retrySave();
-  assert.equal(f.coordinator.state.input, '');
-  assert.equal(f.coordinator.undoInput(), null);
-  f.coordinator.setInput('Next unfinished input');
-  f.coordinator.undoInput();
-  assert.equal(f.coordinator.state.input, '');
-  assert.equal(f.head().adventure.version, 1);
-  assert.equal(f.writes[0].operationId, f.writes[1].operationId);
+  const snapshot = { ...blank(), adventure: { ...blank().adventure, version: Number.MAX_SAFE_INTEGER }, turns: [turn(1)] };
+  const coordinator = new StoryCoordinator(snapshot, { storage: f.storage });
+  assert.doesNotThrow(() => coordinator.requestUndo());
+  assert.equal(coordinator.state.undoTurn, null);
+  assert.match(coordinator.state.error, /version limit/);
+  assert.equal(f.writes.length, 0);
+  coordinator.dispose();
   f.coordinator.dispose();
-});
-
-test('DEV-003D: canonical refresh and disposed adventure clear temporary edit history', async () =>
-{
-  const f = fixture();
-  f.coordinator.setInput('Older local input');
-  f.coordinator.setInput('Still available input');
-  f.replace({ ...blank(), adventure: { ...blank().adventure, version: 1 }, turns: [turn(1)] });
-  await f.coordinator.refresh();
-  assert.equal(f.coordinator.state.input, 'Still available input');
-  assert.equal(f.coordinator.undoInput(), null);
-  assert.equal(f.coordinator.redoInput(), null);
-  f.coordinator.setInput('Another edit');
-  f.coordinator.dispose();
-  f.coordinator.setInput('Must not be applied');
-  assert.equal(f.coordinator.undoInput(), null);
-  assert.equal(f.coordinator.redoInput(), null);
-  assert.equal(f.coordinator.state.input, 'Another edit');
 });

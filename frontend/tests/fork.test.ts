@@ -16,7 +16,7 @@ function turn(order: number): Turn
 }
 function source(): Snapshot
 {
-  return { schemaVersion: 2, epoch: 'epoch', adventure: { id: 'source', title: 'Source', version: 3 }, baseline: { schemaVersion: 1 }, turns: [turn(1), turn(2), turn(3)] };
+  return { schemaVersion: 3, epoch: 'epoch', adventure: { id: 'source', title: 'Source', version: 3 }, baseline: { schemaVersion: 1 }, turns: [turn(1), turn(2), turn(3)] };
 }
 function fixture()
 {
@@ -36,7 +36,7 @@ function fixture()
       if (!receipt)
       {
         destination = { ...structuredClone(original), adventure: { id: request.adventureId, title: request.title, version: 2 }, turns: structuredClone(original.turns.slice(0, 2)) };
-        receipt = { schemaVersion: 2, epoch: request.epoch, adventureId: request.adventureId, operationId: request.operationId, version: 2, turnId: request.turnId, replayed: false };
+        receipt = { schemaVersion: 3, epoch: request.epoch, adventureId: request.adventureId, operationId: request.operationId, version: 2, turnId: request.turnId, replayed: false };
       }
       if (dropReply)
       {
@@ -66,7 +66,7 @@ test('IDEA-0011/R01-R03: request pins actual accepted boundary and source versio
 {
   const original = source();
   const request = prepareFork(original, 'turn-2', '  New future  ', 'fork', 'operation');
-  assert.deepEqual(request, { schemaVersion: 2, epoch: 'epoch', operationId: 'operation', sourceAdventureId: 'source', expectedVersion: 3, turnId: 'turn-2', adventureId: 'fork', title: 'New future' });
+  assert.deepEqual(request, { schemaVersion: 3, epoch: 'epoch', operationId: 'operation', sourceAdventureId: 'source', expectedVersion: 3, turnId: 'turn-2', adventureId: 'fork', title: 'New future' });
   assert.equal(Object.isFrozen(request), true);
   for (const boundary of ['baseline', 'provisional', 'authored-1', 'turn-4']) assert.throws(() => prepareFork(original, boundary, 'Title', 'fork', 'op'));
   assert.throws(() => prepareFork(original, 'turn-1', 'x'.repeat(161), 'fork', 'op'));
@@ -134,14 +134,14 @@ test('pending Fork is single flight and disposed work cannot reopen a destinatio
   assert.equal(f.controller.state.phase, 'saving');
   assert.equal(await f.controller.submit('turn-2', 'Duplicate'), null);
   f.controller.dispose();
-  release({ schemaVersion: 2, epoch: 'epoch', adventureId: 'id-1', operationId: 'id-2', version: 2, turnId: 'turn-2', replayed: false });
+  release({ schemaVersion: 3, epoch: 'epoch', adventureId: 'id-1', operationId: 'id-2', version: 2, turnId: 'turn-2', replayed: false });
   assert.equal(await pending, null);
 });
 
 test('malformed/mismatched Fork receipt cannot be treated as confirmed', async () =>
 {
   const f = fixture();
-  f.storage.fork = async () => ({ schemaVersion: 2, epoch: 'other', adventureId: 'wrong', operationId: 'wrong', version: 2, turnId: 'turn-2', replayed: false });
+  f.storage.fork = async () => ({ schemaVersion: 3, epoch: 'other', adventureId: 'wrong', operationId: 'wrong', version: 2, turnId: 'turn-2', replayed: false });
   assert.equal(await f.controller.submit('turn-2', 'Fork'), null);
   assert.equal(f.controller.state.phase, 'uncertain');
 });
@@ -151,4 +151,19 @@ test('default Fork title uses the source name with a Unicode-safe storage limit'
   assert.equal(defaultForkTitle('A winter road'), 'fork: A winter road');
   assert.equal(defaultForkTitle('🦉'.repeat(160)), 'fork: ' + '🦉'.repeat(154));
   assert.equal([...defaultForkTitle('x'.repeat(160))].length, 160);
+});
+
+test('DEV-003E: recovering an existing Fork after destination Undo opens its current history', async () =>
+{
+  const f = fixture();
+  const originalRead = f.storage.read;
+  f.storage.read = async (epoch, id) =>
+  {
+    const snapshot = await originalRead(epoch, id);
+    return { ...snapshot, adventure: { ...snapshot.adventure, version: 3 }, turns: snapshot.turns.slice(0, 1) };
+  };
+  const snapshot = await f.controller.submit('turn-2', 'Independent future');
+  assert.equal(f.controller.state.phase, 'complete');
+  assert.equal(snapshot!.turns.length, 1);
+  assert.equal(snapshot!.adventure.version, 3);
 });

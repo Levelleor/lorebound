@@ -1,6 +1,6 @@
 import { isID, isObject, readTurns, type Turn } from './story.ts';
 
-export const schemaVersion = 2;
+export const schemaVersion = 3;
 export const baselineSchemaVersion = 1;
 export interface Adventure { id: string; title: string; version: number }
 export interface Baseline { schemaVersion: number }
@@ -8,10 +8,22 @@ export interface Library { schemaVersion: number; epoch: string; adventures: Adv
 export interface Snapshot { schemaVersion: number; epoch: string; adventure: Adventure; baseline: Baseline; turns: Turn[] }
 export interface CreateRequest { schemaVersion: number; epoch: string; operationId: string; adventureId: string; title: string; baseline: Baseline }
 export interface CreateResult { snapshot: Snapshot; replayed: boolean }
-export interface CommitRequest {
+interface CommitBase
+{
   schemaVersion: number; epoch: string; operationId: string; adventureId: string;
-  expectedVersion: number; kind: 'append_story_turn'; turn: Turn;
+  expectedVersion: number;
 }
+export interface AppendRequest extends CommitBase
+{
+  kind: 'append_story_turn';
+  turn: Turn;
+}
+export interface UndoRequest extends CommitBase
+{
+  kind: 'undo_story_turn';
+  turnId: string;
+}
+export type CommitRequest = AppendRequest | UndoRequest;
 export interface CommitResult {
   schemaVersion: number; epoch: string; adventureId: string; operationId: string;
   version: number; turnId: string; replayed: boolean;
