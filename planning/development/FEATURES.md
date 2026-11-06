@@ -11,7 +11,9 @@ verified_idea_count: 0
 
 **This is the authoritative live feature-completion ledger for the development workflow.** Exactly **52 original accepted IDEA notes** exist in [production](../production/). They are *approved scopes*, not implemented features. A partial technical foundation is **not** completion of a whole IDEA. The [current task](./NOW.md), [task queue](./TASKS.md) and [runbook](./AGENT-RUNBOOK.md) govern how evidence is added.
 
-## Reconciled completeness, 2026-11-06
+## Reconciled completeness, 2026-11-06 — effective on confirmed PR #12 merge
+
+**PR #12 closure condition:** The post-merge status below is effective only when [PR #12](https://github.com/Levelleor/lorebound/pull/12) is confirmed merged with its checked final head. Before that confirmation, verified main remains `f66b169ec210d3782833994c4455ad4debe51c4e`, with eight partial ideas, zero complete ideas and three formally certified IDEA-0006 rows. The user approved finalising and merging this same PR on 2026-11-06: “yes finish the task”. No later child is authorised.
 
 | Measure | Current status |
 | --- | --- |
@@ -19,9 +21,9 @@ verified_idea_count: 0
 | Original IDEA notes in production | **52** |
 | Original IDEA notes in staging | **0** |
 | Fully VERIFIED complete ideas | **0** |
-| PARTIAL foundation evidence | **8**: IDEA-0002, IDEA-0004, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053 from merged PRs #4/#6/#8/#10 and earlier Gate 0 PR #3 |
-| Remaining notes with no feature-level implementation evidence | **44** |
-| Accepted **atomic** requirements inventoried | **95 DEV-002 draft records across seven IDEAs, plus 12 IDEA-0004 rows in the DEV-003 scoped audit** (107 recorded rows across eight IDEAs); DEV-002C reconciles 57 First-bearing rows; whole-IDEA inventory/certification remains incomplete |
+| PARTIAL foundation evidence | **9**: IDEA-0002, IDEA-0004, IDEA-0006, IDEA-0011, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053 from PRs #4/#6/#8/#10/#12 and earlier Gate 0 PR #3, subject to the closure condition |
+| Remaining notes with no feature-level implementation evidence | **43** |
+| Accepted **atomic** requirements inventoried | **95 DEV-002 draft records across seven IDEAs, plus 12 IDEA-0004 rows in the DEV-003 scoped audit** plus eight scoped IDEA-0011 rows in DEV-003B (**115 recorded rows across nine IDEAs**); DEV-002C reconciles 57 First-bearing rows; whole-IDEA inventory/certification remains incomplete |
 | Atomic requirements marked VERIFIED | **3 formally certified**: IDEA-0006/R01–R03 from PR #4. DEV-002B/C and DEV-003A have tested scoped requirement coverage; no extra whole-row certification is inferred from mixed/later or empty-effect coverage |
 | New feature proposals awaiting approval | **0 recorded** |
 | Deferred spatial migration | **B9-D12 DEFERRED**, not an automatically accepted requirement |
@@ -36,7 +38,7 @@ Milestone grouping below is a **proposed sequencing/coverage aid**; it does not 
 | --- | --- | --- |
 | **M0** | Real Wails/browser/Go + Go SQLite technical host/storage foundation | [Gate 0 merged PR #3](https://github.com/Levelleor/lorebound/pull/3), extended by [DEV-002A merged PR #4](https://github.com/Levelleor/lorebound/pull/4); broader host/storage requirements remain open |
 | **M1** | One accepted, reopened Story-mode turn and basic adventure entry | **DEV-002**: **VERIFIED & MERGED bounded scope**, A/B/C merged with final-head CI and independent review; [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
-| **M2** | Edit, Retry, Undo, Fork, current-history recovery | Provisional Retry verified/merged in [DEV-003A PR #10](https://github.com/Levelleor/lorebound/pull/10); remaining children unstarted |
+| **M2** | Edit, Retry, Undo, Fork, current-history recovery | Provisional Retry verified/merged in [DEV-003A PR #10](https://github.com/Levelleor/lorebound/pull/10); bounded DEV-003B Fork verified on confirmed PR #12 merge; other children unstarted |
 | **M3** | Real browser-side model providers, streaming, interpretation and routing | Depends on M1 contract; deterministic mocked scenarios plus separate provider smoke |
 | **M4** | Lorebook, derived context/memory and author notes | Depends on canonical history and provider context |
 | **M5** | Characters, playing-as, scene, statuses, items/equipment | Depends on stable IDs, current events |
@@ -61,7 +63,7 @@ Merged DEV-002C extends the same seven partial ideas with safe deferred invalida
 | [IDEA-0007](../production/Character%20Creation%20and%20Starting%20Choices.md) | Character creation and starting choices | S10 | M5 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0008](../production/Reusable%20Scenario%20Templates%20and%20Placeholders.md) | Reusable scenario templates | S02 | M7 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0010](../production/Narration%20Style%20and%20Perspective%20Controls.md) | Narration style and perspective controls | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0011](../production/Manual%20Generation%20Branches.md) | Manual generation branches | S02 | M2 | **NOT STARTED** | Not yet inventoried | None |
+| [IDEA-0011](../production/Manual%20Generation%20Branches.md) | Manual generation branches | S02 | M2 | **PARTIAL (on confirmed PR #12 merge)** | [DEV-003B scoped inventory](./requirements/DEV-003B.md) | [PR #12](https://github.com/Levelleor/lorebound/pull/12), [scoped evidence](./evidence/DEV-003B.md), [revised independent review PASS](./evidence/DEV-003B-ux-review.md); effective on checked-head merge |
 | [IDEA-0012](../production/Cloud%20LLM%20Provider%20Connectors.md) | Cloud LLM provider connectors | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0013](../production/Local%20LLM%20Server%20Connections.md) | Local LLM server connections | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0014](../production/Provider%20Connection%20Profiles%20and%20Discovery.md) | Provider profiles and discovery | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
@@ -190,3 +192,19 @@ The user authorised the recorded next action: commit/push/PR and final-head CI. 
 ### 2026-11-05 — DEV-003A verified and merged
 
 [PR #10](https://github.com/Levelleor/lorebound/pull/10) merged as `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145`. Final head `75384544377b4de982514549976619ad368b5f56` and merged main have identical tree; [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42141159906) and independent source/unit/runtime review cover the bounded simulated Story Retry behavior. IDEA-0004 is now PARTIAL, giving **eight PARTIAL ideas, 44 without feature-level implementation evidence, zero complete IDEAs**. Its R01–R05 scoped evidence does not certify nonempty effects or every full original requirement; the three formally certified IDEA-0006 rows remain the formal count. All 52 original notes remain in production. Parent DEV-003 is PARTIAL; no later child was selected or started. Earlier local/unmerged entries above retain their dated historical meaning.
+
+### 2026-11-06 — DEV-003B authorised launch (unmerged)
+
+IDEA-0011's bounded Story-only committed-prefix Fork is IN PROGRESS on `feat/dev-003b-story-fork`; [scoped inventory](./requirements/DEV-003B.md). Existing IDEA-0004/R09 and storage/history subsets are related. Main retains eight PARTIAL ideas, zero complete ideas and three formally certified IDEA-0006 rows. Full world/Lorebook/memory/plugin copying, rename/delete operations and other DEV-003 children remain later. No original idea is archived.
+
+### 2026-11-06 — DEV-003B primary PR open, independent local PASS
+
+[PR #12](https://github.com/Levelleor/lorebound/pull/12) contains implementation, scope/evidence, independent review, controls and prepared conditional closure. Source commit `085e53fb3fe6207e3cc506947f217b036b78399c`; independently reviewed source hashes match. Publication CI and verbal finalise/merge approval remain pending at this record's write. IDEA-0011 remains unmerged IN PROGRESS; main retains eight partial ideas/zero complete and three certified atomic rows. On confirmed checked-head merge only, prepared closure will make IDEA-0011 PARTIAL (nine total). No next child is selected.
+
+### 2026-11-06 — User correction to DEV-003B Fork interaction (PR #12 unmerged)
+
+The user rejected the story-level turn/title form. Current required interaction is a small accessible fork icon beneath each accepted turn, directly selecting that boundary and opening the independent adventure in a separate browser tab/window, with default `fork: [source story name]`. Renaming is separate; no rename feature is added to this child. The source tab/input stays intact. Generated titles respect the existing 160-codepoint limit by Unicode-safe truncation. Blocked pop-ups perform no write; uncertain/closed-target recovery reuses the original operation and offers destination reopening. Previous dialog/UI evidence is historical; revised UI checks/review/CI are pending. Same primary PR #12, approval still pending, no merge or next child.
+
+### 2026-11-06 — DEV-003B approved same-PR closure (effective on confirmed merge)
+
+The user said “yes finish the task” after the explicit request to finalise and merge PR #12. Readiness head `f86dec286538e3c029536e77162477a4f4946b2a` passed [CI42243295778](https://github.com/Levelleor/lorebound/actions/runs/42243295778) and independent revised source/runtime/publication review. Closure records are in that same PR and effective only after its checked final head is confirmed merged. IDEA-0011 becomes PARTIAL, yielding nine partial ideas/43 without feature-level implementation evidence; zero complete original ideas and three formally certified IDEA-0006 rows remain unchanged. The eight IDEA-0011 rows have bounded Story-only zero-effects coverage; broader world/Lorebook/memory/plugin and rename/edit/delete obligations remain later. All 52 notes stay in production, with no archival. [Reconciliation](./evidence/DEV-003B-reconciliation.md). No next child starts; B9-D12 stays deferred.

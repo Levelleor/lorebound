@@ -3,6 +3,7 @@
   import { host } from './host';
   import { StoryCoordinator, type CoordinatorState } from './coordinator';
   import type { Snapshot } from './library';
+  import { ForkController, defaultForkTitle, type ForkState } from './fork';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -13,6 +14,101 @@
   let candidateSection: HTMLElement;
   let acceptButton: HTMLButtonElement;
   let stopButton: HTMLButtonElement;
+  let forkController: ForkController | null = null;
+  let forkState: ForkState | null = null;
+  let forkTarget: Window | null = null;
+  let forkTurnId = '';
+  let forkUrl = '';
+  let forkError = '';
+  let forkBusy = false;
+  let publish: (next: CoordinatorState) => void;
+
+  function waitingForkTab(): Window | null
+  {
+    try
+    {
+      return forkTarget && !forkTarget.closed && forkTarget.location.href === 'about:blank' ? forkTarget : null;
+    }
+    catch
+    {
+      return null;
+    }
+  }
+
+  function showForkProgress(target: Window, message: string)
+  {
+    const progress = target.document.createElement('p');
+    progress.textContent = message;
+    const libraryLink = target.document.createElement('a');
+    libraryLink.href = window.location.origin;
+    libraryLink.textContent = 'Open adventure library';
+    libraryLink.style.color = 'inherit';
+    target.document.body.replaceChildren(progress, libraryLink);
+  }
+
+  function dismissForkError()
+  {
+    forkError = '';
+    forkState = null;
+  }
+
+  async function saveFork()
+  {
+    if (!forkController || !state) return;
+    const created = await forkController.submit(forkTurnId, defaultForkTitle(state.snapshot.adventure.title));
+    const target = waitingForkTab();
+    if (!created)
+    {
+      if (target && forkState?.phase === 'uncertain') showForkProgress(target, 'Return to the original Lorebound tab to recover this fork.');
+      return;
+    }
+    const url = new URL(window.location.href);
+    url.search = '';
+    url.searchParams.set('adventure', created.adventure.id);
+    forkUrl = url.href;
+    if (target) target.location.replace(forkUrl);
+    forkTarget = null;
+  }
+
+  async function openFork(turnId: string)
+  {
+    if (!state || forkBusy || state.phase !== 'idle' || state.refreshing || state.projection.blocked) return;
+    forkTurnId = turnId;
+    forkUrl = '';
+    forkError = '';
+    forkState = null;
+    // Reserve the tab inside the click's user activation, before awaiting storage.
+    forkTarget = window.open('about:blank', '_blank');
+    if (!forkTarget)
+    {
+      forkError = 'Allow pop-ups for Lorebound, then try this fork again. No adventure was created.';
+      return;
+    }
+    forkTarget.opener = null;
+    forkTarget.document.title = 'Creating fork — Lorebound';
+    showForkProgress(forkTarget, 'Creating your fork…');
+    const colors = getComputedStyle(document.documentElement);
+    Object.assign(forkTarget.document.body.style, {
+      background: colors.getPropertyValue('--background'),
+      color: colors.getPropertyValue('--foreground'),
+      font: '16px system-ui, sans-serif',
+      padding: '32px'
+    });
+    forkController?.dispose();
+    forkController = new ForkController(state.snapshot, host, next =>
+    {
+      forkState = next;
+      forkBusy = next.phase === 'saving' || next.phase === 'uncertain';
+      publish(coordinator.state);
+      if (next.phase === 'rejected' || (next.phase === 'editing' && next.error))
+      {
+        waitingForkTab()?.close();
+        forkTarget = null;
+      }
+      if (next.phase === 'complete' || next.phase === 'rejected') coordinator.requestRefresh();
+    });
+    await saveFork();
+  }
 
   async function generate()
   {
@@ -51,7 +147,7 @@
   function handleInputKey(event: KeyboardEvent)
   {
     if (!(event.ctrlKey || event.metaKey) || event.key !== 'Enter') return;
-    if (state?.phase !== 'idle' || state.refreshing) return;
+    if (forkBusy || state?.phase !== 'idle' || state.refreshing) return;
     event.preventDefault();
     void generate();
   }
@@ -61,7 +157,7 @@
     const channel = typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel('lorebound-story-changes');
     let lastVersion = snapshot.adventure.version;
     let lastEpoch = snapshot.epoch;
-    const publish = (next: CoordinatorState) =>
+    publish = (next: CoordinatorState) =>
     {
       if (next.snapshot.adventure.version !== lastVersion || next.snapshot.epoch !== lastEpoch)
       {
@@ -78,14 +174,17 @@
         : next.phase === 'blocked' ? 'Read only'
         : next.error ? 'Needs attention'
         : next.input ? 'Unsaved input' : '✓ Saved';
-      onUpdate({ snapshot: next.snapshot, status, locked: next.phase === 'saving' || next.phase === 'uncertain' });
+      onUpdate({ snapshot: next.snapshot, status, locked: forkBusy || next.phase === 'saving' || next.phase === 'uncertain' });
     };
     coordinator = new StoryCoordinator(snapshot, {
       storage: host,
       onChange: publish
     });
     publish(coordinator.state);
-    const refresh = () => coordinator.requestRefresh();
+    const refresh = () =>
+    {
+      if (!forkBusy) coordinator.requestRefresh();
+    };
     if (channel) channel.onmessage = event =>
     {
       if (event.data?.adventureId === snapshot.adventure.id) refresh();
@@ -93,6 +192,9 @@
     window.addEventListener('focus', refresh);
     return () =>
     {
+      forkController?.dispose();
+      const target = waitingForkTab();
+      if (target) target.location.replace(window.location.origin);
       coordinator.dispose();
       channel?.close();
       window.removeEventListener('focus', refresh);
@@ -119,6 +221,26 @@
               {/each}
             </div>
           {/each}
+          <div class="turn-actions">
+            <button class="quiet fork-action" aria-label={`Fork from turn ${turn.order}`} title={`Fork from turn ${turn.order} in a new tab`}
+              onclick={() => openFork(turn.id)} disabled={forkBusy || state.phase !== 'idle' || state.refreshing}>
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="6" cy="5" r="2.5" /><circle cx="6" cy="19" r="2.5" /><circle cx="18" cy="5" r="2.5" />
+                <path d="M6 7.5v9M18 7.5v1a5 5 0 0 1-5 5H6" />
+              </svg>
+            </button>
+            {#if forkTurnId === turn.id}
+              {#if forkState?.phase === 'saving'}<span class="supporting" role="status">Creating fork…</span>{/if}
+              {#if forkState?.phase === 'uncertain'}<button onclick={saveFork}>Recover fork</button>{/if}
+              {#if forkUrl}<a href={forkUrl} target="_blank" rel="noopener">Open fork</a>{/if}
+            {/if}
+          </div>
+          {#if forkTurnId === turn.id && (forkError || forkState?.error)}
+            <div class="story-error" role="alert">
+              <p>{forkError || forkState?.error}</p>
+              {#if forkError || forkState?.phase === 'rejected' || forkState?.phase === 'editing'}<button class="quiet" onclick={dismissForkError}>Dismiss</button>{/if}
+            </div>
+          {/if}
         </section>
       {/each}
       {#if state.phase === 'generating'}
@@ -143,7 +265,7 @@
       <div class="composer-input">
         <label class="sr-only" for="story-input">Story input</label>
         <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
-          disabled={!state || state.phase !== 'idle'}
+          disabled={forkBusy || !state || state.phase !== 'idle'}
           oninput={(event) => coordinator.setInput(event.currentTarget.value)}
           onkeydown={handleInputKey}></textarea>
         {#if state?.phase === 'ready' || state?.phase === 'saving' || state?.phase === 'uncertain'}
@@ -161,10 +283,16 @@
         {:else if state?.phase === 'blocked'}
           <div class="pending-overlay"><p>Story writes are unavailable.</p><button onclick={() => coordinator.refresh()}>Reload story</button></div>
         {:else}
-          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={!state?.input.trim() || state.refreshing}>↑</button>
+          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={forkBusy || !state?.input.trim() || state.refreshing}>↑</button>
         {/if}
       </div>
       <p class="composer-hint">{state?.phase === 'idle' ? 'Ctrl / ⌘ + Enter to generate. Input is not saved until you accept.' : 'Only accepted passages are saved. World tracking is not available yet.'}</p>
     </div>
   </div>
 </main>
+
+<style>
+  .turn-actions { display: flex; align-items: center; gap: 12px; margin-top: 12px; min-height: 32px; }
+  .fork-action { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 6px; }
+  .turn-actions a { color: var(--primary); font-size: 12px; }
+</style>

@@ -4,7 +4,7 @@ type: idea
 status: production
 origin: agent
 created: "2026-10-16"
-updated: "2026-11-03"
+updated: "2026-11-06"
 accepted_at: "2026-10-16"
 accepted_by: "requesting user (chat confirmation)"
 approved_at: "2026-11-03"
@@ -41,8 +41,14 @@ Players can explore different outcomes without losing the original version.
 
 This is explicitly **not** acceptance of the originally proposed in-story timeline/branch-tree interface.
 
+## Accepted Fork interaction — 2026-11-06
+
+The requesting user explicitly corrected DEV-003B's unmerged UI: use a **small fork icon beneath the accepted turn to fork from**, opening the new independent adventure in a **separate browser tab/window with that prefix already copied**. The clicked turn determines the boundary directly; do not present a turn-selection/title form. The default adventure title is **`fork: [source adventure name]`**; renaming is separate. Keep the original adventure/tab and available composer input intact. This is an explicit Fork action, not an in-story branch tree or stored response-variant selector.
+
+The current 160-codepoint title limit is retained through Unicode-safe truncation of the automatic default. Blocked pop-ups must not create an unseen adventure; lost-response recovery must preserve the same logical operation. Closing a waiting target does not undo a durable copy and must not cause another copy when opening the completed destination. [DEV-003B scope/evidence](../development/requirements/DEV-003B.md) records bounded Story-only zero-effects verification, effective only on confirmed checked-head merge of primary PR #12. The user separately approved finalising and merging that named PR on 2026-11-06: “yes finish the task”. Full IDEA-0011 remains incomplete/production-stage; broader state/lifecycle copying and renaming remain later, with no whole-IDEA certification or archival.
+
 ## Proposed behaviour
-From an explicit story-level action, a player chooses to fork the adventure (potentially from a selected prior turn or saved revision). Lorebound creates a distinct adventure record and initialises that record with the necessary prose/revisions and validated state through the fork point. The fork is independently listed in the adventure library; its future events and editing history do not affect the original. The original's existing future remains undisturbed. The storage implementation may copy source data or reuse immutable internal data safely, but the visible unit is always a separate adventure, not a sub-branch inside a story.
+From the explicit icon beneath an accepted turn, the player forks that current committed prefix into a separate browser tab/window. Lorebound creates a distinct adventure record and initialises that record with the necessary prose/revisions and validated state through the fork point. The fork is independently listed in the adventure library; its future events and editing history do not affect the original. The original's existing future remains undisturbed. The storage implementation may copy source data or reuse immutable internal data safely, but the visible unit is always a separate adventure, not a sub-branch inside a story.
 
 ## Alternatives and trade-offs
 **Rejected from the original assistant proposal:** A branch/tree picker inside one story, multiple story heads attached to one UI entry, and branch-specific switching mechanics within the chat. The accepted alternative is to fork into a new full adventure object. Simple whole-save duplication (IDEA-0005) is related but may not supply a chosen historical fork point. Implementation may use independent copies or safe immutable sharing internally; that is not a player-visible branching feature.
@@ -69,12 +75,12 @@ From an explicit story-level action, a player chooses to fork the adventure (pot
 - The rule against silently rewriting later prose still applies.
 
 ## Open questions
-- **Resolved:** Fork from **any committed story turn**, not only named save points or materialised checkpoints. Exact turn selection/navigation in the UI remains for later refinement.
-- How should a point-in-history be selected without adding an in-chat branch-tree mechanic?
+- **Resolved:** Fork from **any committed story turn**, not only named save points or materialised checkpoints. Turn selection/navigation is now resolved by the 2026-11-06 per-turn icon and separate-tab decision above.
+- **Resolved 2026-11-06:** The small Fork icon beneath an accepted turn selects that boundary directly, with no branch tree or selector form.
 - **Resolved user-visible requirement:** The fork independently owns all accepted history, text, provenance and state **through the selected turn** with no later source turns and no shared mutable data. Whether immutable internal infrastructure may be safely shared remains a technical implementation detail.
 - How are provenance and source-story attribution represented without forcing branch-specific UI?
 - How should a fork handle the chosen current story-turn boundary, noncanonical pending drafts, and any **technically unprocessable** event payloads? Fictional contradictions are not fork errors.
-- Is a separate "Fork Story" library action sufficient alongside the already accepted Duplicate feature?
+- **Resolved 2026-11-06:** Fork uses the small icon beneath the selected accepted turn; a separate library/title form is not the selected interaction. Duplicate remains separate.
 
 ## Draft acceptance criteria
 - [ ] Fork is optional for preserving multiple **separately playable adventures**, whereas committed Undo can deterministically roll back and continue in the **same** adventure, with no selectable old future left behind.
@@ -115,3 +121,5 @@ From an explicit story-level action, a player chooses to fork the adventure (pot
 ## Stage transition history — 2026-11-03
 
 - **2026-11-03:** Requesting user explicitly approved promotion of all remaining 50 accepted `IDEA-` notes from staging to production. Original `IDEA-0011` identity, existing `accepted_at` and prior accepted/superseded alternatives retained. The new `approved_at` is the promotion date; **no implementation verification or spec archival** occurred.
+
+- **2026-11-06:** User explicitly corrected the unmerged DEV-003B interaction to a small fork icon beneath the selected accepted turn, separate browser tab/window and automatic `fork: [source name]` title; naming changes are separate. Same PR #12 remains subject to final review/checks and verbal merge approval.
