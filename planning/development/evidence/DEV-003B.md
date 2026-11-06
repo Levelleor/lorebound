@@ -1,6 +1,6 @@
 ---
 type: development-evidence
-status: revised-ux-unmerged
+status: verified-bounded-on-confirmed-merge
 created: "2026-11-06"
 updated: "2026-11-06"
 task: "DEV-003B"
@@ -8,7 +8,9 @@ task: "DEV-003B"
 
 # DEV-003B — Independent committed Story-prefix Fork evidence
 
-**[Primary PR #12](https://github.com/Levelleor/lorebound/pull/12) remains OPEN, approval PENDING.** The user rejected the initial dialog before merge approval and explicitly requested the current per-turn icon/separate-tab flow. That correction is recorded in [IDEA-0011](../../production/Manual%20Generation%20Branches.md) and the [scope audit](../requirements/DEV-003B.md). Revised implementation, lead runtime checks and [independent revised review PASS](./DEV-003B-ux-review.md); revised-head publication CI is pending. No merged-main or full-IDEA certification is claimed.
+**PR #12 closure condition:** The post-merge status below is effective only when [PR #12](https://github.com/Levelleor/lorebound/pull/12) is confirmed merged with its checked final head. Before that confirmation, verified main remains `f66b169ec210d3782833994c4455ad4debe51c4e`, with eight partial ideas, zero complete ideas and three formally certified IDEA-0006 rows. The user approved finalising and merging this same PR on 2026-11-06: “yes finish the task”. No later child is authorised.
+
+**DEV-003B is VERIFIED within the bounded Story-only simulated zero-effects scope under that merge condition.** Revised implementation head `f86dec286538e3c029536e77162477a4f4946b2a` passed [readiness CI](https://github.com/Levelleor/lorebound/actions/runs/42243295778), [revised independent source/runtime review](./DEV-003B-ux-review.md) and [final publication review](./DEV-003B-publication-review.md). The current turn-icon/separate-tab flow is the user-approved correction. Final closure additions stay in the same primary PR, with reviewed final-head CI and actual merge provenance recorded there and in the handoff. This is not full-IDEA certification.
 
 ## Current interaction and behavior
 
@@ -33,7 +35,7 @@ Linux; Node 24.14.0 at `/home/alex/.nvm/versions/node/v24.14.0/bin`; Go 1.27.3-X
 | Failure/recovery | PASS | Actual copied response is lost/held; same-request recovery, source/input preservation, blocked popup no write, closed target reopen no recopy, stale rejection/refetch, independent future acceptance and library resume |
 | Host restrictions and existing regressions | PASS | Real same-origin/cross-origin/metadata/Host/WebSocket checks and full existing Story/Retry/recovery/teardown suite; exact process restart compares every adventure/history |
 | Independent revised UI review | PASS, bounded | [Revised review](./DEV-003B-ux-review.md); prior storage evidence applies to unchanged source |
-| Revised published-head CI | NOT RUN (revision unpublished at write) | [PR #12 checks](https://github.com/Levelleor/lorebound/pull/12/checks); exact revised head must pass before approval handoff and final closure |
+| Revised implementation-head CI | PASS | [Run42243295778](https://github.com/Levelleor/lorebound/actions/runs/42243295778), head `f86dec286538e3c029536e77162477a4f4946b2a`; actual logs confirm all required gates. [Artifacts](https://github.com/Levelleor/lorebound/actions/runs/42243295778/artifacts/13516322428). Final closure-head CI must also pass and is recorded in PR #12. |
 | Other platforms/live providers | NOT RUN, outside child | Linux Firefox only; no provider/packaging/full accessibility certification |
 
 ## Historical first-iteration evidence
@@ -42,6 +44,6 @@ Linux; Node 24.14.0 at `/home/alex/.nvm/versions/node/v24.14.0/bin`; Go 1.27.3-X
 
 Storage integrity remains: first/interior/latest accepted boundary; complete exact prefix/baseline; both futures isolated after reopen; reject missing/provisional/invalid/stale/epoch/cross-kind operation misuse and corrupt/unsupported history; injected copy/receipt failure rolls back destination and receipt; concurrent writes yield an exact copy or stale rejection; original receipt recovery precedes source revalidation but follows epoch checks. [Scope](../requirements/DEV-003B.md).
 
-Full world effects, Lorebook/entities, memory/plugin data and rename/edit/delete integration remain later. Shared drafts, editor undo, committed Undo, historical edits, backup/export and packaging are outside this child. **B9-D12 DEFERRED — NO WORK.** No full original IDEA is complete or archived; formal atomic certification remains three IDEA-0006 rows. Closure remains conditional on verbal approval and confirmed checked-head merge of this same PR.
+Full world effects, Lorebook/entities, memory/plugin data and rename/edit/delete integration remain later. Shared drafts, editor undo, committed Undo, historical edits, backup/export and packaging are outside this child. **B9-D12 DEFERRED — NO WORK.** No full original IDEA is complete or archived; formal atomic certification remains three IDEA-0006 rows. Verbal finalise/merge approval is recorded; closure remains conditional on confirmed checked-head merge of this same PR.
 
 Final artifact-capture follow-through: new two-tab screenshots exposed a fixture issue when it typed into the background destination after capture. The final fixture foregrounds each tab before capture/input and bounds custom waits/captures; full lead browser/host/restart verification then passed with all ten new images. Application source was unchanged during this testing correction. [Final publication review](./DEV-003B-publication-review.md) covers its test delta and source identity; the first reviewer completed the revised app/runtime review before hitting an account usage limit during the extra capture probe.

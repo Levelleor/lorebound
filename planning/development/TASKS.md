@@ -3,12 +3,14 @@ type: development-task-queue
 status: current
 created: "2026-11-03"
 updated: "2026-11-06"
-current_next_task: "DEV-003B"
+current_next_task: "DEV-003"
 ---
 
 # Lorebound — Development Task Queue
 
 **One next task, clear dependencies, no anonymous work.** The single operational Next Task lives in [NOW.md](./NOW.md); this file owns task scope, delivery order, evidence and review state. The [52-idea feature ledger](./FEATURES.md) owns whole-feature coverage. This queue is **not another architecture approval round**.
+
+**PR #12 closure condition:** The post-merge status below is effective only when [PR #12](https://github.com/Levelleor/lorebound/pull/12) is confirmed merged with its checked final head. Before that confirmation, verified main remains `f66b169ec210d3782833994c4455ad4debe51c4e`, with eight partial ideas, zero complete ideas and three formally certified IDEA-0006 rows. The user approved finalising and merging this same PR on 2026-11-06: “yes finish the task”. No later child is authorised.
 
 ## Task lifecycle
 
@@ -22,7 +24,7 @@ Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies,
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
 | **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | **VERIFIED & MERGED — bounded Story-only zero-effects scope** | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C merged [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
-| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A verified/merged, DEV-003B IN PROGRESS; other children unstarted | [Merged PR #10](https://github.com/Levelleor/lorebound/pull/10) |
+| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A verified/merged, DEV-003B verified on confirmed PR #12 merge; other children unstarted | [Merged PR #10](https://github.com/Levelleor/lorebound/pull/10) |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
 | **DEV-006** | Universal characters, Playing As, status, anatomy, items and equipment | DEV-002; supported typed entity events | IDEA-0007, IDEA-0026, IDEA-0027, IDEA-0029–IDEA-0031, IDEA-0034, IDEA-0064 | QUEUED | None |
@@ -113,7 +115,7 @@ Required evidence: existing build/typecheck, TS unit and real SQLite contracts; 
 
 ### DEV-003 — Retry, drafts, Undo/Fork and current-history editing
 
-Status: **PARTIAL; DEV-003A VERIFIED & MERGED, DEV-003B IN PROGRESS / UNMERGED**. User authorised launch on 2026-11-05. DEV-002 dependency satisfied; [audit and child boundary](./requirements/DEV-003.md). DEV-003B now implements bounded Story-prefix Fork; shared drafts, temporary editor undo, committed Undo and historical edits remain unstarted; completing Retry does not complete this parent.
+Status: **PARTIAL; DEV-003A VERIFIED & MERGED, DEV-003B verified on confirmed PR #12 merge**. User authorised launch on 2026-11-05. DEV-002 dependency satisfied; [audit and child boundary](./requirements/DEV-003.md). DEV-003B now implements bounded Story-prefix Fork; shared drafts, temporary editor undo, committed Undo and historical edits remain unstarted; completing Retry does not complete this parent.
 
 ### DEV-003A — Replace the provisional Story candidate on Retry
 
@@ -154,10 +156,12 @@ The next executable action must always be copied into [NOW.md](./NOW.md), with n
 
 ### DEV-003B — Independent committed Story-prefix Fork
 
-Status: **PR OPEN / REVIEW**, [primary PR #12](https://github.com/Levelleor/lorebound/pull/12), branch `feat/dev-003b-story-fork`; owner Codex and independent reviewer `/root/fork_review`. The user's 2026-11-06 launch and subsequent explicit UX correction authorise this bounded child; verbal finalise/merge approval remains PENDING.
+Status: **VERIFIED & MERGED within bounded scope, effective only on confirmed checked-head merge of [primary PR #12](https://github.com/Levelleor/lorebound/pull/12)**. Approval: requesting user, 2026-11-06, “yes finish the task”, in direct reply to the named PR finalise/merge question. Branch `feat/dev-003b-story-fork`; revised source `f86dec286538e3c029536e77162477a4f4946b2a`; [readiness CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42243295778). Final closure-head checks and actual merge provenance are recorded in PR #12 and the handoff. Owner Codex; independent revised source/runtime and publication review, plus closure review.
 
-Dependency subset: merged DEV-002A/B/C and DEV-003A supply independently scoped persistence, current structured history, replay and commit guards. No full Duplicate/export, Undo or world-system dependency is claimed complete. [Requirement audit](./requirements/DEV-003B.md).
+Dependency subset: merged DEV-002A/B/C and DEV-003A provide adventure-scoped persistence, current structured history, replay and commit guards. This does not complete Duplicate/export, Undo or world systems. [Scope](./requirements/DEV-003B.md).
 
-Current scope: a small accessible icon beneath the chosen accepted turn creates its complete supported Story-only zero-effects prefix/baseline in a separate browser tab/window with default `fork: [source name]`, preserving source/tab/input. No turn/title form. Renaming remains separate, and names truncate safely to the existing 160-codepoint limit. Real source/future isolation, atomic rollback, source-version/epoch fencing, same-request recovery and blocked-popup/closed-target behavior are required. No drafts/provisional copying, branch tree, nonempty effects, schema change or B9-D12 work.
+Verified child behavior under the merge condition: a small accessible icon beneath any accepted turn copies exactly its supported Story-only zero-effects prefix/baseline into a separate adventure/tab, default `fork: [source name]`, preserving source URL/history/live input. No selector/title form or rename feature. Names truncate by codepoints to 160. Atomic source-version/epoch/idempotency guards, rollback, independent future acceptance/restart and popup/closed-target/lost-response/stale recovery pass. No schema change, drafts/provisional copying, nonempty effects, branch tree or B9-D12 work.
 
-Revised local check/build/37 TS cases/real browser/restart/eight visual checks pass; [evidence](./evidence/DEV-003B.md), [revised independent review PASS](./evidence/DEV-003B-ux-review.md). Go 19 functions/62 nested cases and vet pass for unchanged storage. Prior dialog source/evidence/CI are historical. Exact revised-head publication CI and verbal approval remain required. [Conditional closure preparation](./evidence/DEV-003B-reconciliation.md) is ineffective before confirmed checked-head merge. No separate reconciliation PR or next child starts.
+37 TS cases; 19 Go functions/62 nested cases; build/typecheck/vet; real Firefox/Wails/Go/SQLite/restart; eight responsive checks and two destination captures; independent probes/reviews PASS. [Evidence](./evidence/DEV-003B.md), [UX review](./evidence/DEV-003B-ux-review.md), [publication review](./evidence/DEV-003B-publication-review.md), [same-PR closure/reconciliation](./evidence/DEV-003B-reconciliation.md). Prior dialog evidence is historical.
+
+**Next task candidate: DEV-003**, requiring a separate user-authorised launch to audit/select one remaining child. Parent remains PARTIAL. No later child starts through this approval and no separate reconciliation PR is required.
