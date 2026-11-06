@@ -55,7 +55,7 @@ Merged DEV-002C extends the same seven partial ideas with safe deferred invalida
 | [IDEA-0001](../production/Single-Player%20Account-Free%20Experience.md) | Single-player account-free experience | S01 | M1 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0002](../production/Freeform%20Player%20Action%20Modes.md) | Freeform player action modes | S03 | M1 | **PARTIAL** | [DEV-002B scoped audit](./evidence/DEV-002B-requirements-audit.md); remaining inventory draft | [Merged PR #6](https://github.com/Levelleor/lorebound/pull/6); [evidence](./evidence/DEV-002B.md) |
 | [IDEA-0003](../production/Direct%20Editable%20Prose%20Document.md) | Direct editable prose document | S03 | M2 | **NOT STARTED** | Not yet inventoried | None |
-| [IDEA-0004](../production/Retry%20Undo%20and%20Alternative%20Continuations.md) | Retry, Undo and alternate continuations | S05 | M2 | **NOT STARTED** | Not yet inventoried | None |
+| [IDEA-0004](../production/Retry%20Undo%20and%20Alternative%20Continuations.md) | Retry, Undo and alternate continuations | S05 | M2 | **IMPLEMENTED / UNVERIFIED (Retry only, local)** | [DEV-003A Retry audit](./requirements/DEV-003.md); full Undo/editing obligations remain | [Local evidence](./evidence/DEV-003A.md), [review PASS](./evidence/DEV-003A-review.md); unpublished/unmerged |
 | [IDEA-0005](../production/Adventure%20Save%20and%20Export%20Management.md) | Adventure save/export management | S02 | M7 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0006](../production/Quick%20Start%20and%20Custom%20Story%20Openings.md) | Quick Start and custom openings | S02 | M1 | **PARTIAL** | [R01–R03 VERIFIED](./evidence/DEV-002A.md); [DEV-002B scope](./evidence/DEV-002B.md); remaining parent inventory draft | [Merged PRs #4](https://github.com/Levelleor/lorebound/pull/4) / [#6](https://github.com/Levelleor/lorebound/pull/6) |
 | [IDEA-0007](../production/Character%20Creation%20and%20Starting%20Choices.md) | Character creation and starting choices | S10 | M5 | **NOT STARTED** | Not yet inventoried | None |
@@ -169,3 +169,15 @@ User explicitly authorised the bounded Story-loop integration/parent verificatio
 ### 2026-11-05 — DEV-002C and bounded parent merged
 
 User explicitly authorised merge/finalisation. [PR #8](https://github.com/Levelleor/lorebound/pull/8) merged as `9c4a615b32faee3a513467e3ecc8cf6f5d5b760a` with identical tested tree; [final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088907520) and independent review apply. DEV-002/DEV-002C are VERIFIED & MERGED within their Story-only simulated zero-effects scope. The 57-row First matrix is reconciled; seven PARTIAL ideas, three formally certified atomic rows and zero complete ideas remain the feature counts. Earlier unmerged entries above are chronological snapshots. DEV-003 is queued and unstarted.
+
+### 2026-11-05 — DEV-003A authorised local launch
+
+DEV-003 was launched explicitly and split to one bounded Retry child. IDEA-0004/R01–R05 are in progress locally; R06–R12 remain later work. Existing IDEA-0044/0039/0040/0051 commit/history obligations retain their previous partial status. Main still has seven partial original ideas, three formally certified atomic rows, zero complete ideas. [Scope and accepted-source audit](./requirements/DEV-003.md). No original IDEA is archived.
+
+### 2026-11-05 — DEV-003A local checks and independent review PASS
+
+Bounded Story-only/zero-effects portions of IDEA-0004/R01–R05 are implemented with [local evidence](./evidence/DEV-003A.md) and [independent source/unit/runtime review PASS](./evidence/DEV-003A-review.md). R02 does not certify nonempty effects; R06–R12 and full parent obligations remain later/partial as audited. No additional atomic rows are formally VERIFIED before publication CI and merge. Main counts remain seven partial ideas, three formally certified atomic rows, zero complete original ideas.
+
+### 2026-11-05 — DEV-003A publication launch
+
+The user authorised the recorded next action: commit/push/PR and final-head CI. Reviewed source hashes still match the independent report, and fetched `origin/main` remains `34f25a0fa841827b0b4486106e411c9d28bad2ab`. Publication changes no requirement completion or merged-main feature counts.

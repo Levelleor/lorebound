@@ -1,0 +1,23 @@
+7:52PM INF AssetServer Info: middleware=true handler=true
+Lorebound: http://127.0.0.1:18083
+7:52PM INF Platform Info: mode=server
+7:52PM INF Server mode enabled (built with -tags server)
+7:52PM INF Build Info: Wails=v3.1.0 Compiler=go1.27.3-X:nodwarf5 GOEXPERIMENT=nodwarf5 GOOS=linux GOAMD64=v1 vcs=git -tags=server vcs.revision=34f25a0fa841827b0b4486106e411c9d28bad2ab vcs.time=2026-11-05T19:11:52Z vcs.modified=true -buildmode=exe -compiler=gc CGO_ENABLED=0 GOARCH=amd64
+7:52PM INF Server mode starting address=127.0.0.1:18083
+7:52PM INF [AssetFileServerFS] Handling request url=/ file=.
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/chunks/BWj9D5tW.js file=_app/immutable/chunks/BWj9D5tW.js
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/chunks/CRzLMJPS.js file=_app/immutable/chunks/CRzLMJPS.js
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/entry/start.BoVDsaWv.js file=_app/immutable/entry/start.BoVDsaWv.js
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/entry/payload.DSmR2FwN.js file=_app/immutable/entry/payload.DSmR2FwN.js
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/chunks/CnHLrRD-.js file=_app/immutable/chunks/CnHLrRD-.js
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/chunks/2nOSw8-r.js file=_app/immutable/chunks/2nOSw8-r.js
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/entry/app.ZEYEy-Km.js file=_app/immutable/entry/app.ZEYEy-Km.js
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/nodes/0.DCu04KzV.js file=_app/immutable/nodes/0.DCu04KzV.js
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/assets/2.7hltgoGl.css file=_app/immutable/assets/2.7hltgoGl.css
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/nodes/2.TNDxmLys.js file=_app/immutable/nodes/2.TNDxmLys.js
+7:52PM INF [AssetFileServerFS] Handling request url=/_app/immutable/nodes/1.CLC9TjNS.js file=_app/immutable/nodes/1.CLC9TjNS.js
+7:52PM INF [AssetFileServerFS] Handling request url=/favicon.ico file=favicon.ico
+7:52PM INF WebSocket client connected id=browser-1 clients=1
+7:52PM INF WebSocket client disconnected id=browser-1 clients=0
+7:52PM INF Quitting application...
+7:52PM INF Shutdown signal received

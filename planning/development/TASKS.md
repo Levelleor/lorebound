@@ -3,7 +3,7 @@ type: development-task-queue
 status: current
 created: "2026-11-03"
 updated: "2026-11-05"
-current_next_task: "DEV-003"
+current_next_task: "DEV-003A"
 ---
 
 # Lorebound — Development Task Queue
@@ -22,7 +22,7 @@ Every task has: unique ID, purpose, IDEA/atomic-requirement links, dependencies,
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
 | **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | **VERIFIED & MERGED — bounded Story-only zero-effects scope** | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C merged [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
-| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | **QUEUED / NOT STARTED**; DEV-002 dependency satisfied, separate launch required | None |
+| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0041, IDEA-0042, IDEA-0011 | **IN PROGRESS**; bounded DEV-003A launched, remaining children unstarted | None |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
 | **DEV-006** | Universal characters, Playing As, status, anatomy, items and equipment | DEV-002; supported typed entity events | IDEA-0007, IDEA-0026, IDEA-0027, IDEA-0029–IDEA-0031, IDEA-0034, IDEA-0064 | QUEUED | None |
@@ -111,9 +111,21 @@ Bounded scope: close the existing Story-only, simulated, zero-world-effects pare
 
 Required evidence: existing build/typecheck, TS unit and real SQLite contracts; expanded Firefox/Wails/Go/SQLite checks and exact process restart; responsive/keyboard screenshots; independent accepted-source audit and implementation/browser review; final-head CI. Executed [evidence](./evidence/DEV-002C.md): build/check, 23 TS cases, 14 Go functions/43 subcases, vet, lead/reviewer Firefox/Wails/SQLite and exact restart PASS; [independent review](./evidence/DEV-002C-review.md) PASS after two diagnostic race fixes. [All 57 First-bearing rows](./evidence/DEV-002C-requirements.md) have bounded dispositions. [Implementation-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088372352) at `30f153db153034e41ce1f62e85ec569a7db0be23`. [Final-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42088907520) at `ba9b3c346f5bd7330b5cb19763c31e95c201ebb5`; merged tree matches. Parent DEV-002 is VERIFIED & MERGED only within the accepted Story-only simulated zero-effects scope. Broader original IDEA obligations remain partial/later. Apply the user's personal-development-style override. No live provider, other modes, full history/drafts/world effects, host packaging or B9-D12 work; no later DEV task launches automatically.
 
-### DEV-003 — Next queued task
+### DEV-003 — Retry, drafts, Undo/Fork and current-history editing
 
-Status: **QUEUED / NOT STARTED**. Bounded DEV-002 dependency satisfied by merged A/B/C children. A separate launch must audit accepted Retry/draft/Undo/Fork/editing contracts, identify dependencies and select one bounded implementation child; this finalisation does not start it.
+Status: **IN PROGRESS through DEV-003A**. User authorised launch on 2026-11-05. DEV-002 dependency satisfied; [audit and child boundary](./requirements/DEV-003.md). Shared drafts, temporary editor undo, committed Undo, Fork and historical edits remain unstarted; completing Retry does not complete this parent.
+
+### DEV-003A — Replace the provisional Story candidate on Retry
+
+Status: **PUBLICATION IN PROGRESS (LOCAL CHECKS AND REVIEW PASS; UNMERGED)**. Owner: Codex lead; independent reviewer assigned under the runbook. Branch `feat/dev-003a-provisional-retry`, base main `34f25a0fa841827b0b4486106e411c9d28bad2ab`. Authority: user “Proceed to next task.”
+
+Scope: IDEA-0004/R01–R05, existing coordinator concurrency/commit guards and shared composer UI. Retry immediately invalidates the prior candidate; repeated replacements remain provisional; failure/Stop retain input and canon; only the latest validated result may accept. B3-D02 identical save recovery is distinct from Retry, B3-D05 stale rejection remains binding. Simulated generation, zero world effects, no persistence/schema changes.
+
+Gates: build/typecheck, targeted TypeScript races, existing real SQLite regressions, Firefox/Wails/SQLite replacement/Stop/reload/accept/reopen and stale/uncertain-write checks; Dark/Bright at 390/768/1024/1440; independent source/runtime review. CI/PR/merge pending separate publication instruction. No full IDEA/archive claim; B9-D12 remains deferred.
+
+Executed [evidence](./evidence/DEV-003A.md): zero build/typecheck diagnostics; 30 TypeScript cases; 14 Go functions/43 SQLite subcases; vet; lead/reviewer real Firefox/Wails/Go/SQLite, failure/recovery and exact restart; eight responsive theme/width checks PASS. [Independent review](./evidence/DEV-003A-review.md) PASS. No scoped source blocker.
+
+Publication authorised by the user on 2026-11-05: “proceed with next task”, following the explicit DEV-003A publication/CI handoff. Next action: commit/push, open PR and inspect final-head CI. Merge remains a later explicit action; later children remain unstarted.
 
 ## Deferred and cross-cutting gates
 

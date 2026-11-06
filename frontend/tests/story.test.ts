@@ -468,3 +468,214 @@ test('DEV-002C: background hints preserve technical rejection until deliberate R
   assert.equal(f.coordinator.state.error, '');
   assert.equal(f.writes.length, 1, 'Reload does not automatically resubmit');
 });
+
+test('IDEA-0004/R01–R02: Retry invalidates immediately and only the latest replacement can accept', async () =>
+{
+  const replacement = deferred<string>();
+  const requests: unknown[] = [];
+  let calls = 0;
+  const f = fixture(async request =>
+  {
+    requests.push(structuredClone(request));
+    calls++;
+    if (calls === 2) return replacement.promise;
+    return `Candidate ${calls}.`;
+  });
+  f.coordinator.setInput('Keep the authored passage.');
+  await f.coordinator.generate();
+  const first = f.coordinator.state.candidate!;
+  const retry = f.coordinator.retry();
+  assert.equal(f.coordinator.state.phase, 'generating');
+  assert.equal(f.coordinator.state.candidate, null, 'Old candidate is gone before replacement completes');
+  await f.coordinator.accept();
+  await f.coordinator.retry();
+  await f.coordinator.generate();
+  f.coordinator.setInput('Cannot change the pending input.');
+  assert.equal(calls, 2, 'No duplicate in-flight generation');
+  assert.equal(f.writes.length, 0);
+  replacement.resolve('Replacement.');
+  await retry;
+  const second = f.coordinator.state.candidate!;
+  assert.notEqual(second.id, first.id);
+  await f.coordinator.retry();
+  const latest = f.coordinator.state.candidate!;
+  assert.notEqual(latest.id, second.id);
+  assert.deepEqual(requests, Array(3).fill({ input: 'Keep the authored passage.', history: [] }));
+  assert.equal(documentToText(latest.passages[1].body), 'Candidate 3.');
+  await f.coordinator.accept();
+  assert.equal(f.writes.length, 1);
+  assert.deepEqual(f.head().turns, [latest]);
+  assert.equal(f.head().turns.some(turn => turn.id === first.id || turn.id === second.id), false);
+});
+
+test('IDEA-0004/R03: rejected and malformed replacements never revive old prose or mutate accepted history', async () =>
+{
+  for (const result of [new Error('provider_failure'), '', 'x'.repeat(20001), '\ud800'])
+  {
+    let calls = 0;
+    const f = fixture(async () =>
+    {
+      if (++calls <= 2) return 'Valid response.';
+      if (result instanceof Error) throw result;
+      return result;
+    });
+    f.coordinator.setInput('Accepted first.');
+    await f.coordinator.generate();
+    await f.coordinator.accept();
+    const before = structuredClone(f.head());
+    f.coordinator.setInput('Keep the replacement input.');
+    await f.coordinator.generate();
+    await f.coordinator.retry();
+    assert.equal(f.coordinator.state.phase, 'idle');
+    assert.equal(f.coordinator.state.candidate, null);
+    assert.equal(f.coordinator.state.input, 'Keep the replacement input.');
+    assert.match(f.coordinator.state.error, /could not be prepared/);
+    await f.coordinator.accept();
+    assert.deepEqual(f.head(), before);
+    assert.equal(f.writes.length, 1);
+  }
+});
+
+test('IDEA-0004/R04: Stop fences late replacement resolve or reject even after a newer candidate is ready', async () =>
+{
+  for (const reject of [false, true])
+  {
+    const late = deferred<string>();
+    let calls = 0;
+    let replacementSignal: AbortSignal | undefined;
+    const f = fixture(async (_request, signal) =>
+    {
+      if (++calls !== 2) return `Response ${calls}.`;
+      replacementSignal = signal;
+      return late.promise;
+    });
+    f.coordinator.setInput('Retained input.');
+    await f.coordinator.generate();
+    const retry = f.coordinator.retry();
+    f.coordinator.stop();
+    assert.equal(replacementSignal!.aborted, true);
+    assert.equal(f.coordinator.state.candidate, null);
+    assert.equal(f.coordinator.state.input, 'Retained input.');
+    await f.coordinator.generate();
+    const newest = f.coordinator.state.candidate;
+    if (reject) late.reject(new Error('late_failure'));
+    else late.resolve('Old response must never return.');
+    await retry;
+    assert.equal(f.coordinator.state.candidate, newest);
+    assert.equal(f.coordinator.state.phase, 'ready');
+    assert.equal(f.coordinator.state.error, '');
+    await f.coordinator.accept();
+    assert.deepEqual(f.head().turns, [newest]);
+  }
+});
+
+test('IDEA-0004/R04: abandoning a replacement aborts it and publishes no late candidate', async () =>
+{
+  const late = deferred<string>();
+  let calls = 0;
+  let signal: AbortSignal | undefined;
+  const f = fixture(async (_request, currentSignal) =>
+  {
+    if (++calls === 1) return 'Original candidate.';
+    signal = currentSignal;
+    return late.promise;
+  });
+  f.coordinator.setInput('Input.');
+  await f.coordinator.generate();
+  const retry = f.coordinator.retry();
+  f.coordinator.dispose();
+  const abandoned = f.coordinator.state;
+  late.resolve('Abandoned replacement.');
+  await retry;
+  await f.coordinator.retry();
+  assert.equal(signal!.aborted, true);
+  assert.equal(f.coordinator.state, abandoned);
+  assert.equal(f.coordinator.state.candidate, null);
+  assert.deepEqual(f.writes, []);
+});
+
+test('IDEA-0004/R05: saving and uncertain outcomes reject generation Retry and recover the identical latest request', async () =>
+{
+  const f = fixture();
+  f.coordinator.setInput('Save only this replacement.');
+  await f.coordinator.generate();
+  await f.coordinator.retry();
+  const candidate = f.coordinator.state.candidate;
+  const gate = deferred<void>();
+  const original = f.storage.commit;
+  f.storage.commit = async request =>
+  {
+    await gate.promise;
+    return original(request);
+  };
+  f.dropReply();
+  const accepting = f.coordinator.accept();
+  await f.coordinator.retry();
+  assert.equal(f.coordinator.state.phase, 'saving');
+  assert.equal(f.coordinator.state.candidate, candidate);
+  gate.resolve();
+  await accepting;
+  assert.equal(f.coordinator.state.phase, 'uncertain');
+  await f.coordinator.retry();
+  assert.equal(f.coordinator.state.candidate, candidate);
+  assert.equal(f.coordinator.state.phase, 'uncertain');
+  await f.coordinator.retrySave();
+  assert.deepEqual(f.writes[0], f.writes[1]);
+  assert.deepEqual(f.head().turns, [candidate]);
+});
+
+test('IDEA-0004/R05: a replacement cannot silently rebase over a newer version or library epoch', async () =>
+{
+  for (const epochChange of [false, true])
+  {
+    const f = fixture();
+    f.coordinator.setInput('Losing input.');
+    await f.coordinator.generate();
+    f.replace(epochChange ? { ...blank(), epoch: 'new-epoch' }
+      : { ...blank(), adventure: { ...blank().adventure, version: 1 }, turns: [turn(1, 'winner')] });
+    f.coordinator.requestRefresh();
+    await f.coordinator.retry();
+    const current = structuredClone(f.head());
+    assert.equal(f.coordinator.state.snapshot.adventure.version, 0);
+    await f.coordinator.accept();
+    await new Promise(resolve => setImmediate(resolve));
+    assert.deepEqual(f.head(), current);
+    assert.equal(f.coordinator.state.candidate, null);
+    assert.equal(f.coordinator.state.input, 'Losing input.');
+    assert.match(f.coordinator.state.error, /changed/);
+    assert.equal(f.writes.length, 1);
+    assert.equal(f.coordinator.state.snapshot.epoch, current.epoch);
+  }
+});
+
+test('IDEA-0004/R03–R05: failed replacement drains deferred hints; Retry cannot bypass idle, refresh or blocked states', async () =>
+{
+  const late = deferred<string>();
+  let calls = 0;
+  const f = fixture(async () => ++calls === 1 ? 'Original.' : late.promise);
+  f.coordinator.setInput('Keep this text.');
+  await f.coordinator.retry();
+  assert.equal(calls, 0);
+  await f.coordinator.generate();
+  const retry = f.coordinator.retry();
+  f.replace({ ...blank(), adventure: { ...blank().adventure, version: 1 }, turns: [turn(1)] });
+  f.coordinator.requestRefresh();
+  late.reject(new Error('replacement_failed'));
+  await retry;
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.coordinator.state.snapshot.adventure.version, 1);
+  assert.equal(f.coordinator.state.input, 'Keep this text.');
+  assert.equal(f.coordinator.state.candidate, null);
+  assert.match(f.coordinator.state.error, /could not be prepared/);
+  const gate = deferred<Snapshot>();
+  f.storage.read = async () => gate.promise;
+  const refresh = f.coordinator.refresh();
+  await f.coordinator.retry();
+  assert.equal(calls, 2);
+  gate.reject(new Error('read_failure'));
+  await refresh;
+  assert.equal(f.coordinator.state.phase, 'blocked');
+  await f.coordinator.retry();
+  assert.equal(calls, 2);
+  assert.deepEqual(f.writes, []);
+});

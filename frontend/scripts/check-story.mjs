@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
+import { exerciseRetry, replaceProposal } from './check-story-retry.mjs';
 
 export async function exerciseStory(page, base, artifacts, adventureId) {
   await page.unroute('**/wails/runtime');
@@ -16,6 +17,7 @@ export async function exerciseStory(page, base, artifacts, adventureId) {
   };
   const accepted = (target, count) => target.waitForFunction(count => document.querySelectorAll('.accepted-turn').length === count && document.querySelector('.save-status')?.textContent === '✓ Saved', count);
   const original = await read();
+  await exerciseRetry(page, read);
 
   await page.getByLabel('Story input').fill('The moon turns green.');
   await page.getByLabel('Story input').press('Control+Enter');
@@ -33,6 +35,9 @@ export async function exerciseStory(page, base, artifacts, adventureId) {
 
   const authored = 'A door appears.\nIt opens without a key.\n\n<script>window.storyInjected = true</script> 🦉';
   await generate(page, authored);
+  const firstReplacement = await replaceProposal(page);
+  const finalReplacement = await replaceProposal(page);
+  assert.equal(finalReplacement.originalId, firstReplacement.replacementId);
   assert.equal(await page.getByLabel('Story input').isDisabled(), true, 'Sending cannot implicitly accept');
   assert.deepEqual(await read(), original);
   for (const theme of ['dark', 'bright']) {
@@ -54,6 +59,9 @@ export async function exerciseStory(page, base, artifacts, adventureId) {
       } else assert.equal(await page.locator('.context-rail').evaluate(el => el.getBoundingClientRect().width), 320);
       await page.getByRole('button', { name: 'Accept turn', exact: true }).focus();
       await page.keyboard.press('Tab');
+      assert.equal(await page.getByRole('button', { name: 'Retry', exact: true }).evaluate(el => el.matches(':focus-visible')), true);
+      const retryBox = await page.getByRole('button', { name: 'Retry', exact: true }).boundingBox();
+      assert.ok(retryBox && retryBox.x >= 0 && retryBox.x + retryBox.width <= width && retryBox.y + retryBox.height <= 900);
       await page.keyboard.press('Shift+Tab');
       assert.equal(await page.getByRole('button', { name: 'Accept turn', exact: true }).evaluate(el => el.matches(':focus-visible')), true);
       if (artifacts) await page.screenshot({ path: path.join(artifacts, `story-proposed-${theme}-${width}.png`), fullPage: true });
@@ -64,6 +72,9 @@ export async function exerciseStory(page, base, artifacts, adventureId) {
   assert.equal(await page.evaluate(() => window.storyInjected), undefined, 'Model/player text is never HTML');
   const first = await read();
   assert.equal(first.adventure.version, 1);
+  assert.equal(first.turns[0].id, finalReplacement.replacementId);
+  assert.equal(first.turns.some(turn => turn.id === firstReplacement.originalId || turn.id === firstReplacement.replacementId), false);
+  console.log('PASS: repeated Retry accepts only the latest candidate into real SQLite');
   assert.equal(first.turns[0].passages.length, 2);
   assert.notEqual(first.turns[0].passages[0].id, first.turns[0].passages[1].id);
   assert.deepEqual(first.turns[0].events, []);
@@ -85,10 +96,12 @@ export async function exerciseStory(page, base, artifacts, adventureId) {
     await route.continue();
   });
   await generate(page, 'A second passage, saved despite a lost reply.');
+  await replaceProposal(page);
   await page.getByRole('button', { name: 'Accept turn', exact: true }).click();
   await page.getByRole('button', { name: 'Recover save', exact: true }).waitFor();
   assert.equal((await read()).adventure.version, 2, 'Real SQLite committed before reply was lost');
   assert.equal(await page.getByRole('button', { name: 'Discard', exact: true }).isDisabled(), true);
+  assert.equal(await page.getByRole('button', { name: 'Retry', exact: true }).isDisabled(), true);
   assert.equal(await page.getByRole('button', { name: 'Library', exact: true }).isDisabled(), true);
   if (artifacts) await page.screenshot({ path: path.join(artifacts, 'story-save-unconfirmed.png'), fullPage: true });
   await page.getByRole('button', { name: 'Recover save', exact: true }).click();
@@ -106,6 +119,7 @@ export async function exerciseStory(page, base, artifacts, adventureId) {
     await generate(page, 'The first tab wins this turn.');
     await page.getByRole('button', { name: 'Accept turn', exact: true }).click();
     await accepted(page, 3);
+    await replaceProposal(other);
     await other.getByRole('button', { name: 'Accept turn', exact: true }).click();
     await other.getByRole('alert').getByText(/saved story or library changed/).waitFor();
     assert.equal(await other.getByLabel('Story input').inputValue(), 'The losing tab keeps this text.');

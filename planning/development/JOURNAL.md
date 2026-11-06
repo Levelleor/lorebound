@@ -214,3 +214,27 @@ tags:
 - **Merge/main proof:** [PR #8](https://github.com/Levelleor/lorebound/pull/8) merged as `9c4a615b32faee3a513467e3ecc8cf6f5d5b760a`. Fetched origin/main and clean local main match; head/main identical tree `5a313301d6c2e60cb5c2a43dbec4d6301aab01ab`. No new runtime claim derives from the act of merging.
 - **Reconciliation:** NOW/TASKS/FEATURES, requirement/evidence records, README/development guide and architecture current-status references now record merged DEV-002C and bounded parent DEV-002 closure on `docs/dev-002c-merge-reconciliation`. [Reconciliation report](./evidence/DEV-002C-reconciliation.md). Formal feature counts remain seven partial ideas, three certified atomic rows, zero complete ideas. DEV-003 queued/unstarted, requires separate launch; B9-D12 deferred.
 - **Documentation finalisation:** This documentation-only follow-up is within the user's instruction to finalize the task. Independent source/link/status review and its PR CI precede merging it; exact finalisation-head CI is recorded in that PR.
+
+### 2026-11-05 — DEV-003 launch / bounded DEV-003A Retry
+
+- User authority: “Proceed to next task.” Local clean main was `34f25a0fa841827b0b4486106e411c9d28bad2ab`, matching the supplied PR #9 handoff and origin/main tracking ref. No new remote verification is claimed.
+- Selected DEV-003A after accepted-source audit: provisional candidate Retry only, existing simulated generator and zero-effects history. Independent `/root/requirements_review` confirms immediate invalidation, latest-only acceptance, failure/cancel/input safety, no variants and separation from uncertain-save recovery.
+- Existing coordinator already owns sequence/AbortController and version/epoch/receipt recovery. Reuse that owner; no new schema, persistence API or provider is needed. Simulated output may repeat identical prose; candidate identity/lifecycle must still change.
+- Branch `feat/dev-003a-provisional-retry` created after the read-only .git sandbox required an approved escalation. No commit, push or PR requested. Local implementation and verification are authorised.
+- Later DEV-003 children retain shared drafts, temporary editor undo, committed Undo/Fork, prose editing/truncation and reconstruction. Retry does not certify these or a full IDEA. B9-D12 remains deferred.
+
+- Verification environment: Node v24.14.0 is installed under `/home/alex/.nvm/versions/node/v24.14.0/bin`, absent from the default shell PATH. The sandboxed default Node test runner reported file-level wrappers only; the explicit `--test-isolation=none` run enumerated and passed all 30 individual cases. Build/typecheck and actual browser gates remain separately recorded. Loopback binding required an approved escalation; tests use disposable SQLite libraries only.
+- Independent source/unit review found no scoped code blocker; corrected the parent snapshot/replay reference from B4-D08 (stale manual draft disposal) to B2-D03/B4-D01 before finalising the audit.
+
+### 2026-11-05 — DEV-003A local implementation and independent evidence complete
+
+- Added shared generation preparation and guarded candidate Retry, plus accessible Retry in the composer overlay. Old candidate disappears synchronously; Stop/dispose/late-response sequencing and frozen uncertain-save recovery remain intact. Simulated prose deliberately repeats; fresh candidate identity is the tested replacement behavior.
+- Lead verification PASS: typecheck/build; 30 TypeScript cases; 14 Go functions/43 SQLite subcases; Go vet; actual Firefox/Wails/Go/SQLite on port 18083, exact process restart, host restrictions and eight Dark/Bright viewport checks. Initial Go test/vet commands omitted `CGO_ENABLED=0` and failed on missing WebKit headers; corrected repository headless settings passed.
+- Independent `/root/requirements_review` audited original requirements and source, reran all 30 units and the complete real-host/browser suite on separate port 18084/disposable data, inspected 390 Dark/1440 Bright images and recorded scoped PASS. No remaining scoped implementation blocker. [Evidence](./evidence/DEV-003A.md), [review](./evidence/DEV-003A-review.md).
+- State: local uncommitted branch; no PR, publication CI or merge. DEV-003A remains IMPLEMENTED / UNVERIFIED under formal delivery semantics. User's subsequent “proceed” continued the authorised implementation/verification; it did not explicitly request commit/push/PR. Parent DEV-003 remains incomplete; no later child starts. Main counts and B9-D12 deferral remain unchanged.
+
+### 2026-11-05 — DEV-003A authorised publication
+
+- User said “proceed with next task” after the handoff named DEV-003A publication and CI as next. This authorises committing/pushing the reviewed branch and opening its PR; no new implementation child or merge is launched.
+- Fetched current `origin/main`: still `34f25a0fa841827b0b4486106e411c9d28bad2ab`; branch base matches exactly. All four independently recorded implementation/test source hashes remain identical, and `git diff --check` passes.
+- Publication checks will be inspected on GitHub. Existing local evidence is reused because the reviewed application source has not changed; CI will rebuild and rerun the complete workflow on the published branch.

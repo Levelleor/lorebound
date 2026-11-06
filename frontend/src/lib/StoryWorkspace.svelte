@@ -12,6 +12,7 @@
   let input: HTMLTextAreaElement;
   let candidateSection: HTMLElement;
   let acceptButton: HTMLButtonElement;
+  let stopButton: HTMLButtonElement;
 
   async function generate()
   {
@@ -19,6 +20,18 @@
     await tick();
     candidateSection?.scrollIntoView({ block: 'nearest' });
     if (state?.phase === 'ready') acceptButton?.focus();
+  }
+
+  async function retry()
+  {
+    const replacement = coordinator.retry();
+    await tick();
+    stopButton?.focus();
+    await replacement;
+    await tick();
+    candidateSection?.scrollIntoView({ block: 'nearest' });
+    if (state?.phase === 'ready') acceptButton?.focus();
+    else if (state?.phase === 'idle') input?.focus();
   }
 
   async function discard()
@@ -111,7 +124,7 @@
       {#if state.phase === 'generating'}
         <section class="provisional" aria-label="Generating proposal"><p class="passage-label">Simulated generation</p><p class="prose">Preparing a proposed continuation…</p><p class="supporting">Nothing has been added to your story.</p></section>
       {:else if state.candidate}
-        <section class="provisional" bind:this={candidateSection} aria-label="Proposed turn">
+        <section class="provisional" bind:this={candidateSection} data-turn-id={state.candidate.id} aria-label="Proposed turn">
           <p class="passage-label">{state.phase === 'uncertain' ? 'Save unconfirmed' : state.phase === 'saving' ? 'Saving…' : 'Proposed · Not saved'}</p>
           {#each state.candidate.passages as passage}
             <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Simulated continuation'}</p>
@@ -139,11 +152,12 @@
             <div class="pending-actions">
               {#if state.phase === 'uncertain'}<button class="primary" onclick={() => coordinator.retrySave()}>Recover save</button>
               {:else}<button class="primary" bind:this={acceptButton} onclick={() => coordinator.accept()} disabled={state.phase === 'saving'}>Accept turn</button>{/if}
+              <button onclick={retry} disabled={state.phase !== 'ready'}>Retry</button>
               <button onclick={discard} disabled={state.phase !== 'ready'}>Discard</button>
             </div>
           </div>
         {:else if state?.phase === 'generating'}
-          <button class="send stop" aria-label="Stop generation" onclick={stop}>■</button>
+          <button class="send stop" bind:this={stopButton} aria-label="Stop generation" onclick={stop}>■</button>
         {:else if state?.phase === 'blocked'}
           <div class="pending-overlay"><p>Story writes are unavailable.</p><button onclick={() => coordinator.refresh()}>Reload story</button></div>
         {:else}

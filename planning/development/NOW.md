@@ -2,9 +2,9 @@
 type: development-status
 status: current
 updated: "2026-11-05"
-current_task: "DEV-002C"
-current_task_status: "VERIFIED & MERGED"
-next_task: "DEV-003"
+current_task: "DEV-003A"
+current_task_status: "PUBLICATION IN PROGRESS"
+next_task: "DEV-003A"
 ---
 
 # Lorebound — Current Development Status
@@ -47,11 +47,13 @@ The first Story slice has 16 TypeScript tests, 14 Go functions/43 nested cases, 
 
 **Parent DEV-002 is VERIFIED & MERGED within the accepted Story-only simulated zero-effects scope.** All A/B/C children are merged. The 95-row whole-IDEA inventory retains 38 Later-only rows and explicitly partial nonempty-event/mixed obligations; seven original ideas remain PARTIAL, zero complete, and the formal individually certified main count stays three IDEA-0006 rows. This documentation reconciliation records the actual merged application; its own final checks are recorded in the reconciliation PR.
 
-## Next Task: **DEV-003 — Retry, drafts, Undo/Fork and current-history prose editing**
+## Next Task: **DEV-003A — Replace the provisional Story candidate on Retry**
 
-**Status: QUEUED / NOT STARTED.** The bounded DEV-002 dependency is satisfied. DEV-003 requires a separately authorised launch to audit original requirements and select one bounded child scope before coding. No later task starts as part of DEV-002C finalisation.
+**Status: PUBLICATION IN PROGRESS; local checks and independent review PASS; unmerged.** User authorised DEV-003 launch on 2026-11-05 with “Proceed to next task.” Owner: Codex lead; branch `feat/dev-003a-provisional-retry`, based on reconciliation main `34f25a0fa841827b0b4486106e411c9d28bad2ab`. Bounded DEV-002 dependency is satisfied.
 
-**Exact next action:** On a separately authorised DEV-003 launch, audit its acceptance/dependencies and select one bounded implementation scope.
+DEV-003A adds replace-on-retry for the current unaccepted Story candidate using the existing explicitly simulated generator and zero-effects history. [Requirement audit](./requirements/DEV-003.md). Immediate invalidation, failure/cancellation/input safety, latest-only acceptance and existing stale/uncertain-save fencing pass 30 TypeScript cases, 14 Go functions/43 subcases and lead/reviewer real Firefox/Wails/SQLite runs including exact restart. Eight Dark/Bright viewport captures pass scoped checks. [Evidence](./evidence/DEV-003A.md), [independent review PASS](./evidence/DEV-003A-review.md). Draft autosave, temporary editor undo, committed Undo/Fork and historical editing remain later children; no full IDEA completion or B9-D12 work.
+
+**Exact next action:** Commit/push DEV-003A, open its PR and inspect final-head CI. User authorised this recorded next action on 2026-11-05 with “proceed with next task”. Local implementation and independent review are complete; merge remains outstanding. No later child starts automatically. Main feature counts above remain unchanged.
 
 ## Recent verified milestones
 
