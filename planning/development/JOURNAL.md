@@ -64,6 +64,8 @@ The user explicitly launched the next DEV-003 audit and one bounded child. Sourc
 
 Engineering choices within the accepted draft contract: 600 ms inactivity debounce, one shared `composer_story` slot per adventure and a separate nonspatial SQLite table. Acceptance waits for local autosaves, then consumes only stored text matching its authored passage in the same canonical transaction. A different latest draft survives; receipt replay does not consume again, and uncertain canonical recovery never resaves the prior input. The ordinary unsent composer is distinct from B4-D08's stale manual world-correction batch. Final unsaved keystrokes, overwritten drafts and generated candidates have no new recovery promise. No other DEV-003 child or deferred spatial migration is launched.
 
+After the hands-on handoff, the user approved finalising/merging [PR #13](https://github.com/Levelleor/lorebound/pull/13): “looks good, don't forget to kill the server and merge close this one”. Review servers were stopped without deleting review data. Conditional closure remains in that same PR: on confirmed checked-head merge, DEV-003C is VERIFIED within scope and IDEA-0005 becomes PARTIAL, producing ten partial ideas and zero complete, with three formal IDEA-0006 rows unchanged. Actual merge/final CI is recorded in the PR. This approval authorises no next slice or separate reconciliation PR.
+
 ## Persistent constraints for later authorised work
 
 - **Sensitive local services:** Origin/Host/browser-header restrictions do not authenticate arbitrary hostile local processes. Review the access boundary before sensitive privileged extensions; no new login/token framework is inferred.

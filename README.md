@@ -26,6 +26,8 @@ Gameplay rules, maps, and world-state tracking are optional tools to help the AI
 
 Merged main supports blank adventure creation/resume and Story input with explicitly simulated generation, provisional review, acceptance/discard and durable structured history through the real Wails/Go/SQLite application. A small Fork icon beneath each accepted turn also opens an independently copied prefix in a separate browser tab/window, default `fork: [source name]`, preserving the source and its input. Safe recovery, isolated continuation and restart have [scoped evidence](planning/development/evidence/DEV-003B.md). The simulated continuation is a fixed fixture, not a live model. World tracking, map, other input modes and history editing remain later work. See [development setup](docs/development.md), [DEV-002B evidence](planning/development/evidence/DEV-002B.md), and [NOW](planning/development/NOW.md) for tested scope and current development status.
 
+**DEV-003C closure, effective only on confirmed checked-head merge of [PR #13](https://github.com/Levelleor/lorebound/pull/13):** unfinished Story input autosaves after a short pause as a shared noncanonical SQLite draft and restores on reopen. Explicit acceptance consumes matching input atomically; generated candidates remain ephemeral. [Scope and limits](planning/development/requirements/DEV-003C.md) distinguish this from passage editing and the remaining library lifecycle. The user accepted the review handoff and approved merge; [NOW](planning/development/NOW.md) owns the closure condition. No complete original IDEA or next slice is claimed.
+
 ## Planning
 
 The project's Obsidian-compatible planning vault lives in [planning/](planning/Start%20Here.md).

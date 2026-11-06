@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: awaiting-user-review
+status: verified-on-confirmed-merge
 created: "2026-11-06"
 updated: "2026-11-06"
 task: "DEV-003C"
@@ -12,7 +12,9 @@ tags:
 
 # DEV-003C — Shared latest Story composer draft
 
-The user's 2026-11-06 launch authorises auditing DEV-003 and selecting one bounded child. This child saves and restores unfinished **Story composer input** in the existing Go-owned library. It also carries the previously requested workflow/evidence maintenance as its prerequisite in [primary PR #13](https://github.com/Levelleor/lorebound/pull/13). [CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42264622826) and independent source/coverage review PASS for `1cd6ed4`; actual CI Dark/Bright draft captures were reviewed. User acceptance and finalise/merge approval remain pending. Nothing here declares verified-main behavior.
+The user's 2026-11-06 launch authorises auditing DEV-003 and selecting one bounded child. This child saves and restores unfinished **Story composer input** in the existing Go-owned library. It also carries the previously requested workflow/evidence maintenance as its prerequisite in [primary PR #13](https://github.com/Levelleor/lorebound/pull/13). Application/source/coverage review PASS for `1cd6ed4`; [readiness-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42275447337) covers `d9427f7` with unchanged application sources. Actual CI Dark/Bright draft captures and the readiness delta were independently reviewed.
+
+The user accepted the hands-on review handoff and explicitly approved finalising/merging PR #13 on 2026-11-06: “looks good, don't forget to kill the server and merge close this one”. Both review servers were stopped and their persistent data preserved. **This prepared closure becomes effective only after the checked final head of PR #13 is confirmed merged.** At that point DEV-003C is VERIFIED within the bounded Story composer scope and IDEA-0005 is PARTIAL. Actual merge/head/tree provenance and final-head CI are recorded in the PR; no future merge SHA is assumed here.
 
 ## Source audit and dependency choice
 
@@ -42,4 +44,4 @@ Draft autosave does not save AI candidates, accept story, create events or repla
 
 Leaving before the debounce or before a successful write can lose final input; no unload-time durability guarantee. Draft recovery does not preserve a provisional response or an uncertain canonical operation across reload. Same-session uncertain saves still recover their original immutable operation. Whole-library restore/directory switching/maintenance workflows, backup, rename, duplicate, delete, other modes, passage editing, temporary undo, committed Undo, nonempty world effects and live providers remain later. Draft table foreign keys prepare ownership without claiming those lifecycle features exist. B9-D12 remains **DEFERRED — NO WORK**.
 
-Parent DEV-003 and original IDEAs remain incomplete. No original note moves to specs/archive. Closure stays in this primary PR, conditional on checks, independent review, explicit user approval to finalise/merge the named PR and confirmed merge. Closing this child launches no next slice.
+Parent DEV-003 and original IDEAs remain incomplete. No original note moves to specs/archive. Closure stays in this primary PR, conditional on applicable final-head checks, closure review and confirmed merge. User approval is recorded above; routine closure within this scope requires no second approval. Closing this child launches no next slice.
