@@ -70,6 +70,7 @@ export async function exerciseEdit(page, base, artifacts)
       {
         const bounds = await page.getByRole('button', { name, exact: true }).boundingBox();
         assert.ok(bounds && bounds.x >= 0 && bounds.x + bounds.width <= width && bounds.y + bounds.height <= 900, `${name} reachable at ${width}`);
+        assert.ok(bounds.y >= overlay.y + 8 && bounds.y + bounds.height <= overlay.y + overlay.height - 8, `${name} fits inside the overlay at ${width}`);
       }
       if (artifacts) await page.screenshot({ path: path.join(artifacts, `edit-confirm-${theme}-${width}.png`), fullPage: true });
     }

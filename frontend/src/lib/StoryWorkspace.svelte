@@ -247,7 +247,7 @@
         : next.phase === 'uncertain' ? 'Save unconfirmed'
         : next.phase === 'generating' ? 'Generating · simulated'
         : next.phase === 'ready' ? 'Proposed · not saved'
-        : next.edit ? 'Editing · not accepted'
+        : next.edit ? 'Draft edit'
         : next.refreshing ? 'Refreshing…'
         : next.phase === 'blocked' ? 'Read only'
         : next.error ? 'Needs attention'
@@ -379,7 +379,7 @@
       {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
       {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
       <div class="composer-heading"><span class="mode-selected">✎ Story</span><span class="supporting">Simulated generation · No AI connected</span></div>
-      <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)}>
+      <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)} class:edit-pending={Boolean(state?.edit)}>
         <label class="sr-only" for="story-input">Story input</label>
         <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
           disabled={forkBusy || !state || state.phase !== 'idle'}
@@ -450,6 +450,10 @@
   .edit-overlay { overflow-y: auto; }
   .edit-overlay .pending-actions { flex-wrap: wrap; justify-content: center; width: 100%; }
   .edit-overlay .pending-actions button { flex: 1 1 130px; }
+  @media (max-width: 639px)
+  {
+    .edit-pending { min-height: 250px; }
+  }
   .undo-pending { min-height: 200px; }
   .undo-turn { font-size: 12px; }
   .story-notice { color: var(--success); font-size: 12px; }
