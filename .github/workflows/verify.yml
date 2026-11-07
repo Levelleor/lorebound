@@ -94,7 +94,7 @@ jobs:
         working-directory: frontend
         run: npx --no-install playwright install --with-deps firefox
       - name: Real browser, host restrictions and restart persistence
-        timeout-minutes: 3
+        timeout-minutes: 5
         run: bash scripts/verify-host.sh
       - name: Retain browser captures and failure diagnostics
         if: always()

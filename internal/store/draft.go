@@ -23,7 +23,8 @@ type SaveDraftRequest struct {
 }
 type Draft struct {
 	DraftRequest
-	Text string `json:"text"`
+	Text   string `json:"text"`
+	Exists *bool  `json:"exists,omitempty"`
 }
 
 func (r *SaveDraftRequest) UnmarshalJSON(data []byte) error {
@@ -55,7 +56,8 @@ func addDraftTable(tx *sql.Tx) error {
 }
 
 func draftTransaction(ctx context.Context, tx *sql.Tx, req DraftRequest) error {
-	if req.SchemaVersion != SchemaVersion || req.Epoch == "" || !identifier.MatchString(req.AdventureID) || req.Target != "composer_story" {
+	passageID, passage := strings.CutPrefix(req.Target, "passage:")
+	if req.SchemaVersion != SchemaVersion || req.Epoch == "" || !identifier.MatchString(req.AdventureID) || (req.Target != "composer_story" && (!passage || !identifier.MatchString(passageID))) {
 		return ErrInvalidRequest
 	}
 	currentEpoch, err := epoch(tx)
@@ -69,6 +71,12 @@ func draftTransaction(ctx context.Context, tx *sql.Tx, req DraftRequest) error {
 	err = tx.QueryRowContext(ctx, `SELECT id FROM adventures WHERE id=?`, req.AdventureID).Scan(&id)
 	if errors.Is(err, sql.ErrNoRows) {
 		return ErrNotFound
+	}
+	if err == nil && passage {
+		err = tx.QueryRowContext(ctx, `SELECT id FROM passages WHERE adventure_id=? AND id=? AND source='generated'`, req.AdventureID, passageID).Scan(&id)
+		if errors.Is(err, sql.ErrNoRows) {
+			return ErrNotFound
+		}
 	}
 	return err
 }
@@ -86,6 +94,10 @@ func (s *Store) ReadDraft(ctx context.Context, req DraftRequest) (Draft, error) 
 	err = tx.QueryRowContext(ctx, `SELECT text FROM drafts WHERE adventure_id=? AND target=?`, req.AdventureID, req.Target).Scan(&result.Text)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return Draft{}, err
+	}
+	if strings.HasPrefix(req.Target, "passage:") {
+		exists := err == nil
+		result.Exists = &exists
 	}
 	return result, tx.Commit()
 }
@@ -106,7 +118,28 @@ func (s *Store) SaveDraft(ctx context.Context, req SaveDraftRequest) (Draft, err
 	if _, err = tx.ExecContext(ctx, `INSERT INTO drafts VALUES(?,?,?) ON CONFLICT(adventure_id,target) DO UPDATE SET text=excluded.text`, req.AdventureID, req.Target, text); err != nil {
 		return Draft{}, err
 	}
-	return Draft{DraftRequest: req.DraftRequest, Text: text}, tx.Commit()
+	result := Draft{DraftRequest: req.DraftRequest, Text: text}
+	if strings.HasPrefix(req.Target, "passage:") {
+		exists := true
+		result.Exists = &exists
+	}
+	return result, tx.Commit()
+}
+
+// Discard only the editor's latest value; another tab's different draft survives.
+func (s *Store) DeleteDraft(ctx context.Context, req SaveDraftRequest) error {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if err = draftTransaction(ctx, tx, req.DraftRequest); err != nil && !errors.Is(err, ErrNotFound) {
+		return err
+	}
+	if _, err = tx.ExecContext(ctx, `DELETE FROM drafts WHERE adventure_id=? AND target=? AND text=?`, req.AdventureID, req.Target, req.Text); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func documentText(doc Document) string {
