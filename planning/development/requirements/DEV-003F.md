@@ -1,8 +1,8 @@
 ---
 type: development-requirements
-status: in-progress
+status: ready-for-user-review
 created: "2026-11-06"
-updated: "2026-11-06"
+updated: "2026-11-07"
 task: "DEV-003F"
 parent: "DEV-003"
 tags:
@@ -51,4 +51,14 @@ IDEA-0004/R11 gains bounded historical-edit coverage; R06's native temporary tex
 
 ## Verification and review
 
-Implementation in progress on `feat/dev-003f-generated-passage-edit`. Go transaction/draft tests, TypeScript coordinator tests and real Firefox/Wails/SQLite browser/restart coverage will own repeatable checks in existing CI. UI captures remain temporary CI artifacts. Independent review and named-PR user acceptance are pending. No passing result or verified-main claim is made yet.
+Implementation is in [primary PR #16](https://github.com/Levelleor/lorebound/pull/16). [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42392797069) checks `61340d4f13338fe6664fc52bd467288ea24ee9c5`: build/typecheck, TypeScript, vet, real Go/SQLite, Firefox/host restrictions, recovery and exact process restart. The earlier CI failure exposed an ordinary-acceptance disposal timing regression; the fix preserves the original behavior and its existing regression now passes. Independent source/coverage and readiness-document review PASS. Final-head CI and refreshed capture-review disposition are recorded in the primary PR before handoff; no separate report is created. User acceptance and finalise/merge approval remain pending; no verified-main claim is made.
+
+| Requirements | Maintained source / verification |
+| --- | --- |
+| IDEA-0003/R01, R03–R04; IDEA-0041/R01–R04 | `StoryWorkspace.svelte`, `StoryCoordinator` edit transitions and `editedTurns`; `frontend/tests/edit.test.ts`; `frontend/scripts/check-story-edit.mjs` covers inline editing, all four choices, stable identity, exact retained/truncated history, no typing-time commit, keyboard/focus and four-width Dark/Bright overlay. |
+| IDEA-0003/R02 | `TextDraft`, `internal/store/draft.go`; `frontend/tests/draft.test.ts` covers absent/empty values, delayed restore fencing, serialization, failures and conditional discard; `TestPassageDraftTargetsEmptyDiscardAndReopen` plus browser draft/reload and `check-browser.mjs` passage-draft restart equality. |
+| IDEA-0003/R04; IDEA-0041/R02–R03, R05 | `internal/store/edit.go` within `Store.commit`; `TestEditKeepTruncateDraftsForkRecoveryAndReopen`, `TestEditRejectsAtomicFailureMalformedStaleEpochAndUnsupported`, `TestEditRacesWithAppend`; coordinator tests cover exact operation recovery, post-commit read failure, stale/refetch failure, removed target/epoch changes, retained text and explicit fresh review. Browser coverage includes actual SQLite changes and intercepted lost replies/stale-tab conflicts, Fork/Undo isolation and newer continuation during recovery. |
+
+Draft failure regressions cover Discard after failed-before-write and lost-success-reply autosaves, repeated uncertainty, and preservation of a different newer shared draft. Native textarea history stays temporary; no custom composer Undo/Redo is reintroduced. Unsupported nonempty effects fail closed. No live-provider, Windows/macOS packaging, full accessibility, recovery of overwritten/unsaved draft values or cross-reload uncertain-operation persistence is claimed.
+
+Review launch: `bash scripts/dev.sh -port 8082 -data-dir "$PWD/.local/review/dev003f"`. The persistent sample library is separate from ordinary user data. [NOW](../NOW.md) owns the checked review address and current handoff; the PR/chat owns the task-specific walkthrough. No original IDEA is complete or archived; parent DEV-003 stays PARTIAL.

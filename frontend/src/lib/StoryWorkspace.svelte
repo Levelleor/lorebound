@@ -452,7 +452,7 @@
   .edit-overlay .pending-actions button { flex: 1 1 130px; }
   @media (max-width: 639px)
   {
-    .edit-pending { min-height: 250px; }
+    .composer-input.edit-pending { min-height: 250px; }
   }
   .undo-pending { min-height: 200px; }
   .undo-turn { font-size: 12px; }

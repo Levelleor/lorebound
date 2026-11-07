@@ -2,7 +2,7 @@
 type: development-feature-ledger
 status: current
 created: "2026-11-03"
-updated: "2026-11-06"
+updated: "2026-11-07"
 baseline_idea_count: 52
 verified_idea_count: 0
 ---
@@ -15,7 +15,7 @@ verified_idea_count: 0
 
 [PR #15](https://github.com/Levelleor/lorebound/pull/15) is confirmed merged at `987310abf8ad39d43144c53ae77c78da937bff3b`, satisfying DEV-003E's conditional closure. Merged work gives eleven partial / 41 without feature-level evidence / zero complete original ideas, with three formally certified IDEA-0006 rows unchanged. PR #14's composer-only scope remains historical; #15 removed those custom controls and delivered committed-turn Undo.
 
-The separately authorised [DEV-003F](./requirements/DEV-003F.md) inventories nine affected IDEA-0003/0041 rows and implements generated-passage editing. Its implementation/verification is in progress; it adds no verified-main status or completed original IDEA yet.
+The separately authorised [DEV-003F](./requirements/DEV-003F.md) inventories nine affected IDEA-0003/0041 rows and implements generated-passage editing. Application CI and independent source/coverage review pass in [PR #16](https://github.com/Levelleor/lorebound/pull/16); user acceptance/merge remain pending, so it adds no verified-main status or completed original IDEA yet.
 
 | Measure | Current status |
 | --- | --- |
@@ -58,7 +58,7 @@ Merged DEV-002C extends the same seven partial ideas with safe deferred invalida
 | --- | --- | --- | --- | --- | --- | --- |
 | [IDEA-0001](../production/Single-Player%20Account-Free%20Experience.md) | Single-player account-free experience | S01 | M1 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0002](../production/Freeform%20Player%20Action%20Modes.md) | Freeform player action modes | S03 | M1 | **PARTIAL** | [DEV-002B scoped audit](requirements/DEV-002B.md); remaining inventory draft | [Merged PR #6](https://github.com/Levelleor/lorebound/pull/6); [evidence](./evidence/DEV-002B.md) |
-| [IDEA-0003](../production/Direct%20Editable%20Prose%20Document.md) | Direct editable prose document | S03 | M2 | **IN PROGRESS — DEV-003F** | [Four affected rows; generated-passage boundary](./requirements/DEV-003F.md); broader editing later | Primary PR pending |
+| [IDEA-0003](../production/Direct%20Editable%20Prose%20Document.md) | Direct editable prose document | S03 | M2 | **IMPLEMENTED / AWAITING USER REVIEW — DEV-003F** | [Four affected rows; generated-passage boundary](./requirements/DEV-003F.md); broader editing later | [PR #16](https://github.com/Levelleor/lorebound/pull/16), unmerged |
 | [IDEA-0004](../production/Retry%20Undo%20and%20Alternative%20Continuations.md) | Retry, Undo and alternate continuations | S05 | M2 | **PARTIAL** | [DEV-003A Retry audit](./requirements/DEV-003.md); [DEV-003E committed turn Undo](./requirements/DEV-003E.md) verified/merged in PR #15; DEV-003D composer-only scope rejected; generated-passage editing in DEV-003F; broader replay remains later | [Merged PR #10](https://github.com/Levelleor/lorebound/pull/10); [delivery/review](./evidence/DEV-003A.md) |
 | [IDEA-0005](../production/Adventure%20Save%20and%20Export%20Management.md) | Adventure save/export management | S02 | M7 | **PARTIAL** | [Seven scoped draft requirements](./requirements/DEV-003C.md); other modes, prose drafts and full library lifecycle remain later | [PR #13](https://github.com/Levelleor/lorebound/pull/13), confirmed merged |
 | [IDEA-0006](../production/Quick%20Start%20and%20Custom%20Story%20Openings.md) | Quick Start and custom openings | S02 | M1 | **PARTIAL** | [R01–R03 VERIFIED](./evidence/DEV-002A.md); [DEV-002B scope](./evidence/DEV-002B.md); remaining parent inventory draft | [Merged PRs #4](https://github.com/Levelleor/lorebound/pull/4) / [#6](https://github.com/Levelleor/lorebound/pull/6) |
@@ -93,7 +93,7 @@ Merged DEV-002C extends the same seven partial ideas with safe deferred invalida
 | [IDEA-0038](../production/Persistent%20Location%20State%20and%20Travel%20Interactions.md) | Persistent location state/travel interactions | S11 | M6 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0039](../production/Event-Sourced%20World%20History.md) | Event-sourced world history | S05 | M1 | **PARTIAL** | [DEV-002B scoped audit](requirements/DEV-002B.md); remaining inventory draft | [Merged PR #6](https://github.com/Levelleor/lorebound/pull/6); [evidence](./evidence/DEV-002B.md) |
 | [IDEA-0040](../production/Versioned%20Text%20Blocks%20and%20Revision%20IDs.md) | Versioned text blocks and stable passage IDs | S05 | M1 | **PARTIAL** | [DEV-002B scoped audit](requirements/DEV-002B.md); remaining inventory draft | [Merged PR #6](https://github.com/Levelleor/lorebound/pull/6); [evidence](./evidence/DEV-002B.md) |
-| [IDEA-0041](../production/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md) | Historical edit confirmation/truncation | S03 | M2 | **IN PROGRESS — DEV-003F** | [Five affected rows](./requirements/DEV-003F.md); zero-effects generated-passage boundary | Primary PR pending |
+| [IDEA-0041](../production/Historical%20Edit%20Confirmation%20and%20Bulk%20Truncation.md) | Historical edit confirmation/truncation | S03 | M2 | **IMPLEMENTED / AWAITING USER REVIEW — DEV-003F** | [Five affected rows](./requirements/DEV-003F.md); zero-effects generated-passage boundary | [PR #16](https://github.com/Levelleor/lorebound/pull/16), unmerged |
 | [IDEA-0042](../production/Snapshots%20and%20Incremental%20State%20Rebuild.md) | Snapshots and incremental rebuild | S05 | M2 | **PARTIAL** | [R01 partial Story-only reconstruction coverage](./requirements/DEV-003E.md#affected-idea-0042-reconstruction-requirement); nonempty world/derived/module coverage remains later | [Merged PR #15](https://github.com/Levelleor/lorebound/pull/15) |
 | [IDEA-0044](../production/Deterministic%20Adventure%20Coordinator.md) | Deterministic adventure coordinator | S06 | M1 | **PARTIAL** | [DEV-002B scoped audit](requirements/DEV-002B.md); remaining inventory draft | [Merged PR #6](https://github.com/Levelleor/lorebound/pull/6); [evidence](./evidence/DEV-002B.md) |
 | [IDEA-0045](../production/LLM%20State%20Interpreter%20and%20Proposed%20Operations.md) | LLM state interpreter and proposals | S07 | M3 | **NOT STARTED** | Not yet inventoried | None |
