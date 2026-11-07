@@ -459,8 +459,11 @@ export class StoryCoordinator
       }
       if (!this.draftFlushed)
       {
-        await this.editDraft?.flush();
-        if (!this.live(sequence)) return;
+        if (this.editDraft)
+        {
+          await this.editDraft.flush();
+          if (!this.live(sequence)) return;
+        }
         this.draftFlushed = true;
       }
       const result = readCommitResult(await this.storage.commit(request));

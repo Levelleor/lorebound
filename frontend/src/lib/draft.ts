@@ -44,6 +44,7 @@ export class TextDraft
   private disposed = false;
   private discarding = false;
   private storedText: string | null = null;
+  private unconfirmedText: string | null = null;
   private readonly request: DraftRequest;
   private readonly initialText: string;
 
@@ -88,6 +89,7 @@ export class TextDraft
       if (this.disposed || sequence !== this.readSequence || revision !== this.revision) return;
       this.text = draft.exists === false ? this.initialText : draft.text;
       this.storedText = draft.exists === false ? null : draft.text;
+      this.unconfirmedText = null;
       this.restored(this.text);
       this.status('saved');
     }
@@ -132,12 +134,24 @@ export class TextDraft
         return;
       }
       this.status('saving');
-      this.storedText = text.replace(/\r\n?/g, '\n');
       try
       {
+        // Resolve the preceding uncertain value before another write, retaining
+        // only the acknowledged and one possibly stored value for safe discard.
+        if (this.unconfirmedText !== null)
+        {
+          const stored = readDraft(await this.storage.readDraft(this.request), this.request);
+          if (this.disposed || this.discarding) return;
+          this.storedText = stored.exists !== false && (stored.text === this.storedText || stored.text === this.unconfirmedText)
+            ? stored.text : null;
+          this.unconfirmedText = null;
+        }
+        this.unconfirmedText = text.replace(/\r\n?/g, '\n');
         const draft = readDraft(await this.storage.saveDraft({ ...this.request, text }), this.request);
         if (draft.text !== text.replace(/\r\n?/g, '\n')) throw new Error('inconsistent_draft_save');
         if (this.disposed) return;
+        this.storedText = draft.text;
+        this.unconfirmedText = null;
         this.savedRevision = revision;
         this.status(this.revision === revision ? 'saved' : 'unsaved');
       }
@@ -174,10 +188,12 @@ export class TextDraft
     try
     {
       await this.saving;
-      if (this.storedText !== null)
+      const values = new Set([this.storedText, this.unconfirmedText]);
+      for (const text of values)
       {
+        if (text === null) continue;
         if (!this.storage.deleteDraft) throw new Error('draft_discard_unavailable');
-        await this.storage.deleteDraft({ ...this.request, text: this.storedText });
+        await this.storage.deleteDraft({ ...this.request, text });
       }
       this.consumed();
     }

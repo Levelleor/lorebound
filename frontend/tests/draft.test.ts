@@ -209,3 +209,32 @@ test('DEV-003F: passage restore distinguishes absent and intentionally empty dra
     draft.dispose();
   }
 });
+
+test('DEV-003F: discard clears acknowledged or uncertain own draft after failed saves, preserving another tab’s text', async () =>
+{
+  for (const outcome of ['before-write', 'lost-reply', 'other-tab', 'repeated-failure'])
+  {
+    let stored: string | null = 'Previously saved';
+    const draft = new TextDraft('epoch', 'story', {
+      readDraft: async request => ({ ...request, text: stored ?? '', exists: stored !== null }),
+      saveDraft: async request =>
+      {
+        if (outcome === 'lost-reply' || (outcome === 'repeated-failure' && request.text === 'First attempt')) stored = request.text;
+        throw new Error('save_unconfirmed');
+      },
+      deleteDraft: async request => { if (request.text === stored) stored = null; }
+    }, () => {}, () => {}, 60000, 'passage:generated', 'Accepted passage');
+    await draft.restore();
+    draft.edit('First attempt');
+    await draft.flush();
+    if (outcome === 'repeated-failure')
+    {
+      draft.edit('Second attempt');
+      await draft.flush();
+    }
+    if (outcome === 'other-tab') stored = 'Another tab’s newer draft';
+    await draft.discard();
+    assert.equal(stored, outcome === 'other-tab' ? 'Another tab’s newer draft' : null, outcome);
+    draft.dispose();
+  }
+});
