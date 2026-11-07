@@ -1,4 +1,4 @@
-import { isID, isObject, readTurns, type Turn } from './story.ts';
+import { isID, isObject, readTurns, type Turn, type PassageDocument } from './story.ts';
 
 export const schemaVersion = 3;
 export const baselineSchemaVersion = 1;
@@ -23,7 +23,15 @@ export interface UndoRequest extends CommitBase
   kind: 'undo_story_turn';
   turnId: string;
 }
-export type CommitRequest = AppendRequest | UndoRequest;
+export interface EditRequest extends CommitBase
+{
+  kind: 'edit_generated_passage';
+  turnId: string;
+  passageId: string;
+  body: PassageDocument;
+  later: 'keep' | 'truncate';
+}
+export type CommitRequest = AppendRequest | UndoRequest | EditRequest;
 export interface CommitResult {
   schemaVersion: number; epoch: string; adventureId: string; operationId: string;
   version: number; turnId: string; replayed: boolean;

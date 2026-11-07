@@ -24,6 +24,46 @@
   let publish: (next: CoordinatorState) => void;
   let undoButton: HTMLButtonElement;
   let confirmUndoButton: HTMLButtonElement;
+  let passageInput: HTMLTextAreaElement;
+  let reviewEditButton: HTMLButtonElement;
+  let keepLaterButton: HTMLButtonElement;
+  $: editTargetMissing = state?.edit && !state.snapshot.turns.some(turn => turn.passages.some(passage => passage.id === state?.edit?.passageId));
+
+  async function startEdit(passageId: string)
+  {
+    await coordinator.startEdit(passageId);
+    await tick();
+    passageInput?.focus();
+  }
+
+  async function reviewEdit()
+  {
+    coordinator.reviewEdit();
+    await tick();
+    keepLaterButton?.focus();
+  }
+
+  async function continueEditing()
+  {
+    coordinator.continueEditing();
+    await tick();
+    passageInput?.focus();
+  }
+
+  async function discardEdit()
+  {
+    const passageId = state?.edit?.passageId;
+    await coordinator.discardEdit();
+    await tick();
+    document.querySelector<HTMLButtonElement>(`[data-edit-passage="${passageId}"]`)?.focus();
+  }
+
+  async function confirmEdit(later: 'keep' | 'truncate')
+  {
+    await coordinator.confirmEdit(later);
+    await tick();
+    if (state?.phase === 'idle') input?.focus();
+  }
 
   async function requestUndo()
   {
@@ -48,6 +88,12 @@
 
   function handleWorkspaceKey(event: KeyboardEvent)
   {
+    if (event.key === 'Escape' && state?.phase === 'edit-ready')
+    {
+      event.preventDefault();
+      void continueEditing();
+      return;
+    }
     if (event.key !== 'Escape' || state?.phase !== 'undo-ready') return;
     event.preventDefault();
     void cancelUndo();
@@ -201,6 +247,7 @@
         : next.phase === 'uncertain' ? 'Save unconfirmed'
         : next.phase === 'generating' ? 'Generating · simulated'
         : next.phase === 'ready' ? 'Proposed · not saved'
+        : next.edit ? 'Editing · not accepted'
         : next.refreshing ? 'Refreshing…'
         : next.phase === 'blocked' ? 'Read only'
         : next.error ? 'Needs attention'
@@ -220,6 +267,7 @@
     const refresh = () =>
     {
       if (!forkBusy) coordinator.requestRefresh();
+      if (coordinator.state.phase === 'editing') void coordinator.editDraft?.restore();
     };
     if (channel) channel.onmessage = event =>
     {
@@ -245,6 +293,13 @@
     <p class="eyebrow">Your adventure</p>
     <h1 tabindex="-1">{snapshot.adventure.title}</h1>
     {#if state}
+      {#if state.edit && editTargetMissing}
+        <section class="editing" aria-label="Retained passage edit">
+          <p class="supporting">This passage is no longer in the current story. Copy any text you want to keep before closing the edit.</p>
+          <label class="sr-only" for="retained-edit">Retained edit text</label>
+          <textarea id="retained-edit" class="passage-editor" rows="7" readonly value={state.edit.text}></textarea>
+        </section>
+      {/if}
       {#if state.snapshot.turns.length === 0}
         <div class="empty-story"><span aria-hidden="true">✧</span><p>No passages yet.</p><p class="supporting">A blank beginning, ready for your story.</p></div>
       {/if}
@@ -252,11 +307,30 @@
         <section class="accepted-turn" data-turn-id={turn.id} aria-label={`Accepted turn ${turn.order}`}>
           <p class="turn-label"><span class="confirmed">✓ Accepted</span> · Turn {turn.order}</p>
           {#each turn.passages as passage (passage.id)}
-            <div class:authored={passage.source === 'authored'} class="passage" data-passage-id={passage.id}>
+            <div class:authored={passage.source === 'authored'} class:editing={state.edit?.passageId === passage.id} class="passage" data-passage-id={passage.id}>
               <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Simulated continuation'}</p>
-              {#each passage.body.content as paragraph}
-                <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
-              {/each}
+              {#if state.edit?.passageId === passage.id}
+                <label class="sr-only" for="passage-edit">Edit continuation for turn {turn.order}</label>
+                <textarea id="passage-edit" class="passage-editor" bind:this={passageInput} rows="7" value={state.edit.text}
+                  readonly={state.phase !== 'editing' || state.edit.draftStatus === 'loading'}
+                  oninput={event => coordinator.setEditText(event.currentTarget.value)}></textarea>
+                <details open={state.phase === 'edit-conflict' || Boolean(state.error)}>
+                  <summary>Current accepted passage</summary>
+                  {#each passage.body.content as paragraph}
+                    <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
+                  {/each}
+                </details>
+                <p class="supporting" role="status" aria-label="Passage draft status">{state.edit.draftError || (state.edit.draftStatus === 'saved' ? 'Passage draft saved · Not accepted.' : state.edit.draftStatus === 'loading' ? 'Loading passage draft…' : state.edit.draftStatus === 'saving' ? 'Saving passage draft…' : 'Editing · Not accepted. Autosaves after a short pause.')}</p>
+                {#if state.edit.draftError}<button class="quiet" onclick={() => coordinator.editDraft?.retry()} disabled={state.phase !== 'editing'}>Retry passage draft</button>{/if}
+              {:else}
+                {#each passage.body.content as paragraph}
+                  <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
+                {/each}
+                {#if passage.source === 'generated'}
+                  <button class="quiet edit-passage" data-edit-passage={passage.id} aria-label={`Edit continuation for turn ${turn.order}`}
+                    onclick={() => startEdit(passage.id)} disabled={forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>✎ Edit</button>
+                {/if}
+              {/if}
             </div>
           {/each}
           <div class="turn-actions">
@@ -305,13 +379,34 @@
       {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
       {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
       <div class="composer-heading"><span class="mode-selected">✎ Story</span><span class="supporting">Simulated generation · No AI connected</span></div>
-      <div class="composer-input" class:undo-pending={state?.undoTurn !== null && state?.undoTurn !== undefined}>
+      <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)}>
         <label class="sr-only" for="story-input">Story input</label>
         <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
           disabled={forkBusy || !state || state.phase !== 'idle'}
           oninput={(event) => coordinator.setInput(event.currentTarget.value)}
           onkeydown={handleInputKey}></textarea>
-        {#if state?.phase === 'undo-ready' || ((state?.phase === 'saving' || state?.phase === 'uncertain') && state.undoTurn)}
+        {#if state?.edit}
+          <div class="pending-overlay edit-overlay" aria-label="Passage edit controls">
+            <p>{state.phase === 'edit-conflict' ? 'The story changed. Review the current story before a fresh decision.' : state.phase === 'uncertain' ? 'Confirm this edit’s result before continuing.' : state.phase === 'saving' ? 'Saving passage edit…' : state.phase === 'discarding-edit' ? 'Discarding draft…' : `Uncommitted edit · Turn ${state.edit.order}`}</p>
+            {#if state.phase === 'edit-ready'}<p class="supporting">Keep later turns unchanged, or permanently delete every turn after Turn {state.edit.order}. No previous version is retained.</p>{/if}
+            <div class="pending-actions">
+              {#if state.phase === 'editing'}
+                <button class="primary" bind:this={reviewEditButton} onclick={reviewEdit} disabled={state.edit.draftStatus === 'loading'}>Review edit</button>
+                <button onclick={discardEdit} disabled={state.edit.draftStatus === 'loading'}>Discard</button>
+              {:else if state.phase === 'edit-ready'}
+                <button class="primary" bind:this={keepLaterButton} onclick={() => confirmEdit('keep')}>Keep Later Turns</button>
+                <button onclick={() => confirmEdit('truncate')}>Delete All After Point</button>
+                <button onclick={continueEditing}>Continue Editing</button>
+                <button onclick={discardEdit}>Discard</button>
+              {:else if state.phase === 'edit-conflict'}
+                <button onclick={() => coordinator.reconsiderEdit()} disabled={state.refreshing}>Review against current story</button>
+                <button onclick={() => coordinator.closeConflictedEdit()} disabled={state.refreshing}>Close edit</button>
+              {:else if state.phase === 'uncertain'}
+                <button class="primary" onclick={() => coordinator.retrySave()}>Recover edit</button>
+              {/if}
+            </div>
+          </div>
+        {:else if state?.phase === 'undo-ready' || ((state?.phase === 'saving' || state?.phase === 'uncertain') && state.undoTurn)}
           <div class="pending-overlay" aria-label="Turn Undo confirmation">
             <p>{state.phase === 'saving' ? 'Removing the accepted turn…' : state.phase === 'uncertain' ? 'Confirm the Undo result before continuing.' : `Remove turn ${state.undoTurn?.order} and return to ${state.undoTurn?.order === 1 ? 'the beginning' : `turn ${(state.undoTurn?.order ?? 1) - 1}`}?`}</p>
             {#if state.phase === 'undo-ready'}<p class="supporting">Both passages will be permanently removed. Fork first to keep this future. Your unfinished input stays.</p>{/if}
@@ -349,6 +444,12 @@
 </main>
 
 <style>
+  .editing { border-left: 2px solid var(--primary); padding-left: 12px; }
+  .passage-editor { width: 100%; box-sizing: border-box; padding: 12px 16px; color: var(--ink); background: transparent; font-family: var(--font-prose); font-size: 21px; line-height: 1.625; resize: vertical; min-height: 180px; }
+  .edit-passage { font-size: 12px; margin-top: 8px; }
+  .edit-overlay { overflow-y: auto; }
+  .edit-overlay .pending-actions { flex-wrap: wrap; justify-content: center; width: 100%; }
+  .edit-overlay .pending-actions button { flex: 1 1 130px; }
   .undo-pending { min-height: 200px; }
   .undo-turn { font-size: 12px; }
   .story-notice { color: var(--success); font-size: 12px; }

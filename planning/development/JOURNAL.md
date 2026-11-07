@@ -86,6 +86,14 @@ After the verified PR #15 review sample and walkthrough, the user accepted the f
 
 IDEA-0042's accepted **Reconstruct committed Undo to the immediately previous active turn** clause now has bounded Story-only reconstruction evidence under R01. On confirmed PR #15 merge this makes IDEA-0042 PARTIAL, giving eleven partial / 41 without feature-level evidence / zero complete, with three formal IDEA-0006 rows unchanged. Nonempty/derived/module obligations remain later; no full-row certification or original-note archival follows. No next child starts.
 
+## 2026-11-06 — DEV-003F generated-passage editing selection
+
+The user launched the next DEV-003 task, authorising an audit, one bounded child, implementation/testing/independent review and one primary PR, with verbal approval required before finalise/merge. PR #15's merge is confirmed at `987310abf8ad39d43144c53ae77c78da937bff3b`; its prepared closure is satisfied.
+
+[DEV-003F](./requirements/DEV-003F.md) selects direct editing of accepted generated passages, per-target latest shared drafts and the complete Keep Later/Delete All After/Continue Editing/Discard flow. Generated passages end the existing two-passage turn, so truncation removes exactly the subsequent turns without selecting an authored-passage or cross-passage boundary policy. Current body replacement reuses the version/epoch/receipt transaction and existing structured format; no revision archive, AI inference or spatial migration is introduced.
+
+Passage drafts distinguish absent and deliberately empty saved values, consume only matching committed text and conditionally discard the editor's last saved value without flushing unsent edits over another tab's draft. A stale edit retains accessible text, displays current accepted target prose and requires deliberate fresh review; uncertain saves retry only the original operation. Broad world replay and authored/cross-passage editing remain later. Implementation, evidence and controls stay in the primary PR; no later slice is launched.
+
 ## Persistent constraints for later authorised work
 
 - **Sensitive local services:** Origin/Host/browser-header restrictions do not authenticate arbitrary hostile local processes. Review the access boundary before sensitive privileged extensions; no new login/token framework is inferred.

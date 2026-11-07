@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ComposerDraft, readDraft, type Draft, type DraftStorage, type DraftStatus } from '../src/lib/draft.ts';
+import { TextDraft, readDraft, type Draft, type DraftStorage, type DraftStatus } from '../src/lib/draft.ts';
 
 const request = { schemaVersion: 3, epoch: 'epoch', adventureId: 'adventure', target: 'composer_story' as const };
 
@@ -19,7 +19,7 @@ function fixture(storage?: DraftStorage)
   let status: DraftStatus = 'loading';
   let error = '';
   const writes: Draft[] = [];
-  const draft = new ComposerDraft(request.epoch, request.adventureId, storage ?? {
+  const draft = new TextDraft(request.epoch, request.adventureId, storage ?? {
     readDraft: async () => saved,
     saveDraft: async value =>
     {
@@ -172,4 +172,40 @@ test('IDEA-0005/R06: invalid responses and oversized or malformed Unicode are ne
   await f.draft.flush();
   assert.equal(f.status(), 'saved');
   f.draft.dispose();
+});
+
+test('DEV-003F: discarding unsent edits preserves another tab’s draft and never autosaves the discarded text', async () =>
+{
+  const request = { schemaVersion: 3, epoch: 'epoch', adventureId: 'story', target: 'passage:generated' as const };
+  let stored: string | null = 'Previously saved';
+  let saves = 0;
+  let restored = '';
+  const draft = new TextDraft('epoch', 'story', {
+    readDraft: async () => ({ ...request, text: stored ?? '', exists: stored !== null }),
+    saveDraft: async value => { saves++; stored = value.text; return { ...value, exists: true }; },
+    deleteDraft: async value => { if (stored === value.text) stored = null; }
+  }, text => { restored = text; }, () => {}, 60000, request.target, 'Canonical text');
+  await draft.restore();
+  assert.equal(restored, 'Previously saved');
+  stored = 'Another tab’s newer draft';
+  draft.edit('Unsent text to discard');
+  await draft.discard();
+  assert.equal(stored, 'Another tab’s newer draft');
+  assert.equal(saves, 0);
+  draft.dispose();
+});
+
+test('DEV-003F: passage restore distinguishes absent and intentionally empty drafts', async () =>
+{
+  for (const exists of [false, true])
+  {
+    let restored = 'unchanged';
+    const draft = new TextDraft('epoch', 'story', {
+      readDraft: async request => ({ ...request, text: '', exists }),
+      saveDraft: async request => ({ ...request, exists: true })
+    }, text => { restored = text; }, () => {}, 60000, 'passage:generated', 'Accepted passage');
+    await draft.restore();
+    assert.equal(restored, exists ? '' : 'Accepted passage');
+    draft.dispose();
+  }
 });

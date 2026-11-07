@@ -24,5 +24,6 @@ export const host = {
   fork: async (request: ForkRequest) => readCommitResult(await call('Fork', request)),
   readDraft: async (request: DraftRequest) => readDraft(await call('ReadDraft', request), request),
   saveDraft: async (request: Draft) => readDraft(await call('SaveDraft', request), request),
+  deleteDraft: async (request: Draft) => { await call('DeleteDraft', request); },
   commit: async (request: CommitRequest) => readCommitResult(await call('Commit', request))
 };

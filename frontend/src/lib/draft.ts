@@ -6,22 +6,26 @@ export interface DraftRequest
   schemaVersion: number;
   epoch: string;
   adventureId: string;
-  target: 'composer_story';
+  target: 'composer_story' | `passage:${string}`;
 }
 export interface Draft extends DraftRequest
 {
   text: string;
+  exists?: boolean;
 }
 export interface DraftStorage
 {
   readDraft(request: DraftRequest): Promise<Draft>;
   saveDraft(request: Draft): Promise<Draft>;
+  deleteDraft?(request: Draft): Promise<void>;
 }
 export type DraftStatus = 'loading' | 'saved' | 'unsaved' | 'saving' | 'error';
 
 export function readDraft(value: unknown, request: DraftRequest): Draft
 {
-  if (!isObject(value) || Object.keys(value).length !== 5
+  const passage = request.target.startsWith('passage:');
+  if (!isObject(value) || Object.keys(value).length !== (passage ? 6 : 5)
+    || (passage && typeof value.exists !== 'boolean')
     || value.schemaVersion !== schemaVersion || value.epoch !== request.epoch
     || value.adventureId !== request.adventureId || value.target !== request.target
     || typeof value.text !== 'string' || !value.text.isWellFormed()
@@ -29,7 +33,7 @@ export function readDraft(value: unknown, request: DraftRequest): Draft
   return value as unknown as Draft;
 }
 
-export class ComposerDraft
+export class TextDraft
 {
   private text = '';
   private revision = 0;
@@ -38,7 +42,10 @@ export class ComposerDraft
   private timer: ReturnType<typeof setTimeout> | null = null;
   private saving: Promise<void> | null = null;
   private disposed = false;
+  private discarding = false;
+  private storedText: string | null = null;
   private readonly request: DraftRequest;
+  private readonly initialText: string;
 
   constructor(
     epoch: string,
@@ -46,10 +53,14 @@ export class ComposerDraft
     storage: DraftStorage,
     restored: (text: string) => void,
     changed: (status: DraftStatus, error: string) => void,
-    delay = 600
+    delay = 600,
+    target: DraftRequest['target'] = 'composer_story',
+    initialText = ''
   )
   {
-    this.request = { schemaVersion, epoch, adventureId, target: 'composer_story' };
+    this.request = { schemaVersion, epoch, adventureId, target };
+    this.text = initialText;
+    this.initialText = initialText;
     this.storage = storage;
     this.restored = restored;
     this.changed = changed;
@@ -75,8 +86,9 @@ export class ComposerDraft
     {
       const draft = readDraft(await this.storage.readDraft(this.request), this.request);
       if (this.disposed || sequence !== this.readSequence || revision !== this.revision) return;
-      this.text = draft.text;
-      this.restored(draft.text);
+      this.text = draft.exists === false ? this.initialText : draft.text;
+      this.storedText = draft.exists === false ? null : draft.text;
+      this.restored(this.text);
       this.status('saved');
     }
     catch
@@ -110,7 +122,7 @@ export class ComposerDraft
 
   private async saveChanges(): Promise<void>
   {
-    while (!this.disposed && this.savedRevision !== this.revision)
+    while (!this.disposed && !this.discarding && this.savedRevision !== this.revision)
     {
       const revision = this.revision;
       const text = this.text;
@@ -120,6 +132,7 @@ export class ComposerDraft
         return;
       }
       this.status('saving');
+      this.storedText = text.replace(/\r\n?/g, '\n');
       try
       {
         const draft = readDraft(await this.storage.saveDraft({ ...this.request, text }), this.request);
@@ -150,6 +163,33 @@ export class ComposerDraft
     this.savedRevision = ++this.revision;
     this.text = '';
     this.status('saved');
+  }
+
+  async discard(): Promise<void>
+  {
+    if (this.timer) clearTimeout(this.timer);
+    this.timer = null;
+    this.pauseRestore();
+    this.discarding = true;
+    try
+    {
+      await this.saving;
+      if (this.storedText !== null)
+      {
+        if (!this.storage.deleteDraft) throw new Error('draft_discard_unavailable');
+        await this.storage.deleteDraft({ ...this.request, text: this.storedText });
+      }
+      this.consumed();
+    }
+    finally
+    {
+      this.discarding = false;
+    }
+  }
+
+  pauseRestore(): void
+  {
+    ++this.readSequence;
   }
 
   dispose(): void

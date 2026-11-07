@@ -1,6 +1,6 @@
-import { readCommitResult, readSnapshot, schemaVersion, type CommitRequest, type CommitResult, type Library, type Snapshot } from './library.ts';
+import { readCommitResult, readSnapshot, schemaVersion, type CommitRequest, type CommitResult, type EditRequest, type Library, type Snapshot } from './library.ts';
 import { documentToText, plainTextToDocument, reconstruct, type Projection, type Turn } from './story.ts';
-import { ComposerDraft, type DraftStatus, type DraftStorage } from './draft.ts';
+import { TextDraft, type DraftStatus, type DraftStorage } from './draft.ts';
 
 export interface GenerationInput
 {
@@ -18,7 +18,8 @@ export interface CoordinatorState
 {
   snapshot: Snapshot;
   input: string;
-  phase: 'idle' | 'generating' | 'ready' | 'undo-ready' | 'saving' | 'uncertain' | 'blocked';
+  phase: 'idle' | 'generating' | 'ready' | 'undo-ready' | 'editing' | 'edit-ready' | 'edit-conflict' | 'discarding-edit' | 'saving' | 'uncertain' | 'blocked';
+  edit: { turnId: string; passageId: string; order: number; text: string; draftStatus: DraftStatus; draftError: string } | null;
   candidate: Turn | null;
   undoTurn: { id: string; order: number } | null;
   notice: string;
@@ -71,6 +72,17 @@ function frozenCopy<T>(value: T): T
   return copy;
 }
 
+function editedTurns(snapshot: Snapshot, request: EditRequest): Turn[]
+{
+  const target = snapshot.turns.find(turn => turn.id === request.turnId);
+  if (!target || target.passages[1].id !== request.passageId) throw new Error('invalid_edit_target');
+  return snapshot.turns.filter(turn => request.later === 'keep' || turn.order <= target.order)
+    .map(turn => turn.id !== target.id ? turn : {
+      ...turn,
+      passages: turn.passages.map(passage => passage.id === request.passageId ? { ...passage, body: request.body } : passage)
+    });
+}
+
 export class StoryCoordinator
 {
   state: CoordinatorState;
@@ -84,8 +96,10 @@ export class StoryCoordinator
   private pending: CommitRequest | null = null;
   private draftFlushed = false;
   private refreshRequested = false;
-  readonly draft: ComposerDraft | null;
+  readonly draft: TextDraft | null;
   private readonly draftEpoch: string;
+  private readonly draftStorage?: DraftStorage;
+  editDraft: TextDraft | null = null;
 
   constructor(snapshot: Snapshot, dependencies: Dependencies)
   {
@@ -95,6 +109,7 @@ export class StoryCoordinator
       snapshot: source,
       projection,
       input: '',
+      edit: null,
       phase: projection.blocked ? 'blocked' : 'idle',
       candidate: null,
       undoTurn: null,
@@ -109,7 +124,8 @@ export class StoryCoordinator
     this.newId = dependencies.newId ?? (() => crypto.randomUUID());
     this.changed = dependencies.onChange ?? (() => {});
     this.draftEpoch = source.epoch;
-    this.draft = dependencies.draftStorage ? new ComposerDraft(source.epoch, source.adventure.id,
+    this.draftStorage = dependencies.draftStorage;
+    this.draft = dependencies.draftStorage ? new TextDraft(source.epoch, source.adventure.id,
       dependencies.draftStorage,
       input =>
       {
@@ -149,6 +165,125 @@ export class StoryCoordinator
   {
     if (this.disposed || this.state.phase !== 'idle' || this.state.refreshing || this.state.projection.blocked) return;
     await this.prepareCandidate();
+  }
+
+  async startEdit(passageId: string): Promise<void>
+  {
+    if (this.disposed || this.state.phase !== 'idle' || this.state.refreshing || this.pending
+      || this.state.projection.blocked || this.state.draftStatus === 'loading') return;
+    const turn = this.state.snapshot.turns.find(turn => turn.passages[1].id === passageId);
+    if (!turn) return;
+    const text = documentToText(turn.passages[1].body);
+    this.update({ phase: 'editing', error: '', notice: '', edit: {
+      turnId: turn.id, passageId, order: turn.order, text,
+      draftStatus: this.draftStorage ? 'loading' : 'unsaved', draftError: ''
+    } });
+    if (!this.draftStorage) return;
+    this.editDraft = new TextDraft(this.state.snapshot.epoch, this.state.snapshot.adventure.id, this.draftStorage,
+      text => { if (this.state.phase === 'editing') this.updateEdit({ text }); },
+      (draftStatus, draftError) => this.updateEdit({ draftStatus, draftError }),
+      600, `passage:${passageId}`, text);
+    await this.editDraft.restore();
+  }
+
+  private updateEdit(next: Partial<NonNullable<CoordinatorState['edit']>>): void
+  {
+    if (this.state.edit) this.update({ edit: { ...this.state.edit, ...next } });
+  }
+
+  setEditText(text: string): void
+  {
+    if (this.disposed || this.state.phase !== 'editing') return;
+    this.updateEdit({ text });
+    this.editDraft?.edit(text);
+    this.update({ error: '' });
+  }
+
+  reviewEdit(): void
+  {
+    if (this.disposed || this.state.phase !== 'editing' || !this.state.edit || this.state.edit.draftStatus === 'loading') return;
+    try
+    {
+      plainTextToDocument(this.state.edit.text);
+      this.editDraft?.pauseRestore();
+      this.update({ phase: 'edit-ready', error: '' });
+    }
+    catch
+    {
+      this.update({ error: 'Enter a nonempty passage of 20,000 characters or fewer before confirming.' });
+    }
+  }
+
+  continueEditing(): void
+  {
+    if (this.disposed || this.state.phase !== 'edit-ready') return;
+    this.update({ phase: 'editing' });
+  }
+
+  async discardEdit(): Promise<void>
+  {
+    if (this.disposed || !this.state.edit || !['editing', 'edit-ready', 'edit-conflict'].includes(this.state.phase)) return;
+    const phase = this.state.phase;
+    this.update({ phase: 'discarding-edit', error: '' });
+    try
+    {
+      await this.editDraft?.discard();
+      this.editDraft?.dispose();
+      this.editDraft = null;
+      this.update({ phase: this.state.projection.blocked ? 'blocked' : 'idle', edit: null });
+      this.refreshIfRequested();
+    }
+    catch
+    {
+      this.update({ phase, error: 'The draft discard could not be confirmed. Your edit is retained; try Discard again.' });
+    }
+  }
+
+  async confirmEdit(later: 'keep' | 'truncate'): Promise<void>
+  {
+    if (this.disposed || this.state.phase !== 'edit-ready' || !this.state.edit || this.pending) return;
+    if (this.state.snapshot.adventure.version === Number.MAX_SAFE_INTEGER)
+    {
+      this.update({ error: 'The edit could not be prepared because the adventure version limit was reached.' });
+      return;
+    }
+    const edit = this.state.edit;
+    const request: EditRequest = {
+      schemaVersion, epoch: this.state.snapshot.epoch, adventureId: this.state.snapshot.adventure.id,
+      expectedVersion: this.state.snapshot.adventure.version, operationId: this.newId(),
+      kind: 'edit_generated_passage', turnId: edit.turnId, passageId: edit.passageId,
+      body: plainTextToDocument(edit.text), later
+    };
+    const proposed = readSnapshot({ ...this.state.snapshot,
+      adventure: { ...this.state.snapshot.adventure, version: request.expectedVersion + 1 },
+      turns: editedTurns(this.state.snapshot, request) });
+    if (reconstruct(proposed).blocked) return;
+    this.draftFlushed = false;
+    this.pending = frozenCopy(request);
+    await this.save();
+  }
+
+  async reconsiderEdit(): Promise<void>
+  {
+    if (this.disposed || this.state.phase !== 'edit-conflict' || !this.state.edit || this.state.refreshing) return;
+    this.update({ refreshing: true });
+    const sequence = ++this.sequence;
+    await this.refetch(sequence);
+    if (!this.live(sequence)) return;
+    const snapshot = this.state.snapshot;
+    const target = snapshot.turns.find(turn => turn.passages[1].id === this.state.edit?.passageId);
+    const ready = target && !this.state.error && !this.state.projection.blocked && snapshot.epoch === this.draftEpoch;
+    this.update({ refreshing: false, phase: ready ? 'editing' : 'edit-conflict',
+      error: ready ? 'Review your retained edit against the current story, then confirm a new decision.'
+        : 'The edit target is unavailable or the library changed. Your text is retained for copying.' });
+  }
+
+  closeConflictedEdit(): void
+  {
+    if (this.disposed || this.state.phase !== 'edit-conflict' || this.state.refreshing) return;
+    this.editDraft?.dispose();
+    this.editDraft = null;
+    this.update({ edit: null, phase: 'blocked', error: 'The edit was not applied. Reload the current story before continuing.' });
   }
 
   requestUndo(): void
@@ -321,6 +456,11 @@ export class StoryCoordinator
       {
         await this.draft.flush();
         if (!this.live(sequence)) return;
+      }
+      if (!this.draftFlushed)
+      {
+        await this.editDraft?.flush();
+        if (!this.live(sequence)) return;
         this.draftFlushed = true;
       }
       const result = readCommitResult(await this.storage.commit(request));
@@ -339,15 +479,23 @@ export class StoryCoordinator
         || snapshot.adventure.version < result.version) throw new Error('inconsistent_commit_read');
       const expectedTurns = appended
         ? [...this.state.snapshot.turns, request.turn]
+        : request.kind === 'edit_generated_passage' ? editedTurns(this.state.snapshot, request)
         : this.state.snapshot.turns.slice(0, -1);
       if (snapshot.adventure.version === result.version
         && JSON.stringify(snapshot.turns) !== JSON.stringify(expectedTurns)) throw new Error('inconsistent_commit_read');
       const projection = reconstruct(snapshot);
       this.pending = null;
       if (appended) this.draft?.consumed();
+      if (request.kind === 'edit_generated_passage')
+      {
+        this.editDraft?.consumed();
+        this.editDraft?.dispose();
+        this.editDraft = null;
+      }
       const wasRemoved = appended && !snapshot.turns.some(turn => turn.id === result.turnId);
       const notice = appended
         ? wasRemoved ? 'The original save is confirmed. Its turn was later undone; the current story is shown.' : ''
+        : request.kind === 'edit_generated_passage' ? 'Passage edit confirmed. The current saved story is shown.'
         : `Undo confirmed. Continuing from ${snapshot.turns.length ? `Turn ${snapshot.turns.length}` : 'the initial beginning'}.`;
       this.update({
         snapshot: frozenCopy(snapshot),
@@ -355,6 +503,7 @@ export class StoryCoordinator
         input: appended ? '' : this.state.input,
         candidate: null,
         undoTurn: null,
+        edit: null,
         notice,
         phase: projection.blocked ? 'blocked' : 'idle',
         error: projection.error
@@ -375,14 +524,14 @@ export class StoryCoordinator
         }
         finally
         {
-          this.update({ refreshing: false });
+          this.update({ refreshing: false, ...(this.state.edit ? { phase: 'edit-conflict' as const } : {}) });
         }
       }
       else if (!committed && /invalid_request|operation_id_conflict|unsupported_event|unsupported_history/.test(reason))
       {
         this.pending = null;
         this.update({
-          phase: 'blocked',
+          phase: this.state.edit ? 'edit-conflict' : 'blocked',
           candidate: null,
           undoTurn: null,
           error: 'This change could not be saved in the current format. Your text is retained. Reload the story before continuing.'
@@ -415,7 +564,7 @@ export class StoryCoordinator
       this.update({
         snapshot: frozenCopy(snapshot),
         projection,
-        phase: projection.blocked ? 'blocked' : 'idle',
+        phase: this.state.edit ? 'edit-conflict' : projection.blocked ? 'blocked' : 'idle',
         error: projection.error || message
       });
       if (!projection.blocked && !preserveInput && snapshot.epoch === this.draftEpoch) await this.draft?.restore();
@@ -471,5 +620,6 @@ export class StoryCoordinator
     this.abort?.abort();
     this.abort = null;
     this.draft?.dispose();
+    this.editDraft?.dispose();
   }
 }

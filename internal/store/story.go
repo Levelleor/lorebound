@@ -41,14 +41,17 @@ type Turn struct {
 	Events []json.RawMessage `json:"events"`
 }
 type CommitRequest struct {
-	SchemaVersion   int    `json:"schemaVersion"`
-	Epoch           string `json:"epoch"`
-	OperationID     string `json:"operationId"`
-	AdventureID     string `json:"adventureId"`
-	ExpectedVersion int64  `json:"expectedVersion"`
-	Kind            string `json:"kind"`
-	Turn            Turn   `json:"turn,omitzero"`
-	TurnID          string `json:"turnId,omitempty"`
+	SchemaVersion   int       `json:"schemaVersion"`
+	Epoch           string    `json:"epoch"`
+	OperationID     string    `json:"operationId"`
+	AdventureID     string    `json:"adventureId"`
+	ExpectedVersion int64     `json:"expectedVersion"`
+	Kind            string    `json:"kind"`
+	Turn            Turn      `json:"turn,omitzero"`
+	TurnID          string    `json:"turnId,omitempty"`
+	PassageID       string    `json:"passageId,omitempty"`
+	Body            *Document `json:"body,omitempty"`
+	Later           string    `json:"later,omitempty"`
 }
 type CommitResult struct {
 	SchemaVersion int    `json:"schemaVersion"`
@@ -99,6 +102,8 @@ func (r *CommitRequest) UnmarshalJSON(data []byte) error {
 		required = append(required, "turn")
 	case "undo_story_turn":
 		required = append(required, "turnId")
+	case "edit_generated_passage":
+		required = append(required, "turnId", "passageId", "body", "later")
 	default:
 		return ErrInvalidRequest
 	}
@@ -283,6 +288,9 @@ func (s *Store) commit(ctx context.Context, req CommitRequest, failBeforeReceipt
 	if req.SchemaVersion != SchemaVersion || req.Epoch == "" || !identifier.MatchString(req.OperationID) || !identifier.MatchString(req.AdventureID) || req.ExpectedVersion < 0 || req.ExpectedVersion >= 9007199254740991 {
 		return CommitResult{}, ErrInvalidRequest
 	}
+	if req.Kind != "edit_generated_passage" && (req.PassageID != "" || req.Body != nil || req.Later != "") {
+		return CommitResult{}, ErrInvalidRequest
+	}
 	switch req.Kind {
 	case "append_story_turn":
 		if !validTurn(req.Turn) || req.TurnID != "" {
@@ -290,6 +298,10 @@ func (s *Store) commit(ctx context.Context, req CommitRequest, failBeforeReceipt
 		}
 	case "undo_story_turn":
 		if !identifier.MatchString(req.TurnID) || req.Turn.SchemaVersion != 0 || req.Turn.ID != "" || req.Turn.Order != 0 || req.Turn.Passages != nil || req.Turn.Events != nil {
+			return CommitResult{}, ErrInvalidRequest
+		}
+	case "edit_generated_passage":
+		if !identifier.MatchString(req.TurnID) || !identifier.MatchString(req.PassageID) || req.Body == nil || !validDocument(*req.Body) || (req.Later != "keep" && req.Later != "truncate") || req.Turn.SchemaVersion != 0 || req.Turn.ID != "" || req.Turn.Order != 0 || req.Turn.Passages != nil || req.Turn.Events != nil {
 			return CommitResult{}, ErrInvalidRequest
 		}
 	default:
@@ -355,7 +367,11 @@ func (s *Store) commit(ctx context.Context, req CommitRequest, failBeforeReceipt
 		return CommitResult{}, ErrUnsupportedHistory
 	}
 	turnID := req.TurnID
-	if req.Kind == "undo_story_turn" {
+	if req.Kind == "edit_generated_passage" {
+		if err = replaceGeneratedPassage(ctx, tx, req, snapshot); err != nil {
+			return CommitResult{}, err
+		}
+	} else if req.Kind == "undo_story_turn" {
 		if len(snapshot.Turns) == 0 || snapshot.Turns[len(snapshot.Turns)-1].ID != req.TurnID {
 			return CommitResult{}, ErrInvalidRequest
 		}
@@ -407,6 +423,9 @@ func (s *Store) commit(ctx context.Context, req CommitRequest, failBeforeReceipt
 		if _, err = tx.ExecContext(ctx, `DELETE FROM drafts WHERE adventure_id=? AND target='composer_story' AND text=?`, req.AdventureID, documentText(req.Turn.Passages[0].Body)); err != nil {
 			return CommitResult{}, err
 		}
+	}
+	if _, err = tx.ExecContext(ctx, `DELETE FROM drafts WHERE adventure_id=? AND target LIKE 'passage:%' AND NOT EXISTS (SELECT 1 FROM passages WHERE passages.adventure_id=drafts.adventure_id AND 'passage:' || passages.id=drafts.target)`, req.AdventureID); err != nil {
+		return CommitResult{}, err
 	}
 	if _, err = tx.ExecContext(ctx, `UPDATE adventures SET version=? WHERE id=?`, req.ExpectedVersion+1, req.AdventureID); err != nil {
 		return CommitResult{}, err

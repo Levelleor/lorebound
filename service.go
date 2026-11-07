@@ -27,3 +27,7 @@ func (s *LibraryService) ReadDraft(req store.DraftRequest) (store.Draft, error) 
 func (s *LibraryService) SaveDraft(req store.SaveDraftRequest) (store.Draft, error) {
 	return s.store.SaveDraft(context.Background(), req)
 }
+
+func (s *LibraryService) DeleteDraft(req store.SaveDraftRequest) error {
+	return s.store.DeleteDraft(context.Background(), req)
+}
