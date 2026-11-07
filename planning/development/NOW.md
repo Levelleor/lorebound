@@ -3,31 +3,33 @@ type: development-status
 status: current
 created: "2026-11-03"
 updated: "2026-11-06"
-current_task: "DEV-003D — Temporary Story input Undo/Redo"
-current_task_status: "VERIFIED ON CONFIRMED MERGE — PR #14"
+current_task: "DEV-003E — Committed Story turn Undo and composer correction"
+current_task_status: "VERIFIED ON CONFIRMED MERGE — PR #15"
 next_task: "DEV-003"
 ---
 
 # Lorebound — Current Development Status
 
-Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](./FEATURES.md), [journal](./JOURNAL.md) and [runbook](./AGENT-RUNBOOK.md). Scope and coverage live in the owning requirements record; CI owns execution output.
+Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](./FEATURES.md), [journal](./JOURNAL.md) and [runbook](./AGENT-RUNBOOK.md). Scope and coverage live in the owning requirement record; CI owns execution output.
 
 ## Verified base
 
-[PR #13](https://github.com/Levelleor/lorebound/pull/13) is confirmed merged at `3632386d407efc0e40bfe9a8c9e7916a9fef9199`; GitHub metadata and local main confirm it, satisfying its prepared closure. DEV-003C Story composer drafts are verified within [bounded scope](./requirements/DEV-003C.md). PR #13 owns final CI/provenance. DEV-002/A/B/C, DEV-003A Retry and DEV-003B Fork are also merged, within simulated Story-only zero-world-effects scope.
+[PR #14](https://github.com/Levelleor/lorebound/pull/14) is confirmed merged at `e31cad1d60e4d99cc3d45592b03fbca954524e61`. It delivered composer text Undo/Redo, not story-turn Undo; the user subsequently rejected that scope choice. Its prior closure is satisfied and its historical evidence is preserved. DEV-002/A/B/C, DEV-003A Retry, DEV-003B Fork and DEV-003C draft recovery remain merged within simulated Story-only zero-world-effects scope.
 
-**52 production / ten partial / zero complete original IDEAs; three formally certified IDEA-0006 rows.** [FEATURES](./FEATURES.md) owns the detailed ledger. Parent DEV-003 remains PARTIAL.
+**52 production / ten partial / zero complete original IDEAs; three formally certified IDEA-0006 rows.** [FEATURES](./FEATURES.md) owns the ledger. Parent DEV-003 remains PARTIAL.
 
-## Active child: DEV-003D
+## DEV-003E closure — conditional on confirmed PR #15 merge
 
-The user separately authorised the DEV-003 audit and one bounded child on 2026-11-06. [Selected scope/dependencies/criteria](./requirements/DEV-003D.md): temporary Undo/Redo for unfinished Story composer input, finite in-memory budget, latest-draft autosave, keyboard/buttons and lifecycle fencing. Implementation is in [primary PR #14](https://github.com/Levelleor/lorebound/pull/14). [Readiness-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42303803167) covers `1333fa1`; scope, coverage and review belong in the child record. The user received the preview/demo and instructed: “yes, proceed with a separate subagent for review and finalize the task please”. This authorises independent review and routine finalisation/merge of the named PR #14 after checks/review. No personal manual-test result is claimed. Independent implementation/source/coverage review PASS; final closure additions and applicable final-head checks are the remaining gates.
+The user authorised the corrective slice and explicitly requires review of the added functionality, with context and a reachable site address, before PR acceptance/merge. [Scope, accepted sources, dependencies and coverage](./requirements/DEV-003E.md): remove custom input Undo/Redo; atomically Undo the latest accepted Story turn; reconstruct the supported prefix/baseline; continue differently in the same adventure; preserve drafts/Forks and recover uncertain operations safely. History order and monotonic concurrency versions become independent.
 
-**Prepared closure takes effect only after closure review, applicable final-head checks and confirmed merge of PR #14.** Then DEV-003D is VERIFIED within unfinished Story input scope; parent DEV-003 remains PARTIAL and feature counts do not change. Actual merge/head/tree provenance and final CI belong in PR #14 and the final handoff.
+Implementation is in [primary PR #15](https://github.com/Levelleor/lorebound/pull/15). [Readiness-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42309993023) covers `36b2664`; independent source/coverage/CI-capture and readiness-document review PASS. [Requirements](./requirements/DEV-003E.md) owns coverage and limits. After the checked live sample and functional walkthrough, the user accepted the functionality and authorised proceeding: “looks good to me, you may proceed after you're done”, followed by “continue”. This authorises routine finalisation/merge of the named PR #15 after closure review/checks; it does not claim the user executed every automated scenario.
 
-No committed Undo, passage/history editor, other draft targets, live providers or nonempty world effects are selected. **B9-D12 spatial migration remains DEFERRED — NO WORK.**
+**Prepared closure takes effect only after closure review, applicable final-head checks and confirmed merge of PR #15.** Then DEV-003E is VERIFIED within accepted-turn Story-only zero-effects scope; custom composer history is removed and IDEA-0042 gains PARTIAL foundation evidence: **eleven partial / 41 without feature-level evidence / zero complete**, with three formal IDEA-0006 rows unchanged. Parent DEV-003 and IDEA-0004 remain PARTIAL. Actual final head, merge/tree provenance and final CI belong in PR #15/final handoff, not a separate reconciliation PR.
+
+No nonempty world effects, standalone corrections, passage/history editing, other modes or live providers are selected. **B9-D12 remains DEFERRED — NO WORK.**
 
 ## Review and next task
 
-The review preview was verified at **http://127.0.0.1:8081** with the separate persistent `.local/review/dev003d` library. Relaunch the current checkout: `bash scripts/dev.sh -port 8081 -data-dir "$PWD/.local/review/dev003d"`. This builds and runs with a separate persistent review library; Ctrl+C stops it. Demo: edit input and use Undo/Redo; wait for Draft saved/reload (text returns, history resets); Generate/Discard (input remains, earlier edits expire); Generate/Accept (accepted turn persists and input Undo cannot roll it back). Generation is simulated.
+Review handoff accepted; the preview was verified at: **[A lantern-lit station — two-turn sample](http://127.0.0.1:8082/?adventure=4094003c-48c1-437b-b091-c17d6eaa432a)**. The served index/Story bundle match the published source. It uses the separate persistent `.local/review/dev003e` library; generation is simulated. Relaunch: `bash scripts/dev.sh -port 8082 -data-dir "$PWD/.local/review/dev003e"` (Ctrl+C stops it; data persists). Port 8081 was occupied, so this preview uses 8082. The disposable test host is stopped. The PR/chat contains the Undo/Cancel/reload/new-continuation walkthrough; the supplied sample demonstrated two accepted turns and no custom input Undo/Redo. Review data remains preserved; the final handoff records listener shutdown.
 
-**Exactly one next task: DEV-003 — audit/select one remaining bounded child, only after this child closes and a separate user launch.** Closing DEV-003D never authorises the next slice. Existing DEV-003C review data remains preserved.
+**Exactly one next task: DEV-003 — audit/select one remaining bounded child only after this child closes and a separate user launch.** No next slice starts through closure approval. Existing review data remains preserved.

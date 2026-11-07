@@ -47,7 +47,8 @@ type CommitRequest struct {
 	AdventureID     string `json:"adventureId"`
 	ExpectedVersion int64  `json:"expectedVersion"`
 	Kind            string `json:"kind"`
-	Turn            Turn   `json:"turn"`
+	Turn            Turn   `json:"turn,omitzero"`
+	TurnID          string `json:"turnId,omitempty"`
 }
 type CommitResult struct {
 	SchemaVersion int    `json:"schemaVersion"`
@@ -92,7 +93,19 @@ func (r *CommitRequest) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &fields); err != nil {
 		return ErrInvalidRequest
 	}
-	for _, field := range []string{"schemaVersion", "epoch", "operationId", "adventureId", "expectedVersion", "kind", "turn"} {
+	required := []string{"schemaVersion", "epoch", "operationId", "adventureId", "expectedVersion", "kind"}
+	switch value.Kind {
+	case "append_story_turn":
+		required = append(required, "turn")
+	case "undo_story_turn":
+		required = append(required, "turnId")
+	default:
+		return ErrInvalidRequest
+	}
+	if len(fields) != len(required) {
+		return ErrInvalidRequest
+	}
+	for _, field := range required {
 		raw, ok := fields[field]
 		if !ok || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
 			return ErrInvalidRequest
@@ -242,20 +255,51 @@ func (s *Store) Commit(ctx context.Context, req CommitRequest) (CommitResult, er
 	return s.commit(ctx, req, false)
 }
 
+func validHistory(snapshot Snapshot) bool {
+	if int64(len(snapshot.Turns)) > snapshot.Adventure.Version {
+		return false
+	}
+	ids := map[string]bool{}
+	for i, turn := range snapshot.Turns {
+		if !validTurn(turn) || turn.Order != int64(i+1) {
+			return false
+		}
+		for _, id := range []string{turn.ID, turn.Passages[0].ID, turn.Passages[1].ID} {
+			if ids[id] {
+				return false
+			}
+			ids[id] = true
+		}
+	}
+	return true
+}
+
 func storyReceiptKey(adventureID, operationID string) string {
 	// ':' is forbidden in public IDs, making this composite namespace unambiguous.
 	return "story:" + adventureID + ":" + operationID
 }
 
 func (s *Store) commit(ctx context.Context, req CommitRequest, failBeforeReceipt bool) (CommitResult, error) {
-	if req.SchemaVersion != SchemaVersion || req.Epoch == "" || !identifier.MatchString(req.OperationID) || !identifier.MatchString(req.AdventureID) || req.ExpectedVersion < 0 || req.ExpectedVersion >= 9007199254740991 || req.Kind != "append_story_turn" || !validTurn(req.Turn) || req.Turn.Order != req.ExpectedVersion+1 {
+	if req.SchemaVersion != SchemaVersion || req.Epoch == "" || !identifier.MatchString(req.OperationID) || !identifier.MatchString(req.AdventureID) || req.ExpectedVersion < 0 || req.ExpectedVersion >= 9007199254740991 {
+		return CommitResult{}, ErrInvalidRequest
+	}
+	switch req.Kind {
+	case "append_story_turn":
+		if !validTurn(req.Turn) || req.TurnID != "" {
+			return CommitResult{}, ErrInvalidRequest
+		}
+	case "undo_story_turn":
+		if !identifier.MatchString(req.TurnID) || req.Turn.SchemaVersion != 0 || req.Turn.ID != "" || req.Turn.Order != 0 || req.Turn.Passages != nil || req.Turn.Events != nil {
+			return CommitResult{}, ErrInvalidRequest
+		}
+	default:
 		return CommitResult{}, ErrInvalidRequest
 	}
 	encoded, err := json.Marshal(req)
 	if err != nil {
 		return CommitResult{}, err
 	}
-	fingerprint := fmt.Sprintf("append_story_turn:%x", sha256.Sum256(encoded))
+	fingerprint := fmt.Sprintf("%s:%x", req.Kind, sha256.Sum256(encoded))
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return CommitResult{}, err
@@ -307,57 +351,67 @@ func (s *Store) commit(ctx context.Context, req CommitRequest, failBeforeReceipt
 	if snapshot.Adventure.Version != req.ExpectedVersion {
 		return CommitResult{}, ErrStaleVersion
 	}
-	if int64(len(snapshot.Turns)) != snapshot.Adventure.Version {
+	if !validHistory(snapshot) {
 		return CommitResult{}, ErrUnsupportedHistory
 	}
-	for i, turn := range snapshot.Turns {
-		if !validTurn(turn) || turn.Order != int64(i+1) {
-			return CommitResult{}, ErrUnsupportedHistory
-		}
-		if turn.ID == req.Turn.ID {
+	turnID := req.TurnID
+	if req.Kind == "undo_story_turn" {
+		if len(snapshot.Turns) == 0 || snapshot.Turns[len(snapshot.Turns)-1].ID != req.TurnID {
 			return CommitResult{}, ErrInvalidRequest
 		}
-		for _, incoming := range req.Turn.Passages {
-			if turn.ID == incoming.ID {
-				return CommitResult{}, ErrInvalidRequest
-			}
+		if _, err = tx.ExecContext(ctx, `DELETE FROM turns WHERE adventure_id=? AND id=?`, req.AdventureID, req.TurnID); err != nil {
+			return CommitResult{}, err
 		}
-		for _, passage := range turn.Passages {
-			if passage.ID == req.Turn.ID {
+	} else {
+		if req.Turn.Order != int64(len(snapshot.Turns))+1 {
+			return CommitResult{}, ErrInvalidRequest
+		}
+		for _, turn := range snapshot.Turns {
+			if turn.ID == req.Turn.ID {
 				return CommitResult{}, ErrInvalidRequest
 			}
 			for _, incoming := range req.Turn.Passages {
-				if passage.ID == incoming.ID {
+				if turn.ID == incoming.ID {
 					return CommitResult{}, ErrInvalidRequest
 				}
 			}
+			for _, passage := range turn.Passages {
+				if passage.ID == req.Turn.ID {
+					return CommitResult{}, ErrInvalidRequest
+				}
+				for _, incoming := range req.Turn.Passages {
+					if passage.ID == incoming.ID {
+						return CommitResult{}, ErrInvalidRequest
+					}
+				}
+			}
 		}
-	}
-	events, err := json.Marshal(req.Turn.Events)
-	if err != nil {
-		return CommitResult{}, err
-	}
-	if _, err = tx.ExecContext(ctx, `INSERT INTO turns(adventure_id,id,sequence,schema_version,events) VALUES(?,?,?,?,?)`, req.AdventureID, req.Turn.ID, req.Turn.Order, req.Turn.SchemaVersion, string(events)); err != nil {
-		return CommitResult{}, err
-	}
-	for i, passage := range req.Turn.Passages {
-		body, err := json.Marshal(passage.Body)
+		events, err := json.Marshal(req.Turn.Events)
 		if err != nil {
 			return CommitResult{}, err
 		}
-		if _, err = tx.ExecContext(ctx, `INSERT INTO passages(adventure_id,id,turn_id,ordinal,source,body) VALUES(?,?,?,?,?,?)`, req.AdventureID, passage.ID, req.Turn.ID, i, passage.Source, string(body)); err != nil {
+		if _, err = tx.ExecContext(ctx, `INSERT INTO turns(adventure_id,id,sequence,schema_version,events) VALUES(?,?,?,?,?)`, req.AdventureID, req.Turn.ID, req.Turn.Order, req.Turn.SchemaVersion, string(events)); err != nil {
+			return CommitResult{}, err
+		}
+		for i, passage := range req.Turn.Passages {
+			body, err := json.Marshal(passage.Body)
+			if err != nil {
+				return CommitResult{}, err
+			}
+			if _, err = tx.ExecContext(ctx, `INSERT INTO passages(adventure_id,id,turn_id,ordinal,source,body) VALUES(?,?,?,?,?,?)`, req.AdventureID, passage.ID, req.Turn.ID, i, passage.Source, string(body)); err != nil {
+				return CommitResult{}, err
+			}
+		}
+		turnID = req.Turn.ID
+		// Consume only accepted input; Undo preserves the latest noncanonical draft.
+		if _, err = tx.ExecContext(ctx, `DELETE FROM drafts WHERE adventure_id=? AND target='composer_story' AND text=?`, req.AdventureID, documentText(req.Turn.Passages[0].Body)); err != nil {
 			return CommitResult{}, err
 		}
 	}
 	if _, err = tx.ExecContext(ctx, `UPDATE adventures SET version=? WHERE id=?`, req.ExpectedVersion+1, req.AdventureID); err != nil {
 		return CommitResult{}, err
 	}
-	// Consume only the input being accepted. Another context's different latest
-	// draft survives; replaying an old receipt never clears a newer draft.
-	if _, err = tx.ExecContext(ctx, `DELETE FROM drafts WHERE adventure_id=? AND target='composer_story' AND text=?`, req.AdventureID, documentText(req.Turn.Passages[0].Body)); err != nil {
-		return CommitResult{}, err
-	}
-	result := CommitResult{SchemaVersion: SchemaVersion, Epoch: currentEpoch, AdventureID: req.AdventureID, OperationID: req.OperationID, Version: req.ExpectedVersion + 1, TurnID: req.Turn.ID}
+	result := CommitResult{SchemaVersion: SchemaVersion, Epoch: currentEpoch, AdventureID: req.AdventureID, OperationID: req.OperationID, Version: req.ExpectedVersion + 1, TurnID: turnID}
 	receiptBytes, err := json.Marshal(result)
 	if err != nil {
 		return CommitResult{}, err

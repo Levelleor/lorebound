@@ -118,21 +118,11 @@ func (s *Store) fork(ctx context.Context, req ForkRequest, failBeforeReceipt boo
 	if source.Adventure.Version != req.ExpectedVersion {
 		return ForkResult{}, ErrStaleVersion
 	}
-	if int64(len(source.Turns)) != source.Adventure.Version {
+	if !validHistory(source) {
 		return ForkResult{}, ErrUnsupportedHistory
 	}
 	boundary := int64(0)
-	ids := map[string]bool{}
-	for i, turn := range source.Turns {
-		if !validTurn(turn) || turn.Order != int64(i+1) {
-			return ForkResult{}, ErrUnsupportedHistory
-		}
-		for _, id := range []string{turn.ID, turn.Passages[0].ID, turn.Passages[1].ID} {
-			if ids[id] {
-				return ForkResult{}, ErrUnsupportedHistory
-			}
-			ids[id] = true
-		}
+	for _, turn := range source.Turns {
 		if turn.ID == req.TurnID {
 			boundary = turn.Order
 		}

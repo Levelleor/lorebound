@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { ComposerDraft, readDraft, type Draft, type DraftStorage, type DraftStatus } from '../src/lib/draft.ts';
 
-const request = { schemaVersion: 2, epoch: 'epoch', adventureId: 'adventure', target: 'composer_story' as const };
+const request = { schemaVersion: 3, epoch: 'epoch', adventureId: 'adventure', target: 'composer_story' as const };
 
 function deferred<T>()
 {

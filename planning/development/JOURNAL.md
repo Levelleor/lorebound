@@ -74,6 +74,18 @@ Engineering choices within the accepted finite-history contract: at most 50 edit
 
 After the named PR #14/preview/demo handoff, the user instructed: “yes, proceed with a separate subagent for review and finalize the task please”. This authorises a separate reviewer and routine finalisation/merge of that same PR after review/checks. It does not claim the user personally ran manual tests. Independent implementation review passed with no blocking finding or source change. Prepared closure stays conditional on final closure review, applicable final-head checks and confirmed merge; parent/counts and deferrals remain unchanged. No next child starts.
 
+## 2026-11-06 — Corrective turn-level Undo scope and user review
+
+After PR #14 merged, the user clarified that the intended feature was Undo of accepted Turn 2 back to Turn 1, rather than letter/input edits. They approved a corrective PR removing custom composer Undo/Redo and implementing committed Undo, repeatable back to baseline, new same-adventure continuation, atomic persistence/conflict checks and independent review. [DEV-003E](./requirements/DEV-003E.md) owns scope and coverage. Historical PR #14 evidence remains truthful; it never delivered turn Undo.
+
+The user expressly requires an explanation of what was added and a reachable review-site address before accepting PR changes. Provide a current verified preview, demo and limits; ask for hands-on feedback and await it before named-PR finalise/merge approval. This implementation launch grants no merge authority.
+
+The canonical version must remain monotonic through Undo while surviving turn order/count decreases. Metadata-only nonspatial database v4 and wire v3 fence old version-equals-count assumptions. Undo uses the existing atomic Commit/receipt path, preserves drafts and independently saved Forks, and reconstructs supported zero-effects history without AI. Old receipts resolve current canon after later Undo without reapplying a deletion or resurrecting prose. Broader world/correction replay remains later; B9-D12 stays deferred.
+
+After the verified PR #15 review sample and walkthrough, the user accepted the functionality and authorised proceeding: “looks good to me, you may proceed after you're done”, then “continue”. Routine finalisation/merge of that named PR is authorised after closure review and final checks; no claim is made that the user ran every automated scenario. Prepared closure remains conditional on confirmed merge in the same primary PR.
+
+IDEA-0042's accepted **Reconstruct committed Undo to the immediately previous active turn** clause now has bounded Story-only reconstruction evidence under R01. On confirmed PR #15 merge this makes IDEA-0042 PARTIAL, giving eleven partial / 41 without feature-level evidence / zero complete, with three formal IDEA-0006 rows unchanged. Nonempty/derived/module obligations remain later; no full-row certification or original-note archival follows. No next child starts.
+
 ## Persistent constraints for later authorised work
 
 - **Sensitive local services:** Origin/Host/browser-header restrictions do not authenticate arbitrary hostile local processes. Review the access boundary before sensitive privileged extensions; no new login/token framework is inferred.

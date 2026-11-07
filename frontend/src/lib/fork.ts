@@ -103,7 +103,8 @@ export class ForkController
       if (this.disposed) return null;
       if (snapshot.epoch !== request.epoch || snapshot.adventure.id !== request.adventureId
         || snapshot.adventure.version < result.version || reconstruct(snapshot).blocked
-        || JSON.stringify(snapshot.turns.slice(0, result.version)) !== JSON.stringify(this.source.turns.slice(0, result.version))) throw new Error('inconsistent_fork_read');
+        || (snapshot.adventure.version === result.version
+          && JSON.stringify(snapshot.turns) !== JSON.stringify(this.source.turns.slice(0, result.version)))) throw new Error('inconsistent_fork_read');
       this.pending = null;
       this.update('complete');
       return snapshot;

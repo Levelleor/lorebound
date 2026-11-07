@@ -69,7 +69,7 @@ export function documentToText(document: PassageDocument): string {
 }
 
 export function readTurns(value: unknown, version: number): Turn[] {
-  if (!Array.isArray(value) || value.length !== version) throw new Error('unsupported_story_history');
+  if (!Array.isArray(value) || !Number.isSafeInteger(version) || value.length > version) throw new Error('unsupported_story_history');
   const ids = new Set<string>();
   const add = (id: unknown) => {
     if (!isID(id) || ids.has(id)) throw new Error('unsupported_story_history');

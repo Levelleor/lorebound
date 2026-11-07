@@ -345,7 +345,7 @@ func TestUpgradeBlankV1LibraryPreservesIdentityAndReceipts(t *testing.T) {
 	}
 	defer s.Close()
 	snapshot := readStory(t, s, "old-epoch", "old")
-	if snapshot.SchemaVersion != 2 || snapshot.Adventure.Title != "Old adventure" || snapshot.Adventure.Version != 0 || len(snapshot.Turns) != 0 || snapshot.Baseline.SchemaVersion != 1 {
+	if snapshot.SchemaVersion != SchemaVersion || snapshot.Adventure.Title != "Old adventure" || snapshot.Adventure.Version != 0 || len(snapshot.Turns) != 0 || snapshot.Baseline.SchemaVersion != 1 {
 		t.Fatalf("upgrade lost baseline: %+v", snapshot)
 	}
 	var hash, receipt string

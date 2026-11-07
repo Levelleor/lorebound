@@ -4,7 +4,6 @@
   import { StoryCoordinator, type CoordinatorState } from './coordinator';
   import type { Snapshot } from './library';
   import { ForkController, defaultForkTitle, type ForkState } from './fork';
-  import type { InputSelection } from './inputHistory';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -23,8 +22,36 @@
   let forkError = '';
   let forkBusy = false;
   let publish: (next: CoordinatorState) => void;
-  let composing = false;
-  let compositionChanged = false;
+  let undoButton: HTMLButtonElement;
+  let confirmUndoButton: HTMLButtonElement;
+
+  async function requestUndo()
+  {
+    coordinator.requestUndo();
+    await tick();
+    confirmUndoButton?.focus();
+  }
+
+  async function confirmUndo()
+  {
+    await coordinator.confirmUndo();
+    await tick();
+    if (state?.phase === 'idle') input?.focus();
+  }
+
+  async function cancelUndo()
+  {
+    coordinator.discard();
+    await tick();
+    undoButton?.focus();
+  }
+
+  function handleWorkspaceKey(event: KeyboardEvent)
+  {
+    if (event.key !== 'Escape' || state?.phase !== 'undo-ready') return;
+    event.preventDefault();
+    void cancelUndo();
+  }
 
   function waitingForkTab(): Window | null
   {
@@ -149,60 +176,11 @@
 
   function handleInputKey(event: KeyboardEvent)
   {
-    if (event.isComposing || composing || event.altKey) return;
-    if ((event.ctrlKey || event.metaKey) && ['z', 'y'].includes(event.key.toLowerCase()))
-    {
-      event.preventDefault();
-      void moveInputHistory(event.key.toLowerCase() === 'y' || event.shiftKey);
-      return;
-    }
+    if (event.isComposing) return;
     if (!(event.ctrlKey || event.metaKey) || event.key !== 'Enter') return;
     if (forkBusy || state?.phase !== 'idle' || state.refreshing) return;
     event.preventDefault();
     void generate();
-  }
-
-  function inputSelection(): InputSelection
-  {
-    return { start: input.selectionStart, end: input.selectionEnd, direction: input.selectionDirection };
-  }
-
-  async function moveInputHistory(redo: boolean)
-  {
-    if (forkBusy || composing || state?.phase !== 'idle') return;
-    const selection = redo ? coordinator.redoInput() : coordinator.undoInput();
-    await tick();
-    // Also override an uncancellable native history input at an exhausted boundary.
-    input.value = coordinator.state.input;
-    input.focus();
-    if (selection) input.setSelectionRange(selection.start, selection.end, selection.direction);
-  }
-
-  function handleBeforeInput(event: InputEvent)
-  {
-    if (event.inputType === 'historyUndo' || event.inputType === 'historyRedo')
-    {
-      if (event.cancelable)
-      {
-        event.preventDefault();
-        void moveInputHistory(event.inputType === 'historyRedo');
-      }
-      return;
-    }
-    coordinator.selectInput(inputSelection());
-  }
-
-  function handleInput(event: Event)
-  {
-    const inputType = (event as InputEvent).inputType;
-    if (inputType === 'historyUndo' || inputType === 'historyRedo')
-    {
-      void moveInputHistory(inputType === 'historyRedo');
-      return;
-    }
-    const changed = input.value !== coordinator.state.input;
-    coordinator.setInput(input.value, inputSelection(), composing && compositionChanged);
-    if (composing && changed) compositionChanged = true;
   }
 
   onMount(() =>
@@ -260,6 +238,8 @@
   });
 </script>
 
+<svelte:window onkeydown={handleWorkspaceKey} />
+
 <main class:mobile-hidden={mobileHidden} class="story-pane">
   <article class="reader" aria-label="Story reader">
     <p class="eyebrow">Your adventure</p>
@@ -287,6 +267,10 @@
                 <path d="M6 7.5v9M18 7.5v1a5 5 0 0 1-5 5H6" />
               </svg>
             </button>
+            {#if turn.id === state.snapshot.turns.at(-1)?.id}
+              <button class="quiet undo-turn" bind:this={undoButton} aria-label={`Undo turn ${turn.order}`} onclick={requestUndo}
+                disabled={forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>↶ Undo turn {turn.order}</button>
+            {/if}
             {#if forkTurnId === turn.id}
               {#if forkState?.phase === 'saving'}<span class="supporting" role="status">Creating fork…</span>{/if}
               {#if forkState?.phase === 'uncertain'}<button onclick={saveFork}>Recover fork</button>{/if}
@@ -319,18 +303,25 @@
   <div class="composer">
     <div class="composer-inner">
       {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
+      {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
       <div class="composer-heading"><span class="mode-selected">✎ Story</span><span class="supporting">Simulated generation · No AI connected</span></div>
-      <div class="composer-input">
+      <div class="composer-input" class:undo-pending={state?.undoTurn !== null && state?.undoTurn !== undefined}>
         <label class="sr-only" for="story-input">Story input</label>
         <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
           disabled={forkBusy || !state || state.phase !== 'idle'}
-          oninput={handleInput}
-          onbeforeinput={handleBeforeInput}
-          onselect={() => coordinator.selectInput(inputSelection())}
-          oncompositionstart={() => { composing = true; compositionChanged = false; }}
-          oncompositionend={() => { composing = false; }}
+          oninput={(event) => coordinator.setInput(event.currentTarget.value)}
           onkeydown={handleInputKey}></textarea>
-        {#if state?.phase === 'ready' || state?.phase === 'saving' || state?.phase === 'uncertain'}
+        {#if state?.phase === 'undo-ready' || ((state?.phase === 'saving' || state?.phase === 'uncertain') && state.undoTurn)}
+          <div class="pending-overlay" aria-label="Turn Undo confirmation">
+            <p>{state.phase === 'saving' ? 'Removing the accepted turn…' : state.phase === 'uncertain' ? 'Confirm the Undo result before continuing.' : `Remove turn ${state.undoTurn?.order} and return to ${state.undoTurn?.order === 1 ? 'the beginning' : `turn ${(state.undoTurn?.order ?? 1) - 1}`}?`}</p>
+            {#if state.phase === 'undo-ready'}<p class="supporting">Both passages will be permanently removed. Fork first to keep this future. Your unfinished input stays.</p>{/if}
+            <div class="pending-actions">
+              {#if state.phase === 'uncertain'}<button class="primary" onclick={() => coordinator.retrySave()}>Recover Undo</button>
+              {:else}<button class="primary" bind:this={confirmUndoButton} onclick={confirmUndo} disabled={state.phase === 'saving'}>Confirm Undo</button>{/if}
+              <button onclick={cancelUndo} disabled={state.phase !== 'undo-ready'}>Cancel</button>
+            </div>
+          </div>
+        {:else if state?.phase === 'ready' || state?.phase === 'saving' || state?.phase === 'uncertain'}
           <div class="pending-overlay" aria-label="Turn acceptance">
             <p>{state.phase === 'saving' ? 'Saving your accepted turn…' : state.phase === 'uncertain' ? 'Confirm the save before continuing.' : 'Accept both passages into your story?'}</p>
             <div class="pending-actions">
@@ -348,11 +339,6 @@
           <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={forkBusy || !state?.input.trim() || state.refreshing}>↑</button>
         {/if}
       </div>
-      <div class="input-history" role="group" aria-label="Temporary input history">
-        <button class="quiet" aria-label="Undo input edit" onclick={() => moveInputHistory(false)} disabled={forkBusy || composing || !state?.canUndoInput}>↶ Undo input</button>
-        <button class="quiet" aria-label="Redo input edit" onclick={() => moveInputHistory(true)} disabled={forkBusy || composing || !state?.canRedoInput}>↷ Redo input</button>
-        <span class="supporting">Temporary edits only</span>
-      </div>
       <p class="composer-hint" role="status" aria-label="Draft status">{state?.draftError || (state?.draftStatus === 'saved' ? 'Draft saved · Not accepted story.' : state?.draftStatus === 'saving' ? 'Saving draft…' : state?.draftStatus === 'loading' ? 'Loading saved draft…' : 'Input autosaves after a short pause.')}</p>
       {#if state?.draftError}
         <button class="quiet" onclick={() => coordinator.draft?.retry()}>Retry draft</button>
@@ -363,9 +349,9 @@
 </main>
 
 <style>
-  .input-history { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-  .input-history button { padding: 4px 8px; font-size: 12px; }
-  .input-history .supporting { font-size: 11px; }
+  .undo-pending { min-height: 200px; }
+  .undo-turn { font-size: 12px; }
+  .story-notice { color: var(--success); font-size: 12px; }
   .turn-actions { display: flex; align-items: center; gap: 12px; margin-top: 12px; min-height: 32px; }
   .fork-action { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 6px; }
   .turn-actions a { color: var(--primary); font-size: 12px; }
