@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-07"
+updated: "2026-11-08"
 tags:
   - planning/development
   - decisions
@@ -147,3 +147,10 @@ Confirmed PR #18 merge `39d770c59392f514fb2e2b59499f21da10a59833` satisfies DEV-
 After the PR #19 handoff supplied the checked two-turn sample, saved-draft/offline/reload/Recover save walkthrough and explicit named-PR approval request, the user replied **“OK PROCEED WITH CLOSURE”**. This accepts the handoff and authorises finalising/merging that named PR after closure review/checks, without claiming the user personally ran every automated scenario. Application/readiness CI and independent accepted-source, implementation/coverage/recovery, eight-capture visual and exact readiness-head review PASS. The malformed stored-choice validation finding was fixed and regression-covered. [Requirements](./requirements/DEV-003I.md) owns maintained coverage. Review/test hosts are stopped and the separate persistent review library is preserved.
 
 Prepared closure stays in the same primary PR and takes effect only after independent closure review, applicable final-head checks and confirmed merge. Then DEV-003I is VERIFIED within supported simulated Story-only zero-effects, same-tab/session-storage recovery scope. DEV-003 and IDEA-0003/0004/0005/0041 remain PARTIAL; thirteen partial / 39 without feature-level evidence / zero complete, all 52 originals in production and three formal IDEA-0006 rows remain unchanged. No new full-row certification, revision archive, broader crash recovery or B9-D12 work follows. Actual merge/head/tree provenance and final CI belong in PR #19/final handoff; no routine post-merge repository write, separate reconciliation PR or next slice is authorised.
+
+
+## 2026-11-08 — DEV-003J Fork reload recovery selection
+
+Confirmed PR #19 merge `667bd51e508159c36fa501d7c3f5885b8edd9ae9` satisfies DEV-003I's closure. The user's separate launch selects [DEV-003J](./requirements/DEV-003J.md): source-tab reload recovery for the existing uncertain Fork operation, in one primary PR with independent review and later verbal finalise/merge approval.
+
+Fork's existing Go receipt can resolve success after the source advances/truncates. Its browser controller previously lost the original request on reload. A session transport journal preserves that immutable request plus the original turn order, with no source prose/drafts or old-body archive. Recovery must remain reachable after the source turn disappears and read current destination history after its own independent changes. Losing the popup handle offers Open fork after confirmed resolution. Strict storage access/format/write/readback/cleanup guards preserve one unresolved operation. This is a bounded engineering extension of accepted IDEA-0011/B3-D02/D05/B4-D05, with no new schema/wire format. Broader world/identity/library obligations and B9-D12 remain later/deferred; counts and parent completion do not change.

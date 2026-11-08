@@ -6,6 +6,7 @@
   import { ForkController, defaultForkTitle, type ForkState } from './fork';
   import type { TextSelection } from './textHistory';
   import { SessionSaveRecovery } from './saveRecovery';
+  import { SessionForkRecovery } from './forkRecovery';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -31,6 +32,7 @@
   let keepLaterButton: HTMLButtonElement;
   $: editTargetMissing = state?.edit && !state.snapshot.turns.some(turn => turn.passages.some(passage => passage.id === state?.edit?.passageId));
   $: editHasContinuation = state?.edit && state.snapshot.turns.some(turn => turn.id === state?.edit?.turnId && turn.passages.some(passage => passage.source === 'generated'));
+  $: detachedFork = forkState?.phase === 'blocked' || Boolean(forkState && forkTurnId && state && !state.snapshot.turns.some(turn => turn.id === forkTurnId));
 
   function editSelection(): TextSelection
   {
@@ -183,7 +185,7 @@
 
   async function saveFork()
   {
-    if (!forkController || !state) return;
+    if (!forkController || !state || state.phase !== 'idle' || state.refreshing) return;
     const created = await forkController.submit(forkTurnId, defaultForkTitle(state.snapshot.adventure.title));
     const target = waitingForkTab();
     if (!created)
@@ -197,6 +199,25 @@
     forkUrl = url.href;
     if (target) target.location.replace(forkUrl);
     forkTarget = null;
+  }
+
+  function initializeFork(source: Snapshot)
+  {
+    forkController?.dispose();
+    forkController = new ForkController(source, host, next =>
+    {
+      forkState = next;
+      forkTurnId = next.turnId || forkTurnId;
+      forkBusy = next.phase === 'saving' || next.phase === 'uncertain' || next.phase === 'blocked';
+      publish(coordinator.state);
+      if (next.phase === 'rejected' || next.phase === 'blocked' || (next.phase === 'editing' && next.error))
+      {
+        waitingForkTab()?.close();
+        forkTarget = null;
+      }
+      if (next.phase === 'complete' || next.phase === 'rejected') coordinator.requestRefresh();
+    }, undefined, new SessionForkRecovery(() => window.sessionStorage));
+    forkController.restore();
   }
 
   async function openFork(turnId: string)
@@ -223,19 +244,13 @@
       font: '16px system-ui, sans-serif',
       padding: '32px'
     });
-    forkController?.dispose();
-    forkController = new ForkController(state.snapshot, host, next =>
+    initializeFork(state.snapshot);
+    if (forkController?.state.phase !== 'editing')
     {
-      forkState = next;
-      forkBusy = next.phase === 'saving' || next.phase === 'uncertain';
-      publish(coordinator.state);
-      if (next.phase === 'rejected' || (next.phase === 'editing' && next.error))
-      {
-        waitingForkTab()?.close();
-        forkTarget = null;
-      }
-      if (next.phase === 'complete' || next.phase === 'rejected') coordinator.requestRefresh();
-    });
+      waitingForkTab()?.close();
+      forkTarget = null;
+      return;
+    }
     await saveFork();
   }
 
@@ -296,7 +311,8 @@
         channel?.postMessage({ adventureId: next.snapshot.adventure.id });
       }
       state = next;
-      const status = next.phase === 'saving' ? 'Saving…'
+      const status = forkBusy ? forkState?.phase === 'saving' ? 'Creating fork…' : 'Fork needs recovery'
+        : next.phase === 'saving' ? 'Saving…'
         : next.phase === 'uncertain' ? 'Save unconfirmed'
         : next.phase === 'generating' ? 'Generating · simulated'
         : next.phase === 'ready' ? 'Proposed · not saved'
@@ -318,6 +334,7 @@
       onChange: publish
     });
     publish(coordinator.state);
+    initializeFork(snapshot);
     const refresh = () =>
     {
       if (!forkBusy) coordinator.requestRefresh();
@@ -342,11 +359,33 @@
 
 <svelte:window onkeydown={handleWorkspaceKey} />
 
+{#snippet forkFeedback()}
+  <div class="fork-feedback">
+    {#if forkState?.phase === 'saving'}<p class="supporting" role="status">Creating fork…</p>{/if}
+    {#if forkState?.phase === 'uncertain'}<button onclick={saveFork} disabled={state?.phase !== 'idle' || state.refreshing}>Recover fork</button>{/if}
+    {#if forkState?.phase === 'blocked'}<button onclick={() => forkController?.restore()}>Retry fork recovery access</button>{/if}
+    {#if forkUrl}<a href={forkUrl} target="_blank" rel="noopener">Open fork</a>{/if}
+    {#if forkError || forkState?.error}
+      <div class="story-error" role="alert">
+        <p>{forkError || forkState?.error}</p>
+        {#if forkError || forkState?.phase === 'rejected' || forkState?.phase === 'editing'}<button class="quiet" onclick={dismissForkError}>Dismiss</button>{/if}
+      </div>
+    {/if}
+  </div>
+{/snippet}
+
 <main class:mobile-hidden={mobileHidden} class="story-pane">
   <article class="reader" aria-label="Story reader">
     <p class="eyebrow">Your adventure</p>
     <h1 tabindex="-1">{snapshot.adventure.title}</h1>
     {#if state}
+      {#if detachedFork}
+        <section class="provisional" aria-label="Fork recovery">
+          <p class="passage-label">Previous fork{forkState?.turnOrder ? ` · Turn ${forkState.turnOrder}` : ''}</p>
+          <p class="supporting">Check the original fork before continuing. Your current saved story is shown below.</p>
+          {@render forkFeedback()}
+        </section>
+      {/if}
       {#if state.recovery}
         <section class="provisional" aria-label="Save recovery">
           <p class="passage-label">Previous save · {state.recovery.summary}</p>
@@ -415,17 +454,9 @@
               <button class="quiet undo-turn" bind:this={undoButton} aria-label={`Undo turn ${turn.order}`} onclick={requestUndo}
                 disabled={forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>↶ Undo turn {turn.order}</button>
             {/if}
-            {#if forkTurnId === turn.id}
-              {#if forkState?.phase === 'saving'}<span class="supporting" role="status">Creating fork…</span>{/if}
-              {#if forkState?.phase === 'uncertain'}<button onclick={saveFork}>Recover fork</button>{/if}
-              {#if forkUrl}<a href={forkUrl} target="_blank" rel="noopener">Open fork</a>{/if}
-            {/if}
           </div>
-          {#if forkTurnId === turn.id && (forkError || forkState?.error)}
-            <div class="story-error" role="alert">
-              <p>{forkError || forkState?.error}</p>
-              {#if forkError || forkState?.phase === 'rejected' || forkState?.phase === 'editing'}<button class="quiet" onclick={dismissForkError}>Dismiss</button>{/if}
-            </div>
+          {#if forkTurnId === turn.id && !detachedFork}
+            {@render forkFeedback()}
           {/if}
         </section>
       {/each}
@@ -546,5 +577,6 @@
   .story-notice { color: var(--success); font-size: 12px; }
   .turn-actions { display: flex; align-items: center; gap: 12px; margin-top: 12px; min-height: 32px; }
   .fork-action { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 6px; }
-  .turn-actions a { color: var(--primary); font-size: 12px; }
+  .fork-feedback { margin-top: 8px; }
+  .fork-feedback a { color: var(--primary); font-size: 12px; }
 </style>
