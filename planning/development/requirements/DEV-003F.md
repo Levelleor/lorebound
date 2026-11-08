@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: ready-for-user-review
+status: verified-on-confirmed-merge
 created: "2026-11-06"
 updated: "2026-11-07"
 task: "DEV-003F"
@@ -11,7 +11,7 @@ tags:
 
 # DEV-003F — Accepted generated-passage editing
 
-The user's 2026-11-06 launch explicitly authorises auditing DEV-003, selecting and implementing one bounded child, testing, independent review and one primary PR. Finalise/merge requires a subsequent verbal approval of that named PR. Base: confirmed [PR #15](https://github.com/Levelleor/lorebound/pull/15), merge `987310abf8ad39d43144c53ae77c78da937bff3b`.
+The user's 2026-11-06 launch explicitly authorises auditing DEV-003, selecting and implementing one bounded child, testing, independent review and one primary PR. The user supplied the subsequent named-PR merge/closure approval on 2026-11-07, as recorded below. Base: confirmed [PR #15](https://github.com/Levelleor/lorebound/pull/15), merge `987310abf8ad39d43144c53ae77c78da937bff3b`.
 
 ## Remaining requirements and dependencies
 
@@ -51,7 +51,7 @@ IDEA-0004/R11 gains bounded historical-edit coverage; R06's native temporary tex
 
 ## Verification and review
 
-Implementation is in [primary PR #16](https://github.com/Levelleor/lorebound/pull/16). [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42392797069) checks `61340d4f13338fe6664fc52bd467288ea24ee9c5`: build/typecheck, TypeScript, vet, real Go/SQLite, Firefox/host restrictions, recovery and exact process restart. The earlier CI failure exposed an ordinary-acceptance disposal timing regression; the fix preserves the original behavior and its existing regression now passes. Independent source/coverage and readiness-document review PASS. Final-head CI and refreshed capture-review disposition are recorded in the primary PR before handoff; no separate report is created. User acceptance and finalise/merge approval remain pending; no verified-main claim is made.
+Implementation is in [primary PR #16](https://github.com/Levelleor/lorebound/pull/16). [Reviewed application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42393461928) checks `e047e916e60a3c3302837ea0b19da4f04f45761f`: build/typecheck, TypeScript, vet, real Go/SQLite, Firefox/host restrictions, recovery and exact process restart. The earlier CI failure exposed an ordinary-acceptance disposal timing regression; the fix preserves the original behavior and its existing regression now passes. Independent source/coverage, final Dark/Bright capture and readiness-document review PASS. Final closure-head CI and merge provenance belong in the primary PR/final handoff. Verified-main status remains conditional on confirmed merge below.
 
 | Requirements | Maintained source / verification |
 | --- | --- |
@@ -62,3 +62,9 @@ Implementation is in [primary PR #16](https://github.com/Levelleor/lorebound/pul
 Draft failure regressions cover Discard after failed-before-write and lost-success-reply autosaves, repeated uncertainty, and preservation of a different newer shared draft. Native textarea history stays temporary; no custom composer Undo/Redo is reintroduced. Unsupported nonempty effects fail closed. No live-provider, Windows/macOS packaging, full accessibility, recovery of overwritten/unsaved draft values or cross-reload uncertain-operation persistence is claimed.
 
 Review launch: `bash scripts/dev.sh -port 8082 -data-dir "$PWD/.local/review/dev003f"`. The persistent sample library is separate from ordinary user data. [NOW](../NOW.md) owns the checked review address and current handoff; the PR/chat owns the task-specific walkthrough. No original IDEA is complete or archived; parent DEV-003 stays PARTIAL.
+
+## Conditional single-PR closure
+
+On 2026-11-07, after the checked preview/demo handoff for PR #16, the user replied: **“yes, proceed with a merge for this and closure”**. This accepts the handoff and authorises routine finalisation/merge of this named PR after closure review/checks; it is not a claim that the user personally executed every automated scenario. The task's review/test hosts are stopped and the separate persistent review library is preserved.
+
+This prepared closure becomes effective **only after closure review, applicable final-head checks and confirmed merge of PR #16**. Then DEV-003F is VERIFIED within the generated-passage Story-only zero-effects boundary. IDEA-0003 and IDEA-0041 gain PARTIAL foundation evidence, producing thirteen partial / 39 without feature-level evidence / zero complete original ideas. All 52 originals remain in production; three formally certified IDEA-0006 rows are unchanged. No additional full-row atomic certification, authored-passage scope, nonempty replay, B9-D12 work or next-child launch follows. Parent DEV-003 remains PARTIAL. Routine closure stays in this primary PR, with actual merge SHA/CI in the PR and final report, not a follow-up reconciliation write.

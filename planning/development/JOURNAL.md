@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-06"
+updated: "2026-11-07"
 tags:
   - planning/development
   - decisions
@@ -93,6 +93,12 @@ The user launched the next DEV-003 task, authorising an audit, one bounded child
 [DEV-003F](./requirements/DEV-003F.md) selects direct editing of accepted generated passages, per-target latest shared drafts and the complete Keep Later/Delete All After/Continue Editing/Discard flow. Generated passages end the existing two-passage turn, so truncation removes exactly the subsequent turns without selecting an authored-passage or cross-passage boundary policy. Current body replacement reuses the version/epoch/receipt transaction and existing structured format; no revision archive, AI inference or spatial migration is introduced.
 
 Passage drafts distinguish absent and deliberately empty saved values, consume only matching committed text and conditionally discard the editor's last saved value without flushing unsent edits over another tab's draft. A stale edit retains accessible text, displays current accepted target prose and requires deliberate fresh review; uncertain saves retry only the original operation. Broad world replay and authored/cross-passage editing remain later. Implementation, evidence and controls stay in the primary PR; no later slice is launched.
+
+## 2026-11-07 — DEV-003F user acceptance and approved closure
+
+After the PR #16 handoff supplied the checked two-turn review sample, the four-choice editing/draft walkthrough and limits, the user replied: **“yes, proceed with a merge for this and closure”**. This authorises finalising/merging that named PR after closure review/checks. It does not claim the user personally executed every automated scenario. Independent implementation/coverage, final CI-capture and readiness review PASS; the [requirement record](./requirements/DEV-003F.md) owns maintained coverage. Review/test hosts are stopped; review data is preserved.
+
+Closure is prepared in the same primary PR and becomes effective only after closure review, applicable final-head checks and confirmed merge. DEV-003F then becomes VERIFIED within generated-passage Story-only zero-effects scope; IDEA-0003 and IDEA-0041 become PARTIAL, giving thirteen partial / 39 without feature-level evidence / zero complete originals. All 52 originals stay in production; three formal IDEA-0006 rows are unchanged. Actual merge provenance/final CI belongs in the PR/final handoff. Parent DEV-003, authored/cross-passage editing and broader reconstruction remain unfinished; B9-D12 is deferred. No next slice is launched.
 
 ## Persistent constraints for later authorised work
 

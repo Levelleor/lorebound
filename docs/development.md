@@ -1,6 +1,6 @@
 # Lorebound development
 
-Merged main extends blank adventure creation/resume with a bounded Story-only path: type prose, generate a visibly simulated continuation, then explicitly accept or discard it. The continuation is a deterministic fixed fixture; no AI provider is connected. Acceptance saves two structured passages together in the Go-owned SQLite library. Rename/delete, live providers, world tracking, history edits, backup/restore and full host lifecycle remain later slices; see [DEV-002B](../planning/development/TASKS.md#dev-002b--first-provisional-and-accepted-story-turn-merged) and [NOW](../planning/development/NOW.md) for merged evidence and current task status.
+Merged main extends blank adventure creation/resume with a bounded Story-only path: type prose, generate a visibly simulated continuation, then explicitly accept or discard it. The continuation is a deterministic fixed fixture; no AI provider is connected. Acceptance saves two structured passages together in the Go-owned SQLite library. Rename/delete, live providers, world tracking, authored/cross-passage edits, backup/restore and full host lifecycle remain later slices; see [DEV-002B](../planning/development/TASKS.md#dev-002b--first-provisional-and-accepted-story-turn-merged) and [NOW](../planning/development/NOW.md) for merged evidence and current task status.
 
 Use Go 1.27.3 (`go.mod`), Node from [.nvmrc](../.nvmrc) and npm for development. Node is not a player runtime dependency. Dependencies are locked in `go.sum` and `frontend/package-lock.json`.
 
