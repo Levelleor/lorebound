@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: in-progress
+status: implemented-unverified
 created: "2026-11-07"
 updated: "2026-11-07"
 task: "DEV-003H"
@@ -45,7 +45,9 @@ The coordinator owns one private session history; the UI submits edits/selection
 
 ## Verification and review status
 
-Focused TypeScript/editor tests and Svelte typecheck PASS locally. Application CI, independent final source/coverage/capture review and hands-on handoff remain pending. Generated output belongs in CI or temporary directories. The primary PR will own checked revision/run links and review disposition; no separate evidence/reconciliation report is created.
+[Primary PR #18](https://github.com/Levelleor/lorebound/pull/18) contains implementation, evidence, controls and reconciliation. Focused TypeScript/editor tests, Svelte typecheck and actual Linux Firefox/Wails/Go/SQLite authored/generated editing scenarios PASS locally. Independent `/root/dev003h_review` accepted-source/source/coverage review and all sixteen changed-UI Dark/Bright captures at 390/768/1024/1440px PASS, with no blocking finding. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42438839068) checks exact source head `81f82778181419d2ce865c4668bc65d290252a79`: repository checks, build/typecheck, TypeScript, vet, Go/SQLite, Linux Firefox/host/recovery and exact process restart. Independent `/root/dev003h_review` final review of all sixteen actual CI history captures and the five-file readiness documentation delta PASS, with no blocking findings. Application sources are unchanged by readiness documentation; the reviewed application CI is reused, with repository checks required on the readiness head. Generated output belongs in CI or temporary directories; no separate evidence/reconciliation report is created.
+
+The checked [two-turn preview](http://127.0.0.1:8084/?adventure=b8bf28fe-8d39-4079-9703-e94edad82a6b) serves matching built assets and uses the separate persistent `.local/review/dev003h` library. The focused disposable test host is stopped. [NOW](../NOW.md) owns readiness/relaunch; PR/chat owns the short demonstration. User acceptance and verbal approval to finalise/merge PR #18 remain pending. Work is not verified main.
 
 Browser integration uses actual Linux Firefox → Wails → Go → SQLite with simulated generation. Dispatched composition/history-input events test event paths, not a real OS IME or browser menu. Meta-key injection on Linux does not certify macOS. Live providers, Windows/macOS packaging and full accessibility remain unverified. Unsaved/overwritten drafts and old accepted prose have no new recovery promise.
 
