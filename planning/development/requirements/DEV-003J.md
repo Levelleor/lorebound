@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: ready-for-user-review
+status: verified-on-confirmed-merge
 created: "2026-11-08"
 updated: "2026-11-08"
 task: "DEV-003J"
@@ -11,7 +11,7 @@ tags:
 
 # DEV-003J — Same-tab reload recovery for uncertain Fork
 
-The user's separate DEV-003 launch on 2026-11-08 authorises one bounded child, implementation/tests, independent review and one primary PR. Named-PR verbal approval is required before finalise/merge. Base: confirmed [PR #19](https://github.com/Levelleor/lorebound/pull/19) merge `667bd51e508159c36fa501d7c3f5885b8edd9ae9`, satisfying DEV-003I's approved conditional closure.
+The user's separate DEV-003 launch on 2026-11-08 authorises one bounded child, implementation/tests, independent review and one primary PR. The user supplied verbal approval to finalise/merge PR #20 after its checked handoff, as recorded below. Base: confirmed [PR #19](https://github.com/Levelleor/lorebound/pull/19) merge `667bd51e508159c36fa501d7c3f5885b8edd9ae9`, satisfying DEV-003I's approved conditional closure.
 
 ## Remaining scope and dependencies
 
@@ -43,8 +43,15 @@ Accepted authority: [IDEA-0011](../../production/Manual%20Generation%20Branches.
 
 [Primary PR #20](https://github.com/Levelleor/lorebound/pull/20) contains this bounded child. [Full application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42524823030) checks corrected source/test head `0cdb903762553b61ae5a568e46a7067ccc19ea6d`: repository, build/typecheck, TypeScript, vet, real Go/SQLite, Firefox/host/recovery and exact process restart. The recovery regressions live in `frontend/tests/forkRecovery.test.ts` and `frontend/scripts/check-fork-recovery.mjs`, integrated by `check-browser.mjs`; existing Fork unit/browser/SQLite tests retain the other technical gates.
 
-Independent `/root/dev003j_review` accepted-source, exact-head implementation/coverage/controls, CI association and all eight Dark/Bright viewport capture reviews PASS, with no remaining blockers. Its receipt-boundary validation finding is fixed and regression-covered. Focused local Fork tests and the exact offline/online source-tab reload/Recover fork/Open fork walkthrough also PASS. The separate persistent review library and checked two-turn address are in [NOW](../NOW.md); served assets match the reviewed application source.
+Independent `/root/dev003j_review` accepted-source, exact-head implementation/coverage/controls, CI association and all eight Dark/Bright viewport capture reviews PASS, with no remaining blockers. Its receipt-boundary validation finding is fixed and regression-covered. Focused local Fork tests and the exact offline/online source-tab reload/Recover fork/Open fork walkthrough also PASS. The separate persistent review library and checked two-turn address are in [NOW](../NOW.md); the checked preview served assets matching the reviewed application source.
 
-**Awaiting hands-on user review and verbal approval to finalise and merge PR #20.** Readiness documentation is reviewed separately with applicable head checks; application source is unchanged from the passing source/test head. Implementation, evidence, controls and routine reconciliation stay in this same PR. No verified-main claim or user acceptance is inferred from CI or a running preview.
+[Complete readiness-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42525536975) checks exact `28f89fa4721add24c06bcb600121c2e457637e60`, including repository and full headless/browser/restart jobs. Independent exact-head readiness documentation review PASS; application/tooling remains identical to the reviewed passing source/test head. The agent-hosted preview is stopped and the persistent review library is preserved. User acceptance/closure authority is recorded below; CI alone does not establish acceptance.
 
 Recovery is limited to the same source tab's session storage and origin/port. Tab closure, browser crash, cleared session data, creation recovery, live providers, other platforms and complete world/library behavior gain no guarantee. Generation and intercepted faults remain simulated; Firefox/Wails/Go/SQLite execution is real when run. Parent DEV-003 and IDEA-0011 stay PARTIAL; feature counts and three formal IDEA-0006 certifications stay unchanged. No original IDEA is archived and no next slice starts through closure approval.
+
+
+## Conditional single-PR closure
+
+After the checked two-turn sample, one-command launch and task-specific offline/reload/Recover fork/Open fork walkthrough, the user replied **“proceed with closure”** on 2026-11-08 to the explicit request to finalise and merge PR #20. This accepts the handoff and approves this named PR's closure without claiming the user personally ran every automated scenario.
+
+Prepared closure stays in this same primary PR and takes effect **only after independent closure review, applicable final-head checks and confirmed PR #20 merge**. Then J01–J06 are VERIFIED within supported simulated Story-only zero-effects, same-tab/session-storage Fork recovery scope. Parent DEV-003 and IDEA-0011 remain PARTIAL. Thirteen partial / 39 without feature-level evidence / zero complete originals, all 52 original notes in production and three formal IDEA-0006 certifications remain unchanged. No original IDEA is archived or new whole-row certification inferred. Actual final-head/merge/tree provenance and CI belong in PR #20/final handoff; no routine post-merge repository write or separate reconciliation PR follows. The next DEV-003 audit requires a separate user launch; this approval starts no next child. B9-D12 remains deferred.
