@@ -106,3 +106,11 @@ Closure is prepared in the same primary PR and becomes effective only after clos
 - **Restore/library changes:** validate active-epoch checks before honoring old receipts and test replay across epoch rotation when implementing these workflows.
 - **Evidence limits:** fixed generation and intercepted faults remain simulated. Actual Linux Firefox/Wails/SQLite integration does not certify live providers, Windows/macOS packaging, full appearance controls or whole-application accessibility.
 - **B9-D12:** spatial event/schema migration remains expressly DEFERRED — NO WORK. Respect later accepted ADRs and preserve the current-only story, TS domain/Go storage boundary and shared pending composer.
+
+## 2026-11-07 — DEV-003G authored-passage editing selection
+
+Confirmed PR #16 merge `020e36fd68b2360982ff288622539dcc42058552` satisfies DEV-003F's closure. The user's separate DEV-003 launch authorises one bounded child, implementation/tests/independent review and a single primary PR, with later named-PR verbal finalise/merge approval required.
+
+[DEV-003G](./requirements/DEV-003G.md) selects accepted authored Story-passage editing. B3-D04 explicitly deletes all passages after the selected passage, so Delete removes the same-turn generated continuation as well as later turns. The surviving authored-only turn retains stable identity and supports a new continuation, Fork, Undo and exact reopen. Keep preserves its continuation and all later prose. Ordinary new-turn acceptance still requires both proposed passages. Latest shared drafts and immutable receipt recovery reuse the existing paths; no AI repair, revision archive or cross-passage operation is introduced.
+
+Metadata-only database v5 and wire v4 fence older two-passage assumptions while preserving existing rows/identity/drafts/receipts. No spatial migration occurs. Nonempty effects, standalone corrections, custom passage-editor history and other modes remain later. Existing nine IDEA-0003/0041 rows extend to authored targets; no new formal certification or feature-count change is claimed. No further child starts.

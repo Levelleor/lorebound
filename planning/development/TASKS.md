@@ -16,7 +16,7 @@ current_next_task: "DEV-003"
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
 | **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | **VERIFIED & MERGED — bounded Story-only zero-effects scope** | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C merged [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
-| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A/B/C/D merged; DEV-003E merged; DEV-003F user approved; conditional closure in PR #16 | [PR #10](https://github.com/Levelleor/lorebound/pull/10), [PR #12](https://github.com/Levelleor/lorebound/pull/12), [PR #13](https://github.com/Levelleor/lorebound/pull/13), [PR #14](https://github.com/Levelleor/lorebound/pull/14), [PR #15](https://github.com/Levelleor/lorebound/pull/15) |
+| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A/B/C/D merged; DEV-003E merged; DEV-003F merged; DEV-003G IN PROGRESS | [PR #10](https://github.com/Levelleor/lorebound/pull/10), [PR #12](https://github.com/Levelleor/lorebound/pull/12), [PR #13](https://github.com/Levelleor/lorebound/pull/13), [PR #14](https://github.com/Levelleor/lorebound/pull/14), [PR #15](https://github.com/Levelleor/lorebound/pull/15) |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
 | **DEV-006** | Universal characters, Playing As, status, anatomy, items and equipment | DEV-002; supported typed entity events | IDEA-0007, IDEA-0026, IDEA-0027, IDEA-0029–IDEA-0031, IDEA-0034, IDEA-0064 | QUEUED | None |
@@ -57,7 +57,7 @@ Acceptance: safe coalesced cross-tab refresh, typing during reads, pending-state
 
 ### DEV-003 — Retry, drafts, Undo/Fork and current-history editing
 
-**PARTIAL.** DEV-002 dependency is satisfied; [scope/dependency audit](./requirements/DEV-003.md). A/B/C/D/E are merged. D's custom composer history was removed by corrective E. The user's separate launch selected DEV-003F below; its closure is prepared after user acceptance/merge approval, conditional on confirmed PR #16 merge. Other remaining work stays later.
+**PARTIAL.** DEV-002 dependency is satisfied; [scope/dependency audit](./requirements/DEV-003.md). A/B/C/D/E/F are merged. D's custom composer history was removed by corrective E. Confirmed PR #16 merge satisfies F's conditional closure. The user's separate launch selects DEV-003G below. Other remaining work stays later.
 
 ### DEV-003A — Replace the provisional Story candidate on Retry
 
@@ -94,6 +94,12 @@ Readiness CI and independent implementation/readiness review PASS; [scope](./req
 **VERIFIED ON CONFIRMED MERGE — [PR #16](https://github.com/Levelleor/lorebound/pull/16).** Separately selected under the user's explicit DEV-003 launch. [Accepted-source audit, remaining dependencies and requirements](./requirements/DEV-003F.md). Edit any accepted generated Story passage inline with latest shared noncanonical drafts; explicitly Keep Later Turns/Delete All After Point/Continue Editing/Discard using the composer overlay. Replace only the current body, preserve stable identity, atomically truncate later turns when selected, and recover stale/uncertain operations safely. Preserve composer input and independent Forks.
 
 Generated passages are the existing turn-ending boundary. Authored targets, whole-passage deletion/splitting/merging, nonempty effects and standalone corrections remain later; B9-D12 remains deferred. Application CI and independent source/coverage review PASS; [requirements](./requirements/DEV-003F.md) owns coverage/limits. After the checked preview/demo handoff, the user approved merge/closure of PR #16 on 2026-11-07. Prepared closure becomes effective only after closure review, applicable final-head checks and confirmed merge of that same PR. Review/test hosts are stopped and review data preserved; no next child starts.
+
+### DEV-003G — Accepted authored-passage editing
+
+**IN PROGRESS.** Selected under the user's separate 2026-11-07 DEV-003 launch after confirmed PR #16 merge. [Accepted-source audit, remaining dependencies and requirements](./requirements/DEV-003G.md). Extend inline passage drafts and the complete Keep/Delete/Continue/Discard flow to accepted authored Story text. Keep retains its same-turn continuation; Delete removes that continuation and every later turn, preserving the edited authored passage/turn. The authored-only boundary must support reload, Fork, Undo and a new continuation. Metadata/wire compatibility fences older two-passage readers.
+
+Implementation, applicable CI, independent review, handoff and later approved closure belong in one primary PR. Whole-passage/cross-passage operations, nonempty effects and standalone corrections remain later; B9-D12 stays deferred. No merge or next-child authority follows from this launch.
 
 ## Prerequisite maintenance: CI, concise controls and hands-on review
 

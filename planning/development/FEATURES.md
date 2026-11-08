@@ -15,7 +15,7 @@ verified_idea_count: 0
 
 [PR #15](https://github.com/Levelleor/lorebound/pull/15) is confirmed merged at `987310abf8ad39d43144c53ae77c78da937bff3b`, satisfying DEV-003E's conditional closure. Merged work gives eleven partial / 41 without feature-level evidence / zero complete original ideas, with three formally certified IDEA-0006 rows unchanged. PR #14's composer-only scope remains historical; #15 removed those custom controls and delivered committed-turn Undo.
 
-[DEV-003F](./requirements/DEV-003F.md) inventories nine affected IDEA-0003/0041 rows and implements generated-passage editing in [PR #16](https://github.com/Levelleor/lorebound/pull/16). Reviewed application CI and independent source/coverage/capture/readiness review PASS. After the checked preview/demo handoff, the user approved merge/closure on 2026-11-07. **The prepared counts/statuses below take effect only after closure review, applicable final-head checks and confirmed PR #16 merge**; until then verified main remains eleven partial / 41 without feature-level evidence / zero complete. No original IDEA completion or new full-row atomic certification is claimed.
+[PR #16](https://github.com/Levelleor/lorebound/pull/16) is confirmed merged at `020e36fd68b2360982ff288622539dcc42058552`, satisfying [DEV-003F](./requirements/DEV-003F.md)'s conditional closure. Generated-passage editing makes IDEA-0003/0041 PARTIAL: **thirteen partial / 39 without feature-level evidence / zero complete**. All original ideas remain in production; three formal IDEA-0006 rows are unchanged. [DEV-003G](./requirements/DEV-003G.md) is in progress for authored-passage editing and reuses those nine stable rows, with no new inventory count or full-row certification. Its verification/merge remain pending.
 
 | Measure | Current status |
 | --- | --- |
@@ -23,8 +23,8 @@ verified_idea_count: 0
 | Original IDEA notes in production | **52** |
 | Original IDEA notes in staging | **0** |
 | Fully VERIFIED complete ideas | **0** |
-| PARTIAL foundation evidence, conditional on PR #16 merge above | **13**: IDEA-0002, IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0006, IDEA-0011, IDEA-0039, IDEA-0040, IDEA-0041, IDEA-0042, IDEA-0044, IDEA-0051, IDEA-0053 from PRs #4/#6/#8/#10/#12/#13/#15/#16 and earlier Gate 0 PR #3 |
-| Notes without feature-level implementation evidence, on confirmed merge | **39** |
+| PARTIAL foundation evidence | **13**: IDEA-0002, IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0006, IDEA-0011, IDEA-0039, IDEA-0040, IDEA-0041, IDEA-0042, IDEA-0044, IDEA-0051, IDEA-0053 from PRs #4/#6/#8/#10/#12/#13/#15/#16 and earlier Gate 0 PR #3 |
+| Notes without feature-level implementation evidence | **39** |
 | Accepted **atomic** requirements inventoried | **95 DEV-002 draft records across seven IDEAs, plus 12 IDEA-0004 rows in the DEV-003 scoped audit**, eight scoped IDEA-0011 rows in DEV-003B and seven IDEA-0005 draft rows in [DEV-003C](./requirements/DEV-003C.md) plus one affected IDEA-0042 reconstruction row in [DEV-003E](./requirements/DEV-003E.md) and nine affected IDEA-0003/0041 rows in [DEV-003F](./requirements/DEV-003F.md) (**132 recorded rows across thirteen IDEAs**). DEV-002C reconciles 57 First-bearing rows; whole-IDEA inventory/certification remains incomplete |
 | Atomic requirements marked VERIFIED | **3 formally certified**: IDEA-0006/R01–R03 from PR #4. DEV-002B/C and DEV-003A have tested scoped requirement coverage; no extra whole-row certification is inferred from mixed/later or empty-effect coverage |
 | New feature proposals awaiting approval | **0 recorded** |

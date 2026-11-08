@@ -102,7 +102,7 @@ func (r *CommitRequest) UnmarshalJSON(data []byte) error {
 		required = append(required, "turn")
 	case "undo_story_turn":
 		required = append(required, "turnId")
-	case "edit_generated_passage":
+	case "edit_generated_passage", "edit_authored_passage":
 		required = append(required, "turnId", "passageId", "body", "later")
 	default:
 		return ErrInvalidRequest
@@ -174,19 +174,21 @@ func validDocument(doc Document) bool {
 }
 
 func validTurn(turn Turn) bool {
-	if turn.SchemaVersion != 1 || !identifier.MatchString(turn.ID) || turn.Order < 1 || len(turn.Passages) != 2 || turn.Events == nil || len(turn.Events) != 0 {
+	if turn.SchemaVersion != 1 || !identifier.MatchString(turn.ID) || turn.Order < 1 || (len(turn.Passages) < 1 || len(turn.Passages) > 2) || turn.Events == nil || len(turn.Events) != 0 {
 		return false
 	}
+	ids := map[string]bool{turn.ID: true}
 	for i, passage := range turn.Passages {
 		expected := "authored"
 		if i == 1 {
 			expected = "generated"
 		}
-		if !identifier.MatchString(passage.ID) || passage.Source != expected || !validDocument(passage.Body) {
+		if !identifier.MatchString(passage.ID) || ids[passage.ID] || passage.Source != expected || !validDocument(passage.Body) {
 			return false
 		}
+		ids[passage.ID] = true
 	}
-	return turn.Passages[0].ID != turn.Passages[1].ID && turn.Passages[0].ID != turn.ID && turn.Passages[1].ID != turn.ID
+	return true
 }
 
 func readHistory(ctx context.Context, tx *sql.Tx, id string, snapshot *Snapshot) error {
@@ -228,16 +230,21 @@ func readHistory(ctx context.Context, tx *sql.Tx, id string, snapshot *Snapshot)
 	// Keep the transaction open across both queries, so no mixed-version reads.
 	for i := range snapshot.Turns {
 		turn := &snapshot.Turns[i]
-		rows, err = tx.QueryContext(ctx, `SELECT id,source,body FROM passages WHERE adventure_id=? AND turn_id=? ORDER BY ordinal`, id, turn.ID)
+		rows, err = tx.QueryContext(ctx, `SELECT id,source,body,ordinal FROM passages WHERE adventure_id=? AND turn_id=? ORDER BY ordinal`, id, turn.ID)
 		if err != nil {
 			return err
 		}
 		for rows.Next() {
 			var passage Passage
 			var body string
-			if err = rows.Scan(&passage.ID, &passage.Source, &body); err != nil {
+			var ordinal int
+			if err = rows.Scan(&passage.ID, &passage.Source, &body, &ordinal); err != nil {
 				rows.Close()
 				return err
+			}
+			if ordinal != len(turn.Passages) {
+				rows.Close()
+				return ErrUnsupportedHistory
 			}
 			decoder := json.NewDecoder(strings.NewReader(body))
 			decoder.DisallowUnknownFields()
@@ -269,7 +276,11 @@ func validHistory(snapshot Snapshot) bool {
 		if !validTurn(turn) || turn.Order != int64(i+1) {
 			return false
 		}
-		for _, id := range []string{turn.ID, turn.Passages[0].ID, turn.Passages[1].ID} {
+		turnIDs := []string{turn.ID}
+		for _, passage := range turn.Passages {
+			turnIDs = append(turnIDs, passage.ID)
+		}
+		for _, id := range turnIDs {
 			if ids[id] {
 				return false
 			}
@@ -288,19 +299,19 @@ func (s *Store) commit(ctx context.Context, req CommitRequest, failBeforeReceipt
 	if req.SchemaVersion != SchemaVersion || req.Epoch == "" || !identifier.MatchString(req.OperationID) || !identifier.MatchString(req.AdventureID) || req.ExpectedVersion < 0 || req.ExpectedVersion >= 9007199254740991 {
 		return CommitResult{}, ErrInvalidRequest
 	}
-	if req.Kind != "edit_generated_passage" && (req.PassageID != "" || req.Body != nil || req.Later != "") {
+	if req.Kind != "edit_generated_passage" && req.Kind != "edit_authored_passage" && (req.PassageID != "" || req.Body != nil || req.Later != "") {
 		return CommitResult{}, ErrInvalidRequest
 	}
 	switch req.Kind {
 	case "append_story_turn":
-		if !validTurn(req.Turn) || req.TurnID != "" {
+		if !validTurn(req.Turn) || len(req.Turn.Passages) != 2 || req.TurnID != "" {
 			return CommitResult{}, ErrInvalidRequest
 		}
 	case "undo_story_turn":
 		if !identifier.MatchString(req.TurnID) || req.Turn.SchemaVersion != 0 || req.Turn.ID != "" || req.Turn.Order != 0 || req.Turn.Passages != nil || req.Turn.Events != nil {
 			return CommitResult{}, ErrInvalidRequest
 		}
-	case "edit_generated_passage":
+	case "edit_generated_passage", "edit_authored_passage":
 		if !identifier.MatchString(req.TurnID) || !identifier.MatchString(req.PassageID) || req.Body == nil || !validDocument(*req.Body) || (req.Later != "keep" && req.Later != "truncate") || req.Turn.SchemaVersion != 0 || req.Turn.ID != "" || req.Turn.Order != 0 || req.Turn.Passages != nil || req.Turn.Events != nil {
 			return CommitResult{}, ErrInvalidRequest
 		}
@@ -367,8 +378,8 @@ func (s *Store) commit(ctx context.Context, req CommitRequest, failBeforeReceipt
 		return CommitResult{}, ErrUnsupportedHistory
 	}
 	turnID := req.TurnID
-	if req.Kind == "edit_generated_passage" {
-		if err = replaceGeneratedPassage(ctx, tx, req, snapshot); err != nil {
+	if req.Kind == "edit_generated_passage" || req.Kind == "edit_authored_passage" {
+		if err = replacePassage(ctx, tx, req, snapshot); err != nil {
 			return CommitResult{}, err
 		}
 	} else if req.Kind == "undo_story_turn" {

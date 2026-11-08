@@ -39,7 +39,7 @@ async function readStory(page, adventureId)
   {
     const library = await window.wails.Call.ByName('main.LibraryService.List');
     return window.wails.Call.ByName('main.LibraryService.Read', {
-      schemaVersion: 3, epoch: library.epoch, adventureId: id
+      schemaVersion: 4, epoch: library.epoch, adventureId: id
     });
   }, adventureId);
 }

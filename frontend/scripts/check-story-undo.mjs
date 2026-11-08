@@ -11,7 +11,7 @@ export async function exerciseUndo(page, base, artifacts)
   const id = new URL(page.url()).searchParams.get('adventure');
   const call = (method, ...args) => page.evaluate(({ method, args }) => window.wails.Call.ByName(`main.LibraryService.${method}`, ...args), { method, args });
   const library = await call('List');
-  const read = adventureId => call('Read', { schemaVersion: 3, epoch: library.epoch, adventureId: adventureId ?? id });
+  const read = adventureId => call('Read', { schemaVersion: 4, epoch: library.epoch, adventureId: adventureId ?? id });
   const idle = (target, count) => target.waitForFunction(count => document.querySelectorAll('.accepted-turn').length === count && !document.querySelector('#story-input')?.disabled, count);
   const saved = target => target.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
   const accept = async (target, text) =>
@@ -145,7 +145,7 @@ export async function exerciseUndo(page, base, artifacts)
   later.id = 'browser-new-turn';
   later.passages[0].id = 'browser-new-authored';
   later.passages[1].id = 'browser-new-generated';
-  await call('Commit', { schemaVersion: 3, epoch: library.epoch, adventureId: id, operationId: 'browser-later-operation', expectedVersion: 5, kind: 'append_story_turn', turn: later });
+  await call('Commit', { schemaVersion: 4, epoch: library.epoch, adventureId: id, operationId: 'browser-later-operation', expectedVersion: 5, kind: 'append_story_turn', turn: later });
   await page.getByRole('button', { name: 'Recover Undo', exact: true }).click();
   await idle(page, 2);
   assert.deepEqual(attempts[0], attempts[1]);

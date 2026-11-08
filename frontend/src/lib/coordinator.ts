@@ -19,7 +19,7 @@ export interface CoordinatorState
   snapshot: Snapshot;
   input: string;
   phase: 'idle' | 'generating' | 'ready' | 'undo-ready' | 'editing' | 'edit-ready' | 'edit-conflict' | 'discarding-edit' | 'saving' | 'uncertain' | 'blocked';
-  edit: { turnId: string; passageId: string; order: number; text: string; draftStatus: DraftStatus; draftError: string } | null;
+  edit: { turnId: string; passageId: string; order: number; source: 'authored' | 'generated'; text: string; draftStatus: DraftStatus; draftError: string } | null;
   candidate: Turn | null;
   undoTurn: { id: string; order: number } | null;
   notice: string;
@@ -75,11 +75,13 @@ function frozenCopy<T>(value: T): T
 function editedTurns(snapshot: Snapshot, request: EditRequest): Turn[]
 {
   const target = snapshot.turns.find(turn => turn.id === request.turnId);
-  if (!target || target.passages[1].id !== request.passageId) throw new Error('invalid_edit_target');
+  const position = target?.passages.findIndex(passage => passage.id === request.passageId) ?? -1;
+  if (!target || position < 0) throw new Error('invalid_edit_target');
   return snapshot.turns.filter(turn => request.later === 'keep' || turn.order <= target.order)
     .map(turn => turn.id !== target.id ? turn : {
       ...turn,
-      passages: turn.passages.map(passage => passage.id === request.passageId ? { ...passage, body: request.body } : passage)
+      passages: turn.passages.filter((_passage, index) => request.later === 'keep' || index <= position)
+        .map(passage => passage.id === request.passageId ? { ...passage, body: request.body } : passage)
     });
 }
 
@@ -171,11 +173,12 @@ export class StoryCoordinator
   {
     if (this.disposed || this.state.phase !== 'idle' || this.state.refreshing || this.pending
       || this.state.projection.blocked || this.state.draftStatus === 'loading') return;
-    const turn = this.state.snapshot.turns.find(turn => turn.passages[1].id === passageId);
+    const turn = this.state.snapshot.turns.find(turn => turn.passages.some(passage => passage.id === passageId));
     if (!turn) return;
-    const text = documentToText(turn.passages[1].body);
+    const passage = turn.passages.find(passage => passage.id === passageId)!;
+    const text = documentToText(passage.body);
     this.update({ phase: 'editing', error: '', notice: '', edit: {
-      turnId: turn.id, passageId, order: turn.order, text,
+      turnId: turn.id, passageId, order: turn.order, source: passage.source, text,
       draftStatus: this.draftStorage ? 'loading' : 'unsaved', draftError: ''
     } });
     if (!this.draftStorage) return;
@@ -251,7 +254,7 @@ export class StoryCoordinator
     const request: EditRequest = {
       schemaVersion, epoch: this.state.snapshot.epoch, adventureId: this.state.snapshot.adventure.id,
       expectedVersion: this.state.snapshot.adventure.version, operationId: this.newId(),
-      kind: 'edit_generated_passage', turnId: edit.turnId, passageId: edit.passageId,
+      kind: edit.source === 'authored' ? 'edit_authored_passage' : 'edit_generated_passage', turnId: edit.turnId, passageId: edit.passageId,
       body: plainTextToDocument(edit.text), later
     };
     const proposed = readSnapshot({ ...this.state.snapshot,
@@ -271,7 +274,7 @@ export class StoryCoordinator
     await this.refetch(sequence);
     if (!this.live(sequence)) return;
     const snapshot = this.state.snapshot;
-    const target = snapshot.turns.find(turn => turn.passages[1].id === this.state.edit?.passageId);
+    const target = snapshot.turns.find(turn => turn.passages.some(passage => passage.id === this.state.edit?.passageId));
     const ready = target && !this.state.error && !this.state.projection.blocked && snapshot.epoch === this.draftEpoch;
     this.update({ refreshing: false, phase: ready ? 'editing' : 'edit-conflict',
       error: ready ? 'Review your retained edit against the current story, then confirm a new decision.'
@@ -482,14 +485,14 @@ export class StoryCoordinator
         || snapshot.adventure.version < result.version) throw new Error('inconsistent_commit_read');
       const expectedTurns = appended
         ? [...this.state.snapshot.turns, request.turn]
-        : request.kind === 'edit_generated_passage' ? editedTurns(this.state.snapshot, request)
+        : request.kind !== 'undo_story_turn' ? editedTurns(this.state.snapshot, request)
         : this.state.snapshot.turns.slice(0, -1);
       if (snapshot.adventure.version === result.version
         && JSON.stringify(snapshot.turns) !== JSON.stringify(expectedTurns)) throw new Error('inconsistent_commit_read');
       const projection = reconstruct(snapshot);
       this.pending = null;
       if (appended) this.draft?.consumed();
-      if (request.kind === 'edit_generated_passage')
+      if (!appended && request.kind !== 'undo_story_turn')
       {
         this.editDraft?.consumed();
         this.editDraft?.dispose();
@@ -498,7 +501,7 @@ export class StoryCoordinator
       const wasRemoved = appended && !snapshot.turns.some(turn => turn.id === result.turnId);
       const notice = appended
         ? wasRemoved ? 'The original save is confirmed. Its turn was later undone; the current story is shown.' : ''
-        : request.kind === 'edit_generated_passage' ? 'Passage edit confirmed. The current saved story is shown.'
+        : request.kind !== 'undo_story_turn' ? 'Passage edit confirmed. The current saved story is shown.'
         : `Undo confirmed. Continuing from ${snapshot.turns.length ? `Turn ${snapshot.turns.length}` : 'the initial beginning'}.`;
       this.update({
         snapshot: frozenCopy(snapshot),

@@ -147,7 +147,7 @@ func TestForkBoundariesRollbackAndCorruption(t *testing.T) {
 	}
 	for _, query := range []string{
 		`UPDATE turns SET events='[{"type":"unknown"}]' WHERE adventure_id='story' AND sequence=1`,
-		`DELETE FROM passages WHERE adventure_id='story' AND id='generated-1'`,
+		`DELETE FROM passages WHERE adventure_id='story' AND id='authored-1'`,
 		`UPDATE turns SET sequence=7 WHERE adventure_id='story' AND sequence=3`,
 		`UPDATE passages SET id='turn-0' WHERE adventure_id='story' AND id='generated-2'`,
 	} {

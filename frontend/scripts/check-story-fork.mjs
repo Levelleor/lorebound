@@ -29,7 +29,7 @@ export async function exerciseFork(page, base, artifacts, sourceId)
   }
   const call = (method, ...args) => page.evaluate(({ method, args }) => window.wails.Call.ByName(`main.LibraryService.${method}`, ...args), { method, args });
   const library = await call('List');
-  const read = id => call('Read', { schemaVersion: 3, epoch: library.epoch, adventureId: id });
+  const read = id => call('Read', { schemaVersion: 4, epoch: library.epoch, adventureId: id });
   const source = await read(sourceId);
   assert.ok(source.turns.length >= 3, 'Existing integration suite supplies accepted boundaries');
   const icons = page.getByRole('button', { name: /^Fork from turn/ });
@@ -44,7 +44,7 @@ export async function exerciseFork(page, base, artifacts, sourceId)
   await page.getByRole('button', { name: 'Discard', exact: true }).click();
   assert.equal(await input.inputValue(), 'Unsent input must stay in the original tab.');
   await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
-  const sourceDraft = await call('ReadDraft', { schemaVersion: 3, epoch: library.epoch, adventureId: sourceId, target: 'composer_story' });
+  const sourceDraft = await call('ReadDraft', { schemaVersion: 4, epoch: library.epoch, adventureId: sourceId, target: 'composer_story' });
   assert.equal(sourceDraft.text, 'Unsent input must stay in the original tab.');
 
   if (artifacts)
@@ -130,7 +130,7 @@ export async function exerciseFork(page, base, artifacts, sourceId)
   assert.deepEqual(attempts[1], attempts[0]);
   assert.equal(context.pages().length, tabsBeforeRecovery);
   assert.equal(await forkTab.getByLabel('Story input').inputValue(), '');
-  const forkDraft = await call('ReadDraft', { schemaVersion: 3, epoch: library.epoch, adventureId: forkId, target: 'composer_story' });
+  const forkDraft = await call('ReadDraft', { schemaVersion: 4, epoch: library.epoch, adventureId: forkId, target: 'composer_story' });
   assert.equal(forkDraft.text, '', 'Fork copies no stored source draft');
   assert.equal(await forkTab.locator('.accepted-turn').count(), 2);
   if (artifacts)
@@ -235,7 +235,7 @@ export async function exerciseFork(page, base, artifacts, sourceId)
   concurrent.id = crypto.randomUUID();
   concurrent.order = beforeRace.adventure.version + 1;
   for (const passage of concurrent.passages) passage.id = crypto.randomUUID();
-  await call('Commit', { schemaVersion: 3, epoch: library.epoch, operationId: crypto.randomUUID(), adventureId: sourceId, expectedVersion: beforeRace.adventure.version, kind: 'append_story_turn', turn: concurrent });
+  await call('Commit', { schemaVersion: 4, epoch: library.epoch, operationId: crypto.randomUUID(), adventureId: sourceId, expectedVersion: beforeRace.adventure.version, kind: 'append_story_turn', turn: concurrent });
   releaseStale();
   await page.getByRole('alert').getByText(/fork was rejected/).waitFor();
   await page.waitForFunction(version => document.querySelectorAll('.accepted-turn').length === version, concurrent.order);
@@ -253,7 +253,7 @@ async function exerciseForkNavigation(page, base, sourceId, within)
 {
   const call = (method, ...args) => page.evaluate(({ method, args }) => window.wails.Call.ByName(`main.LibraryService.${method}`, ...args), { method, args });
   const library = await call('List');
-  const sourceRequest = { schemaVersion: 3, epoch: library.epoch, adventureId: sourceId };
+  const sourceRequest = { schemaVersion: 4, epoch: library.epoch, adventureId: sourceId };
   const source = await call('Read', sourceRequest);
   let expectedCount = library.adventures.length;
 
