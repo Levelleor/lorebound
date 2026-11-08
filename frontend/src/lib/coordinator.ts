@@ -1,6 +1,7 @@
 import { readCommitResult, readSnapshot, schemaVersion, type CommitRequest, type CommitResult, type EditRequest, type Library, type Snapshot } from './library.ts';
 import { documentToText, plainTextToDocument, reconstruct, type Projection, type Turn } from './story.ts';
 import { TextDraft, type DraftStatus, type DraftStorage } from './draft.ts';
+import { TextHistory, type TextSelection } from './textHistory.ts';
 
 export interface GenerationInput
 {
@@ -19,7 +20,7 @@ export interface CoordinatorState
   snapshot: Snapshot;
   input: string;
   phase: 'idle' | 'generating' | 'ready' | 'undo-ready' | 'editing' | 'edit-ready' | 'edit-conflict' | 'discarding-edit' | 'saving' | 'uncertain' | 'blocked';
-  edit: { turnId: string; passageId: string; order: number; source: 'authored' | 'generated'; text: string; draftStatus: DraftStatus; draftError: string } | null;
+  edit: { turnId: string; passageId: string; order: number; source: 'authored' | 'generated'; text: string; draftStatus: DraftStatus; draftError: string; canUndo: boolean; canRedo: boolean; composing: boolean } | null;
   candidate: Turn | null;
   undoTurn: { id: string; order: number } | null;
   notice: string;
@@ -102,6 +103,7 @@ export class StoryCoordinator
   private readonly draftEpoch: string;
   private readonly draftStorage?: DraftStorage;
   editDraft: TextDraft | null = null;
+  private editHistory: TextHistory | null = null;
 
   constructor(snapshot: Snapshot, dependencies: Dependencies)
   {
@@ -177,13 +179,23 @@ export class StoryCoordinator
     if (!turn) return;
     const passage = turn.passages.find(passage => passage.id === passageId)!;
     const text = documentToText(passage.body);
+    this.editHistory = new TextHistory(text);
     this.update({ phase: 'editing', error: '', notice: '', edit: {
       turnId: turn.id, passageId, order: turn.order, source: passage.source, text,
-      draftStatus: this.draftStorage ? 'loading' : 'unsaved', draftError: ''
+      draftStatus: this.draftStorage ? 'loading' : 'unsaved', draftError: '',
+      canUndo: false, canRedo: false, composing: false
     } });
     if (!this.draftStorage) return;
     this.editDraft = new TextDraft(this.state.snapshot.epoch, this.state.snapshot.adventure.id, this.draftStorage,
-      text => { if (this.state.phase === 'editing') this.updateEdit({ text }); },
+      text =>
+      {
+        if (this.state.phase !== 'editing') return;
+        if (text !== this.state.edit?.text)
+        {
+          this.editHistory = new TextHistory(text);
+          this.updateEdit({ text, canUndo: false, canRedo: false, composing: false });
+        }
+      },
       (draftStatus, draftError) => this.updateEdit({ draftStatus, draftError }),
       600, `passage:${passageId}`, text);
     await this.editDraft.restore();
@@ -194,17 +206,55 @@ export class StoryCoordinator
     if (this.state.edit) this.update({ edit: { ...this.state.edit, ...next } });
   }
 
-  setEditText(text: string): void
+  selectEditText(selection: TextSelection): void
   {
-    if (this.disposed || this.state.phase !== 'editing') return;
-    this.updateEdit({ text });
+    if (!this.canEditText || this.state.edit?.composing) return;
+    this.editHistory?.select(selection);
+  }
+
+  private get canEditText(): boolean
+  {
+    return !this.disposed && this.state.phase === 'editing' && this.state.edit?.draftStatus !== 'loading';
+  }
+
+  setEditText(text: string, selection: TextSelection = { start: text.length, end: text.length, direction: 'none' }): void
+  {
+    if (!this.canEditText) return;
+    if (!this.state.edit?.composing) this.editHistory?.record(text, selection);
+    this.updateEdit({ text, canUndo: !this.state.edit?.composing && (this.editHistory?.canUndo ?? false), canRedo: !this.state.edit?.composing && (this.editHistory?.canRedo ?? false) });
     this.editDraft?.edit(text);
     this.update({ error: '' });
   }
 
+  beginEditComposition(selection: TextSelection): void
+  {
+    if (!this.canEditText) return;
+    this.selectEditText(selection);
+    this.editDraft?.pauseRestore();
+    this.updateEdit({ composing: true, canUndo: false, canRedo: false });
+  }
+
+  endEditComposition(text: string, selection: TextSelection): void
+  {
+    if (!this.canEditText || !this.state.edit?.composing) return;
+    this.updateEdit({ composing: false });
+    this.setEditText(text, selection);
+  }
+
+  moveEditHistory(direction: 'undo' | 'redo'): TextSelection | null
+  {
+    if (!this.canEditText || this.state.edit?.composing) return null;
+    const entry = this.editHistory?.move(direction);
+    if (!entry) return null;
+    this.updateEdit({ text: entry.text, canUndo: this.editHistory!.canUndo, canRedo: this.editHistory!.canRedo });
+    this.editDraft?.edit(entry.text);
+    this.update({ error: '' });
+    return entry.selection;
+  }
+
   reviewEdit(): void
   {
-    if (this.disposed || this.state.phase !== 'editing' || !this.state.edit || this.state.edit.draftStatus === 'loading') return;
+    if (!this.canEditText || !this.state.edit || this.state.edit.composing) return;
     try
     {
       plainTextToDocument(this.state.edit.text);
@@ -233,6 +283,7 @@ export class StoryCoordinator
       await this.editDraft?.discard();
       this.editDraft?.dispose();
       this.editDraft = null;
+      this.editHistory = null;
       this.update({ phase: this.state.projection.blocked ? 'blocked' : 'idle', edit: null });
       this.refreshIfRequested();
     }
@@ -261,6 +312,8 @@ export class StoryCoordinator
       adventure: { ...this.state.snapshot.adventure, version: request.expectedVersion + 1 },
       turns: editedTurns(this.state.snapshot, request) });
     if (reconstruct(proposed).blocked) return;
+    this.editHistory = null;
+    this.updateEdit({ canUndo: false, canRedo: false, composing: false });
     this.draftFlushed = false;
     this.pending = frozenCopy(request);
     await this.save();
@@ -276,6 +329,7 @@ export class StoryCoordinator
     const snapshot = this.state.snapshot;
     const target = snapshot.turns.find(turn => turn.passages.some(passage => passage.id === this.state.edit?.passageId));
     const ready = target && !this.state.error && !this.state.projection.blocked && snapshot.epoch === this.draftEpoch;
+    if (ready && this.state.edit) this.editHistory = new TextHistory(this.state.edit.text);
     this.update({ refreshing: false, phase: ready ? 'editing' : 'edit-conflict',
       error: ready ? 'Review your retained edit against the current story, then confirm a new decision.'
         : 'The edit target is unavailable or the library changed. Your text is retained for copying.' });
@@ -286,6 +340,7 @@ export class StoryCoordinator
     if (this.disposed || this.state.phase !== 'edit-conflict' || this.state.refreshing) return;
     this.editDraft?.dispose();
     this.editDraft = null;
+    this.editHistory = null;
     this.update({ edit: null, phase: 'blocked', error: 'The edit was not applied. Reload the current story before continuing.' });
   }
 
@@ -497,6 +552,7 @@ export class StoryCoordinator
         this.editDraft?.consumed();
         this.editDraft?.dispose();
         this.editDraft = null;
+        this.editHistory = null;
       }
       const wasRemoved = appended && !snapshot.turns.some(turn => turn.id === result.turnId);
       const notice = appended
@@ -627,5 +683,6 @@ export class StoryCoordinator
     this.abort = null;
     this.draft?.dispose();
     this.editDraft?.dispose();
+    this.editHistory = null;
   }
 }
