@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: awaiting-user-review
+status: verified-on-confirmed-merge
 created: "2026-11-07"
 updated: "2026-11-07"
 task: "DEV-003G"
@@ -11,7 +11,7 @@ tags:
 
 # DEV-003G — Accepted authored-passage editing
 
-The user's separate 2026-11-07 launch authorises auditing DEV-003, implementing one bounded child, testing, independent review and one primary PR. Finalise/merge requires later verbal approval of the named PR. Base: confirmed [PR #16](https://github.com/Levelleor/lorebound/pull/16), merge `020e36fd68b2360982ff288622539dcc42058552`; its conditional DEV-003F closure is satisfied.
+The user's separate 2026-11-07 launch authorises auditing DEV-003, implementing one bounded child, testing, independent review and one primary PR. The user supplied named-PR finalise/merge approval after the review handoff, as recorded below. Base: confirmed [PR #16](https://github.com/Levelleor/lorebound/pull/16), merge `020e36fd68b2360982ff288622539dcc42058552`; its conditional DEV-003F closure is satisfied.
 
 ## Remaining scope and dependency audit
 
@@ -48,10 +48,18 @@ A metadata-only nonspatial database v4→v5 upgrade fences older binaries that a
 
 ## Verification and handoff
 
-Implemented in [primary PR #17](https://github.com/Levelleor/lorebound/pull/17), awaiting user review and named-PR finalise/merge approval. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42435364390) checks `8063ad1dc3291d18a3f3b1cb4a1c131bc01ab291`: repository checks, build/typecheck, TypeScript, Go/vet/SQLite, real Linux Firefox/host/recovery and exact process restart. Independent source/coverage/documentation review and all eight local authored confirmation captures PASS; final CI-capture/readiness review is recorded in the PR. The reviewer found a malformed stored-ordinal edge case; `readHistory` now rejects it before mutation, with target/version/receipt-preservation regression coverage. No blocking source finding remains. Final readiness-head CI belongs in the PR; application sources are unchanged by readiness documentation. Generated output stays in CI/temporary directories.
+Implemented in [primary PR #17](https://github.com/Levelleor/lorebound/pull/17); the user approved finalising/merging it after the review handoff. Verification becomes effective only on confirmed merge after closure review/checks below. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42435364390) checks `8063ad1dc3291d18a3f3b1cb4a1c131bc01ab291`: repository checks, build/typecheck, TypeScript, Go/vet/SQLite, real Linux Firefox/host/recovery and exact process restart. Independent source/coverage/documentation review and all eight local authored confirmation captures PASS; final CI-capture/readiness review is recorded in the PR. The reviewer found a malformed stored-ordinal edge case; `readHistory` now rejects it before mutation, with target/version/receipt-preservation regression coverage. No blocking source finding remains. [Readiness-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42435687417) checks `42b836c8b4413800ddfa84a636be7edd856a80a8`, including repository and full application jobs. Independent final CI-capture/readiness review PASS. Closure-head CI and actual merge provenance belong in the PR/final handoff; application sources are unchanged by closure documentation. Generated output stays in CI/temporary directories.
 
-The checked [two-turn preview](http://127.0.0.1:8083/?adventure=a15b929e-cab7-4c03-b47c-3eb88739c164) serves matching built assets using the separate persistent `.local/review/dev003g` library. The disposable focused test host is stopped. Relaunch: `bash scripts/dev.sh -port 8083 -data-dir "$PWD/.local/review/dev003g"`. [NOW](../NOW.md) owns readiness; the PR/chat provides the checked address and short authored-edit demo before requesting verbal finalise/merge approval.
+The review handoff supplied the checked [two-turn preview](http://127.0.0.1:8083/?adventure=a15b929e-cab7-4c03-b47c-3eb88739c164), which served matching built assets using the separate persistent `.local/review/dev003g` library. Review/test hosts are now stopped; review data is preserved. Relaunch: `bash scripts/dev.sh -port 8083 -data-dir "$PWD/.local/review/dev003g"`. [NOW](../NOW.md) owns readiness; the PR/chat provides the checked address and short authored-edit demo before the user’s verbal finalise/merge approval.
 
 No original IDEA is complete or archived; IDEA-0003/0041 and parent DEV-003 remain PARTIAL. Thirteen partial / 39 without feature-level evidence / zero complete originals and three formal IDEA-0006 rows remain unchanged. No next slice starts through this task's closure.
 
-Generation and provider faults are simulated; actual Linux Firefox/Wails/SQLite verification does not certify live providers, Windows/macOS packaging or full accessibility. Overwritten/unsaved drafts and cross-reload uncertain-operation persistence remain outside scope. User acceptance and verbal finalise/merge approval are still pending; no prepared verified-main closure is claimed.
+Generation and provider faults are simulated; actual Linux Firefox/Wails/SQLite verification does not certify live providers, Windows/macOS packaging or full accessibility. Overwritten/unsaved drafts and cross-reload uncertain-operation persistence remain outside scope.
+
+## Conditional single-PR closure
+
+After the checked sample, authored-edit walkthrough and named-PR approval request, the user replied **“yes proceed”** on 2026-11-07. This authorises routine finalisation/merge of PR #17 after closure review/checks. It accepts the handoff without claiming that the user personally executed every automated scenario.
+
+Prepared closure takes effect **only after independent closure review, applicable final-head checks and confirmed merge of this same PR**. Then DEV-003G is VERIFIED within authored-passage Story-only zero-effects scope. Existing IDEA-0003/0041 rows gain this authored coverage; both original ideas and parent DEV-003 remain PARTIAL. Counts remain thirteen partial / 39 without feature-level evidence / zero complete, all 52 originals in production, with three formal IDEA-0006 rows unchanged. No additional full-row certification or original IDEA archival follows.
+
+Whole-passage/cross-passage operations, custom passage-editor history, nonempty world/derived/module replay, standalone corrections, other modes and live providers remain later; B9-D12 stays deferred. Review/test listeners are stopped, with the separate persistent review library preserved. Actual final head, merge/tree provenance and CI belong in PR #17/final handoff. No routine post-merge repository write, separate reconciliation PR or next slice follows.
