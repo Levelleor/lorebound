@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
+import { exerciseEditHistory } from './check-edit-history.mjs';
 
 export async function exerciseEdit(page, base, artifacts, source = 'generated')
 {
@@ -48,6 +49,8 @@ export async function exerciseEdit(page, base, artifacts, source = 'generated')
   await open(page, 1);
   assert.equal(await passageInput(page).evaluate(element => element === document.activeElement), true);
   assert.equal(await input.isDisabled(), true);
+  await exerciseEditHistory(page, artifacts, source);
+  assert.deepEqual(await read(), original, 'Temporary Undo/Redo is noncanonical');
   const editedText = 'No key was ever left here. 🦉\n\nThe player chooses what remains true.';
   await passageInput(page).fill(editedText);
   await draftSaved(page);
@@ -55,6 +58,10 @@ export async function exerciseEdit(page, base, artifacts, source = 'generated')
   await page.reload({ waitUntil: 'networkidle' });
   await open(page, 1);
   assert.equal(await passageInput(page).inputValue(), editedText, 'Latest passage draft restores on explicit reopen');
+  assert.equal(await page.getByRole('button', { name: 'Undo edit', exact: true }).isDisabled(), true);
+  assert.equal(await page.getByRole('button', { name: 'Redo edit', exact: true }).isDisabled(), true);
+  await passageInput(page).press('Control+z');
+  assert.equal(await passageInput(page).inputValue(), editedText, 'Reload has no previous temporary or native history');
   assert.equal(await input.inputValue(), 'Keep my unfinished next input.');
   await review(page);
   if (source === 'authored') await page.getByText('Keep the continuation and later turns unchanged, or permanently delete the continuation in Turn 1 and every later turn.', { exact: false }).waitFor();

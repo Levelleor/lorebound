@@ -75,6 +75,103 @@ async function ready(f: ReturnType<typeof fixture>, passageId = 'generated-1')
   await f.coordinator.startEdit(passageId);
 }
 
+test('DEV-003H: authored/generated temporary edit history autosaves only its latest value and never commits', async () =>
+{
+  for (const source of ['authored', 'generated'])
+  {
+    const f = fixture();
+    await ready(f, `${source}-1`);
+    const before = structuredClone(f.head());
+    const selection = { start: 1, end: 4, direction: 'backward' as const };
+    f.coordinator.selectEditText(selection);
+    f.coordinator.setEditText('A paragraph. 🦉\n\nAnother paragraph.');
+    f.coordinator.setEditText('Changed again');
+    assert.equal(f.coordinator.state.edit?.canUndo, true);
+    f.coordinator.moveEditHistory('undo');
+    assert.equal(f.coordinator.state.edit?.text, 'A paragraph. 🦉\n\nAnother paragraph.');
+    assert.deepEqual(f.coordinator.moveEditHistory('undo'), selection);
+    assert.equal(f.coordinator.state.edit?.text, `${source === 'authored' ? 'Authored' : 'Generated'} 1`);
+    assert.equal(f.coordinator.moveEditHistory('undo'), null);
+    f.coordinator.moveEditHistory('redo');
+    await f.coordinator.editDraft?.flush();
+    assert.equal(f.drafts.get(`passage:${source}-1`), 'A paragraph. 🦉\n\nAnother paragraph.');
+    f.coordinator.reviewEdit();
+    assert.equal(f.coordinator.moveEditHistory('undo'), null);
+    f.coordinator.continueEditing();
+    f.coordinator.moveEditHistory('undo');
+    f.coordinator.setEditText('Replacement after Undo');
+    assert.equal(f.coordinator.moveEditHistory('redo'), null);
+    assert.deepEqual(f.head(), before);
+    assert.equal(f.writes.length, 0);
+    assert.equal(f.generates(), 0);
+    await f.coordinator.discardEdit();
+    await f.coordinator.startEdit(`${source}-1`);
+    assert.equal(f.coordinator.state.edit?.canUndo, false);
+    assert.equal(f.coordinator.state.edit?.canRedo, false);
+    f.coordinator.dispose();
+    assert.equal(f.coordinator.moveEditHistory('undo'), null);
+  }
+});
+
+test('DEV-003H: one IME composition is one temporary edit; shared replacement resets history, equal restore preserves it', async () =>
+{
+  const f = fixture();
+  await ready(f);
+  const cursor = { start: 0, end: 0, direction: 'none' as const };
+  f.coordinator.beginEditComposition(cursor);
+  f.coordinator.setEditText('仮');
+  f.coordinator.reviewEdit();
+  assert.equal(f.coordinator.state.phase, 'editing');
+  assert.equal(f.coordinator.moveEditHistory('undo'), null);
+  assert.equal(f.coordinator.state.edit?.canUndo, false);
+  f.coordinator.endEditComposition('確定', { ...cursor, start: 2, end: 2 });
+  f.coordinator.moveEditHistory('undo');
+  assert.equal(f.coordinator.state.edit?.text, 'Generated 1');
+  f.coordinator.moveEditHistory('redo');
+  await f.coordinator.editDraft?.flush();
+  await f.coordinator.editDraft?.restore();
+  assert.equal(f.coordinator.state.edit?.canUndo, true);
+  f.drafts.set('passage:generated-1', 'A different shared draft');
+  await f.coordinator.editDraft?.restore();
+  assert.equal(f.coordinator.state.edit?.text, 'A different shared draft');
+  assert.equal(f.coordinator.moveEditHistory('undo'), null);
+  assert.equal(f.coordinator.moveEditHistory('redo'), null);
+  f.coordinator.dispose();
+});
+
+test('DEV-003H: temporary edits cannot cross confirmation, uncertain recovery, conflict or a reopened target', async () =>
+{
+  const f = fixture();
+  await ready(f);
+  f.coordinator.setEditText('First draft');
+  f.coordinator.setEditText('Latest draft');
+  f.coordinator.reviewEdit();
+  f.drop();
+  await f.coordinator.confirmEdit('keep');
+  assert.equal(f.coordinator.state.phase, 'uncertain');
+  assert.equal(f.coordinator.moveEditHistory('undo'), null);
+  assert.equal(f.coordinator.state.edit?.canUndo, false);
+  await f.coordinator.retrySave();
+  assert.deepEqual(f.writes[0], f.writes[1]);
+  assert.equal(documentToText(f.head().turns[0].passages[1].body), 'Latest draft');
+  await f.coordinator.startEdit('generated-1');
+  assert.equal(f.coordinator.moveEditHistory('undo'), null);
+  f.coordinator.setEditText('A stale draft');
+  f.coordinator.reviewEdit();
+  const changed = structuredClone(f.head());
+  changed.adventure.version++;
+  f.replace(changed);
+  await f.coordinator.confirmEdit('keep');
+  assert.equal(f.coordinator.state.phase, 'edit-conflict');
+  assert.equal(f.coordinator.moveEditHistory('undo'), null);
+  await f.coordinator.reconsiderEdit();
+  assert.equal(f.coordinator.moveEditHistory('undo'), null);
+  f.coordinator.setEditText('A fresh edit');
+  f.coordinator.moveEditHistory('undo');
+  assert.equal(f.coordinator.state.edit?.text, 'A stale draft');
+  f.coordinator.dispose();
+});
+
 test('DEV-003F: inline draft, four decisions, exact Keep and Truncate, composer isolation and no AI', async () =>
 {
   const f = fixture();

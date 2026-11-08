@@ -4,6 +4,7 @@
   import { StoryCoordinator, type CoordinatorState } from './coordinator';
   import type { Snapshot } from './library';
   import { ForkController, defaultForkTitle, type ForkState } from './fork';
+  import type { TextSelection } from './textHistory';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -29,6 +30,56 @@
   let keepLaterButton: HTMLButtonElement;
   $: editTargetMissing = state?.edit && !state.snapshot.turns.some(turn => turn.passages.some(passage => passage.id === state?.edit?.passageId));
   $: editHasContinuation = state?.edit && state.snapshot.turns.some(turn => turn.id === state?.edit?.turnId && turn.passages.some(passage => passage.source === 'generated'));
+
+  function editSelection(): TextSelection
+  {
+    return { start: passageInput.selectionStart, end: passageInput.selectionEnd, direction: passageInput.selectionDirection };
+  }
+
+  async function moveEditHistory(direction: 'undo' | 'redo')
+  {
+    const selection = coordinator.moveEditHistory(direction);
+    const edit = coordinator.state.edit;
+    // Also undo native history input when the browser cannot cancel beforeinput.
+    passageInput.value = edit?.text ?? passageInput.value;
+    if (!selection) return;
+    await tick();
+    if (state?.phase !== 'editing' || state.edit !== edit) return;
+    passageInput.focus();
+    passageInput.setSelectionRange(selection.start, selection.end, selection.direction);
+  }
+
+  function handleEditKey(event: KeyboardEvent)
+  {
+    if (event.isComposing || state?.edit?.composing || !(event.ctrlKey || event.metaKey) || event.altKey) return;
+    const key = event.key.toLowerCase();
+    if (key !== 'z' && !(key === 'y' && event.ctrlKey && !event.metaKey && !event.shiftKey)) return;
+    event.preventDefault();
+    void moveEditHistory(key === 'y' || event.shiftKey ? 'redo' : 'undo');
+  }
+
+  function handleEditBeforeInput(event: InputEvent)
+  {
+    if (event.inputType === 'historyUndo' || event.inputType === 'historyRedo')
+    {
+      if (!event.cancelable) return;
+      event.preventDefault();
+      void moveEditHistory(event.inputType === 'historyUndo' ? 'undo' : 'redo');
+      return;
+    }
+    coordinator.selectEditText(editSelection());
+  }
+
+  function handleEditInput(event: Event)
+  {
+    const inputType = (event as InputEvent).inputType;
+    if (inputType === 'historyUndo' || inputType === 'historyRedo')
+    {
+      void moveEditHistory(inputType === 'historyUndo' ? 'undo' : 'redo');
+      return;
+    }
+    coordinator.setEditText(passageInput.value, editSelection());
+  }
 
   async function startEdit(passageId: string)
   {
@@ -314,7 +365,15 @@
                 <label class="sr-only" for="passage-edit">Edit {passage.source === 'authored' ? 'Story text' : 'continuation'} for turn {turn.order}</label>
                 <textarea id="passage-edit" class="passage-editor" bind:this={passageInput} rows="7" value={state.edit.text}
                   readonly={state.phase !== 'editing' || state.edit.draftStatus === 'loading'}
-                  oninput={event => coordinator.setEditText(event.currentTarget.value)}></textarea>
+                  onbeforeinput={handleEditBeforeInput} oninput={handleEditInput} onkeydown={handleEditKey}
+                  onselect={() => coordinator.selectEditText(editSelection())}
+                  oncompositionstart={() => coordinator.beginEditComposition(editSelection())}
+                  oncompositionend={() => coordinator.endEditComposition(passageInput.value, editSelection())}></textarea>
+                <div class="edit-history" role="group" aria-label="Temporary passage edits">
+                  <button class="quiet" onclick={() => moveEditHistory('undo')} disabled={state.phase !== 'editing' || state.edit.draftStatus === 'loading' || !state.edit.canUndo || state.edit.composing}>Undo edit</button>
+                  <button class="quiet" onclick={() => moveEditHistory('redo')} disabled={state.phase !== 'editing' || state.edit.draftStatus === 'loading' || !state.edit.canRedo || state.edit.composing}>Redo edit</button>
+                  <span class="supporting">Temporary edits in this session</span>
+                </div>
                 <details open={state.phase === 'edit-conflict' || Boolean(state.error)}>
                   <summary>Current accepted passage</summary>
                   {#each passage.body.content as paragraph}
@@ -394,7 +453,7 @@
             {/if}
             <div class="pending-actions">
               {#if state.phase === 'editing'}
-                <button class="primary" bind:this={reviewEditButton} onclick={reviewEdit} disabled={state.edit.draftStatus === 'loading'}>Review edit</button>
+                <button class="primary" bind:this={reviewEditButton} onclick={reviewEdit} disabled={state.edit.draftStatus === 'loading' || state.edit.composing}>Review edit</button>
                 <button onclick={discardEdit} disabled={state.edit.draftStatus === 'loading'}>Discard</button>
               {:else if state.phase === 'edit-ready'}
                 <button class="primary" bind:this={keepLaterButton} onclick={() => confirmEdit('keep')}>Keep Later Turns</button>
@@ -450,6 +509,8 @@
   .editing { border-left: 2px solid var(--primary); padding-left: 12px; }
   .passage-editor { width: 100%; box-sizing: border-box; padding: 12px 16px; color: var(--ink); background: transparent; font-family: var(--font-prose); font-size: 21px; line-height: 1.625; resize: vertical; min-height: 180px; }
   .edit-passage { font-size: 12px; margin-top: 8px; }
+  .edit-history { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0; }
+  .edit-history button { font-size: 12px; }
   .edit-overlay { overflow-y: auto; }
   .edit-overlay .pending-actions { flex-wrap: wrap; justify-content: center; width: 100%; }
   .edit-overlay .pending-actions button { flex: 1 1 130px; }
