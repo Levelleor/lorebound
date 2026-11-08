@@ -178,6 +178,18 @@ export async function exerciseEdit(page, base, artifacts, source = 'generated')
   assert.deepEqual((await read()).turns, truncated.turns);
   if (source === 'authored')
   {
+    await input.fill('A new player turn after the authored-only boundary.');
+    await page.getByRole('button', { name: 'Generate continuation', exact: true }).click();
+    await page.getByRole('button', { name: 'Accept turn', exact: true }).click();
+    await idle(page);
+    const continued = await read();
+    assert.deepEqual(continued.turns[0], truncated.turns[0]);
+    assert.equal(continued.turns[1].order, 2);
+    assert.deepEqual(continued.turns[1].passages.map(passage => passage.source), ['authored', 'generated']);
+    await page.getByRole('button', { name: 'Undo turn 2', exact: true }).click();
+    await page.getByRole('button', { name: 'Confirm Undo', exact: true }).click();
+    await idle(page);
+    assert.deepEqual((await read()).turns, truncated.turns);
     const popup = page.waitForEvent('popup');
     await page.getByRole('button', { name: 'Fork from turn 1', exact: true }).click();
     const boundaryFork = await popup;
@@ -193,6 +205,12 @@ export async function exerciseEdit(page, base, artifacts, source = 'generated')
     await boundaryFork.close();
   }
   await open(page, 1);
+  if (source === 'authored')
+  {
+    await review(page);
+    await page.getByText('Keep later turns unchanged, or permanently delete every turn after Turn 1.', { exact: false }).waitFor();
+    await page.getByRole('button', { name: 'Continue Editing', exact: true }).click();
+  }
   await passageInput(page).fill('A passage draft retained across host restart.');
   await draftSaved(page);
   await page.reload({ waitUntil: 'networkidle' });
