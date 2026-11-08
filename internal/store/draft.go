@@ -73,7 +73,7 @@ func draftTransaction(ctx context.Context, tx *sql.Tx, req DraftRequest) error {
 		return ErrNotFound
 	}
 	if err == nil && passage {
-		err = tx.QueryRowContext(ctx, `SELECT id FROM passages WHERE adventure_id=? AND id=? AND source='generated'`, req.AdventureID, passageID).Scan(&id)
+		err = tx.QueryRowContext(ctx, `SELECT id FROM passages WHERE adventure_id=? AND id=? AND source IN ('authored','generated')`, req.AdventureID, passageID).Scan(&id)
 		if errors.Is(err, sql.ErrNoRows) {
 			return ErrNotFound
 		}

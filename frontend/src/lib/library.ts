@@ -1,6 +1,6 @@
 import { isID, isObject, readTurns, type Turn, type PassageDocument } from './story.ts';
 
-export const schemaVersion = 3;
+export const schemaVersion = 4;
 export const baselineSchemaVersion = 1;
 export interface Adventure { id: string; title: string; version: number }
 export interface Baseline { schemaVersion: number }
@@ -25,7 +25,7 @@ export interface UndoRequest extends CommitBase
 }
 export interface EditRequest extends CommitBase
 {
-  kind: 'edit_generated_passage';
+  kind: 'edit_generated_passage' | 'edit_authored_passage';
   turnId: string;
   passageId: string;
   body: PassageDocument;

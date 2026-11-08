@@ -8,7 +8,7 @@ export async function exerciseStory(page, base, artifacts, adventureId) {
   await page.getByLabel('Story input').waitFor();
   const read = () => page.evaluate(async id => {
     const library = await window.wails.Call.ByName('main.LibraryService.List');
-    return window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 3, epoch: library.epoch, adventureId: id });
+    return window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 4, epoch: library.epoch, adventureId: id });
   }, adventureId);
   const generate = async (target, text) => {
     await target.getByLabel('Story input').fill(text);

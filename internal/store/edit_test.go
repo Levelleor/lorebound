@@ -236,7 +236,7 @@ func TestPassageDraftTargetsEmptyDiscardAndReopen(t *testing.T) {
 	if draft, err := s.ReadDraft(ctx, target); err != nil || draft.Text != "newer" {
 		t.Fatal("discard erased different shared value")
 	}
-	for _, id := range []string{snapshot.Turns[0].Passages[0].ID, "absent"} {
+	for _, id := range []string{"absent"} {
 		bad := target
 		bad.Target = "passage:" + id
 		if _, err := s.SaveDraft(ctx, SaveDraftRequest{bad, "bad"}); !errors.Is(err, ErrNotFound) {

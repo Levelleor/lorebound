@@ -6,7 +6,7 @@ import { StoryCoordinator, type Generator, type StoryStorage } from '../src/lib/
 import type { Draft, DraftStorage } from '../src/lib/draft.ts';
 
 function blank(): Snapshot {
-  return { schemaVersion: 3, epoch: 'epoch', adventure: { id: 'adventure', title: 'Story', version: 0 }, baseline: { schemaVersion: 1 }, turns: [] };
+  return { schemaVersion: 4, epoch: 'epoch', adventure: { id: 'adventure', title: 'Story', version: 0 }, baseline: { schemaVersion: 1 }, turns: [] };
 }
 function turn(order: number, suffix = String(order)): Turn {
   return {
@@ -35,7 +35,7 @@ function fixture(generate: Generator = async () => 'A provisional response.', dr
   const writes: CommitRequest[] = [];
   const receipts = new Map<string, { request: string; result: CommitResult }>();
   const storage: StoryStorage = {
-    list: async () => ({ schemaVersion: 3, epoch: current.epoch, adventures: [current.adventure] }),
+    list: async () => ({ schemaVersion: 4, epoch: current.epoch, adventures: [current.adventure] }),
     read: async (epoch, id) => {
       if (readFailure) throw new Error('read_failed');
       if (epoch !== current.epoch) throw new Error('wrong_epoch');
@@ -55,7 +55,7 @@ function fixture(generate: Generator = async () => 'A provisional response.', dr
       const appended = request.kind === 'append_story_turn';
       if (!appended && current.turns.at(-1)?.id !== request.turnId) throw new Error('invalid_request');
       current = { ...current, adventure: { ...current.adventure, version: current.adventure.version + 1 }, turns: appended ? [...current.turns, structuredClone(request.turn)] : current.turns.slice(0, -1) };
-      const result: CommitResult = { schemaVersion: 3, epoch: request.epoch, adventureId: request.adventureId, operationId: request.operationId, version: current.adventure.version, turnId: request.kind === 'append_story_turn' ? request.turn.id : request.turnId, replayed: false };
+      const result: CommitResult = { schemaVersion: 4, epoch: request.epoch, adventureId: request.adventureId, operationId: request.operationId, version: current.adventure.version, turnId: request.kind === 'append_story_turn' ? request.turn.id : request.turnId, replayed: false };
       receipts.set(request.operationId, { request: JSON.stringify(request), result });
       if (dropResponse) { dropResponse = false; throw new Error('lost_response'); }
       return result;
@@ -140,7 +140,7 @@ test('IDEA-0040/R02: structured prose roundtrips paragraphs, hard breaks, Unicod
   for (const invalid of ['', ' \n\n ', 'a'.repeat(20001), '\ud800', ...Array.from({ length: 1 }, () => 'a\n'.repeat(2001))]) assert.throws(() => plainTextToDocument(invalid), /invalid_passage_document/);
   assert.equal(documentToText(plainTextToDocument('🦉'.repeat(20000))).length, 40000);
   for (const invalid of [
-    { schemaVersion: 3, type: 'doc', content: document.content },
+    { schemaVersion: 4, type: 'doc', content: document.content },
     { ...document, html: '<b>hidden</b>' },
     { schemaVersion: 1, type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'raw\nline' }] }] },
     { schemaVersion: 1, type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'hard_break', text: 'hidden' }] }] }

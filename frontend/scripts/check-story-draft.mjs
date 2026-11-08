@@ -9,7 +9,7 @@ export async function exerciseDrafts(page, base, artifacts, adventureId)
   const canonical = () => page.evaluate(async id =>
   {
     const library = await window.wails.Call.ByName('main.LibraryService.List');
-    return window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 3, epoch: library.epoch, adventureId: id });
+    return window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 4, epoch: library.epoch, adventureId: id });
   }, adventureId);
   const before = await canonical();
   const text = 'An unfinished scene. 🦉\n\n<script>window.draftInjected = true</script>';

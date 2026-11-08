@@ -3,8 +3,8 @@ type: development-status
 status: current
 created: "2026-11-03"
 updated: "2026-11-07"
-current_task: "DEV-003F — Accepted generated-passage editing"
-current_task_status: "VERIFIED ON CONFIRMED MERGE — PR #16"
+current_task: "DEV-003G — Accepted authored-passage editing"
+current_task_status: "VERIFIED ON CONFIRMED MERGE — PR #17"
 next_task: "DEV-003"
 ---
 
@@ -14,22 +14,20 @@ Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](.
 
 ## Verified base
 
-[PR #15](https://github.com/Levelleor/lorebound/pull/15) is confirmed merged at `987310abf8ad39d43144c53ae77c78da937bff3b`, satisfying DEV-003E's closure condition. Committed Story turn Undo is verified within supported zero-effects state; custom composer Undo/Redo was removed. DEV-002/A/B/C and DEV-003A/B/C remain merged. Parent DEV-003 stays PARTIAL.
+[PR #16](https://github.com/Levelleor/lorebound/pull/16) is confirmed merged at `020e36fd68b2360982ff288622539dcc42058552`, satisfying DEV-003F's conditional closure. Generated-passage editing is verified within supported Story-only zero-effects scope. DEV-002/A/B/C and DEV-003A/B/C/D/E are also merged; D's custom composer history was removed by E. Parent DEV-003 stays PARTIAL. [FEATURES](./FEATURES.md) records thirteen partial / 39 without feature-level evidence / zero complete original IDEAs; three formally certified IDEA-0006 rows remain unchanged.
 
-Before PR #16's merge, the ledger remains **52 production / eleven partial / zero complete original IDEAs; three formally certified IDEA-0006 rows**. [FEATURES](./FEATURES.md) owns the conditional update below.
+## DEV-003G closure — conditional on confirmed PR #17 merge
 
-## DEV-003F closure — conditional on confirmed PR #16 merge
+[Primary PR #17](https://github.com/Levelleor/lorebound/pull/17) implements accepted authored Story-passage editing: inline latest shared drafts, the four confirmation choices, exact suffix truncation and authored-only boundaries through reload, Fork, Undo and a new continuation. [Requirements](./requirements/DEV-003G.md) owns scope, maintained coverage and limits. [Readiness CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42435687417) checks `42b836c`; independent source/coverage, final Dark/Bright CI-capture and readiness-document review PASS.
 
-[Primary PR #16](https://github.com/Levelleor/lorebound/pull/16) implements accepted generated-passage editing: inline latest shared drafts, Keep Later Turns/Delete All After Point/Continue Editing/Discard, stable current bodies, atomic truncation and safe stale/uncertain recovery. [Requirements](./requirements/DEV-003F.md) owns scope, maintained coverage and limits. [Reviewed application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42393461928) checks `e047e91`; independent source/coverage, final Dark/Bright captures and readiness-document review PASS.
+After the checked two-turn sample and authored-edit walkthrough, the user authorised finalising/merging PR #17 on 2026-11-07: **“yes proceed”**. This approves closure of this named PR; it does not assert that the user personally ran every automated scenario.
 
-After the checked two-turn preview/demo handoff, the user authorised closure on 2026-11-07: **“yes, proceed with a merge for this and closure”**. This approves finalising/merging PR #16; it does not assert the user personally ran every automated scenario.
+**Prepared closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of this same PR.** Then DEV-003G is VERIFIED within supported authored-passage Story-only zero-effects scope. IDEA-0003/0041 and parent DEV-003 remain PARTIAL: thirteen partial / 39 without feature-level evidence / zero complete originals; three formal IDEA-0006 rows unchanged. No original IDEA is archived. Actual merge/head/tree provenance and final CI belong in PR #17/final handoff, with no routine post-merge repository write.
 
-**Prepared closure takes effect only after closure review, applicable final-head checks and confirmed merge of this same PR.** Then DEV-003F is VERIFIED within supported generated-passage Story-only zero-effects scope; IDEA-0003 and IDEA-0041 become PARTIAL: **thirteen partial / 39 without feature-level evidence / zero complete**. Three formally certified IDEA-0006 rows are unchanged. No original IDEA is archived; parent DEV-003 remains PARTIAL. Actual final head, merge/tree provenance and CI belong in PR #16/final handoff, with no routine post-merge repository write.
-
-Authored-passage editing, cross-passage operations, nonempty effects, standalone corrections, other modes and live providers remain later. **B9-D12 remains DEFERRED — NO WORK.**
+Whole-passage/cross-passage operations, custom passage-editor history, nonempty effects, standalone corrections, other modes and live providers remain later. **B9-D12 remains DEFERRED — NO WORK.**
 
 ## Review and next task
 
-The review handoff supplied a checked [two-turn sample](http://127.0.0.1:8082/?adventure=51e76221-35e8-4904-b1d4-1c0248bf1088), served from the reviewed build, and the Edit/draft reopen/four-choice walkthrough. Review/test hosts are now stopped; the separate persistent `.local/review/dev003f` library is preserved. Relaunch: `bash scripts/dev.sh -port 8082 -data-dir "$PWD/.local/review/dev003f"` (Ctrl+C stops that launch). Generation is simulated.
+Checked [two-turn sample — The lantern and the key](http://127.0.0.1:8083/?adventure=a15b929e-cab7-4c03-b47c-3eb88739c164), serving matching built assets. Review/test hosts are now stopped; review data is preserved. Separate persistent review library: `.local/review/dev003g`; relaunch with `bash scripts/dev.sh -port 8083 -data-dir "$PWD/.local/review/dev003g"`. Ctrl+C stops that relaunch. Generation is simulated. PR #16’s separate review library remains preserved. The PR/chat supplies the authored Edit/draft reopen/four-choice walkthrough. User approval is recorded above; CI alone does not establish acceptance.
 
-**Exactly one next task: DEV-003 — audit/select one remaining bounded child only after DEV-003F closes and a separate user launch.** No next slice starts through closure approval.
+**Exactly one next task: DEV-003 — audit/select one remaining bounded child only after DEV-003G closes and a separate user launch.** No next slice starts through closure approval.

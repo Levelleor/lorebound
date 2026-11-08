@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { StoryCoordinator, type StoryStorage } from '../src/lib/coordinator.ts';
-import { plainTextToDocument, documentToText, type Turn } from '../src/lib/story.ts';
+import { plainTextToDocument, documentToText, reconstruct, type Turn } from '../src/lib/story.ts';
 import type { CommitRequest, CommitResult, Snapshot } from '../src/lib/library.ts';
 import type { Draft, DraftStorage } from '../src/lib/draft.ts';
 
@@ -14,7 +14,7 @@ function fixture()
       { id: `generated-${order}`, source: 'generated', body: plainTextToDocument(`Generated ${order}`) }
     ]
   }));
-  let snapshot: Snapshot = { schemaVersion: 3, epoch: 'epoch', adventure: { id: 'story', title: 'Story', version: 3 }, baseline: { schemaVersion: 1 }, turns };
+  let snapshot: Snapshot = { schemaVersion: 4, epoch: 'epoch', adventure: { id: 'story', title: 'Story', version: 3 }, baseline: { schemaVersion: 1 }, turns };
   let nextId = 0;
   let drop = false;
   let readFailure = false;
@@ -32,7 +32,7 @@ function fixture()
     deleteDraft: async request => { if (drafts.get(request.target) === request.text) drafts.delete(request.target); }
   };
   const storage: StoryStorage = {
-    list: async () => ({ schemaVersion: 3, epoch: snapshot.epoch, adventures: [snapshot.adventure] }),
+    list: async () => ({ schemaVersion: 4, epoch: snapshot.epoch, adventures: [snapshot.adventure] }),
     read: async () =>
     {
       if (readFailure) throw new Error('read_failed');
@@ -45,16 +45,21 @@ function fixture()
       const receipt = receipts.get(request.operationId);
       if (receipt) return { ...receipt, replayed: true };
       if (request.expectedVersion !== snapshot.adventure.version) throw new Error('stale_version');
-      assert.equal(request.kind, 'edit_generated_passage');
-      if (request.kind !== 'edit_generated_passage') throw new Error('unexpected_operation');
+      assert.ok(request.kind === 'edit_generated_passage' || request.kind === 'edit_authored_passage');
+      if (request.kind !== 'edit_generated_passage' && request.kind !== 'edit_authored_passage') throw new Error('unexpected_operation');
       const index = snapshot.turns.findIndex(turn => turn.id === request.turnId);
       const updated = structuredClone(snapshot);
-      updated.turns[index].passages[1].body = structuredClone(request.body);
-      if (request.later === 'truncate') updated.turns.splice(index + 1);
+      const position = updated.turns[index].passages.findIndex(passage => passage.id === request.passageId);
+      updated.turns[index].passages[position].body = structuredClone(request.body);
+      if (request.later === 'truncate')
+      {
+        updated.turns.splice(index + 1);
+        updated.turns[index].passages.splice(position + 1);
+      }
       updated.adventure.version++;
       snapshot = updated;
       if (drafts.get(`passage:${request.passageId}`) === documentToText(request.body)) drafts.delete(`passage:${request.passageId}`);
-      const result: CommitResult = { schemaVersion: 3, epoch: request.epoch, adventureId: request.adventureId, operationId: request.operationId, turnId: request.turnId, version: updated.adventure.version, replayed: false };
+      const result: CommitResult = { schemaVersion: 4, epoch: request.epoch, adventureId: request.adventureId, operationId: request.operationId, turnId: request.turnId, version: updated.adventure.version, replayed: false };
       receipts.set(request.operationId, result);
       if (drop) { drop = false; throw new Error('lost_response'); }
       return result;
@@ -64,10 +69,10 @@ function fixture()
   return { coordinator, drafts, draftStorage, writes, head: () => snapshot, replace: (next: Snapshot) => { snapshot = next; }, drop: () => { drop = true; }, failRead: (value: boolean) => { readFailure = value; }, generates: () => generates };
 }
 
-async function ready(f: ReturnType<typeof fixture>)
+async function ready(f: ReturnType<typeof fixture>, passageId = 'generated-1')
 {
   await f.coordinator.draft?.restore();
-  await f.coordinator.startEdit('generated-1');
+  await f.coordinator.startEdit(passageId);
 }
 
 test('DEV-003F: inline draft, four decisions, exact Keep and Truncate, composer isolation and no AI', async () =>
@@ -76,7 +81,7 @@ test('DEV-003F: inline draft, four decisions, exact Keep and Truncate, composer 
   const before = structuredClone(f.head());
   await f.coordinator.draft?.restore();
   f.coordinator.setInput('Unfinished input');
-  await f.coordinator.startEdit('authored-1');
+  await f.coordinator.startEdit('missing');
   assert.equal(f.coordinator.state.edit, null);
   await f.coordinator.startEdit('generated-1');
   assert.equal(f.coordinator.state.edit?.text, 'Generated 1');
@@ -204,7 +209,7 @@ test('DEV-003F: delayed draft restore cannot change a reviewed edit; empty and m
   f.draftStorage.readDraft = request => new Promise(yes => { resolve = yes; });
   const restore = f.coordinator.editDraft!.restore();
   f.coordinator.reviewEdit();
-  resolve({ schemaVersion: 3, epoch: 'epoch', adventureId: 'story', target: 'passage:generated-1', text: 'Different shared draft', exists: true });
+  resolve({ schemaVersion: 4, epoch: 'epoch', adventureId: 'story', target: 'passage:generated-1', text: 'Different shared draft', exists: true });
   await restore;
   assert.equal(f.coordinator.state.edit?.text, 'Generated 1');
   await f.coordinator.confirmEdit('keep');
@@ -224,4 +229,106 @@ test('DEV-003F: delayed draft restore cannot change a reviewed edit; empty and m
   assert.match(limited.coordinator.state.error, /version limit/);
   assert.equal(limited.writes.length, 0);
   limited.coordinator.dispose();
+});
+
+test('DEV-003G: authored draft restores independently; Keep preserves its continuation and later turns', async () =>
+{
+  const f = fixture();
+  const before = structuredClone(f.head());
+  f.drafts.set('passage:authored-1', 'A restored player edit.\n\nAnother paragraph.');
+  f.drafts.set('passage:generated-1', 'Separate continuation draft');
+  await ready(f, 'authored-1');
+  assert.equal(f.coordinator.state.edit?.text, 'A restored player edit.\n\nAnother paragraph.');
+  f.coordinator.reviewEdit();
+  f.coordinator.continueEditing();
+  assert.deepEqual(f.head(), before);
+  f.coordinator.reviewEdit();
+  await f.coordinator.confirmEdit('keep');
+  assert.equal(f.writes[0].kind, 'edit_authored_passage');
+  assert.deepEqual(f.head().turns[0].passages[1], before.turns[0].passages[1]);
+  assert.deepEqual(f.head().turns.slice(1), before.turns.slice(1));
+  assert.equal(f.head().turns[0].passages[0].id, before.turns[0].passages[0].id);
+  assert.equal(f.head().turns[0].passages[0].source, 'authored');
+  assert.equal(f.drafts.has('passage:authored-1'), false);
+  assert.equal(f.drafts.get('passage:generated-1'), 'Separate continuation draft');
+  await f.coordinator.startEdit('authored-2');
+  f.coordinator.setEditText('Discard this player edit');
+  await f.coordinator.discardEdit();
+  assert.equal(f.writes.length, 1);
+  assert.equal(f.generates(), 0);
+  f.coordinator.dispose();
+});
+
+test('DEV-003G: authored truncation retains one passage; lost reply recovers without deleting newer history', async () =>
+{
+  const f = fixture();
+  await ready(f, 'authored-2');
+  const before = structuredClone(f.head());
+  f.coordinator.setEditText('The authored boundary survives.');
+  f.coordinator.reviewEdit();
+  f.drop();
+  await f.coordinator.confirmEdit('truncate');
+  assert.equal(f.coordinator.state.phase, 'uncertain');
+  assert.deepEqual(f.head().turns[0], before.turns[0]);
+  assert.equal(f.head().turns.length, 2);
+  assert.equal(f.head().turns[1].passages.length, 1);
+  assert.equal(f.head().turns[1].passages[0].id, 'authored-2');
+  const newer = structuredClone(f.head());
+  newer.adventure.version++;
+  newer.turns.push(before.turns[2]);
+  f.replace(newer);
+  f.failRead(true);
+  await f.coordinator.retrySave();
+  assert.equal(f.coordinator.state.phase, 'uncertain');
+  f.failRead(false);
+  await f.coordinator.retrySave();
+  assert.deepEqual(f.writes[0], f.writes[1]);
+  assert.deepEqual(f.writes[0], f.writes[2]);
+  assert.deepEqual(f.coordinator.state.snapshot, newer);
+  await f.coordinator.startEdit('generated-2');
+  assert.equal(f.coordinator.state.edit, null);
+  await f.coordinator.startEdit('authored-2');
+  assert.equal(f.coordinator.state.edit?.text, 'The authored boundary survives.');
+  f.coordinator.dispose();
+});
+
+test('DEV-003G: stale authored truncation preserves same-turn continuation until a fresh decision', async () =>
+{
+  const f = fixture();
+  await ready(f, 'authored-1');
+  f.coordinator.setEditText('My retained player edit');
+  f.coordinator.reviewEdit();
+  const changed = structuredClone(f.head());
+  changed.adventure.version++;
+  changed.turns[0].passages[0].body = plainTextToDocument('Another accepted player edit');
+  f.replace(changed);
+  await f.coordinator.confirmEdit('truncate');
+  assert.equal(f.coordinator.state.phase, 'edit-conflict');
+  assert.deepEqual(f.head(), changed);
+  assert.equal(f.coordinator.state.edit?.text, 'My retained player edit');
+  await f.coordinator.reconsiderEdit();
+  f.coordinator.reviewEdit();
+  await f.coordinator.confirmEdit('keep');
+  assert.equal(f.writes[1].expectedVersion, changed.adventure.version);
+  assert.notEqual(f.writes[0].operationId, f.writes[1].operationId);
+  assert.deepEqual(f.head().turns[0].passages[1], changed.turns[0].passages[1]);
+  f.coordinator.dispose();
+});
+
+test('DEV-003G: replay supports authored-only turns and rejects empty, generated-only and malformed history', () =>
+{
+  const f = fixture();
+  const snapshot = structuredClone(f.head());
+  snapshot.turns[1].passages.splice(1);
+  assert.deepEqual(reconstruct(snapshot).passages, snapshot.turns.flatMap(turn => turn.passages));
+  for (const passages of [[], [snapshot.turns[0].passages[1]], [...snapshot.turns[0].passages, snapshot.turns[0].passages[0]]])
+  {
+    const invalid = structuredClone(snapshot);
+    invalid.turns[1].passages = passages;
+    assert.throws(() => reconstruct(invalid));
+  }
+  const duplicate = structuredClone(snapshot);
+  duplicate.turns[1].passages[0].id = duplicate.turns[0].passages[0].id;
+  assert.throws(() => reconstruct(duplicate));
+  f.coordinator.dispose();
 });

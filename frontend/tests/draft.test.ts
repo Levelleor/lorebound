@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { TextDraft, readDraft, type Draft, type DraftStorage, type DraftStatus } from '../src/lib/draft.ts';
 
-const request = { schemaVersion: 3, epoch: 'epoch', adventureId: 'adventure', target: 'composer_story' as const };
+const request = { schemaVersion: 4, epoch: 'epoch', adventureId: 'adventure', target: 'composer_story' as const };
 
 function deferred<T>()
 {
@@ -176,7 +176,7 @@ test('IDEA-0005/R06: invalid responses and oversized or malformed Unicode are ne
 
 test('DEV-003F: discarding unsent edits preserves another tab’s draft and never autosaves the discarded text', async () =>
 {
-  const request = { schemaVersion: 3, epoch: 'epoch', adventureId: 'story', target: 'passage:generated' as const };
+  const request = { schemaVersion: 4, epoch: 'epoch', adventureId: 'story', target: 'passage:generated' as const };
   let stored: string | null = 'Previously saved';
   let saves = 0;
   let restored = '';

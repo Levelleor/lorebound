@@ -28,6 +28,7 @@
   let reviewEditButton: HTMLButtonElement;
   let keepLaterButton: HTMLButtonElement;
   $: editTargetMissing = state?.edit && !state.snapshot.turns.some(turn => turn.passages.some(passage => passage.id === state?.edit?.passageId));
+  $: editHasContinuation = state?.edit && state.snapshot.turns.some(turn => turn.id === state?.edit?.turnId && turn.passages.some(passage => passage.source === 'generated'));
 
   async function startEdit(passageId: string)
   {
@@ -310,7 +311,7 @@
             <div class:authored={passage.source === 'authored'} class:editing={state.edit?.passageId === passage.id} class="passage" data-passage-id={passage.id}>
               <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Simulated continuation'}</p>
               {#if state.edit?.passageId === passage.id}
-                <label class="sr-only" for="passage-edit">Edit continuation for turn {turn.order}</label>
+                <label class="sr-only" for="passage-edit">Edit {passage.source === 'authored' ? 'Story text' : 'continuation'} for turn {turn.order}</label>
                 <textarea id="passage-edit" class="passage-editor" bind:this={passageInput} rows="7" value={state.edit.text}
                   readonly={state.phase !== 'editing' || state.edit.draftStatus === 'loading'}
                   oninput={event => coordinator.setEditText(event.currentTarget.value)}></textarea>
@@ -326,10 +327,8 @@
                 {#each passage.body.content as paragraph}
                   <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
                 {/each}
-                {#if passage.source === 'generated'}
-                  <button class="quiet edit-passage" data-edit-passage={passage.id} aria-label={`Edit continuation for turn ${turn.order}`}
-                    onclick={() => startEdit(passage.id)} disabled={forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>✎ Edit</button>
-                {/if}
+                <button class="quiet edit-passage" data-edit-passage={passage.id} aria-label={`Edit ${passage.source === 'authored' ? 'Story text' : 'continuation'} for turn ${turn.order}`}
+                  onclick={() => startEdit(passage.id)} disabled={forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>✎ Edit</button>
               {/if}
             </div>
           {/each}
@@ -388,7 +387,11 @@
         {#if state?.edit}
           <div class="pending-overlay edit-overlay" aria-label="Passage edit controls">
             <p>{state.phase === 'edit-conflict' ? 'The story changed. Review the current story before a fresh decision.' : state.phase === 'uncertain' ? 'Confirm this edit’s result before continuing.' : state.phase === 'saving' ? 'Saving passage edit…' : state.phase === 'discarding-edit' ? 'Discarding draft…' : `Uncommitted edit · Turn ${state.edit.order}`}</p>
-            {#if state.phase === 'edit-ready'}<p class="supporting">Keep later turns unchanged, or permanently delete every turn after Turn {state.edit.order}. No previous version is retained.</p>{/if}
+            {#if state.phase === 'edit-ready'}
+              <p class="supporting">{state.edit.source === 'authored' && editHasContinuation
+                ? `Keep the continuation and later turns unchanged, or permanently delete the continuation in Turn ${state.edit.order} and every later turn.`
+                : `Keep later turns unchanged, or permanently delete every turn after Turn ${state.edit.order}.`} Your edited passage stays. No previous version is retained.</p>
+            {/if}
             <div class="pending-actions">
               {#if state.phase === 'editing'}
                 <button class="primary" bind:this={reviewEditButton} onclick={reviewEdit} disabled={state.edit.draftStatus === 'loading'}>Review edit</button>
@@ -409,7 +412,7 @@
         {:else if state?.phase === 'undo-ready' || ((state?.phase === 'saving' || state?.phase === 'uncertain') && state.undoTurn)}
           <div class="pending-overlay" aria-label="Turn Undo confirmation">
             <p>{state.phase === 'saving' ? 'Removing the accepted turn…' : state.phase === 'uncertain' ? 'Confirm the Undo result before continuing.' : `Remove turn ${state.undoTurn?.order} and return to ${state.undoTurn?.order === 1 ? 'the beginning' : `turn ${(state.undoTurn?.order ?? 1) - 1}`}?`}</p>
-            {#if state.phase === 'undo-ready'}<p class="supporting">Both passages will be permanently removed. Fork first to keep this future. Your unfinished input stays.</p>{/if}
+            {#if state.phase === 'undo-ready'}<p class="supporting">All saved passages in this turn will be permanently removed. Fork first to keep this future. Your unfinished input stays.</p>{/if}
             <div class="pending-actions">
               {#if state.phase === 'uncertain'}<button class="primary" onclick={() => coordinator.retrySave()}>Recover Undo</button>
               {:else}<button class="primary" bind:this={confirmUndoButton} onclick={confirmUndo} disabled={state.phase === 'saving'}>Confirm Undo</button>{/if}

@@ -266,7 +266,7 @@ func TestUndoWireShapeAndV3UpgradePreserveExistingData(t *testing.T) {
 	}
 	defer reopened.Close()
 	var version int
-	if err := reopened.db.QueryRow(`PRAGMA user_version`).Scan(&version); err != nil || version != 4 {
+	if err := reopened.db.QueryRow(`PRAGMA user_version`).Scan(&version); err != nil || version != databaseVersion {
 		t.Fatalf("version fence: %d %v", version, err)
 	}
 	if got := readStory(t, reopened, library.Epoch, "story"); !reflect.DeepEqual(got, before) {

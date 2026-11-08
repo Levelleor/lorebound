@@ -68,17 +68,21 @@ export function documentToText(document: PassageDocument): string {
   return document.content.map(paragraph => paragraph.content.map(node => node.type === 'text' ? node.text : '\n').join('')).join('\n\n');
 }
 
-export function readTurns(value: unknown, version: number): Turn[] {
+export function readTurns(value: unknown, version: number): Turn[]
+{
   if (!Array.isArray(value) || !Number.isSafeInteger(version) || value.length > version) throw new Error('unsupported_story_history');
   const ids = new Set<string>();
-  const add = (id: unknown) => {
+  const add = (id: unknown) =>
+  {
     if (!isID(id) || ids.has(id)) throw new Error('unsupported_story_history');
     ids.add(id);
   };
-  value.forEach((turn, index) => {
-    if (!isObject(turn) || !exactKeys(turn, ['schemaVersion', 'id', 'order', 'passages', 'events']) || turn.schemaVersion !== 1 || turn.order !== index + 1 || !Array.isArray(turn.passages) || turn.passages.length !== 2 || !Array.isArray(turn.events)) throw new Error('unsupported_story_history');
+  value.forEach((turn, index) =>
+  {
+    if (!isObject(turn) || !exactKeys(turn, ['schemaVersion', 'id', 'order', 'passages', 'events']) || turn.schemaVersion !== 1 || turn.order !== index + 1 || !Array.isArray(turn.passages) || (turn.passages.length < 1 || turn.passages.length > 2) || !Array.isArray(turn.events)) throw new Error('unsupported_story_history');
     add(turn.id);
-    turn.passages.forEach((passage, position) => {
+    turn.passages.forEach((passage, position) =>
+    {
       if (!isObject(passage) || !exactKeys(passage, ['id', 'source', 'body']) || passage.source !== (position === 0 ? 'authored' : 'generated')) throw new Error('unsupported_story_history');
       add(passage.id);
       readDocument(passage.body);

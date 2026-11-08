@@ -32,7 +32,7 @@ try {
   await page.getByRole('status').getByText('Library ready', { exact: true }).waitFor();
   const list = () => page.evaluate(() => window.wails.Call.ByName('main.LibraryService.List'));
   const initial = await list();
-  assert.equal(initial.schemaVersion, 3);
+  assert.equal(initial.schemaVersion, 4);
 
   if (reopen) {
     const expected = JSON.parse(await readFile(statePath, 'utf8'));
@@ -42,12 +42,12 @@ try {
       await page.getByRole('heading', { name: adventure.title, exact: true }).waitFor();
       if (expected.snapshots[adventure.id].turns.length === 0) await page.getByText('No passages yet.', { exact: true }).waitFor();
       else await page.locator('.accepted-turn').first().waitFor();
-      const snapshot = await page.evaluate(({ epoch, id }) => window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 3, epoch, adventureId: id }), { epoch: initial.epoch, id: adventure.id });
+      const snapshot = await page.evaluate(({ epoch, id }) => window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 4, epoch, adventureId: id }), { epoch: initial.epoch, id: adventure.id });
       assert.deepEqual(snapshot, expected.snapshots[adventure.id], 'Exact structured history survives process restart');
-      for (const turn of snapshot.turns)
+      for (const passage of snapshot.turns.flatMap(turn => turn.passages))
       {
-        const target = `passage:${turn.passages[1].id}`;
-        const draft = await page.evaluate(request => window.wails.Call.ByName('main.LibraryService.ReadDraft', request), { schemaVersion: 3, epoch: initial.epoch, adventureId: adventure.id, target });
+        const target = `passage:${passage.id}`;
+        const draft = await page.evaluate(request => window.wails.Call.ByName('main.LibraryService.ReadDraft', request), { schemaVersion: 4, epoch: initial.epoch, adventureId: adventure.id, target });
         assert.deepEqual(draft, expected.passageDrafts[adventure.id][target], 'Passage drafts survive process restart independently of accepted text');
       }
       await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
@@ -118,7 +118,7 @@ try {
 
     const rejected = await page.evaluate(async () => {
       try {
-        await window.wails.Call.ByName('main.LibraryService.Create', { schemaVersion: 3, epoch: 'wrong', adventureId: 'rejected', operationId: 'rejected', title: 'Rejected', baseline: { schemaVersion: 1 } });
+        await window.wails.Call.ByName('main.LibraryService.Create', { schemaVersion: 4, epoch: 'wrong', adventureId: 'rejected', operationId: 'rejected', title: 'Rejected', baseline: { schemaVersion: 1 } });
         return false;
       } catch { return true; }
     });
@@ -170,10 +170,11 @@ try {
     await exerciseDrafts(page, base, artifacts, firstID);
     await exerciseUndo(page, base, artifacts);
     await exerciseEdit(page, base, artifacts);
+    await exerciseEdit(page, base, artifacts, 'authored');
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};
-      for (const adventure of library.adventures) snapshots[adventure.id] = await window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 3, epoch: library.epoch, adventureId: adventure.id });
+      for (const adventure of library.adventures) snapshots[adventure.id] = await window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 4, epoch: library.epoch, adventureId: adventure.id });
       return snapshots;
     }, finalLibrary);
     const drafts = await page.evaluate(async library =>
@@ -181,7 +182,7 @@ try {
       const drafts = {};
       for (const adventure of library.adventures)
       {
-        const draft = await window.wails.Call.ByName('main.LibraryService.ReadDraft', { schemaVersion: 3, epoch: library.epoch, adventureId: adventure.id, target: 'composer_story' });
+        const draft = await window.wails.Call.ByName('main.LibraryService.ReadDraft', { schemaVersion: 4, epoch: library.epoch, adventureId: adventure.id, target: 'composer_story' });
         drafts[adventure.id] = draft.text;
       }
       return drafts;
@@ -192,10 +193,10 @@ try {
       for (const adventure of library.adventures)
       {
         saved[adventure.id] = {};
-        for (const turn of snapshots[adventure.id].turns)
+        for (const passage of snapshots[adventure.id].turns.flatMap(turn => turn.passages))
         {
-          const target = `passage:${turn.passages[1].id}`;
-          saved[adventure.id][target] = await window.wails.Call.ByName('main.LibraryService.ReadDraft', { schemaVersion: 3, epoch: library.epoch, adventureId: adventure.id, target });
+          const target = `passage:${passage.id}`;
+          saved[adventure.id][target] = await window.wails.Call.ByName('main.LibraryService.ReadDraft', { schemaVersion: 4, epoch: library.epoch, adventureId: adventure.id, target });
         }
       }
       return saved;
