@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: in-progress
+status: ready-for-user-review
 created: "2026-11-08"
 updated: "2026-11-08"
 task: "DEV-003J"
@@ -41,6 +41,10 @@ Accepted authority: [IDEA-0011](../../production/Manual%20Generation%20Branches.
 
 ## Verification and limits
 
-Implementation and verification are in progress. CI owns build/typecheck, TypeScript contracts, real SQLite/host/browser and exact restart output. Independent source/coverage review is required; inspect affected CI captures. Record the primary PR and actual checked CI/review here when available. No verified-main claim before approved merge.
+[Primary PR #20](https://github.com/Levelleor/lorebound/pull/20) contains this bounded child. [Full application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42524823030) checks corrected source/test head `0cdb903762553b61ae5a568e46a7067ccc19ea6d`: repository, build/typecheck, TypeScript, vet, real Go/SQLite, Firefox/host/recovery and exact process restart. The recovery regressions live in `frontend/tests/forkRecovery.test.ts` and `frontend/scripts/check-fork-recovery.mjs`, integrated by `check-browser.mjs`; existing Fork unit/browser/SQLite tests retain the other technical gates.
+
+Independent `/root/dev003j_review` accepted-source, exact-head implementation/coverage/controls, CI association and all eight Dark/Bright viewport capture reviews PASS, with no remaining blockers. Its receipt-boundary validation finding is fixed and regression-covered. Focused local Fork tests and the exact offline/online source-tab reload/Recover fork/Open fork walkthrough also PASS. The separate persistent review library and checked two-turn address are in [NOW](../NOW.md); served assets match the reviewed application source.
+
+**Awaiting hands-on user review and verbal approval to finalise and merge PR #20.** Readiness documentation is reviewed separately with applicable head checks; application source is unchanged from the passing source/test head. Implementation, evidence, controls and routine reconciliation stay in this same PR. No verified-main claim or user acceptance is inferred from CI or a running preview.
 
 Recovery is limited to the same source tab's session storage and origin/port. Tab closure, browser crash, cleared session data, creation recovery, live providers, other platforms and complete world/library behavior gain no guarantee. Generation and intercepted faults remain simulated; Firefox/Wails/Go/SQLite execution is real when run. Parent DEV-003 and IDEA-0011 stay PARTIAL; feature counts and three formal IDEA-0006 certifications stay unchanged. No original IDEA is archived and no next slice starts through closure approval.
