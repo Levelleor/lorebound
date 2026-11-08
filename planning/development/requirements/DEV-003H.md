@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: implemented-unverified
+status: verified-on-confirmed-merge
 created: "2026-11-07"
 updated: "2026-11-07"
 task: "DEV-003H"
@@ -11,7 +11,7 @@ tags:
 
 # DEV-003H — Temporary passage-editor Undo/Redo
 
-The user's separate 2026-11-07 launch authorises auditing DEV-003, selecting one bounded child, implementation/tests, independent review and one primary PR. Finalise/merge still requires later verbal approval of that named PR after the hands-on handoff. Base: confirmed [PR #17](https://github.com/Levelleor/lorebound/pull/17), merge `632ed6fb78b88a51e5135a516ff7ec7a1e35fdb1`; DEV-003G's conditional closure is satisfied.
+The user's separate 2026-11-07 launch authorises auditing DEV-003, selecting one bounded child, implementation/tests, independent review and one primary PR. The user supplied verbal approval to finalise/merge PR #18 after the hands-on handoff, as recorded below. Base: confirmed [PR #17](https://github.com/Levelleor/lorebound/pull/17), merge `632ed6fb78b88a51e5135a516ff7ec7a1e35fdb1`; DEV-003G's conditional closure is satisfied.
 
 ## Remaining requirements and dependencies
 
@@ -45,10 +45,18 @@ The coordinator owns one private session history; the UI submits edits/selection
 
 ## Verification and review status
 
-[Primary PR #18](https://github.com/Levelleor/lorebound/pull/18) contains implementation, evidence, controls and reconciliation. Focused TypeScript/editor tests, Svelte typecheck and actual Linux Firefox/Wails/Go/SQLite authored/generated editing scenarios PASS locally. Independent `/root/dev003h_review` accepted-source/source/coverage review and all sixteen changed-UI Dark/Bright captures at 390/768/1024/1440px PASS, with no blocking finding. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42438839068) checks exact source head `81f82778181419d2ce865c4668bc65d290252a79`: repository checks, build/typecheck, TypeScript, vet, Go/SQLite, Linux Firefox/host/recovery and exact process restart. Independent `/root/dev003h_review` final review of all sixteen actual CI history captures and the five-file readiness documentation delta PASS, with no blocking findings. Application sources are unchanged by readiness documentation; the reviewed application CI is reused, with repository checks required on the readiness head. Generated output belongs in CI or temporary directories; no separate evidence/reconciliation report is created.
+[Primary PR #18](https://github.com/Levelleor/lorebound/pull/18) contains implementation, evidence, controls and reconciliation. Focused TypeScript/editor tests, Svelte typecheck and actual Linux Firefox/Wails/Go/SQLite authored/generated editing scenarios PASS locally. Independent `/root/dev003h_review` accepted-source/source/coverage review and all sixteen changed-UI Dark/Bright captures at 390/768/1024/1440px PASS, with no blocking finding. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42438839068) checks exact source head `81f82778181419d2ce865c4668bc65d290252a79`: repository checks, build/typecheck, TypeScript, vet, Go/SQLite, Linux Firefox/host/recovery and exact process restart. Independent `/root/dev003h_review` final review of all sixteen actual CI history captures and the five-file readiness documentation delta PASS, with no blocking findings. [Readiness-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42439229301) checks exact `205848e6b2fd52a892ddf0b9bacc25e712ee0d60`, including repository and full application jobs. Independent exact-head readiness review PASS. Application sources are unchanged by closure documentation; final-head repository checks remain required and reviewed application CI is reused. Generated output belongs in CI or temporary directories; no separate evidence/reconciliation report is created.
 
-The checked [two-turn preview](http://127.0.0.1:8084/?adventure=b8bf28fe-8d39-4079-9703-e94edad82a6b) serves matching built assets and uses the separate persistent `.local/review/dev003h` library. The focused disposable test host is stopped. [NOW](../NOW.md) owns readiness/relaunch; PR/chat owns the short demonstration. User acceptance and verbal approval to finalise/merge PR #18 remain pending. Work is not verified main.
+The checked [two-turn preview](http://127.0.0.1:8084/?adventure=b8bf28fe-8d39-4079-9703-e94edad82a6b) serves matching built assets and uses the separate persistent `.local/review/dev003h` library. Review and focused-test hosts are now stopped; the review library is preserved. [NOW](../NOW.md) owns readiness/relaunch; PR/chat owns the short demonstration. The user accepted the handoff and approved finalising/merging PR #18 on 2026-11-07. Verification is effective only on confirmed merge after closure review/checks below; actual final head/merge/tree provenance and CI belong in the PR/final handoff.
 
 Browser integration uses actual Linux Firefox → Wails → Go → SQLite with simulated generation. Dispatched composition/history-input events test event paths, not a real OS IME or browser menu. Meta-key injection on Linux does not certify macOS. Live providers, Windows/macOS packaging and full accessibility remain unverified. Unsaved/overwritten drafts and old accepted prose have no new recovery promise.
 
 IDEA-0003/0004/0005/0041 and parent DEV-003 remain PARTIAL. Thirteen partial / 39 without feature-level evidence / zero complete original IDEAs, all 52 originals in production and three formal IDEA-0006 certifications stay unchanged. No next child starts through closure approval.
+
+## Conditional single-PR closure
+
+After the checked two-turn sample, task-specific walkthrough and explicit named-PR approval request, the user replied **“sounds good, proceed to closure”** on 2026-11-07. This accepts the handoff and authorises routine finalisation/merge of PR #18 after closure review/checks; it does not claim the user personally ran every automated scenario.
+
+Prepared closure takes effect **only after independent closure review, applicable final-head checks and confirmed merge of this same PR**. Then DEV-003H is VERIFIED within temporary passage-editor Story-only zero-effects scope. Existing IDEA-0004/R06/R12 and affected passage/draft rows gain this bounded evidence; IDEA-0003/0004/0005/0041 and parent DEV-003 remain PARTIAL. Thirteen partial / 39 without feature-level evidence / zero complete originals, all 52 originals in production and three formal IDEA-0006 certifications remain unchanged. No full-row certification or original IDEA archival follows.
+
+Whole-passage/cross-passage operations, nonempty world/derived/module replay, standalone corrections, other modes and live providers remain later; B9-D12 stays deferred. Review/test hosts are stopped, with persistent review data preserved. Actual final head, merge/tree provenance and final CI belong in PR #18/final handoff. No routine post-merge repository write, separate reconciliation PR or next slice follows.

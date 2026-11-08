@@ -3,7 +3,7 @@ type: development-task-queue
 status: current
 created: "2026-11-03"
 updated: "2026-11-07"
-current_next_task: "DEV-003H"
+current_next_task: "DEV-003"
 ---
 
 # Lorebound — Development Task Queue
@@ -16,7 +16,7 @@ current_next_task: "DEV-003H"
 | --- | --- | --- | --- | --- | --- |
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
 | **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | **VERIFIED & MERGED — bounded Story-only zero-effects scope** | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C merged [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
-| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A/B/C/D merged; DEV-003E merged; DEV-003F merged; DEV-003G merged; DEV-003H implemented/unverified in PR #18 | [PR #10](https://github.com/Levelleor/lorebound/pull/10), [PR #12](https://github.com/Levelleor/lorebound/pull/12), [PR #13](https://github.com/Levelleor/lorebound/pull/13), [PR #14](https://github.com/Levelleor/lorebound/pull/14), [PR #15](https://github.com/Levelleor/lorebound/pull/15) |
+| **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A/B/C/D merged; DEV-003E merged; DEV-003F merged; DEV-003G merged; DEV-003H user approved; conditional closure in PR #18 | [PR #10](https://github.com/Levelleor/lorebound/pull/10), [PR #12](https://github.com/Levelleor/lorebound/pull/12), [PR #13](https://github.com/Levelleor/lorebound/pull/13), [PR #14](https://github.com/Levelleor/lorebound/pull/14), [PR #15](https://github.com/Levelleor/lorebound/pull/15) |
 | **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | QUEUED | None |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
 | **DEV-006** | Universal characters, Playing As, status, anatomy, items and equipment | DEV-002; supported typed entity events | IDEA-0007, IDEA-0026, IDEA-0027, IDEA-0029–IDEA-0031, IDEA-0034, IDEA-0064 | QUEUED | None |
@@ -57,7 +57,7 @@ Acceptance: safe coalesced cross-tab refresh, typing during reads, pending-state
 
 ### DEV-003 — Retry, drafts, Undo/Fork and current-history editing
 
-**PARTIAL.** DEV-002 dependency is satisfied; [scope/dependency audit](./requirements/DEV-003.md). A/B/C/D/E/F are merged. D's custom composer history was removed by corrective E. Confirmed PR #16 merge satisfies F's conditional closure. PR #17 is confirmed merged, satisfying DEV-003G’s closure. The user’s separate launch selects DEV-003H below. Other remaining work stays later.
+**PARTIAL.** DEV-002 dependency is satisfied; [scope/dependency audit](./requirements/DEV-003.md). A/B/C/D/E/F are merged. D's custom composer history was removed by corrective E. Confirmed PR #16 merge satisfies F's conditional closure. PR #17 is confirmed merged, satisfying DEV-003G’s closure. The user’s separate launch selected DEV-003H below; after the checked handoff, the user approved finalising/merging PR #18. Its closure stays conditional on final review/checks and confirmed merge. Other remaining work stays later.
 
 ### DEV-003A — Replace the provisional Story candidate on Retry
 
@@ -103,7 +103,7 @@ Application CI and independent source/coverage/documentation/capture review PASS
 
 ### DEV-003H — Temporary passage-editor Undo/Redo
 
-**IMPLEMENTED / UNVERIFIED — [PR #18](https://github.com/Levelleor/lorebound/pull/18).** Selected under the user's separate 2026-11-07 DEV-003 launch after confirmed PR #17 merge. [Accepted-source audit, remaining dependencies and criteria](./requirements/DEV-003H.md). Add bounded session-only Undo edit/Redo edit to accepted authored/generated passage drafts, with keyboard controls, selection restoration, IME grouping and latest-only autosave. Continue Editing retains the session; replaced shared drafts, confirmation, conflict, closing/reload and disposal reset it. Committed-turn Undo and ordinary composer editing retain their existing behavior. Application CI and independent source/coverage/local responsive capture review PASS; CI-capture/readiness review is recorded in the requirement record/PR. User acceptance remains pending. The checked hands-on preview is available through NOW; verbal finalise/merge approval remains required. Whole-passage identity rules and broader nonempty reconstruction remain later; B9-D12 stays deferred.
+**VERIFIED ON CONFIRMED MERGE — [PR #18](https://github.com/Levelleor/lorebound/pull/18).** Selected under the user's separate 2026-11-07 DEV-003 launch after confirmed PR #17 merge. [Accepted-source audit, remaining dependencies and criteria](./requirements/DEV-003H.md). Add bounded session-only Undo edit/Redo edit to accepted authored/generated passage drafts, with keyboard controls, selection restoration, IME grouping and latest-only autosave. Continue Editing retains the session; replaced shared drafts, confirmation, conflict, closing/reload and disposal reset it. Committed-turn Undo and ordinary composer editing retain their existing behavior. Readiness CI and independent source/coverage/final CI-capture/readiness review PASS. After the checked hands-on handoff, the user approved finalising/merging PR #18 on 2026-11-07. Prepared closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of that same PR. Review/test hosts are stopped and review data preserved. This approval starts no next child. Whole-passage identity rules and broader nonempty reconstruction remain later; B9-D12 stays deferred.
 
 ## Prerequisite maintenance: CI, concise controls and hands-on review
 
