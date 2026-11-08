@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: in-progress
+status: implemented-awaiting-independent-review
 created: "2026-11-08"
 updated: "2026-11-08"
 task: "DEV-003I"
@@ -47,6 +47,8 @@ These child acceptance IDs qualify existing affected rows; they add no whole-IDE
 
 ## Verification and review
 
-Implementation and focused verification are in progress. CI, independent review and the checked user handoff remain required; no merge or user acceptance is claimed. Execution output belongs in CI/temporary directories, with PR/run/revision links added here when available. No separate delivery/reconciliation report is needed.
+[Primary PR #19](https://github.com/Levelleor/lorebound/pull/19) contains implementation, maintained tests, controls and this evidence record. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42497298974) checks exact source head `33e6dac6bc702906b798e3af15f60df675e427f6`: repository checks, build/typecheck, TypeScript contracts, vet, real Go/SQLite, Linux Firefox/host/recovery and exact process restart. The new recovery cases are present in the job log. Focused local recovery tests and actual Firefox/Go/SQLite reload scenarios also PASS. The implementer inspected all eight exact CI recovery captures at the required widths/themes; no visual blocker was found. Separate independent source/coverage review remains required before merge readiness. Documentation changes leave application/tooling identical to that passing head; applicable final-head checks remain required.
+
+The checked [two-turn sample](http://127.0.0.1:8085/?adventure=4954b65e-7ff1-48d4-8c4c-e96064bcd155) serves matching built assets and uses the separate persistent `.local/review/dev003i` library. The precise saved-draft → Review edit → Offline → Keep Later Turns → Online → same-tab reload → Recover save walkthrough passed locally, preserving both turns. [NOW](../NOW.md) owns the running preview/relaunch; PR/chat owns the demo. The disposable test host is stopped. No user acceptance or merge approval is claimed. Execution output stays in CI/temporary directories; no separate delivery/reconciliation report is created.
 
 Generation remains simulated. Browser faults are intercepted around actual Go/SQLite transactions; unit storage/provider fixtures remain simulated. Same-origin session storage surviving a reload is the recovery boundary. Live providers, Windows/macOS packaging, full accessibility and tab/browser-crash recovery remain unverified. All 52 original IDEAs stay in production; thirteen partial / 39 without feature-level evidence / zero complete and three formal IDEA-0006 rows stay unchanged. DEV-003 remains PARTIAL. No next child starts through this work or closure approval.

@@ -290,7 +290,7 @@ For screen-by-screen states, see the [UI interaction map](../design/Lorebound%20
 
 ## 10. Current implementation status and intended development sequence
 
-| Area | Current evidenced status (2026-11-07) | What remains |
+| Area | Current evidenced status (2026-11-08) | What remains |
 | --- | --- | --- |
 | Wails v3 headless Go + SvelteKit ordinary browser | **Real adventure service/browser integration verified on Linux**, merged [PRs #4](https://github.com/Levelleor/lorebound/pull/4) / [#6](https://github.com/Levelleor/lorebound/pull/6); [evidence](../development/evidence/DEV-002B.md) | Full launcher/instance/Quit lifecycle, sensitive-service security and platform packaging |
 | Go SQLite adventure library | **Blank creation and atomic Story passage/receipt append, isolation, stale/epoch rejection, rollback and reopen verified** through DEV-002B; separate Story input drafts verified/merged in PR #13 | Nonempty world events, cross-passage edits, other draft targets, backup/restore and broader integration; generated-passage editing is merged in PR #16; authored editing is verified/merged in PR #17; temporary passage-editor history in DEV-003H is verified/merged in PR #18; same-tab reload save recovery is in progress under [DEV-003I](../development/requirements/DEV-003I.md) |

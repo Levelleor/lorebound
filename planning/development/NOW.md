@@ -4,7 +4,7 @@ status: current
 created: "2026-11-03"
 updated: "2026-11-08"
 current_task: "DEV-003I — Same-tab reload save recovery"
-current_task_status: "IN PROGRESS"
+current_task_status: "IMPLEMENTED — CI PASS; AWAITING INDEPENDENT REVIEW"
 next_task: "DEV-003I"
 ---
 
@@ -20,7 +20,9 @@ Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](.
 
 The user's separate 2026-11-08 launch selects **DEV-003I — same-tab reload recovery for confirmed Story saves**. [Requirements and dependency audit](./requirements/DEV-003I.md) owns observable criteria and remaining scope. Keep implementation, evidence, controls and reconciliation in one primary PR; named-PR verbal finalise/merge approval remains required after checks, independent review and the hands-on handoff.
 
-Implementation/focused checks are in progress. No readiness, acceptance or merge is claimed. A checked preview/demo and CI/PR links follow when ready. The previous `.local/review/dev003h` library is preserved; this child uses separate review data.
+[Primary PR #19](https://github.com/Levelleor/lorebound/pull/19) is a draft. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42497298974) checks source head `33e6dac`; focused checks and the exact offline/online walkthrough also pass. All eight changed CI captures were inspected. Independent source/coverage review remains required before merge readiness; no user acceptance or merge is claimed.
+
+Checked local preview: [The tide bell and the lantern](http://127.0.0.1:8085/?adventure=4954b65e-7ff1-48d4-8c4c-e96064bcd155), serving this source revision's built assets. Its separate persistent `.local/review/dev003i` library survives relaunch; previous review data is preserved. The preview is running; the disposable test host is stopped. Relaunch with `bash scripts/dev.sh -port 8085 -data-dir "$PWD/.local/review/dev003i"`; Ctrl+C stops a terminal launch. PR/chat owns the short edit/offline/reload/Recover save demo. Generation is simulated.
 
 Whole-passage/cross-passage operations, nonempty world/derived/module reconstruction, standalone corrections, other modes, live providers and broader library lifecycle remain later. **B9-D12 remains DEFERRED — NO WORK.** No original IDEA is archived.
 
