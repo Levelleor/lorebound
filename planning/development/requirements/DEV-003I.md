@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: implemented-awaiting-independent-review
+status: ready-for-user-review
 created: "2026-11-08"
 updated: "2026-11-08"
 task: "DEV-003I"
@@ -47,7 +47,9 @@ These child acceptance IDs qualify existing affected rows; they add no whole-IDE
 
 ## Verification and review
 
-[Primary PR #19](https://github.com/Levelleor/lorebound/pull/19) contains implementation, maintained tests, controls and this evidence record. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42497298974) checks exact source head `33e6dac6bc702906b798e3af15f60df675e427f6`: repository checks, build/typecheck, TypeScript contracts, vet, real Go/SQLite, Linux Firefox/host/recovery and exact process restart. The new recovery cases are present in the job log. Focused local recovery tests and actual Firefox/Go/SQLite reload scenarios also PASS. The implementer inspected all eight exact CI recovery captures at the required widths/themes; no visual blocker was found. Separate independent source/coverage review remains required before merge readiness. Documentation changes leave application/tooling identical to that passing head; applicable final-head checks remain required.
+[Primary PR #19](https://github.com/Levelleor/lorebound/pull/19) contains implementation, maintained tests, controls and this evidence record. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42505302655) checks exact corrected source head `dd826949c0f17649d47f20a09bc1a9c51de954b9`: repository checks, build/typecheck, TypeScript contracts, vet, real Go/SQLite, Linux Firefox/host/recovery and exact process restart. Focused local recovery tests and actual Firefox/Go/SQLite reload scenarios also PASS.
+
+Independent `/root/dev003i_review` accepted-source, implementation, coverage, immutable recovery/lifecycle/draft ownership and UI review PASS at that exact head, with no remaining blocking findings. The reviewer found that a malformed stored edit choice could pass browser validation through string coercion; strict literal checks and six malformed-choice regressions now reject it before dispatch. The reviewer independently confirmed fresh full CI PASS and inspected all eight exact original application-CI recovery captures at the required widths/themes; UI and browser scenario source are unchanged by the fix. The [original capture run](https://github.com/Levelleor/lorebound/actions/runs/42497298974) owns those artifacts. Readiness changes are documentation only; applicable final-head checks and review of that delta remain required. No extra local full-suite run or separate report is needed.
 
 The checked [two-turn sample](http://127.0.0.1:8085/?adventure=4954b65e-7ff1-48d4-8c4c-e96064bcd155) serves matching built assets and uses the separate persistent `.local/review/dev003i` library. The precise saved-draft → Review edit → Offline → Keep Later Turns → Online → same-tab reload → Recover save walkthrough passed locally, preserving both turns. [NOW](../NOW.md) owns the running preview/relaunch; PR/chat owns the demo. The disposable test host is stopped. No user acceptance or merge approval is claimed. Execution output stays in CI/temporary directories; no separate delivery/reconciliation report is created.
 
