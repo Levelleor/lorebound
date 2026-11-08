@@ -102,13 +102,15 @@ export async function exerciseForkRecovery(page, base, artifacts)
     }
     if (artifacts && scenario === 'committed')
     {
+      await page.bringToFront();
       for (const theme of ['dark', 'bright'])
       {
         await page.evaluate(theme => document.documentElement.dataset.loreboundUi = theme, theme);
         for (const width of [390, 768, 1024, 1440])
         {
           await page.setViewportSize({ width, height: 900 });
-          await recover.focus();
+          await page.locator('.reader h1').focus();
+          await page.keyboard.press('Tab');
           assert.equal(await recover.evaluate(el => el.matches(':focus-visible')), true);
           assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
           assert.equal(await page.locator('.topbar').evaluate(el => el.getBoundingClientRect().height), 48);
