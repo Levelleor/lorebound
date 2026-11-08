@@ -3,9 +3,11 @@ type: development-status
 status: current
 created: "2026-11-03"
 updated: "2026-11-08"
-current_task: "DEV-003I — Same-tab reload save recovery"
-current_task_status: "VERIFIED ON CONFIRMED MERGE — PR #19"
+current_task: "DEV-003J — Same-tab reload Fork recovery"
+current_task_status: "VERIFIED ON CONFIRMED MERGE — PR #20"
 next_task: "DEV-003"
+tags:
+  - planning/development
 ---
 
 # Lorebound — Current Development Status
@@ -14,20 +16,20 @@ Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](.
 
 ## Verified base
 
-[PR #18](https://github.com/Levelleor/lorebound/pull/18) is confirmed merged at `39d770c59392f514fb2e2b59499f21da10a59833`, satisfying DEV-003H's approved closure. Temporary passage-editor Undo/Redo joins Retry, independent Fork, latest drafts, committed-turn Undo and authored/generated passage editing within supported simulated Story-only zero-effects scope. Parent DEV-003 remains PARTIAL. Thirteen partial / 39 without feature-level evidence / zero complete original IDEAs and three formally certified IDEA-0006 rows stay unchanged.
+[PR #19](https://github.com/Levelleor/lorebound/pull/19) is confirmed merged at `667bd51e508159c36fa501d7c3f5885b8edd9ae9`, satisfying DEV-003I's approved closure. Same-tab confirmed Story save recovery joins Retry, independent Fork, shared latest drafts, committed Undo and authored/generated passage editing/history within supported simulated Story-only zero-effects scope. Parent DEV-003 remains PARTIAL; thirteen partial / 39 without feature-level evidence / zero complete original IDEAs and three formally certified IDEA-0006 rows stay unchanged.
 
-## DEV-003I closure — conditional on confirmed PR #19 merge
+## DEV-003J closure — conditional on confirmed PR #20 merge
 
-[Primary PR #19](https://github.com/Levelleor/lorebound/pull/19) adds same-tab reload recovery for confirmed Story acceptance, Undo and authored/generated passage edits. [Requirements](./requirements/DEV-003I.md) owns maintained coverage and limits. [Complete readiness-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42505737117) checks `cdb0c0d`; independent implementation, coverage, recovery, eight-capture visual and exact readiness-head review PASS with no blockers.
+[Primary PR #20](https://github.com/Levelleor/lorebound/pull/20) adds same-tab reload recovery for uncertain Fork, preserving original operation/destination identity and current destination history. [Requirements](./requirements/DEV-003J.md) owns maintained coverage and limits. [Complete readiness-head CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42525536975) checks `28f89fa`; independent source/coverage, eight-capture visual and exact readiness-head documentation review PASS with no blockers.
 
-After the checked two-turn preview, task-specific offline/reload/Recover save walkthrough and named-PR approval request, the user authorised finalising/merging PR #19 on 2026-11-08: **“OK PROCEED WITH CLOSURE”**. This accepts the handoff and approves this named PR's closure without claiming the user personally ran every automated scenario.
+After the checked sample, one-command launch and offline/reload/Recover fork/Open fork walkthrough, the user authorised finalising/merging PR #20 on 2026-11-08: **“proceed with closure”**. This accepts the handoff and approves this named PR's closure without claiming the user personally ran every automated scenario.
 
-**Prepared closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of this same PR.** Then DEV-003I is VERIFIED within supported simulated Story-only zero-effects, same-tab/session-storage recovery scope. Parent DEV-003 and IDEA-0003/0004/0005/0041 remain PARTIAL; counts and formal certifications stay unchanged. Actual final-head/merge/tree provenance and CI belong in PR #19/final handoff; no routine post-merge repository write follows.
+**Prepared closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of this same PR.** Then DEV-003J is VERIFIED within supported simulated Story-only zero-effects, same-tab/session-storage Fork recovery scope. Parent DEV-003 and IDEA-0011 remain PARTIAL; feature counts and formal certifications stay unchanged. Actual final-head/merge/tree provenance and CI belong in PR #20/final handoff; no routine post-merge repository write follows.
 
 ## Review and next task
 
-The checked [two-turn sample — The tide bell and the lantern](http://127.0.0.1:8085/?adventure=4954b65e-7ff1-48d4-8c4c-e96064bcd155) served matching built assets. Review/test hosts are now stopped; the separate persistent `.local/review/dev003i` library and previous review data are preserved. Relaunch with `bash scripts/dev.sh -port 8085 -data-dir "$PWD/.local/review/dev003i"`; Ctrl+C stops that terminal launch. Generation is simulated. PR/chat owns the demo and user approval; CI alone does not establish acceptance.
+The previously checked [two-turn sample — The lantern at the branching road](http://127.0.0.1:8086/?adventure=8c57cc8f-8bf5-42fb-9f90-eae0d975c594) served matching built assets from the reviewed application source. Its separate persistent `.local/review/dev003j` library contains the sample and a checked recovered Fork; earlier review libraries are preserved. The task-specific offline/reload/Recover fork/Open fork walkthrough passed. The agent-hosted preview is stopped; launch the current checkout with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev003j"`; Ctrl+C stops that terminal launch. Generation is simulated. PR/chat owns the demo and user acceptance; CI does not establish acceptance.
 
-Whole-passage/cross-passage operations, nonempty world/derived/module reconstruction, standalone corrections, other modes, live providers and broader library lifecycle remain later. **B9-D12 remains DEFERRED — NO WORK.** No original IDEA is archived.
+Whole-passage identity decisions, nonempty world/derived/module reconstruction, standalone corrections, other modes, live providers and broader library lifecycle remain later. **B9-D12 remains DEFERRED — NO WORK.** No original IDEA is archived.
 
-**Exactly one next task: DEV-003 — audit/select one remaining bounded child only after DEV-003I closes and a separate user launch.** No next slice starts through closure approval.
+**Exactly one next task: DEV-003 — audit/select one remaining bounded child only after DEV-003J closes and a separate user launch.** No next slice starts through closure approval.

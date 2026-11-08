@@ -9,6 +9,7 @@ import { exerciseDrafts } from './check-story-draft.mjs';
 import { exerciseUndo } from './check-story-undo.mjs';
 import { exerciseEdit } from './check-story-edit.mjs';
 import { exerciseSaveRecovery } from './check-save-recovery.mjs';
+import { exerciseForkRecovery } from './check-fork-recovery.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -173,6 +174,7 @@ try {
     await exerciseEdit(page, base, artifacts);
     await exerciseEdit(page, base, artifacts, 'authored');
     await exerciseSaveRecovery(page, base, artifacts);
+    await exerciseForkRecovery(page, base, artifacts);
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};
