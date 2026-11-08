@@ -4,7 +4,7 @@ status: current
 created: "2026-11-03"
 updated: "2026-11-07"
 current_task: "DEV-003G — Accepted authored-passage editing"
-current_task_status: "IN PROGRESS"
+current_task_status: "READY — AWAITING USER REVIEW / MERGE APPROVAL"
 next_task: "DEV-003"
 ---
 
@@ -20,12 +20,12 @@ Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](.
 
 The user's separate launch selects **DEV-003G — accepted authored-passage editing**. [Requirements/dependency audit](./requirements/DEV-003G.md) owns scope, maintained coverage and limits. Reuse inline latest shared drafts and Keep Later Turns/Delete All After Point/Continue Editing/Discard. Authored truncation removes the same-turn generated continuation and every later turn; the edited authored passage and its stable turn survive. Support that authored-only boundary through reload, Fork, Undo and a new continuation.
 
-Implementation and focused verification are in progress on `feat/dev-003g-authored-passage-edit`. Independent review and CI are pending. One primary PR will carry implementation, evidence, controls and reconciliation. No merge approval is granted by this launch.
+[Primary PR #17](https://github.com/Levelleor/lorebound/pull/17) carries implementation, evidence, controls and reconciliation. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42435364390) checks `8063ad1`; independent source/coverage/documentation and eight Dark/Bright capture reviews PASS. Requirements own coverage and limits; final readiness-head CI/review belongs in the PR. User review and verbal approval to finalise/merge PR #17 remain pending.
 
 Whole-passage/cross-passage operations, nonempty effects, standalone corrections, other modes and live providers remain later. **B9-D12 remains DEFERRED — NO WORK.**
 
 ## Review and next task
 
-Review handoff is not ready. Separate persistent review library: `.local/review/dev003g`; launch when ready with `bash scripts/dev.sh -port 8083 -data-dir "$PWD/.local/review/dev003g"`. Generation is simulated. PR #16's separate review library remains preserved.
+Checked [two-turn sample — The lantern and the key](http://127.0.0.1:8083/?adventure=a15b929e-cab7-4c03-b47c-3eb88739c164), serving matching built assets. The local preview remains running; disposable test host is stopped. Separate persistent review library: `.local/review/dev003g`; relaunch with `bash scripts/dev.sh -port 8083 -data-dir "$PWD/.local/review/dev003g"`. Stop the preview with Ctrl+C in its launch terminal. Generation is simulated; review data is preserved. PR #16’s separate review library remains preserved. The PR/chat supplies the authored Edit/draft reopen/four-choice walkthrough. No user acceptance is inferred from CI or a running preview.
 
 **Exactly one next task: DEV-003 — audit/select one remaining bounded child only after DEV-003G closes and a separate user launch.** No next slice starts through closure approval.

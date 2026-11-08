@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: in-progress
+status: awaiting-user-review
 created: "2026-11-07"
 updated: "2026-11-07"
 task: "DEV-003G"
@@ -48,8 +48,10 @@ A metadata-only nonspatial database v4→v5 upgrade fences older binaries that a
 
 ## Verification and handoff
 
-Implementation and focused checks are in progress. Primary PR, reviewed CI revision/result and independent source/coverage/capture review will be recorded here and in the PR when ready; no passing CI or user acceptance is claimed yet. CI owns repeatable build/typecheck, TypeScript, Go/SQLite, real Linux Firefox/host/recovery and exact process restart output. Local output and captures stay in temporary directories.
+Implemented in [primary PR #17](https://github.com/Levelleor/lorebound/pull/17), awaiting user review and named-PR finalise/merge approval. [Application CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42435364390) checks `8063ad1dc3291d18a3f3b1cb4a1c131bc01ab291`: repository checks, build/typecheck, TypeScript, Go/vet/SQLite, real Linux Firefox/host/recovery and exact process restart. Independent source/coverage/documentation review and all eight local authored confirmation captures PASS; final CI-capture/readiness review is recorded in the PR. The reviewer found a malformed stored-ordinal edge case; `readHistory` now rejects it before mutation, with target/version/receipt-preservation regression coverage. No blocking source finding remains. Final readiness-head CI belongs in the PR; application sources are unchanged by readiness documentation. Generated output stays in CI/temporary directories.
 
-Review uses a separate persistent `.local/review/dev003g` library. Launch: `bash scripts/dev.sh -port 8083 -data-dir "$PWD/.local/review/dev003g"`. [NOW](../NOW.md) owns readiness; the PR/chat will provide the checked address and short authored-edit demo before requesting verbal finalise/merge approval.
+The checked [two-turn preview](http://127.0.0.1:8083/?adventure=a15b929e-cab7-4c03-b47c-3eb88739c164) serves matching built assets using the separate persistent `.local/review/dev003g` library. The disposable focused test host is stopped. Relaunch: `bash scripts/dev.sh -port 8083 -data-dir "$PWD/.local/review/dev003g"`. [NOW](../NOW.md) owns readiness; the PR/chat provides the checked address and short authored-edit demo before requesting verbal finalise/merge approval.
 
 No original IDEA is complete or archived; IDEA-0003/0041 and parent DEV-003 remain PARTIAL. Thirteen partial / 39 without feature-level evidence / zero complete originals and three formal IDEA-0006 rows remain unchanged. No next slice starts through this task's closure.
+
+Generation and provider faults are simulated; actual Linux Firefox/Wails/SQLite verification does not certify live providers, Windows/macOS packaging or full accessibility. Overwritten/unsaved drafts and cross-reload uncertain-operation persistence remain outside scope. User acceptance and verbal finalise/merge approval are still pending; no prepared verified-main closure is claimed.
