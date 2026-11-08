@@ -347,11 +347,21 @@ test('DEV-003I: malformed/incompatible/foreign recovery records fail closed and 
     JSON.stringify({ ...record, request: { ...record.request, unexpected: true } }),
     JSON.stringify({ ...record, request: { ...record.request, expectedVersion: -1 } })
   ];
+  const edit = {
+    schemaVersion, epoch: 'epoch', operationId: 'edit', adventureId: 'story', expectedVersion: 3,
+    kind: 'edit_authored_passage', turnId: 'turn-1', passageId: 'authored-1', body: plainTextToDocument('An edit')
+  };
+  for (const later of [['keep'], ['truncate'], null, 0, {}, 'other'])
+  {
+    invalid.push(JSON.stringify({ version: 1, request: { ...edit, later } }));
+  }
   for (const encoded of invalid)
   {
     f.records.set(key, encoded);
     const blocked = f.open();
     assert.equal(blocked.state.phase, 'recovery-blocked');
+    await blocked.retrySave();
+    assert.equal(f.writes.length, 1, 'Malformed requests are never dispatched');
     assert.equal(f.records.get(key), encoded, 'Invalid data is retained for diagnosis, never dispatched or erased');
     blocked.dispose();
   }

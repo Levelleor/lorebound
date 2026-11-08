@@ -33,7 +33,7 @@ function readRequest(value: unknown, adventureId: string): CommitRequest
   else if (value.kind === 'edit_authored_passage' || value.kind === 'edit_generated_passage')
   {
     keys.push('turnId', 'passageId', 'body', 'later');
-    if (!isID(value.turnId) || !isID(value.passageId) || !['keep', 'truncate'].includes(String(value.later))) return invalid();
+    if (!isID(value.turnId) || !isID(value.passageId) || (value.later !== 'keep' && value.later !== 'truncate')) return invalid();
     readDocument(value.body);
   }
   else return invalid();
