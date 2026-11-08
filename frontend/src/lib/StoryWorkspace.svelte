@@ -5,6 +5,7 @@
   import type { Snapshot } from './library';
   import { ForkController, defaultForkTitle, type ForkState } from './fork';
   import type { TextSelection } from './textHistory';
+  import { SessionSaveRecovery } from './saveRecovery';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -301,7 +302,7 @@
         : next.phase === 'ready' ? 'Proposed · not saved'
         : next.edit ? 'Draft edit'
         : next.refreshing ? 'Refreshing…'
-        : next.phase === 'blocked' ? 'Read only'
+        : next.phase === 'blocked' || next.phase === 'recovery-blocked' ? 'Read only'
         : next.error ? 'Needs attention'
         : next.draftStatus === 'loading' ? 'Loading draft…'
         : next.draftStatus === 'saving' ? 'Saving draft…'
@@ -313,6 +314,7 @@
     coordinator = new StoryCoordinator(snapshot, {
       storage: host,
       draftStorage: host,
+      recoveryStorage: new SessionSaveRecovery(() => window.sessionStorage),
       onChange: publish
     });
     publish(coordinator.state);
@@ -345,6 +347,16 @@
     <p class="eyebrow">Your adventure</p>
     <h1 tabindex="-1">{snapshot.adventure.title}</h1>
     {#if state}
+      {#if state.recovery}
+        <section class="provisional" aria-label="Save recovery">
+          <p class="passage-label">Previous save · {state.recovery.summary}</p>
+          <p class="supporting">Your current saved story is shown below. Retained text is available to copy while you check this save.</p>
+          {#if state.recovery.text}
+            <label class="sr-only" for="save-recovery-text">Retained save text</label>
+            <textarea id="save-recovery-text" class="recovery-text" rows="4" readonly value={state.recovery.text}></textarea>
+          {/if}
+        </section>
+      {/if}
       {#if state.edit && editTargetMissing}
         <section class="editing" aria-label="Retained passage edit">
           <p class="supporting">This passage is no longer in the current story. Copy any text you want to keep before closing the edit.</p>
@@ -443,7 +455,17 @@
           disabled={forkBusy || !state || state.phase !== 'idle'}
           oninput={(event) => coordinator.setInput(event.currentTarget.value)}
           onkeydown={handleInputKey}></textarea>
-        {#if state?.edit}
+        {#if state?.phase === 'recovery-blocked'}
+          <div class="pending-overlay" aria-label="Save recovery unavailable">
+            <p>Check the previous save before continuing.</p>
+            <button class="primary" onclick={() => coordinator.restoreSave()}>Retry recovery access</button>
+          </div>
+        {:else if state?.recovery && (state.phase === 'uncertain' || state.phase === 'saving')}
+          <div class="pending-overlay" aria-label="Save recovery controls">
+            <p>{state.phase === 'saving' ? 'Checking the previous save…' : 'Recover the previously confirmed save before continuing.'}</p>
+            <button class="primary" onclick={() => coordinator.retrySave()} disabled={state.phase === 'saving'}>Recover save</button>
+          </div>
+        {:else if state?.edit}
           <div class="pending-overlay edit-overlay" aria-label="Passage edit controls">
             <p>{state.phase === 'edit-conflict' ? 'The story changed. Review the current story before a fresh decision.' : state.phase === 'uncertain' ? 'Confirm this edit’s result before continuing.' : state.phase === 'saving' ? 'Saving passage edit…' : state.phase === 'discarding-edit' ? 'Discarding draft…' : `Uncommitted edit · Turn ${state.edit.order}`}</p>
             {#if state.phase === 'edit-ready'}
@@ -496,7 +518,7 @@
           <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={forkBusy || !state?.input.trim() || state.refreshing}>↑</button>
         {/if}
       </div>
-      <p class="composer-hint" role="status" aria-label="Draft status">{state?.draftError || (state?.draftStatus === 'saved' ? 'Draft saved · Not accepted story.' : state?.draftStatus === 'saving' ? 'Saving draft…' : state?.draftStatus === 'loading' ? 'Loading saved draft…' : 'Input autosaves after a short pause.')}</p>
+      <p class="composer-hint" role="status" aria-label="Draft status">{state?.draftError || (state?.phase === 'recovery-blocked' || (state?.recovery && (state.phase === 'saving' || state.phase === 'uncertain')) ? 'Input draft resumes after save recovery.' : state?.draftStatus === 'saved' ? 'Draft saved · Not accepted story.' : state?.draftStatus === 'saving' ? 'Saving draft…' : state?.draftStatus === 'loading' ? 'Loading saved draft…' : 'Input autosaves after a short pause.')}</p>
       {#if state?.draftError}
         <button class="quiet" onclick={() => coordinator.draft?.retry()}>Retry draft</button>
       {/if}
@@ -506,6 +528,7 @@
 </main>
 
 <style>
+  .recovery-text { width: 100%; box-sizing: border-box; padding: 8px; background: transparent; color: var(--ink); resize: vertical; }
   .editing { border-left: 2px solid var(--primary); padding-left: 12px; }
   .passage-editor { width: 100%; box-sizing: border-box; padding: 12px 16px; color: var(--ink); background: transparent; font-family: var(--font-prose); font-size: 21px; line-height: 1.625; resize: vertical; min-height: 180px; }
   .edit-passage { font-size: 12px; margin-top: 8px; }

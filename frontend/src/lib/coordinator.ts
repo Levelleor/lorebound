@@ -2,6 +2,7 @@ import { readCommitResult, readSnapshot, schemaVersion, type CommitRequest, type
 import { documentToText, plainTextToDocument, reconstruct, type Projection, type Turn } from './story.ts';
 import { TextDraft, type DraftStatus, type DraftStorage } from './draft.ts';
 import { TextHistory, type TextSelection } from './textHistory.ts';
+import type { SaveRecovery } from './saveRecovery.ts';
 
 export interface GenerationInput
 {
@@ -19,7 +20,8 @@ export interface CoordinatorState
 {
   snapshot: Snapshot;
   input: string;
-  phase: 'idle' | 'generating' | 'ready' | 'undo-ready' | 'editing' | 'edit-ready' | 'edit-conflict' | 'discarding-edit' | 'saving' | 'uncertain' | 'blocked';
+  phase: 'idle' | 'generating' | 'ready' | 'undo-ready' | 'editing' | 'edit-ready' | 'edit-conflict' | 'discarding-edit' | 'saving' | 'uncertain' | 'blocked' | 'recovery-blocked';
+  recovery: { summary: string; text: string } | null;
   edit: { turnId: string; passageId: string; order: number; source: 'authored' | 'generated'; text: string; draftStatus: DraftStatus; draftError: string; canUndo: boolean; canRedo: boolean; composing: boolean } | null;
   candidate: Turn | null;
   undoTurn: { id: string; order: number } | null;
@@ -34,6 +36,7 @@ interface Dependencies
 {
   storage: StoryStorage;
   draftStorage?: DraftStorage;
+  recoveryStorage?: SaveRecovery;
   generate?: Generator;
   newId?: () => string;
   onChange?: (state: CoordinatorState) => void;
@@ -86,6 +89,28 @@ function editedTurns(snapshot: Snapshot, request: EditRequest): Turn[]
     });
 }
 
+function assertRecoveredSave(snapshot: Snapshot, request: CommitRequest): void
+{
+  let applied: boolean;
+  if (request.kind === 'append_story_turn')
+  {
+    applied = JSON.stringify(snapshot.turns.at(-1)) === JSON.stringify(request.turn);
+  }
+  else if (request.kind === 'undo_story_turn')
+  {
+    applied = !snapshot.turns.some(turn => turn.id === request.turnId);
+  }
+  else
+  {
+    const turn = snapshot.turns.find(turn => turn.id === request.turnId);
+    const passage = turn?.passages.find(passage => passage.id === request.passageId);
+    applied = Boolean(passage && passage.source === (request.kind === 'edit_authored_passage' ? 'authored' : 'generated')
+      && JSON.stringify(passage.body) === JSON.stringify(request.body)
+      && (request.later === 'keep' || (snapshot.turns.at(-1)?.id === turn?.id && turn?.passages.at(-1)?.id === passage.id)));
+  }
+  if (!applied) throw new Error('inconsistent_commit_read');
+}
+
 export class StoryCoordinator
 {
   state: CoordinatorState;
@@ -97,6 +122,8 @@ export class StoryCoordinator
   private disposed = false;
   private abort: AbortController | null = null;
   private pending: CommitRequest | null = null;
+  private readonly recoveryStorage?: SaveRecovery;
+  private recovered = false;
   private draftFlushed = false;
   private refreshRequested = false;
   readonly draft: TextDraft | null;
@@ -117,6 +144,7 @@ export class StoryCoordinator
       phase: projection.blocked ? 'blocked' : 'idle',
       candidate: null,
       undoTurn: null,
+      recovery: null,
       notice: '',
       error: projection.error,
       refreshing: false,
@@ -129,6 +157,7 @@ export class StoryCoordinator
     this.changed = dependencies.onChange ?? (() => {});
     this.draftEpoch = source.epoch;
     this.draftStorage = dependencies.draftStorage;
+    this.recoveryStorage = dependencies.recoveryStorage;
     this.draft = dependencies.draftStorage ? new TextDraft(source.epoch, source.adventure.id,
       dependencies.draftStorage,
       input =>
@@ -136,7 +165,37 @@ export class StoryCoordinator
         if (this.state.phase === 'idle') this.update({ input });
       },
       (draftStatus, draftError) => this.update({ draftStatus, draftError })) : null;
-    if (this.state.phase === 'idle') void this.draft?.restore();
+    this.restoreSave();
+  }
+
+  restoreSave(): void
+  {
+    if (this.disposed || this.pending || !['idle', 'blocked', 'recovery-blocked'].includes(this.state.phase)) return;
+    try
+    {
+      const request = this.recoveryStorage?.load(this.state.snapshot.adventure.id);
+      if (request)
+      {
+        this.pending = frozenCopy(request);
+        this.recovered = true;
+        this.draftFlushed = true;
+        const appended = request.kind === 'append_story_turn';
+        const summary = appended ? 'Story turn acceptance'
+          : request.kind === 'undo_story_turn' ? 'Committed turn Undo'
+          : `Passage edit · ${request.later === 'keep' ? 'Keep Later Turns' : 'Delete All After Point'}`;
+        const text = appended ? request.turn.passages.map(passage => documentToText(passage.body)).join('\n\n')
+          : request.kind === 'undo_story_turn' ? '' : documentToText(request.body);
+        this.update({ phase: 'uncertain', recovery: { summary, text },
+          error: 'A previously confirmed save needs checking. Recover the same save before continuing; the saved story may already include it.' });
+        return;
+      }
+      this.update({ phase: this.state.projection.blocked ? 'blocked' : 'idle', error: this.state.projection.error });
+      if (this.state.phase === 'idle') void this.draft?.restore();
+    }
+    catch
+    {
+      this.update({ phase: 'recovery-blocked', error: 'The saved recovery record could not be read. Restore browser session storage access or use a compatible app version, then retry recovery. Story writes are blocked to protect an unresolved save.' });
+    }
   }
 
   private update(next: Partial<CoordinatorState>): void
@@ -161,7 +220,7 @@ export class StoryCoordinator
   {
     // Background canonical reads must not swallow edits to noncanonical input.
     if (this.disposed || this.state.phase !== 'idle') return;
-    this.update({ input, error: '', notice: '' });
+    this.update({ input, error: '', notice: '', recovery: null });
     this.draft?.edit(input);
   }
 
@@ -180,7 +239,7 @@ export class StoryCoordinator
     const passage = turn.passages.find(passage => passage.id === passageId)!;
     const text = documentToText(passage.body);
     this.editHistory = new TextHistory(text);
-    this.update({ phase: 'editing', error: '', notice: '', edit: {
+    this.update({ phase: 'editing', error: '', notice: '', recovery: null, edit: {
       turnId: turn.id, passageId, order: turn.order, source: passage.source, text,
       draftStatus: this.draftStorage ? 'loading' : 'unsaved', draftError: '',
       canUndo: false, canRedo: false, composing: false
@@ -362,7 +421,7 @@ export class StoryCoordinator
       turns: snapshot.turns.slice(0, -1)
     });
     if (reconstruct(prefix).blocked) return;
-    this.update({ phase: 'undo-ready', undoTurn: { id: turn.id, order: turn.order }, error: '', notice: '' });
+    this.update({ phase: 'undo-ready', undoTurn: { id: turn.id, order: turn.order }, error: '', notice: '', recovery: null });
   }
 
   async confirmUndo(): Promise<void>
@@ -394,7 +453,7 @@ export class StoryCoordinator
     const snapshot = this.state.snapshot;
     this.abort?.abort();
     this.abort = new AbortController();
-    this.update({ phase: 'generating', candidate: null, error: '', notice: '' });
+    this.update({ phase: 'generating', candidate: null, error: '', notice: '', recovery: null });
     let authored;
     try
     {
@@ -500,6 +559,21 @@ export class StoryCoordinator
     await this.save();
   }
 
+  private clearPending(): boolean
+  {
+    try
+    {
+      if (this.pending) this.recoveryStorage?.clear(this.pending);
+      this.pending = null;
+      return true;
+    }
+    catch
+    {
+      this.update({ phase: 'uncertain', error: 'The save result is available, but its recovery record could not be cleared. Restore browser session storage access, then recover the same save before continuing.' });
+      return false;
+    }
+  }
+
   private async save(): Promise<void>
   {
     const request = this.pending;
@@ -524,6 +598,16 @@ export class StoryCoordinator
         }
         this.draftFlushed = true;
       }
+      // Record the immutable confirmed request before any canonical dispatch.
+      try
+      {
+        this.recoveryStorage?.save(request);
+      }
+      catch
+      {
+        this.update({ phase: 'uncertain', error: 'Save recovery could not be stored in this browser session. Restore session storage access or free space, then recover the same save. No new save was sent by this attempt.' });
+        return;
+      }
       const result = readCommitResult(await this.storage.commit(request));
       if (!this.live(sequence)) return;
       const appended = request.kind === 'append_story_turn';
@@ -538,15 +622,22 @@ export class StoryCoordinator
       if (!this.live(sequence)) return;
       if (snapshot.epoch !== request.epoch || snapshot.adventure.id !== request.adventureId
         || snapshot.adventure.version < result.version) throw new Error('inconsistent_commit_read');
-      const expectedTurns = appended
-        ? [...this.state.snapshot.turns, request.turn]
-        : request.kind !== 'undo_story_turn' ? editedTurns(this.state.snapshot, request)
-        : this.state.snapshot.turns.slice(0, -1);
-      if (snapshot.adventure.version === result.version
-        && JSON.stringify(snapshot.turns) !== JSON.stringify(expectedTurns)) throw new Error('inconsistent_commit_read');
+      if (snapshot.adventure.version === result.version)
+      {
+        if (this.recovered) assertRecoveredSave(snapshot, request);
+        else
+        {
+          const expectedTurns = appended ? [...this.state.snapshot.turns, request.turn]
+            : request.kind !== 'undo_story_turn' ? editedTurns(this.state.snapshot, request)
+            : this.state.snapshot.turns.slice(0, -1);
+          if (JSON.stringify(snapshot.turns) !== JSON.stringify(expectedTurns)) throw new Error('inconsistent_commit_read');
+        }
+      }
       const projection = reconstruct(snapshot);
-      this.pending = null;
-      if (appended) this.draft?.consumed();
+      if (!this.clearPending()) return;
+      const recovered = this.recovered;
+      this.recovered = false;
+      if (appended && !recovered) this.draft?.consumed();
       if (!appended && request.kind !== 'undo_story_turn')
       {
         this.editDraft?.consumed();
@@ -566,10 +657,12 @@ export class StoryCoordinator
         candidate: null,
         undoTurn: null,
         edit: null,
+        recovery: null,
         notice,
         phase: projection.blocked ? 'blocked' : 'idle',
         error: projection.error
       });
+      if (recovered && !projection.blocked) await this.draft?.restore();
     }
     catch (cause)
     {
@@ -577,7 +670,8 @@ export class StoryCoordinator
       const reason = String(cause);
       if (!committed && (reason.includes('stale_version') || reason.includes('wrong_epoch')))
       {
-        this.pending = null;
+        if (!this.clearPending()) return;
+        this.recovered = false;
         this.update({ candidate: null, undoTurn: null, phase: 'blocked', refreshing: true });
         this.refreshRequested = false;
         try
@@ -591,7 +685,8 @@ export class StoryCoordinator
       }
       else if (!committed && /invalid_request|operation_id_conflict|unsupported_event|unsupported_history/.test(reason))
       {
-        this.pending = null;
+        if (!this.clearPending()) return;
+        this.recovered = false;
         this.update({
           phase: this.state.edit ? 'edit-conflict' : 'blocked',
           candidate: null,

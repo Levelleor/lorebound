@@ -3,7 +3,7 @@ type: architecture
 status: current-reference
 phase: "C"
 created: "2026-11-03"
-updated: "2026-11-07"
+updated: "2026-11-08"
 tags:
   - planning/architecture
   - system-overview
@@ -290,14 +290,14 @@ For screen-by-screen states, see the [UI interaction map](../design/Lorebound%20
 
 ## 10. Current implementation status and intended development sequence
 
-| Area | Current evidenced status (2026-11-07) | What remains |
+| Area | Current evidenced status (2026-11-08) | What remains |
 | --- | --- | --- |
 | Wails v3 headless Go + SvelteKit ordinary browser | **Real adventure service/browser integration verified on Linux**, merged [PRs #4](https://github.com/Levelleor/lorebound/pull/4) / [#6](https://github.com/Levelleor/lorebound/pull/6); [evidence](../development/evidence/DEV-002B.md) | Full launcher/instance/Quit lifecycle, sensitive-service security and platform packaging |
-| Go SQLite adventure library | **Blank creation and atomic Story passage/receipt append, isolation, stale/epoch rejection, rollback and reopen verified** through DEV-002B; separate Story input drafts verified/merged in PR #13 | Nonempty world events, cross-passage edits, other draft targets, backup/restore and broader integration; generated-passage editing is merged in PR #16; authored editing is verified/merged in PR #17; temporary passage-editor history in DEV-003H is verified only on confirmed PR #18 merge after approved closure review/checks |
+| Go SQLite adventure library | **Blank creation and atomic Story passage/receipt append, isolation, stale/epoch rejection, rollback and reopen verified** through DEV-002B; separate Story input drafts verified/merged in PR #13 | Nonempty world events, cross-passage edits, other draft targets, backup/restore and broader integration; generated-passage editing is merged in PR #16; authored editing is verified/merged in PR #17; temporary passage-editor history in DEV-003H is verified/merged in PR #18; same-tab reload save recovery in [DEV-003I](../development/requirements/DEV-003I.md) is verified only on confirmed PR #19 merge after approved closure review/checks |
 | Adventure/story turn + TypeScript coordinator | **Story-only simulated proposal/Retry → explicit accept → Go atomic persist → refetch/replay/reopen verified** through [DEV-003A](../development/evidence/DEV-003A.md) | Live model, other modes, nonempty world events and broader later-feature integration |
 | Independent Story-prefix Fork | **Verified/merged within supported Story-only zero-effects scope in PR #12**; [evidence/review](../development/evidence/DEV-003B.md). Per-turn icon, separate tab and automatic name; source preserved | Nonempty world/Lorebook/memory/plugin and rename/edit/delete integration; no branch tree or revision archive |
 | Shared latest Story composer draft | **Verified/merged in PR #13**; [scope/coverage](../development/requirements/DEV-003C.md). Latest input restores independently of canon; acceptance consumes matching input atomically | Other modes, manual-correction drafts, cross-reload uncertain-commit recovery and broader library lifecycle; generated-passage drafts follow PR #16 below |
-| Temporary Story input Undo/Redo | **Merged in PR #14**, with [historical scope](../development/requirements/DEV-003D.md). The user subsequently rejected this composer-only choice; custom input history was removed by confirmed merged PR #15 | Native composer editing and latest-draft autosave remain; passage-editor history in DEV-003H is verified only on confirmed PR #18 merge after approved closure review/checks; no revision/candidate archive |
+| Temporary Story input Undo/Redo | **Merged in PR #14**, with [historical scope](../development/requirements/DEV-003D.md). The user subsequently rejected this composer-only choice; custom input history was removed by confirmed merged PR #15 | Native composer editing and latest-draft autosave remain; passage-editor history in DEV-003H is verified/merged in PR #18; no revision/candidate archive |
 | Committed Story turn Undo | **Verified/merged in PR #15**, [DEV-003E](../development/requirements/DEV-003E.md): latest-turn removal, monotonic version/count separation and fresh reconstruction of the supported zero-effects prefix; CI/independent review pass; user accepted functionality and authorised finalisation | Nonempty world/correction/module replay and broader prose editing remain later |
 | Direct model providers and full AI workflow | **Approved design only** | Browser adapters, settings, streaming, interpretation and context |
 | Accepted generated-passage editing | **Verified/merged in PR #16**; [DEV-003F scope/coverage](../development/requirements/DEV-003F.md): inline per-target drafts and explicit Keep/Delete/Continue/Discard; reviewed application CI and independent review PASS, user approved merge/closure | Authored editing is verified/merged in [DEV-003G PR #17](../development/requirements/DEV-003G.md); cross-passage edits, nonempty world/derived/module replay and cross-reload uncertain-operation persistence remain later |
