@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: implemented-unverified
+status: verified-on-confirmed-merge
 created: "2026-11-08"
 updated: "2026-11-09"
 task: "DEV-004A"
@@ -11,7 +11,7 @@ tags:
 
 # DEV-004A — Direct browser local Story narration
 
-After the [DEV-003 audit](./DEV-003.md#remaining-scope-audit--2026-11-08), the user explicitly authorised **“Proceed with a bounded DEV-004 child”**. This selects one first local narration child, implementation/tests, independent review and one primary PR. Finalising/merging that named PR still requires verbal approval after a hands-on handoff. Base: confirmed PR #20 merge `6f74134b6dd72228040939f9cfba22f12699ecd9`.
+After the [DEV-003 audit](./DEV-003.md#remaining-scope-audit--2026-11-08), the user explicitly authorised **“Proceed with a bounded DEV-004 child”**. This selects one first local narration child, implementation/tests, independent review and one primary PR. After the checked hands-on handoff and explicit named-PR approval request, the user authorised closure of PR #21 on 2026-11-09: “otherwise proceed with closure”. Base: confirmed PR #20 merge `6f74134b6dd72228040939f9cfba22f12699ecd9`.
 
 ## Accepted sources and dependencies
 
@@ -42,12 +42,18 @@ Browser HTTP is subject to actual CORS/private-network/mixed-content rules. Fixe
 
 Additive nonspatial database format 6 stores profile metadata/settings; existing canonical wire version 4 remains unchanged. Upgrades preserve existing library identity, baseline, prose, drafts and receipts; older binaries reject the newer database. B9-D12 remains **DEFERRED — NO WORK**.
 
-Ollama/LM Studio/vLLM-specific support, cloud adapters, credentials/custom headers and their OS-vault/consented encrypted fallback, streaming/usage diagnostics, configurable retries/sampling/pipelines/interpretation, other modes and nonempty effects remain later accepted obligations. Simulation is an explicit choice; it is never a fallback for a selected local profile. Tests use simulated compatible HTTP servers/responses with real browser/Go/SQLite execution; no live llama.cpp model or cross-platform packaging claim follows.
+Ollama/LM Studio/vLLM-specific support, cloud adapters, credentials/custom headers and their OS-vault/consented encrypted fallback, streaming/usage diagnostics, configurable retries/sampling/pipelines/interpretation, other modes and nonempty effects remain later accepted obligations. Simulation is an explicit choice; it is never a fallback for a selected local profile. CI uses simulated compatible HTTP servers/responses with real browser/Go/SQLite execution. A separate local live-model smoke test is described below; neither proves universal interoperability or cross-platform packaging.
 
 ## Verification and handoff
 
-[Primary PR #21](https://github.com/Levelleor/lorebound/pull/21) owns implementation, evidence, controls and eventual closure. [Full application CI](https://github.com/Levelleor/lorebound/actions/runs/42633647500) passed at `edc54d4`, including named TypeScript contracts, actual Go/SQLite upgrades and real Firefox/HTTP/CORS/recovery/process reopen. Independent source/coverage/documentation review passed after strict enum validation was corrected; eight Dark/Bright settings captures were reviewed. A responsive follow-up wraps long profile/model labels and preserves mobile header spacing, with maintained browser regression coverage. The PR owns the latest checked revision, follow-up CI and final review disposition; results are not verified-main truth before merge.
+[Primary PR #21](https://github.com/Levelleor/lorebound/pull/21) owns implementation, evidence, controls and closure. [Readiness application CI](https://github.com/Levelleor/lorebound/actions/runs/42635258985) passed at `38d56a809950e2a77d27122c07dfcfe5fc71bad7`, including named TypeScript contracts, actual Go/SQLite upgrades and real Firefox/HTTP/CORS/recovery/process reopen. Independent source/coverage/security/documentation review and all nine final Dark/Bright/responsive captures PASS after strict enum validation, long source-label wrapping and mobile header spacing were corrected. The PR owns final-head checks and actual merge provenance; reviewed application CI is reused for documentation-only closure.
 
-The checked local preview uses the separate persistent `.local/review/dev004a` library at [http://127.0.0.1:8086](http://127.0.0.1:8086). Relaunch with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004a"`; Ctrl+C stops it. The PR/chat handoff supplies the manual-profile/discovery, proposal/Accept and failed-request demo. A real server must allow that browser origin. Provider prose in automated checks is simulated; live llama.cpp interoperability, other browser/OS combinations and full accessibility certification remain unverified.
+The owner supplied and authorised a [local llama.cpp testing recipe](../README.md#local-llamacpp-testing). A separate agent-operated live integration smoke test PASS on the same application revision using llama.cpp `0.6.0-dev` build 11429 (`d812350493`), `Qwen3-4B-Q4_K_M.gguf`, ROCm0 with 28 GPU layers/8192 context, and Linux Firefox. Actual browser discovery, completed narration, Retry replacement, explicit acceptance, exact browser reload and saved selection worked through the Go/SQLite host; no credentials/referrer were sent. The app used a disposable library and a separate loopback provider port. This is a limited live-model result, distinct from simulated CI fixtures; other server/model/browser/OS combinations, packaging and full accessibility certification remain unverified. Temporary output stays outside planning.
 
-**Awaiting user review and verbal approval to finalise and merge PR #21.** Closure details will be prepared on this branch only after that approval and stay conditional on confirmed merge. No next child starts through closure; no separate reconciliation PR or whole-IDEA archival.
+The checked preview/demo used separate persistent `.local/review/dev004a` at port 8086. Review/test hosts and the agent-launched provider are stopped; review data is preserved. Relaunch with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004a"`; Ctrl+C stops it. The PR/chat handoff supplied manual-profile/discovery, proposal/Accept and failed-request flows. The user's closure approval accepts that handoff without claiming they personally ran every automated or live check.
+
+## Conditional single-PR closure
+
+The user authorised finalising/merging PR #21 after its checked review handoff. This closure becomes effective only after independent closure review, applicable final-head checks and confirmed merge of that same PR. Then DEV-004A is VERIFIED within the eight bounded affected requirements above; parent DEV-004 and IDEA-0013/0014/0019 remain PARTIAL. Feature totals become sixteen partial / 36 without feature-level evidence / zero complete; 140 inventoried rows and three formal IDEA-0006 certifications remain unchanged. No extra whole-row/whole-IDEA certification or archival follows.
+
+All remaining accepted provider/credential/streaming/world scope and B9-D12 deferral remain visible. Exactly one next task is DEV-004 selection after a separate launch. Actual merge/head/tree provenance and final CI belong in PR #21/final handoff; no routine post-merge repository write, separate reconciliation PR or automatic next child.

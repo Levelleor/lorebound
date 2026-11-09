@@ -2,7 +2,7 @@
 type: development-guide
 status: current
 created: "2026-11-03"
-updated: "2026-11-06"
+updated: "2026-11-09"
 tags:
   - planning/development
   - implementation
@@ -45,6 +45,18 @@ Read these with repository [AGENTS](../../AGENTS.md), [planning rules](../AGENTS
 - Local verification is for focused development, reproducing a defect or a check CI cannot perform. Use a disposable library and temporary output outside the repository. Do not duplicate full local runs for each agent, documentation update or closure commit.
 - For UI changes, review the relevant CI captures and automated responsive/accessibility checks. Passing geometry assertions alone do not establish visual fidelity. Manual checks require a short result and limitation in the PR, with any temporary captures in artifacts, not planning.
 - Preserve truthful boundaries: simulated providers do not prove live-provider support; actual Linux Firefox/Go/SQLite tests do not prove Windows/macOS packaging. Missing applicable coverage stays NOT RUN or BLOCKED until resolved.
+
+## Local llama.cpp testing
+
+The owner supplied and authorised this workstation launch recipe on 2026-11-09 for relevant future live-provider tests:
+
+```sh
+llama-server -m ~/ai-models/Qwen3-4B-Q4_K_M.gguf --device ROCm0 -ngl 28 -c 8192
+```
+
+Check that the model file and `ROCm0` device are available before using it (`llama-server --list-devices`). Keep test servers on loopback and choose an available port, for example by adding `--host 127.0.0.1 --port 18085`; that gives the API base URL `http://127.0.0.1:18085/v1`. Stop a foreground server with Ctrl+C. Use a disposable Lorebound library, optional Models discovery or the server's actual model ID, and explicit proposal acceptance. Preserve existing review/user libraries and stop only processes started for the test.
+
+This machine-specific recipe is available for focused checks that hosted CI cannot perform. A successful run establishes only the exercised server/model/browser configuration; keep live evidence separate from CI's simulated compatible-provider fixtures. The owning task/PR records the result and limitations, without copied server output or generated prose in planning.
 
 ## Single-PR closure and verbal approval
 
