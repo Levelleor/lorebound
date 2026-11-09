@@ -196,7 +196,7 @@ func TestUpgradeV4PreservesHistoryDraftsEpochAndReceipts(t *testing.T) {
 	if err := s.db.QueryRow(`SELECT json_group_array(json_object('id',operation_id,'hash',request_hash,'result',result)) FROM operations ORDER BY operation_id`).Scan(&receipts); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := s.db.Exec(`PRAGMA user_version=4`); err != nil {
+	if _, err := s.db.Exec(`DROP TABLE model_settings; DROP TABLE model_profiles; PRAGMA user_version=4`); err != nil {
 		t.Fatal(err)
 	}
 	s.Close()

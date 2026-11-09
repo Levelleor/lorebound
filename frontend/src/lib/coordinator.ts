@@ -38,6 +38,7 @@ interface Dependencies
   draftStorage?: DraftStorage;
   recoveryStorage?: SaveRecovery;
   generate?: Generator;
+  generationError?: (cause: unknown) => string;
   newId?: () => string;
   onChange?: (state: CoordinatorState) => void;
 }
@@ -116,6 +117,7 @@ export class StoryCoordinator
   state: CoordinatorState;
   private readonly storage: StoryStorage;
   private readonly generator: Generator;
+  private readonly generationError: (cause: unknown) => string;
   private readonly newId: () => string;
   private readonly changed: (state: CoordinatorState) => void;
   private sequence = 0;
@@ -153,6 +155,7 @@ export class StoryCoordinator
     };
     this.storage = dependencies.storage;
     this.generator = dependencies.generate ?? simulatedGeneration;
+    this.generationError = dependencies.generationError ?? (() => 'The response could not be prepared. Your text is retained; send it again when ready.');
     this.newId = dependencies.newId ?? (() => crypto.randomUUID());
     this.changed = dependencies.onChange ?? (() => {});
     this.draftEpoch = source.epoch;
@@ -493,12 +496,12 @@ export class StoryCoordinator
       });
       this.update({ phase: 'ready', candidate: frozenCopy(candidate) });
     }
-    catch
+    catch (cause)
     {
       if (this.live(sequence)) this.update({
         phase: 'idle',
         candidate: null,
-        error: 'The simulated response could not be prepared. Your text is retained; send it again when ready.'
+        error: this.generationError(cause)
       });
     }
     finally

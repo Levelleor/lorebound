@@ -10,6 +10,7 @@ import { exerciseUndo } from './check-story-undo.mjs';
 import { exerciseEdit } from './check-story-edit.mjs';
 import { exerciseSaveRecovery } from './check-save-recovery.mjs';
 import { exerciseForkRecovery } from './check-fork-recovery.mjs';
+import { exerciseModels } from './check-models.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -38,6 +39,8 @@ try {
 
   if (reopen) {
     const expected = JSON.parse(await readFile(statePath, 'utf8'));
+    const connections = await page.evaluate(epoch => window.wails.Call.ByName('main.LibraryService.ReadConnections', { schemaVersion: 4, epoch }), initial.epoch);
+    assert.deepEqual(connections, expected.connections, 'Nonsecret profiles/selection survive process restart without provider requests');
     assert.deepEqual(initial, expected.library, 'Library identity, adventure IDs, names and versions survive process restart');
     for (const adventure of initial.adventures) {
       await page.locator(`[data-adventure-id="${adventure.id}"]`).click();
@@ -175,6 +178,7 @@ try {
     await exerciseEdit(page, base, artifacts, 'authored');
     await exerciseSaveRecovery(page, base, artifacts);
     await exerciseForkRecovery(page, base, artifacts);
+    await exerciseModels(browser, base, artifacts);
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};
@@ -205,7 +209,8 @@ try {
       }
       return saved;
     }, { library: finalLibrary, snapshots });
-    await writeFile(statePath, JSON.stringify({ library: finalLibrary, snapshots, drafts, passageDrafts }));
+    const connections = await page.evaluate(epoch => window.wails.Call.ByName('main.LibraryService.ReadConnections', { schemaVersion: 4, epoch }), finalLibrary.epoch);
+    await writeFile(statePath, JSON.stringify({ library: finalLibrary, snapshots, drafts, passageDrafts, connections }));
   }
   assert.equal(await page.getByRole('alert').count(), 0);
   assert.deepEqual(errors, [], 'No uncaught browser exceptions');
