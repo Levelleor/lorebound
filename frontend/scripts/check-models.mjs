@@ -158,6 +158,14 @@ export async function exerciseModels(browser, base, artifacts)
         {
           await page.setViewportSize({ width, height: 900 });
           assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+          assert.equal(await page.evaluate(() =>
+          {
+            const brand = document.querySelector('.brand').getBoundingClientRect();
+            const actions = document.querySelector('.header-actions').getBoundingClientRect();
+            const status = document.querySelector('.save-status').getBoundingClientRect();
+            const header = document.querySelector('.topbar').getBoundingClientRect();
+            return actions.left - brand.right >= 11 && status.bottom <= header.bottom;
+          }), true, 'Model settings leave room for the library brand and save status');
           assert.ok(await page.getByRole('dialog').evaluate(element => element.getBoundingClientRect().height) <= 810);
           await page.getByRole('dialog').evaluate(element => element.scrollTop = 0);
           await page.screenshot({ path: path.join(artifacts, `models-${theme}-${width}.png`) });
@@ -209,13 +217,16 @@ export async function exerciseModels(browser, base, artifacts)
     await page.getByRole('button', { name: 'Reload models', exact: true }).click();
     await page.waitForFunction(() => document.querySelector('#connection-name')?.value === 'Changed elsewhere');
     await page.getByRole('button', { name: 'New', exact: true }).click();
-    await page.getByLabel('Connection name', { exact: true }).fill('Custom fixture');
+    await page.getByLabel('Connection name', { exact: true }).fill('N'.repeat(80));
     await page.getByLabel('Server type', { exact: true }).selectOption('custom');
     await page.getByLabel('API base URL', { exact: true }).fill(endpoint);
-    await page.getByLabel('Model ID', { exact: true }).fill('manual-fixture');
+    await page.getByLabel('Model ID', { exact: true }).fill('M'.repeat(200));
     await page.getByRole('button', { name: 'Save and use profile', exact: true }).click();
     await page.getByRole('dialog').waitFor({ state: 'detached' });
     assert.equal((await settings()).profiles.length, 2);
+    await page.setViewportSize({ width: 390, height: 900 });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'Long profile/model labels wrap in the mobile composer');
+    if (artifacts) await page.screenshot({ path: path.join(artifacts, 'models-long-source-dark-390.png') });
     await openModels();
     await page.getByRole('button', { name: 'Delete profile', exact: true }).click();
     await page.getByRole('status', { name: 'Model discovery result' }).filter({ hasText: 'Profile deleted' }).waitFor();

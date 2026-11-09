@@ -467,11 +467,11 @@
         </section>
       {/each}
       {#if state.phase === 'generating'}
-        <section class="provisional" aria-label="Generating proposal"><p class="passage-label">{sourceLabel}</p><p class="prose">Waiting for a complete proposed continuation…</p><p class="supporting">Nothing has been added to your story.</p></section>
+        <section class="provisional" aria-label="Generating proposal"><p class="passage-label model-source">{sourceLabel}</p><p class="prose">Waiting for a complete proposed continuation…</p><p class="supporting">Nothing has been added to your story.</p></section>
       {:else if state.candidate}
         <section class="provisional" bind:this={candidateSection} data-turn-id={state.candidate.id} aria-label="Proposed turn">
           <p class="passage-label">{state.phase === 'uncertain' ? 'Save unconfirmed' : state.phase === 'saving' ? 'Saving…' : 'Proposed · Not saved'}</p>
-          <p class="supporting">{sourceLabel}</p>
+          <p class="supporting model-source">{sourceLabel}</p>
           {#each state.candidate.passages as passage}
             <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Continuation'}</p>
             {#each passage.body.content as paragraph}
@@ -486,7 +486,7 @@
     <div class="composer-inner">
       {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
       {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
-      <div class="composer-heading"><span class="mode-selected">✎ Story</span><span class="supporting">{sourceLabel}</span></div>
+      <div class="composer-heading"><span class="mode-selected">✎ Story</span><span class="supporting model-source">{sourceLabel}</span></div>
       <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)} class:edit-pending={Boolean(state?.edit)}>
         <label class="sr-only" for="story-input">Story input</label>
         <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}

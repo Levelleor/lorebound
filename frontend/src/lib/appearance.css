@@ -10,10 +10,11 @@ button:hover:not(:disabled) { background: var(--card); }
 button:disabled { cursor: default; opacity: .45; }
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
 h1:focus { outline: none; }
-.topbar { height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--border); }
-.brand { color: var(--parchment); text-decoration: none; font: 600 20px var(--font-prose); letter-spacing: .05em; display: flex; gap: 9px; align-items: center; }
-.header-actions { display: flex; align-items: center; gap: 14px; }
-.save-status { color: var(--muted-foreground); font-size: 12px; }
+.topbar { height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 20px; border-bottom: 1px solid var(--border); }
+.brand { color: var(--parchment); text-decoration: none; font: 600 20px var(--font-prose); letter-spacing: .05em; display: flex; flex-shrink: 0; gap: 9px; align-items: center; }
+.header-actions { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.header-actions button { flex-shrink: 0; }
+.save-status { color: var(--muted-foreground); font-size: 12px; min-width: 0; }
 .quiet { border-color: transparent; color: var(--muted-foreground); padding: 5px 8px; }
 .library-pane, .story-pane { background: radial-gradient(ellipse at 50% -10%, oklch(0.24 0.03 65 / .9), transparent 60%); }
 .library-pane { height: calc(100dvh - 48px); overflow: auto; }
@@ -75,6 +76,7 @@ body:has(.error-banner) .workspace, body:has(.error-banner) .library-pane { heig
 .composer { flex-shrink: 0; border-top: 1px solid var(--border); padding: 16px; background: color-mix(in oklch, var(--card) 80%, transparent); backdrop-filter: blur(8px); }
 .composer-inner { max-width: 672px; margin: 0 auto; }
 .composer-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.model-source { min-width: 0; overflow-wrap: anywhere; }
 .mode-selected { background: var(--primary); color: var(--primary-foreground); border-radius: 4px; padding: 6px 12px; box-shadow: 0 0 12px color-mix(in oklch, var(--primary) 12%, transparent); }
 .composer-input { position: relative; }
 textarea { display: block; width: 100%; min-height: 140px; max-height: 25dvh; resize: vertical; background: var(--background); color: var(--ink); border: 1px solid var(--border); border-radius: 4px; padding: 12px 16px 52px; font: 18px/1.5 var(--font-prose); }

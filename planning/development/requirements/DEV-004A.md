@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: in-progress
+status: implemented-unverified
 created: "2026-11-08"
 updated: "2026-11-09"
 task: "DEV-004A"
@@ -46,4 +46,8 @@ Ollama/LM Studio/vLLM-specific support, cloud adapters, credentials/custom heade
 
 ## Verification and handoff
 
-Implementation, evidence, controls and reconciliation stay in the same primary PR. Verification/review and the checked launch/demo will be recorded here and in that PR before requesting named-PR finalise/merge approval. No next child starts through closure.
+[Primary PR #21](https://github.com/Levelleor/lorebound/pull/21) owns implementation, evidence, controls and eventual closure. [Full application CI](https://github.com/Levelleor/lorebound/actions/runs/42633647500) passed at `edc54d4`, including named TypeScript contracts, actual Go/SQLite upgrades and real Firefox/HTTP/CORS/recovery/process reopen. Independent source/coverage/documentation review passed after strict enum validation was corrected; eight Dark/Bright settings captures were reviewed. A responsive follow-up wraps long profile/model labels and preserves mobile header spacing, with maintained browser regression coverage. The PR owns the latest checked revision, follow-up CI and final review disposition; results are not verified-main truth before merge.
+
+The checked local preview uses the separate persistent `.local/review/dev004a` library at [http://127.0.0.1:8086](http://127.0.0.1:8086). Relaunch with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004a"`; Ctrl+C stops it. The PR/chat handoff supplies the manual-profile/discovery, proposal/Accept and failed-request demo. A real server must allow that browser origin. Provider prose in automated checks is simulated; live llama.cpp interoperability, other browser/OS combinations and full accessibility certification remain unverified.
+
+**Awaiting user review and verbal approval to finalise and merge PR #21.** Closure details will be prepared on this branch only after that approval and stay conditional on confirmed merge. No next child starts through closure; no separate reconciliation PR or whole-IDEA archival.
