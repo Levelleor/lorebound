@@ -9,7 +9,7 @@ export interface GenerationInput
   input: string;
   history: string[];
 }
-export type Generator = (request: GenerationInput, signal: AbortSignal) => Promise<string>;
+export type Generator = (request: GenerationInput, signal: AbortSignal, onProgress?: (text: string) => void) => Promise<string>;
 export interface StoryStorage
 {
   commit(request: CommitRequest): Promise<CommitResult>;
@@ -24,6 +24,7 @@ export interface CoordinatorState
   recovery: { summary: string; text: string } | null;
   edit: { turnId: string; passageId: string; order: number; source: 'authored' | 'generated'; text: string; draftStatus: DraftStatus; draftError: string; canUndo: boolean; canRedo: boolean; composing: boolean } | null;
   candidate: Turn | null;
+  preview: string;
   undoTurn: { id: string; order: number } | null;
   notice: string;
   error: string;
@@ -145,6 +146,7 @@ export class StoryCoordinator
       edit: null,
       phase: projection.blocked ? 'blocked' : 'idle',
       candidate: null,
+      preview: '',
       undoTurn: null,
       recovery: null,
       notice: '',
@@ -456,7 +458,7 @@ export class StoryCoordinator
     const snapshot = this.state.snapshot;
     this.abort?.abort();
     this.abort = new AbortController();
-    this.update({ phase: 'generating', candidate: null, error: '', notice: '', recovery: null });
+    this.update({ phase: 'generating', candidate: null, preview: '', error: '', notice: '', recovery: null });
     let authored;
     try
     {
@@ -476,7 +478,10 @@ export class StoryCoordinator
       const text = await this.generator({
         input: documentToText(authored),
         history: this.state.projection.passages.map(passage => documentToText(passage.body))
-      }, this.abort.signal);
+      }, this.abort.signal, preview =>
+      {
+        if (this.live(sequence) && this.state.phase === 'generating') this.update({ preview });
+      });
       if (!this.live(sequence)) return;
       const candidate: Turn = {
         schemaVersion: 1,
@@ -494,13 +499,14 @@ export class StoryCoordinator
         adventure: { ...snapshot.adventure, version: snapshot.adventure.version + 1 },
         turns: [...snapshot.turns, candidate]
       });
-      this.update({ phase: 'ready', candidate: frozenCopy(candidate) });
+      this.update({ phase: 'ready', candidate: frozenCopy(candidate), preview: '' });
     }
     catch (cause)
     {
       if (this.live(sequence)) this.update({
         phase: 'idle',
         candidate: null,
+        preview: '',
         error: this.generationError(cause)
       });
     }
@@ -517,7 +523,7 @@ export class StoryCoordinator
     ++this.sequence;
     this.abort?.abort();
     this.abort = null;
-    this.update({ phase: 'idle', candidate: null, error: '' });
+    this.update({ phase: 'idle', candidate: null, preview: '', error: '', notice: 'Generation stopped. Uncommitted output was discarded.' });
     this.refreshIfRequested();
   }
 
