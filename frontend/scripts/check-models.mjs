@@ -8,6 +8,7 @@ export async function exerciseModels(browser, base, artifacts)
   let behavior = 'ok';
   let discoveryFails = true;
   let delayDiscovery = false;
+  let delayedReceived = () => {};
   let calls = 0;
   let aborted = 0;
   const requests = [];
@@ -33,6 +34,7 @@ export async function exerciseModels(browser, base, artifacts)
       if (delayDiscovery)
       {
         response.flushHeaders();
+        delayedReceived();
         const timer = setTimeout(() => { pending.delete(timer); finishDiscovery(); }, 2000);
         pending.add(timer);
       }
@@ -53,6 +55,7 @@ export async function exerciseModels(browser, base, artifacts)
     if (selectedBehavior === 'delay')
     {
       response.flushHeaders();
+      delayedReceived();
       const timer = setTimeout(() => { pending.delete(timer); finish(); }, 2000);
       pending.add(timer);
     }
@@ -178,7 +181,7 @@ export async function exerciseModels(browser, base, artifacts)
     assert.ok(aborted > 0, 'The real browser closes aborted HTTP response streams');
 
     const abortedBeforeNavigation = aborted;
-    const navigationRequest = page.waitForResponse(response => response.url() === `${endpoint}/chat/completions` && response.request().method() === 'POST');
+    const navigationRequest = new Promise(resolve => { delayedReceived = resolve; });
     await page.getByRole('button', { name: 'Generate continuation', exact: true }).click();
     await navigationRequest;
     await page.getByRole('button', { name: 'Library', exact: true }).click();
@@ -233,7 +236,7 @@ export async function exerciseModels(browser, base, artifacts)
     await openModels();
     delayDiscovery = true;
     const abortedBeforeProbe = aborted;
-    const discoveryRequest = page.waitForResponse(response => response.url() === `${endpoint}/models` && response.request().method() === 'GET');
+    const discoveryRequest = new Promise(resolve => { delayedReceived = resolve; });
     await page.getByRole('button', { name: 'Discover models', exact: true }).click();
     await discoveryRequest;
     await page.keyboard.press('Escape');
