@@ -1,0 +1,180 @@
+import { schemaVersion } from './library.ts';
+import { isID, isObject, plainTextToDocument } from './story.ts';
+import type { GenerationInput } from './coordinator.ts';
+
+export interface ModelProfile
+{
+  id: string;
+  name: string;
+  kind: 'llamacpp' | 'custom';
+  baseUrl: string;
+  model: string;
+  timeoutMs: number;
+}
+
+export interface Connections
+{
+  schemaVersion: number;
+  epoch: string;
+  revision: number;
+  mode: 'simulation' | 'local';
+  activeProfileId: string;
+  profiles: ModelProfile[];
+}
+
+export type SaveConnections = Omit<Connections, 'revision'> & { expectedRevision: number };
+
+export class ModelError extends Error {}
+
+export function modelError(cause: unknown): string
+{
+  return cause instanceof ModelError ? cause.message
+    : 'The response could not be prepared. Your input is retained. Check Models and try again.';
+}
+
+export function endpointUrl(value: string): string
+{
+  if (value.length > 2048 || /[\s?#\\]/u.test(value))
+    throw new ModelError('Use an HTTP(S) base URL without credentials, spaces, query or fragment.');
+  let url: URL;
+  try { url = new URL(value); }
+  catch { throw new ModelError('Enter the server’s complete HTTP(S) API base URL.'); }
+  if (!['http:', 'https:'].includes(url.protocol) || !url.hostname || url.username || url.password)
+    throw new ModelError('Use an HTTP(S) base URL without credentials, query or fragment.');
+  return url.href.replace(/\/+$/, '');
+}
+
+export function readProfile(value: unknown): ModelProfile
+{
+  if (!isObject(value) || Object.keys(value).length !== 6 || !isID(value.id)
+    || (value.kind !== 'llamacpp' && value.kind !== 'custom')
+    || typeof value.name !== 'string' || !value.name.trim() || !value.name.isWellFormed() || [...value.name].length > 80
+    || typeof value.model !== 'string' || !value.model.trim() || !value.model.isWellFormed() || [...value.model].length > 200
+    || typeof value.baseUrl !== 'string' || !Number.isInteger(value.timeoutMs) || Number(value.timeoutMs) < 1000 || Number(value.timeoutMs) > 300000)
+    throw new ModelError('Use a name up to 80 characters, model ID up to 200 characters and timeout from 1 to 300 seconds.');
+  endpointUrl(value.baseUrl);
+  return value as unknown as ModelProfile;
+}
+
+export function readConnections(value: unknown, epoch: string): Connections
+{
+  if (!isObject(value) || Object.keys(value).length !== 6 || value.schemaVersion !== schemaVersion || value.epoch !== epoch
+    || !Number.isSafeInteger(value.revision) || Number(value.revision) < 0
+    || (value.mode !== 'simulation' && value.mode !== 'local') || typeof value.activeProfileId !== 'string'
+    || !Array.isArray(value.profiles) || value.profiles.length > 32)
+    throw new Error('unsupported_model_settings');
+  const profiles = value.profiles.map(readProfile);
+  if (new Set(profiles.map(profile => profile.id)).size !== profiles.length
+    || (value.mode === 'simulation' && value.activeProfileId !== '')
+    || (value.activeProfileId && !profiles.some(profile => profile.id === value.activeProfileId)))
+    throw new Error('unsupported_model_settings');
+  return value as unknown as Connections;
+}
+
+async function readJson(response: Response): Promise<unknown>
+{
+  if (!response.body) throw new ModelError('The server returned an empty response. Check its compatible API settings.');
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder('utf-8', { fatal: true });
+  let text = '';
+  let size = 0;
+  try
+  {
+    for (;;)
+    {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > 1048576) throw new ModelError('The server response exceeded the supported size. Try a shorter response.');
+      text += decoder.decode(value, { stream: true });
+    }
+    text += decoder.decode();
+    return JSON.parse(text);
+  }
+  finally
+  {
+    await reader.cancel().catch(() => {});
+    reader.releaseLock();
+  }
+}
+
+type ModelEndpoint = Pick<ModelProfile, 'baseUrl' | 'timeoutMs'>;
+
+async function requestJson(profile: ModelEndpoint, path: string, signal: AbortSignal, body?: unknown, fetcher: typeof fetch = fetch): Promise<unknown>
+{
+  const selected = { ...profile, baseUrl: endpointUrl(profile.baseUrl) };
+  if (!Number.isInteger(selected.timeoutMs) || selected.timeoutMs < 1000 || selected.timeoutMs > 300000)
+    throw new ModelError('Use a timeout from 1 to 300 seconds.');
+  const timeout = new AbortController();
+  const timer = setTimeout(() => timeout.abort(), selected.timeoutMs);
+  const combined = AbortSignal.any([signal, timeout.signal]);
+  try
+  {
+    combined.throwIfAborted();
+    const response = await fetcher(`${endpointUrl(selected.baseUrl)}/${path}`, {
+      method: body ? 'POST' : 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+      redirect: 'error',
+      referrerPolicy: 'no-referrer',
+      cache: 'no-store',
+      headers: body ? { 'Content-Type': 'application/json' } : {},
+      ...(body ? { body: JSON.stringify(body) } : {}),
+      signal: combined
+    });
+    combined.throwIfAborted();
+    if (!response.ok)
+    {
+      await response.body?.cancel();
+      if (response.status === 401 || response.status === 403)
+        throw new ModelError('The server requires access this connection cannot provide. Authenticated connections are not supported yet.');
+      if (response.status === 404)
+        throw new ModelError('The server could not find this API or model. Check the base URL and model ID; discovery is optional.');
+      if (response.status === 429)
+        throw new ModelError('The server is busy or rate limited. Try again when ready; no automatic retry was sent.');
+      throw new ModelError(`The server returned HTTP ${response.status}. Check the server and try again.`);
+    }
+    const value = await readJson(response);
+    combined.throwIfAborted();
+    return value;
+  }
+  catch (cause)
+  {
+    if (signal.aborted) throw signal.reason;
+    if (timeout.signal.aborted) throw new ModelError('The model request timed out. Your input is retained; check the server or increase its timeout.');
+    if (cause instanceof ModelError) throw cause;
+    throw new ModelError('The model request failed. Check the server, HTTP(S) URL, browser CORS/origin and network permissions. No proxy or fallback was used.');
+  }
+  finally { clearTimeout(timer); }
+}
+
+export async function discoverModels(profile: ModelEndpoint, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<string[]>
+{
+  const value = await requestJson(profile, 'models', signal, undefined, fetcher);
+  if (!isObject(value) || !Array.isArray(value.data) || value.data.length > 1000
+    || !value.data.every(model => isObject(model) && typeof model.id === 'string' && model.id.trim() && model.id.isWellFormed() && [...model.id].length <= 200))
+    throw new ModelError('The model list was not compatible. Enter a model ID manually; generation does not require discovery.');
+  return [...new Set(value.data.map(model => model.id as string))];
+}
+
+export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<string>
+{
+  const selected = structuredClone(readProfile(profile));
+  const value = await requestJson(selected, 'chat/completions', signal, {
+    model: selected.model,
+    stream: false,
+    messages: [
+      { role: 'system', content: 'Continue the player’s fiction as narrative prose. Return only the next continuation. Do not call tools or change application state.' },
+      ...(input.history.length ? [{ role: 'user', content: `Accepted story so far:\n\n${input.history.join('\n\n')}` }] : []),
+      { role: 'user', content: input.input }
+    ]
+  }, fetcher);
+  const choice = isObject(value) && Array.isArray(value.choices) && value.choices.length === 1 ? value.choices[0] : null;
+  const message = isObject(choice) && isObject(choice.message) ? choice.message : null;
+  if (!isObject(choice) || choice.finish_reason !== 'stop' || !message || message.role !== 'assistant'
+    || typeof message.content !== 'string' || message.tool_calls || message.function_call || message.refusal)
+    throw new ModelError('The server did not return a complete text continuation. Incomplete output and tool calls were discarded.');
+  try { plainTextToDocument(message.content); }
+  catch { throw new ModelError('The server returned empty, malformed or oversized prose. No proposal was retained.'); }
+  return message.content;
+}

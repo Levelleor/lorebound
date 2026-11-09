@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-08"
+updated: "2026-11-09"
 tags:
   - planning/development
   - decisions
@@ -161,3 +161,14 @@ Fork's existing Go receipt can resolve success after the source advances/truncat
 After the PR #20 handoff supplied the checked two-turn sample, persistent-library launch command, offline/reload/Recover fork/Open fork walkthrough and explicit named-PR approval request, the user replied **“proceed with closure”**. This accepts the handoff and authorises finalising/merging that named PR after closure review/checks, without claiming the user personally ran every automated scenario. Complete readiness-head CI and independent source/coverage, eight-capture visual and exact readiness-head documentation review PASS. [Requirements](./requirements/DEV-003J.md) owns maintained coverage and limits. Review/test hosts are stopped; the separate persistent review library is preserved.
 
 Prepared closure stays in the same primary PR and takes effect only after independent closure review, applicable final-head checks and confirmed merge. Then DEV-003J is VERIFIED within supported simulated Story-only zero-effects, same-tab/session-storage Fork recovery scope. DEV-003 and IDEA-0011 remain PARTIAL; counts and formal certifications stay unchanged. All original IDEAs stay in production. No broader crash recovery, new whole-row certification or B9-D12 work follows. Actual merge/head/tree provenance and CI belong in PR #20/final handoff; no routine post-merge repository write, separate reconciliation PR or next slice is authorised.
+
+
+## 2026-11-08 — DEV-003 remaining dependency boundary
+
+Confirmed PR #20 merge `6f74134b6dd72228040939f9cfba22f12699ecd9` satisfies DEV-003J's approved closure. The user's separate launch prompted another accepted-source/code audit and independent review. No further product child was identified in the supported Story-only zero-effects boundary without open whole-passage identity decisions or later world/module/input/library dependencies. [The parent audit](./requirements/DEV-003.md#remaining-scope-audit--2026-11-08) owns those dispositions; DEV-003 remains PARTIAL rather than gaining a speculative child or whole-IDEA certification.
+
+The agent recommended DEV-004 as the next execution and asked whether this launch could cover one bounded browser-provider child. The user explicitly answered “Proceed with a bounded DEV-004 child”. [DEV-004A](./requirements/DEV-004A.md) selects direct browser local Story narration with saved nonsecret llama.cpp/Custom compatible profiles and optional discovery. This is implementation/publication authority, not merge authority. B9-D12 remains deferred.
+
+## 2026-11-09 — Local narration implementation boundary
+
+DEV-004A uses completed text responses through the existing explicit proposal/acceptance coordinator. Simulation remains an explicit selection and never substitutes for a failed local request. Fixed nonsecret profile metadata lives in Go-owned shared SQLite settings, with revision conflicts and epoch fencing; the additive database format becomes 6 while canonical wire version 4 stays unchanged. No secret store or Go inference proxy is introduced. Cloud/credentials/streaming and remaining named local adapters stay later accepted obligations. The requirement record owns source/test coverage and limitations; the primary PR will own CI/review and closure. No live model result or verified-main claim follows from the simulated provider fixture.

@@ -137,7 +137,7 @@ func TestDraftUpgradePreservesStoryAndFailsAtomically(t *testing.T) {
 				t.Fatal(err)
 			}
 			before := readStory(t, s, library.Epoch, "story")
-			setupSQL := `DROP TABLE drafts; PRAGMA user_version=2;`
+			setupSQL := `DROP TABLE model_settings; DROP TABLE model_profiles; DROP TABLE drafts; PRAGMA user_version=2;`
 			if conflict {
 				setupSQL = `PRAGMA user_version=2;`
 			}

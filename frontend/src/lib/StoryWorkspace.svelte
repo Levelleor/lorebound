@@ -1,16 +1,19 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import { host } from './host';
-  import { StoryCoordinator, type CoordinatorState } from './coordinator';
+  import { StoryCoordinator, simulatedGeneration, type CoordinatorState, type Generator } from './coordinator';
   import type { Snapshot } from './library';
   import { ForkController, defaultForkTitle, type ForkState } from './fork';
   import type { TextSelection } from './textHistory';
   import { SessionSaveRecovery } from './saveRecovery';
   import { SessionForkRecovery } from './forkRecovery';
+  import { modelError } from './models';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
-  export let onUpdate: (value: { snapshot: Snapshot; status: string; locked: boolean }) => void;
+  export let generateNarration: Generator = simulatedGeneration;
+  export let sourceLabel = 'Simulated generation · No AI connected';
+  export let onUpdate: (value: { snapshot: Snapshot; status: string; locked: boolean; modelLocked: boolean }) => void;
   let coordinator: StoryCoordinator;
   let state: CoordinatorState | null = null;
   let input: HTMLTextAreaElement;
@@ -314,7 +317,7 @@
       const status = forkBusy ? forkState?.phase === 'saving' ? 'Creating fork…' : 'Fork needs recovery'
         : next.phase === 'saving' ? 'Saving…'
         : next.phase === 'uncertain' ? 'Save unconfirmed'
-        : next.phase === 'generating' ? 'Generating · simulated'
+        : next.phase === 'generating' ? 'Generating…'
         : next.phase === 'ready' ? 'Proposed · not saved'
         : next.edit ? 'Draft edit'
         : next.refreshing ? 'Refreshing…'
@@ -325,12 +328,15 @@
         : next.draftStatus === 'error' ? 'Draft needs attention'
         : next.draftStatus === 'unsaved' ? 'Unsaved input'
         : next.input ? 'Draft saved' : '✓ Saved';
-      onUpdate({ snapshot: next.snapshot, status, locked: forkBusy || next.phase === 'saving' || next.phase === 'uncertain' });
+      onUpdate({ snapshot: next.snapshot, status, locked: forkBusy || next.phase === 'saving' || next.phase === 'uncertain',
+        modelLocked: forkBusy || next.phase !== 'idle' });
     };
     coordinator = new StoryCoordinator(snapshot, {
       storage: host,
       draftStorage: host,
       recoveryStorage: new SessionSaveRecovery(() => window.sessionStorage),
+      generate: (request, signal) => generateNarration(request, signal),
+      generationError: modelError,
       onChange: publish
     });
     publish(coordinator.state);
@@ -411,7 +417,7 @@
           <p class="turn-label"><span class="confirmed">✓ Accepted</span> · Turn {turn.order}</p>
           {#each turn.passages as passage (passage.id)}
             <div class:authored={passage.source === 'authored'} class:editing={state.edit?.passageId === passage.id} class="passage" data-passage-id={passage.id}>
-              <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Simulated continuation'}</p>
+              <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Continuation'}</p>
               {#if state.edit?.passageId === passage.id}
                 <label class="sr-only" for="passage-edit">Edit {passage.source === 'authored' ? 'Story text' : 'continuation'} for turn {turn.order}</label>
                 <textarea id="passage-edit" class="passage-editor" bind:this={passageInput} rows="7" value={state.edit.text}
@@ -461,12 +467,13 @@
         </section>
       {/each}
       {#if state.phase === 'generating'}
-        <section class="provisional" aria-label="Generating proposal"><p class="passage-label">Simulated generation</p><p class="prose">Preparing a proposed continuation…</p><p class="supporting">Nothing has been added to your story.</p></section>
+        <section class="provisional" aria-label="Generating proposal"><p class="passage-label">{sourceLabel}</p><p class="prose">Waiting for a complete proposed continuation…</p><p class="supporting">Nothing has been added to your story.</p></section>
       {:else if state.candidate}
         <section class="provisional" bind:this={candidateSection} data-turn-id={state.candidate.id} aria-label="Proposed turn">
           <p class="passage-label">{state.phase === 'uncertain' ? 'Save unconfirmed' : state.phase === 'saving' ? 'Saving…' : 'Proposed · Not saved'}</p>
+          <p class="supporting">{sourceLabel}</p>
           {#each state.candidate.passages as passage}
-            <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Simulated continuation'}</p>
+            <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Continuation'}</p>
             {#each passage.body.content as paragraph}
               <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
             {/each}
@@ -479,7 +486,7 @@
     <div class="composer-inner">
       {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
       {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
-      <div class="composer-heading"><span class="mode-selected">✎ Story</span><span class="supporting">Simulated generation · No AI connected</span></div>
+      <div class="composer-heading"><span class="mode-selected">✎ Story</span><span class="supporting">{sourceLabel}</span></div>
       <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)} class:edit-pending={Boolean(state?.edit)}>
         <label class="sr-only" for="story-input">Story input</label>
         <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
@@ -553,7 +560,7 @@
       {#if state?.draftError}
         <button class="quiet" onclick={() => coordinator.draft?.retry()}>Retry draft</button>
       {/if}
-      <p class="composer-hint">Ctrl / ⌘ + Enter to generate. Only accepted passages join your story. Generation is simulated.</p>
+      <p class="composer-hint">Ctrl / ⌘ + Enter to generate. Only accepted passages join your story. Choose your source in Models.</p>
     </div>
   </div>
 </main>

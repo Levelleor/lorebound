@@ -31,3 +31,11 @@ func (s *LibraryService) SaveDraft(req store.SaveDraftRequest) (store.Draft, err
 func (s *LibraryService) DeleteDraft(req store.SaveDraftRequest) error {
 	return s.store.DeleteDraft(context.Background(), req)
 }
+
+func (s *LibraryService) ReadConnections(req store.ConnectionsRequest) (store.Connections, error) {
+	return s.store.ReadConnections(context.Background(), req)
+}
+
+func (s *LibraryService) SaveConnections(req store.SaveConnectionsRequest) (store.Connections, error) {
+	return s.store.SaveConnections(context.Background(), req)
+}

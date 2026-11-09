@@ -4,6 +4,9 @@
   import { prepareCreate, type Library, type Snapshot, type CreateRequest } from '../lib/library';
   import '../lib/appearance.css';
   import StoryWorkspace from '../lib/StoryWorkspace.svelte';
+  import ConnectionSettings from '../lib/ConnectionSettings.svelte';
+  import { ModelError, generateLocal, type Connections } from '../lib/models';
+  import { simulatedGeneration, type GenerationInput } from '../lib/coordinator';
 
   let library: Library | null = null;
   let current: Snapshot | null = null;
@@ -16,6 +19,43 @@
   let loadSequence = 0;
   let storyStatus = '✓ Saved';
   let storyLocked = false;
+  let modelLocked = false;
+  let modelsOpen = false;
+  let connections: Connections | null = null;
+  let modelSequence = 0;
+  $: activeProfile = connections?.profiles.find(profile => profile.id === connections?.activeProfileId);
+  $: narrationLabel = !connections ? 'Models · Settings unavailable'
+    : connections.mode === 'simulation' ? 'Simulated generation · No AI connected'
+    : activeProfile ? `${activeProfile.name} · ${activeProfile.model}` : 'Local model · Choose a profile in Models';
+
+  async function loadModels(epoch: string)
+  {
+    const sequence = ++modelSequence;
+    connections = null;
+    try
+    {
+      const value = await host.readConnections(epoch);
+      if (sequence === modelSequence && library?.epoch === epoch) connections = value;
+    }
+    catch { /* Model settings failures do not block manual library work. */ }
+  }
+
+  async function narrate(request: GenerationInput, signal: AbortSignal): Promise<string>
+  {
+    const settings = connections;
+    if (!settings) throw new ModelError('Model settings are unavailable. Open Models and reload them before generating. Your input is retained.');
+    if (settings.mode === 'simulation') return simulatedGeneration(request, signal);
+    const profile = settings.profiles.find(profile => profile.id === settings.activeProfileId);
+    if (!profile) throw new ModelError('Choose and save a local profile in Models before generating. Your input is retained.');
+    return generateLocal(profile, request, signal);
+  }
+
+  function modelsSaved(value: Connections)
+  {
+    if (value.epoch !== library?.epoch) return;
+    ++modelSequence;
+    connections = value;
+  }
 
   function message(cause: unknown) {
     const value = String(cause);
@@ -34,13 +74,14 @@
   }
   async function load() {
     const sequence = ++loadSequence;
-    busy = true; error = ''; current = null; storyLocked = false; storyStatus = '✓ Saved';
+    busy = true; error = ''; current = null; storyLocked = false; modelLocked = false; modelsOpen = false; storyStatus = '✓ Saved';
     try {
       const next = await host.list();
       const id = new URL(window.location.href).searchParams.get('adventure');
       const snapshot = id ? await host.read(next.epoch, id) : null;
       if (sequence !== loadSequence) return;
       library = next; current = snapshot;
+      void loadModels(next.epoch);
       if (pending && pending.epoch !== next.epoch) {
         pending = null;
         error = 'The library changed. Your title is retained; choose whether to create it in this library.';
@@ -86,7 +127,7 @@
     const ready = () => { void load(); };
     if (window.wails) ready(); else window.addEventListener('wails:runtime:ready', ready, { once: true });
     window.addEventListener('popstate', ready);
-    return () => { loadSequence++; window.removeEventListener('wails:runtime:ready', ready); window.removeEventListener('popstate', ready); };
+    return () => { loadSequence++; modelSequence++; window.removeEventListener('wails:runtime:ready', ready); window.removeEventListener('popstate', ready); };
   });
 </script>
 
@@ -95,9 +136,12 @@
   <a class="brand" href="/" onclick={(event) => { event.preventDefault(); void showLibrary(); }} aria-label="Lorebound adventure library">▤ <span>Lorebound</span></a>
   <div class="header-actions">
     <span class="save-status" role="status">{busy ? 'Loading…' : pending ? 'Creation unconfirmed' : current && !error ? storyStatus : library && !error ? 'Library ready' : 'Unavailable'}</span>
+    <button class="quiet" aria-label="Model settings" onclick={() => modelsOpen = true} disabled={!library || busy || modelLocked}>⚙ <span class="settings-text">Models</span></button>
     {#if current}<button class="quiet" onclick={showLibrary} disabled={busy || storyLocked}>Library</button>{/if}
   </div>
 </header>
+
+{#if modelsOpen && library}<ConnectionSettings epoch={library.epoch} onSaved={modelsSaved} onClose={() => modelsOpen = false} />{/if}
 
 {#if error || (pending && !busy)}
   <div class="error-banner" role="alert">
@@ -115,7 +159,8 @@
   </nav>
   <div class="workspace">
     {#key current.adventure.id}
-      <StoryWorkspace snapshot={current} mobileHidden={mobileView !== 'story'} onUpdate={(update) => { current = update.snapshot; storyStatus = update.status; storyLocked = update.locked; }} />
+      <StoryWorkspace snapshot={current} mobileHidden={mobileView !== 'story'} generateNarration={narrate} sourceLabel={narrationLabel}
+        onUpdate={(update) => { current = update.snapshot; storyStatus = update.status; storyLocked = update.locked; modelLocked = update.modelLocked; }} />
     {/key}
     <aside class:mobile-hidden={mobileView !== 'world'} class="context-rail" aria-label="World context">
       <div class="context-tabs"><span class="selected">Scene</span><span>Items</span><span>Lore</span><span>Context</span></div>
