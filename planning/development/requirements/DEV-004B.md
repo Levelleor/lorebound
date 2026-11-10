@@ -1,8 +1,8 @@
 ---
 type: development-requirements
-status: in-progress
+status: awaiting-user-review
 created: "2026-11-09"
-updated: "2026-11-09"
+updated: "2026-11-10"
 task: "DEV-004B"
 parent: "DEV-004"
 tags:
@@ -47,6 +47,10 @@ Paths resolve under [frontend/src](../../../frontend/src/), [frontend/tests](../
 
 ## Verification and review boundary
 
-Focused named TypeScript stream/provider/coordinator tests and Svelte typecheck pass locally. The unit command explicitly disables process isolation so this environment executes and reports named cases rather than only file-level child-process wrappers. CI owns repeatable application/browser/restart checks and temporary captures. Readiness CI and independent review are pending; no verified-main claim is made.
+[Primary PR #22](https://github.com/Levelleor/lorebound/pull/22) owns implementation, evidence, controls and eventual closure. [Application CI](https://github.com/Levelleor/lorebound/actions/runs/42644499354) PASS at `08f2e4232518c0b9089f041a5f64a811a61d513b`, including named TypeScript cases, Go/SQLite contracts, real Firefox streamed HTTP/failure/recovery and exact process reopen. Focused local stream/provider/coordinator tests, Svelte typecheck/build and Firefox streaming checks also passed. The unit command explicitly disables process isolation so this environment executes and reports named cases rather than only file-level child-process wrappers. Independent source/coverage/security/documentation review and all eight Dark/Bright CI-capture reviews PASS, with no blocking findings. No full suite was repeated for review and no verified-main claim is made.
 
-CI uses simulated compatible HTTP responses with actual Linux Firefox → Wails → Go → SQLite. Live-server interoperability, Windows/macOS packaging and full accessibility certification are unclaimed. Other accepted provider/diagnostic/pipeline/world work remains open. The primary PR will own CI, review, hands-on access and eventual conditional closure; no separate reconciliation record or automatic next child follows.
+CI uses simulated compatible HTTP responses with actual Linux Firefox → Wails → Go → SQLite. A separate agent-operated live smoke test PASS on the same application source using llama.cpp `0.6.0-dev` build 11429 (`d812350493`), `Qwen3-4B-Q4_K_M.gguf`, ROCm0 with 28 GPU layers/8192 context, and Linux Firefox. Actual browser discovery, incremental preview before acceptance, normal completion, explicit Accept, exact reload and a second-stream Stop worked in a disposable library; credentials/referrer were omitted. This limited configuration does not establish universal provider/model/browser interoperability, Windows/macOS packaging or full accessibility certification.
+
+The checked local review host at port 8086 serves application head `08f2e42` with separate persistent `.local/review/dev004b`. The live loopback provider is at port 18085. The app/provider were rechecked on 2026-11-10; **Streaming review** now has one accepted turn, that live profile selected and empty input. Existing review data is preserved. The PR/chat supplies its checked URL, checkbox/Generate/Accept/Stop demo and relaunch command. Disposable test hosts are stopped; earlier review libraries are preserved. The review app/provider remain running for hands-on acceptance. Finalisation/merge approval is still pending; this record does not attribute personal test execution to the user.
+
+Other accepted provider/diagnostic/pipeline/world work remains open. The PR owns final-head checks, user disposition and eventual conditional closure; no separate reconciliation record or automatic next child follows.
