@@ -13,6 +13,8 @@
   export let mobileHidden = false;
   export let generateNarration: Generator = simulatedGeneration;
   export let sourceLabel = 'Simulated generation · No AI connected';
+  export let canStream = false;
+  let streamOutput = false;
   export let onUpdate: (value: { snapshot: Snapshot; status: string; locked: boolean; modelLocked: boolean }) => void;
   let coordinator: StoryCoordinator;
   let state: CoordinatorState | null = null;
@@ -317,7 +319,7 @@
       const status = forkBusy ? forkState?.phase === 'saving' ? 'Creating fork…' : 'Fork needs recovery'
         : next.phase === 'saving' ? 'Saving…'
         : next.phase === 'uncertain' ? 'Save unconfirmed'
-        : next.phase === 'generating' ? 'Generating…'
+        : next.phase === 'generating' ? next.preview ? 'Streaming · not saved' : 'Generating…'
         : next.phase === 'ready' ? 'Proposed · not saved'
         : next.edit ? 'Draft edit'
         : next.refreshing ? 'Refreshing…'
@@ -335,7 +337,7 @@
       storage: host,
       draftStorage: host,
       recoveryStorage: new SessionSaveRecovery(() => window.sessionStorage),
-      generate: (request, signal) => generateNarration(request, signal),
+      generate: (request, signal, onProgress) => generateNarration(request, signal, canStream && streamOutput ? onProgress : undefined),
       generationError: modelError,
       onChange: publish
     });
@@ -351,6 +353,8 @@
       if (event.data?.adventureId === snapshot.adventure.id) refresh();
     };
     window.addEventListener('focus', refresh);
+    const abandonGeneration = () => coordinator.discard();
+    window.addEventListener('pagehide', abandonGeneration);
     return () =>
     {
       forkController?.dispose();
@@ -359,6 +363,7 @@
       coordinator.dispose();
       channel?.close();
       window.removeEventListener('focus', refresh);
+      window.removeEventListener('pagehide', abandonGeneration);
     };
   });
 </script>
@@ -467,7 +472,12 @@
         </section>
       {/each}
       {#if state.phase === 'generating'}
-        <section class="provisional" aria-label="Generating proposal"><p class="passage-label model-source">{sourceLabel}</p><p class="prose">Waiting for a complete proposed continuation…</p><p class="supporting">Nothing has been added to your story.</p></section>
+        <section class="provisional" aria-label="Generating proposal" aria-busy="true">
+          <p class="passage-label" role="status">{state.preview ? 'Streaming · Provisional · Not saved' : 'Waiting for a proposed continuation…'}</p>
+          <p class="supporting model-source">{sourceLabel}</p>
+          {#if state.preview}<p class="prose stream-preview">{state.preview}</p>{/if}
+          <p class="supporting">Nothing has been added to your story. Stop discards this output.</p>
+        </section>
       {:else if state.candidate}
         <section class="provisional" bind:this={candidateSection} data-turn-id={state.candidate.id} aria-label="Proposed turn">
           <p class="passage-label">{state.phase === 'uncertain' ? 'Save unconfirmed' : state.phase === 'saving' ? 'Saving…' : 'Proposed · Not saved'}</p>
@@ -487,6 +497,9 @@
       {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
       {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
       <div class="composer-heading"><span class="mode-selected">✎ Story</span><span class="supporting model-source">{sourceLabel}</span></div>
+      {#if canStream}
+        <label class="stream-option"><input type="checkbox" bind:checked={streamOutput} disabled={forkBusy || state?.phase !== 'idle' || state.refreshing} /> Stream output <span class="supporting">This session · Server support required</span></label>
+      {/if}
       <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)} class:edit-pending={Boolean(state?.edit)}>
         <label class="sr-only" for="story-input">Story input</label>
         <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
@@ -566,6 +579,9 @@
 </main>
 
 <style>
+  .stream-preview { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .stream-option { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; margin-bottom: 8px; }
+  .stream-option input { width: auto; }
   .recovery-text { width: 100%; box-sizing: border-box; padding: 8px; background: transparent; color: var(--ink); resize: vertical; }
   .editing { border-left: 2px solid var(--primary); padding-left: 12px; }
   .passage-editor { width: 100%; box-sizing: border-box; padding: 12px 16px; color: var(--ink); background: transparent; font-family: var(--font-prose); font-size: 21px; line-height: 1.625; resize: vertical; min-height: 180px; }

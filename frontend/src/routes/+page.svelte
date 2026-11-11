@@ -40,14 +40,14 @@
     catch { /* Model settings failures do not block manual library work. */ }
   }
 
-  async function narrate(request: GenerationInput, signal: AbortSignal): Promise<string>
+  async function narrate(request: GenerationInput, signal: AbortSignal, onProgress?: (text: string) => void): Promise<string>
   {
     const settings = connections;
     if (!settings) throw new ModelError('Model settings are unavailable. Open Models and reload them before generating. Your input is retained.');
     if (settings.mode === 'simulation') return simulatedGeneration(request, signal);
     const profile = settings.profiles.find(profile => profile.id === settings.activeProfileId);
     if (!profile) throw new ModelError('Choose and save a local profile in Models before generating. Your input is retained.');
-    return generateLocal(profile, request, signal);
+    return generateLocal(profile, request, signal, fetch, onProgress);
   }
 
   function modelsSaved(value: Connections)
@@ -159,7 +159,7 @@
   </nav>
   <div class="workspace">
     {#key current.adventure.id}
-      <StoryWorkspace snapshot={current} mobileHidden={mobileView !== 'story'} generateNarration={narrate} sourceLabel={narrationLabel}
+      <StoryWorkspace snapshot={current} mobileHidden={mobileView !== 'story'} generateNarration={narrate} sourceLabel={narrationLabel} canStream={connections?.mode === 'local' && Boolean(activeProfile)}
         onUpdate={(update) => { current = update.snapshot; storyStatus = update.status; storyLocked = update.locked; modelLocked = update.modelLocked; }} />
     {/key}
     <aside class:mobile-hidden={mobileView !== 'world'} class="context-rail" aria-label="World context">

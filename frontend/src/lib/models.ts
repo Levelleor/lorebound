@@ -100,7 +100,116 @@ async function readJson(response: Response): Promise<unknown>
 
 type ModelEndpoint = Pick<ModelProfile, 'baseUrl' | 'timeoutMs'>;
 
-async function requestJson(profile: ModelEndpoint, path: string, signal: AbortSignal, body?: unknown, fetcher: typeof fetch = fetch): Promise<unknown>
+async function readContinuationStream(response: Response, signal: AbortSignal, onProgress: (text: string) => void): Promise<string>
+{
+  const invalid = () => new ModelError('The stream did not contain a complete text continuation. Partial output was discarded. Check the server or uncheck Stream output to request a completed response.');
+  if (!response.body) throw invalid();
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder('utf-8', { fatal: true });
+  let buffer = '';
+  let data: string[] = [];
+  let event = '';
+  let text = '';
+  let size = 0;
+  let stopped = false;
+  let completed = false;
+  let skipLF = false;
+  const cancel = () => { void reader.cancel().catch(() => {}); };
+
+  function dispatch(): void
+  {
+    if (!data.length) { event = ''; return; }
+    if (event && event !== 'message') throw invalid();
+    const payload = data.join('\n');
+    data = [];
+    event = '';
+    if (payload === '[DONE]')
+    {
+      if (!stopped) throw invalid();
+      plainTextToDocument(text);
+      completed = true;
+      return;
+    }
+    const value: unknown = JSON.parse(payload);
+    if (!isObject(value) || value.error || !Array.isArray(value.choices)) throw invalid();
+    // Compatible servers may send a final usage-only chunk. It is not prose.
+    if (value.choices.length === 0 && stopped && isObject(value.usage)) return;
+    if (value.choices.length !== 1 || stopped) throw invalid();
+    const choice = value.choices[0];
+    const delta = isObject(choice) && isObject(choice.delta) ? choice.delta : null;
+    if (!isObject(choice) || choice.index !== 0 || !delta
+      || (delta.role !== undefined && delta.role !== 'assistant')
+      || delta.tool_calls || delta.function_call || delta.refusal
+      || (delta.content !== undefined && delta.content !== null && typeof delta.content !== 'string')
+      || (choice.finish_reason !== null && choice.finish_reason !== 'stop')) throw invalid();
+    if (typeof delta.content === 'string' && delta.content)
+    {
+      text += delta.content;
+      if (!text.isWellFormed() || text.length > 40000 || [...text].length > 20000) throw invalid();
+      onProgress(text);
+    }
+    stopped = choice.finish_reason === 'stop';
+  }
+
+  signal.addEventListener('abort', cancel, { once: true });
+  try
+  {
+    signal.throwIfAborted();
+    if (response.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !== 'text/event-stream') throw invalid();
+    while (!completed)
+    {
+      const { done, value } = await reader.read();
+      signal.throwIfAborted();
+      if (done)
+      {
+        decoder.decode();
+        throw invalid();
+      }
+      size += value.byteLength;
+      if (size > 1048576) throw invalid();
+      buffer += decoder.decode(value, { stream: true });
+      for (;;)
+      {
+        if (skipLF && buffer)
+        {
+          if (buffer[0] === '\n') buffer = buffer.slice(1);
+          skipLF = false;
+        }
+        const boundary = buffer.search(/[\r\n]/);
+        if (boundary < 0) break;
+        const line = buffer.slice(0, boundary);
+        skipLF = buffer[boundary] === '\r';
+        buffer = buffer.slice(boundary + 1);
+        if (!line) dispatch();
+        else
+        {
+          const colon = line.indexOf(':');
+          const field = colon < 0 ? line : line.slice(0, colon);
+          const value = colon < 0 ? '' : line.slice(colon + 1).replace(/^ /, '');
+          if (field === 'data') data.push(value);
+          if (field === 'event') event = value;
+        }
+        signal.throwIfAborted();
+        if (completed) return text;
+      }
+    }
+    return text;
+  }
+  catch (cause)
+  {
+    signal.throwIfAborted();
+    if (cause instanceof ModelError) throw cause;
+    throw invalid();
+  }
+  finally
+  {
+    signal.removeEventListener('abort', cancel);
+    await reader.cancel().catch(() => {});
+    reader.releaseLock();
+  }
+}
+
+async function requestValue<T>(profile: ModelEndpoint, path: string, signal: AbortSignal, read: (response: Response, signal: AbortSignal) => Promise<T>, body?: unknown, fetcher: typeof fetch = fetch): Promise<T>
 {
   const selected = { ...profile, baseUrl: endpointUrl(profile.baseUrl) };
   if (!Number.isInteger(selected.timeoutMs) || selected.timeoutMs < 1000 || selected.timeoutMs > 300000)
@@ -134,7 +243,7 @@ async function requestJson(profile: ModelEndpoint, path: string, signal: AbortSi
         throw new ModelError('The server is busy or rate limited. Try again when ready; no automatic retry was sent.');
       throw new ModelError(`The server returned HTTP ${response.status}. Check the server and try again.`);
     }
-    const value = await readJson(response);
+    const value = await read(response, combined);
     combined.throwIfAborted();
     return value;
   }
@@ -150,25 +259,28 @@ async function requestJson(profile: ModelEndpoint, path: string, signal: AbortSi
 
 export async function discoverModels(profile: ModelEndpoint, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<string[]>
 {
-  const value = await requestJson(profile, 'models', signal, undefined, fetcher);
+  const value = await requestValue(profile, 'models', signal, readJson, undefined, fetcher);
   if (!isObject(value) || !Array.isArray(value.data) || value.data.length > 1000
     || !value.data.every(model => isObject(model) && typeof model.id === 'string' && model.id.trim() && model.id.isWellFormed() && [...model.id].length <= 200))
     throw new ModelError('The model list was not compatible. Enter a model ID manually; generation does not require discovery.');
   return [...new Set(value.data.map(model => model.id as string))];
 }
 
-export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<string>
+export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch, onProgress?: (text: string) => void): Promise<string>
 {
   const selected = structuredClone(readProfile(profile));
-  const value = await requestJson(selected, 'chat/completions', signal, {
+  const body = {
     model: selected.model,
-    stream: false,
+    stream: Boolean(onProgress),
     messages: [
       { role: 'system', content: 'Continue the player’s fiction as narrative prose. Return only the next continuation. Do not call tools or change application state.' },
       ...(input.history.length ? [{ role: 'user', content: `Accepted story so far:\n\n${input.history.join('\n\n')}` }] : []),
       { role: 'user', content: input.input }
     ]
-  }, fetcher);
+  };
+  if (onProgress)
+    return requestValue(selected, 'chat/completions', signal, (response, activeSignal) => readContinuationStream(response, activeSignal, onProgress), body, fetcher);
+  const value = await requestValue(selected, 'chat/completions', signal, readJson, body, fetcher);
   const choice = isObject(value) && Array.isArray(value.choices) && value.choices.length === 1 ? value.choices[0] : null;
   const message = isObject(choice) && isObject(choice.message) ? choice.message : null;
   if (!isObject(choice) || choice.finish_reason !== 'stop' || !message || message.role !== 'assistant'
