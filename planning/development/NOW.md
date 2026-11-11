@@ -2,10 +2,10 @@
 type: development-status
 status: current
 created: "2026-11-03"
-updated: "2026-11-10"
-current_task: "DEV-004B — Provisional local Story streaming"
-current_task_status: "VERIFIED ON CONFIRMED PR #22 MERGE"
-next_task: "DEV-004"
+updated: "2026-11-11"
+current_task: "DEV-004C — Explicit local connection testing"
+current_task_status: "IN PROGRESS"
+next_task: "DEV-004C"
 tags:
   - planning/development
 ---
@@ -14,14 +14,14 @@ tags:
 
 Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](./FEATURES.md), [journal](./JOURNAL.md) and [runbook](./AGENT-RUNBOOK.md). Requirements own scope/coverage; CI owns execution output.
 
-## Approved closure — conditional on merge
+## Active bounded child
 
-After the checked preview/demo and explicit named-PR approval request, the user authorised finalising/merging [PR #22](https://github.com/Levelleor/lorebound/pull/22) on 2026-11-10: “looks good lets close it up and kill the servers”. [DEV-004B](./requirements/DEV-004B.md) owns the remaining DEV-004 audit, five bounded streaming requirements, CI/review and live-test limits. The same primary PR contains implementation, evidence and closure.
+Confirmed [PR #22](https://github.com/Levelleor/lorebound/pull/22) merge `b6c9c79de0b51564a3007a0a946f5e5242d746e8` satisfies DEV-004B's approved closure. The user's separate 2026-11-11 DEV-004 launch selects [DEV-004C](./requirements/DEV-004C.md): explicit optional testing of the entered local endpoint/model with a small synthetic request, temporary truthful feedback and cancellation. The owning record contains the remaining-scope/dependency audit and three affected requirements.
 
-Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge. Then DEV-004B is VERIFIED within its bounded scope; parent DEV-004 and affected IDEAs remain PARTIAL. DEV-003 retains its [remaining dependencies](./requirements/DEV-003.md#remaining-scope-audit--2026-11-08). Cloud/credentials, other named adapters, broader diagnostics, pipelines/interpretation and world effects remain later. **B9-D12 remains DEFERRED — NO WORK.** Actual merge provenance/final CI belongs in PR #22 and the final handoff.
+Implementation, tests, independent review, evidence and controls stay in one primary PR on `feat/dev-004c-connection-test`. No named-PR merge approval has been given. Parent DEV-004 and original IDEAs remain PARTIAL; other adapters, cloud/credentials, broader diagnostics, pipelines/interpretation and world effects remain later. **B9-D12 remains DEFERRED — NO WORK.**
 
-## Review access and next task
+## Review access and next action
 
-The user accepted the checked handoff. Review/test apps and the agent-launched llama.cpp server are stopped as requested; persistent `.local/review/dev004b` and earlier libraries are preserved. Relaunch current source with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004b"`; Ctrl+C stops it. Start the [local provider](./README.md#local-llamacpp-testing) on loopback port 18085 to match the saved review profile. Enter Story prose, check Stream output and Generate; Accept appears after completion. Stop discards preview and preserves input/canon.
+Review handoff is being prepared. A single current-source launch command is `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004c"`; Ctrl+C stops it. This separate persistent review library preserves prior review/user libraries. Connection testing requires a separately running browser-accessible compatible server; it sends no story and does not save settings or canon.
 
-**Exactly one next task: DEV-004 — audit/select a further bounded child only after DEV-004B closes and a separate user launch.** Closure approval starts no next slice; existing dependencies and deferrals remain open.
+**Exactly one next task: finish DEV-004C implementation, applicable CI and independent review, then provide the checked demo and request verbal approval to finalise and merge its named primary PR.** No next child starts through closure.

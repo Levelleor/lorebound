@@ -71,18 +71,22 @@ export function readConnections(value: unknown, epoch: string): Connections
   return value as unknown as Connections;
 }
 
-async function readJson(response: Response): Promise<unknown>
+async function readJson(response: Response, signal: AbortSignal): Promise<unknown>
 {
   if (!response.body) throw new ModelError('The server returned an empty response. Check its compatible API settings.');
   const reader = response.body.getReader();
   const decoder = new TextDecoder('utf-8', { fatal: true });
   let text = '';
   let size = 0;
+  const cancel = () => { void reader.cancel().catch(() => {}); };
+  signal.addEventListener('abort', cancel, { once: true });
   try
   {
+    signal.throwIfAborted();
     for (;;)
     {
       const { done, value } = await reader.read();
+      signal.throwIfAborted();
       if (done) break;
       size += value.byteLength;
       if (size > 1048576) throw new ModelError('The server response exceeded the supported size. Try a shorter response.');
@@ -91,8 +95,15 @@ async function readJson(response: Response): Promise<unknown>
     text += decoder.decode();
     return JSON.parse(text);
   }
+  catch (cause)
+  {
+    signal.throwIfAborted();
+    if (cause instanceof ModelError) throw cause;
+    throw new ModelError('The server response could not be read as supported UTF-8 JSON. Check its compatible API settings and server logs. No response was retained.');
+  }
   finally
   {
+    signal.removeEventListener('abort', cancel);
     await reader.cancel().catch(() => {});
     reader.releaseLock();
   }
@@ -239,6 +250,8 @@ async function requestValue<T>(profile: ModelEndpoint, path: string, signal: Abo
         throw new ModelError('The server requires access this connection cannot provide. Authenticated connections are not supported yet.');
       if (response.status === 404)
         throw new ModelError('The server could not find this API or model. Check the base URL and model ID; discovery is optional.');
+      if (response.status === 400)
+        throw new ModelError('The server rejected this request. Check the model ID, API path and supported request settings (HTTP 400).');
       if (response.status === 429)
         throw new ModelError('The server is busy or rate limited. Try again when ready; no automatic retry was sent.');
       throw new ModelError(`The server returned HTTP ${response.status}. Check the server and try again.`);
@@ -264,6 +277,30 @@ export async function discoverModels(profile: ModelEndpoint, signal: AbortSignal
     || !value.data.every(model => isObject(model) && typeof model.id === 'string' && model.id.trim() && model.id.isWellFormed() && [...model.id].length <= 200))
     throw new ModelError('The model list was not compatible. Enter a model ID manually; generation does not require discovery.');
   return [...new Set(value.data.map(model => model.id as string))];
+}
+
+export async function testConnection(profile: ModelEndpoint & Pick<ModelProfile, 'model'>, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<'complete' | 'limited'>
+{
+  const selected = { ...profile };
+  if (typeof selected.model !== 'string' || !selected.model.trim() || !selected.model.isWellFormed() || [...selected.model].length > 200)
+    throw new ModelError('Enter a model ID up to 200 characters before testing the connection. Discovery is optional.');
+  const value = await requestValue(selected, 'chat/completions', signal, readJson, {
+    model: selected.model,
+    stream: false,
+    max_tokens: 32,
+    messages: [{ role: 'user', content: 'Reply with OK.' }]
+  }, fetcher);
+  const choice = isObject(value) && !value.error && Array.isArray(value.choices) && value.choices.length === 1 ? value.choices[0] : null;
+  const message = isObject(choice) && isObject(choice.message) ? choice.message : null;
+  if (!isObject(choice) || (choice.finish_reason !== 'stop' && choice.finish_reason !== 'length') || !message || message.role !== 'assistant'
+    || message.tool_calls || message.function_call || message.refusal
+    || (message.content !== null && typeof message.content !== 'string')
+    || (typeof message.content === 'string' && (!message.content.isWellFormed() || [...message.content].length > 20000)))
+    throw new ModelError('The test response was not compatible text. Check the API path, model and server settings. No response was retained.');
+  if (choice.finish_reason === 'length') return 'limited';
+  if (typeof message.content !== 'string' || !message.content.trim())
+    throw new ModelError('The test returned no text. Check the model and server settings; full narration remains untested.');
+  return 'complete';
 }
 
 export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch, onProgress?: (text: string) => void): Promise<string>
