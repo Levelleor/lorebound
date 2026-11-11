@@ -132,6 +132,7 @@ export async function exerciseConnectionTest(browser, base, artifacts)
     await result.filter({ hasText: 'timed out' }).waitFor();
     await timeout.closed;
     finishDelayed();
+    await page.setViewportSize({ width: 390, height: 900 });
     const stopped = prepareDelay();
     await test();
     await stopped.received;
@@ -140,6 +141,11 @@ export async function exerciseConnectionTest(browser, base, artifacts)
     assert.equal(await page.getByRole('button', { name: 'Discover models', exact: true }).isDisabled(), true);
     const stop = page.getByRole('button', { name: 'Stop connection test', exact: true });
     await stop.scrollIntoViewIfNeeded();
+    assert.equal(await stop.evaluate(element =>
+    {
+      const bounds = element.getBoundingClientRect();
+      return bounds.left >= 0 && bounds.right <= innerWidth && bounds.top >= 0 && bounds.bottom <= innerHeight;
+    }), true, 'Stop remains visible and fits the narrow viewport');
     if (artifacts) await page.screenshot({ path: path.join(artifacts, 'connection-test-stop-dark-390.png') });
     await stop.focus();
     await page.keyboard.press('Enter');
