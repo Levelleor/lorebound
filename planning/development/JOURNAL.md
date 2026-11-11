@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-09"
+updated: "2026-11-10"
 tags:
   - planning/development
   - decisions
@@ -182,3 +182,9 @@ Prepared closure stays in PR #21 and takes effect only after independent closure
 ## 2026-11-09 — Separate DEV-004 launch selects local streaming
 
 Confirmed PR #21 merge `3e37f2dcd9d2f6018990a33579b44d87ee3cfe7f` satisfies DEV-004A's approved closure. The user's separate launch authorises the [DEV-004B remaining-scope audit and selected child](./requirements/DEV-004B.md): opt-in provisional SSE through existing local profiles, complete normal-stop/terminal-marker validation, abort/late-output fencing and unchanged explicit Story acceptance. Completed-response mode remains a deliberate choice. Streaming preference is session-only; no profile/database migration or AI preview autosave is introduced. The child owns five new affected requirements; parent/IDEA completeness does not change. Cloud/credentials, other adapters, full diagnostics, routing/interpretation/world work and B9-D12 deferral remain visible. Publication is authorised, but named-PR finalise/merge approval must follow the hands-on handoff.
+
+## 2026-11-10 — DEV-004B closure approval
+
+After the checked review URL/demo and explicit request for approval to finalise and merge [PR #22](https://github.com/Levelleor/lorebound/pull/22), the user replied: “looks good lets close it up and kill the servers”. This accepts the handoff and authorises closure of that same primary PR. Readiness CI, independent source/coverage/security/documentation/eight-capture review and a separate limited live Qwen3 streaming smoke test PASS; [DEV-004B](./requirements/DEV-004B.md) owns scope, coverage and limits. The review app and agent-launched llama.cpp server are stopped as requested, with both ports confirmed closed and persistent review libraries preserved.
+
+Prepared closure takes effect only after independent closure review, applicable final-head checks and confirmed merge. Parent DEV-004 and affected IDEAs remain PARTIAL; sixteen partial / 36 without feature-level evidence / zero complete originals, 145 inventoried rows and three formal IDEA-0006 certifications stay unchanged. All originals remain in production. Remaining providers/credentials/diagnostics/pipelines/world obligations and B9-D12 deferral remain open. Actual merge provenance/final CI belongs in PR #22/final handoff; no routine post-merge repository write, reconciliation PR or next child follows.

@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: awaiting-user-review
+status: verified-on-confirmed-merge
 created: "2026-11-09"
 updated: "2026-11-10"
 task: "DEV-004B"
@@ -11,7 +11,7 @@ tags:
 
 # DEV-004B — Provisional local Story streaming
 
-The user's separate 2026-11-09 launch authorises auditing DEV-004, selecting one bounded child, implementation/tests, independent review and one primary PR. It grants publication authority; finalising/merging the named PR still requires verbal approval after the hands-on handoff. Base: confirmed [PR #21](https://github.com/Levelleor/lorebound/pull/21) merge `3e37f2dcd9d2f6018990a33579b44d87ee3cfe7f`; its checked final head/tree and closure are confirmed in that PR.
+The user's separate 2026-11-09 launch authorises auditing DEV-004, selecting one bounded child, implementation/tests, independent review and one primary PR. After the checked hands-on handoff and explicit named-PR approval request, the user approved finalising/merging PR #22 on 2026-11-10: “looks good lets close it up and kill the servers”. Base: confirmed [PR #21](https://github.com/Levelleor/lorebound/pull/21) merge `3e37f2dcd9d2f6018990a33579b44d87ee3cfe7f`; its checked final head/tree and closure are confirmed in that PR.
 
 ## Remaining DEV-004 scope and dependency audit
 
@@ -51,6 +51,14 @@ Paths resolve under [frontend/src](../../../frontend/src/), [frontend/tests](../
 
 CI uses simulated compatible HTTP responses with actual Linux Firefox → Wails → Go → SQLite. A separate agent-operated live smoke test PASS on the same application source using llama.cpp `0.6.0-dev` build 11429 (`d812350493`), `Qwen3-4B-Q4_K_M.gguf`, ROCm0 with 28 GPU layers/8192 context, and Linux Firefox. Actual browser discovery, incremental preview before acceptance, normal completion, explicit Accept, exact reload and a second-stream Stop worked in a disposable library; credentials/referrer were omitted. This limited configuration does not establish universal provider/model/browser interoperability, Windows/macOS packaging or full accessibility certification.
 
-The checked local review host at port 8086 serves application head `08f2e42` with separate persistent `.local/review/dev004b`. The live loopback provider is at port 18085. The app/provider were rechecked on 2026-11-10; **Streaming review** now has one accepted turn, that live profile selected and empty input. Existing review data is preserved. The PR/chat supplies its checked URL, checkbox/Generate/Accept/Stop demo and relaunch command. Disposable test hosts are stopped; earlier review libraries are preserved. The review app/provider remain running for hands-on acceptance. Finalisation/merge approval is still pending; this record does not attribute personal test execution to the user.
+The checked local review host at port 8086 served application head `08f2e42` with separate persistent `.local/review/dev004b`, using the live loopback provider on port 18085. The app/provider were rechecked on 2026-11-10; **Streaming review** then had one accepted turn, that live profile selected and empty input. The PR/chat supplied the checked URL, checkbox/Generate/Accept/Stop demo and relaunch command. The user accepted the handoff and authorised closure without claiming they personally ran every test. Review/test hosts and the agent-launched provider are now stopped as requested; all persistent review libraries are preserved.
 
 Other accepted provider/diagnostic/pipeline/world work remains open. The PR owns final-head checks, user disposition and eventual conditional closure; no separate reconciliation record or automatic next child follows.
+
+## Conditional single-PR closure
+
+The user authorised finalising/merging PR #22 after its checked review handoff. [Readiness-head CI](https://github.com/Levelleor/lorebound/actions/runs/42918156481) PASS at `03b8308fac614cfee901d6a279b103bb538283a4`, including the complete application/browser/restart rerun. Independent readiness-documentation review PASS; the application source is unchanged from reviewed head `08f2e42`.
+
+This prepared closure becomes effective only after independent closure review, applicable final-head checks and confirmed merge of that same PR. Then DEV-004B is VERIFIED within its five affected requirements; parent DEV-004 and IDEA-0013/0019 remain PARTIAL. Counts remain sixteen partial / 36 without merged feature-level evidence / zero complete originals, with 145 inventoried rows and three formal IDEA-0006 certifications unchanged. No whole-IDEA archival or further certification follows. B9-D12 stays deferred. Exactly one next task is DEV-004 audit/selection after a separate launch; this closure starts no next child.
+
+Actual merge/head/tree provenance and final CI belong in PR #22/final handoff. No routine post-merge repository write, separate reconciliation PR or automatic next slice follows.
