@@ -2,7 +2,7 @@
 type: development-feature-ledger
 status: current
 created: "2026-11-03"
-updated: "2026-11-10"
+updated: "2026-11-11"
 baseline_idea_count: 52
 verified_idea_count: 0
 ---
@@ -11,7 +11,7 @@ verified_idea_count: 0
 
 **This is the authoritative live feature-completion ledger for the development workflow.** Exactly **52 original accepted IDEA notes** exist in [production](../production/). They are *approved scopes*, not implemented features. A partial technical foundation is **not** completion of a whole IDEA. The [current task](./NOW.md), [task queue](./TASKS.md) and [runbook](./AGENT-RUNBOOK.md) govern how evidence is added.
 
-## Reconciled completeness, 2026-11-10
+## Reconciled completeness, 2026-11-11
 
 [PR #15](https://github.com/Levelleor/lorebound/pull/15) is confirmed merged at `987310abf8ad39d43144c53ae77c78da937bff3b`, satisfying DEV-003E's conditional closure. At that merge, work gave eleven partial / 41 without feature-level evidence / zero complete original ideas, with three formally certified IDEA-0006 rows unchanged. PR #14's composer-only scope remains historical; #15 removed those custom controls and delivered committed-turn Undo.
 
@@ -27,7 +27,7 @@ Confirmed [PR #21](https://github.com/Levelleor/lorebound/pull/21) merge `3e37f2
 | Fully VERIFIED complete ideas | **0** |
 | PARTIAL foundation evidence | **16 on confirmed PR #21 merge**: IDEA-0002, IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0006, IDEA-0011, IDEA-0013, IDEA-0014, IDEA-0019, IDEA-0039, IDEA-0040, IDEA-0041, IDEA-0042, IDEA-0044, IDEA-0051, IDEA-0053 from PRs #4/#6/#8/#10/#12/#13/#15/#16 and earlier Gate 0 PR #3, plus bounded local narration/profile/cancellation evidence in PR #21 |
 | Notes without merged feature-level implementation evidence | **36 on confirmed PR #21 merge** |
-| Accepted **atomic** requirements inventoried | **145 recorded rows across sixteen IDEAs**: prior 140 through [DEV-004A](./requirements/DEV-004A.md), plus five affected IDEA-0013/0019 streaming rows in [DEV-004B](./requirements/DEV-004B.md) (verified on confirmed PR #22 merge). DEV-002C reconciles 57 First-bearing rows; whole-IDEA inventory/certification remains incomplete |
+| Accepted **atomic** requirements inventoried | **148 recorded rows across sixteen IDEAs**: 145 through [DEV-004B](./requirements/DEV-004B.md), plus three affected IDEA-0014 connection-test rows in [DEV-004C](./requirements/DEV-004C.md) (IN PROGRESS). DEV-002C reconciles 57 First-bearing rows; whole-IDEA inventory/certification remains incomplete |
 | Atomic requirements marked VERIFIED | **3 formally certified**: IDEA-0006/R01–R03 from PR #4. DEV-002B/C and DEV-003A have tested scoped requirement coverage; no extra whole-row certification is inferred from mixed/later or empty-effect coverage |
 | New feature proposals awaiting approval | **0 recorded** |
 | Deferred spatial migration | **B9-D12 DEFERRED**, not an automatically accepted requirement |
@@ -70,7 +70,7 @@ Merged DEV-002C extends the same seven partial ideas with safe deferred invalida
 | [IDEA-0011](../production/Manual%20Generation%20Branches.md) | Manual generation branches | S02 | M2 | **PARTIAL** | [DEV-003B scoped inventory](./requirements/DEV-003B.md); [DEV-003J reload recovery](./requirements/DEV-003J.md) verified/merged in PR #20 | [PR #12](https://github.com/Levelleor/lorebound/pull/12), [delivery/review](./evidence/DEV-003B.md) |
 | [IDEA-0012](../production/Cloud%20LLM%20Provider%20Connectors.md) | Cloud LLM provider connectors | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0013](../production/Local%20LLM%20Server%20Connections.md) | Local LLM server connections | S08 | M3 | **PARTIAL** | [DEV-004A R01–R03](./requirements/DEV-004A.md) merged; [DEV-004B R04](./requirements/DEV-004B.md) streaming verified on confirmed PR #22 merge; broader scope remains later | [PR #21](https://github.com/Levelleor/lorebound/pull/21), confirmed merged |
-| [IDEA-0014](../production/Provider%20Connection%20Profiles%20and%20Discovery.md) | Provider profiles and discovery | S08 | M3 | **PARTIAL on confirmed PR #21 merge** | [DEV-004A R01–R03](./requirements/DEV-004A.md); bounded local narration only, broader scope remains later | [PR #21](https://github.com/Levelleor/lorebound/pull/21), approved conditional closure; actual provenance/final CI in PR |
+| [IDEA-0014](../production/Provider%20Connection%20Profiles%20and%20Discovery.md) | Provider profiles and discovery | S08 | M3 | **PARTIAL on confirmed PR #21 merge** | [DEV-004A R01–R03](./requirements/DEV-004A.md) merged; [DEV-004C R04–R06](./requirements/DEV-004C.md) connection testing IN PROGRESS; broader scope remains later | [PR #21](https://github.com/Levelleor/lorebound/pull/21), confirmed merged; current child not verified main |
 | [IDEA-0015](../production/Model-Capability-Aware%20Controls.md) | Model capability-aware controls | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0016](../production/Sampling%20Presets%20and%20Advanced%20Parameters.md) | Sampling presets and advanced parameters | S08 | M3 | **NOT STARTED** | Not yet inventoried | None |
 | [IDEA-0017](../production/One-Model%20Task%20Routing.md) | One-model task routing | S07 | M3 | **NOT STARTED** | Not yet inventoried | None |

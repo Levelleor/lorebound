@@ -2,8 +2,8 @@
 type: development-task-queue
 status: current
 created: "2026-11-03"
-updated: "2026-11-10"
-current_next_task: "DEV-004"
+updated: "2026-11-11"
+current_next_task: "DEV-004C"
 ---
 
 # Lorebound — Development Task Queue
@@ -17,7 +17,7 @@ current_next_task: "DEV-004"
 | **DEV-001** | Minimal CI/checks + traceability for Story-mode-first | Merged Gate 0 | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051, IDEA-0053; global 52-idea register | **INTERRUPTED / REPRIORITISED** | `feat/dev-001-verification-controls` |
 | **DEV-002** | First complete accepted Story-mode turn in real host/SQLite | Gate 0; verification controls integrated in children after explicit user reprioritisation | IDEA-0002, IDEA-0006, IDEA-0039, IDEA-0040, IDEA-0044, IDEA-0051 | **VERIFIED & MERGED — bounded Story-only zero-effects scope** | A merged [PR #4](https://github.com/Levelleor/lorebound/pull/4); B merged [PR #6](https://github.com/Levelleor/lorebound/pull/6); C merged [PR #8](https://github.com/Levelleor/lorebound/pull/8) |
 | **DEV-003** | Retry, drafts, Undo/Fork and current-history prose editing | DEV-002 | IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0041, IDEA-0042, IDEA-0011 | **PARTIAL**; DEV-003A/B/C/D merged; DEV-003E merged; DEV-003F merged; DEV-003G merged; DEV-003H verified/merged in PR #18; DEV-003I verified/merged in PR #19; DEV-003J verified/merged in PR #20; remaining work needs passage decisions or later subsystems | [PR #10](https://github.com/Levelleor/lorebound/pull/10), [PR #12](https://github.com/Levelleor/lorebound/pull/12), [PR #13](https://github.com/Levelleor/lorebound/pull/13), [PR #14](https://github.com/Levelleor/lorebound/pull/14), [PR #15](https://github.com/Levelleor/lorebound/pull/15) |
-| **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | **PARTIAL — DEV-004A merged; DEV-004B verified on confirmed PR #22 merge** | [Local narration](./requirements/DEV-004A.md); [streaming and remaining audit](./requirements/DEV-004B.md) |
+| **DEV-004** | Direct browser cloud/local models, profiles, streaming, pipelines and interpretation | DEV-002 + bounded service security review | IDEA-0010, IDEA-0012–IDEA-0019, IDEA-0045, IDEA-0046 | **PARTIAL — A/B merged; DEV-004C IN PROGRESS** | [Local narration](./requirements/DEV-004A.md); [streaming](./requirements/DEV-004B.md); [current audit/testing child](./requirements/DEV-004C.md) |
 | **DEV-005** | Lorebook, author notes, context budget and derived memory | DEV-002; DEV-004 interfaces | IDEA-0020–IDEA-0025 | QUEUED | None |
 | **DEV-006** | Universal characters, Playing As, status, anatomy, items and equipment | DEV-002; supported typed entity events | IDEA-0007, IDEA-0026, IDEA-0027, IDEA-0029–IDEA-0031, IDEA-0034, IDEA-0064 | QUEUED | None |
 | **DEV-007** | Locations, containment/routes, discovery, simple grounded map | DEV-006; relevant accepted event/geometry rules | IDEA-0033, IDEA-0035–IDEA-0038 | QUEUED | None |
@@ -124,6 +124,10 @@ The same primary PR contains implementation, evidence, controls and conditional 
 **VERIFIED ON CONFIRMED MERGE**, [primary PR #22](https://github.com/Levelleor/lorebound/pull/22). Selected under the user's separate 2026-11-09 DEV-004 launch after confirmed PR #21 merge. [Remaining requirement/dependency audit and five affected acceptance rows](./requirements/DEV-004B.md) own scope, CI/review and live-test limits. Opt-in session-only streaming for current llama.cpp/Custom connections displays incremental provisional prose; normal completion alone enables the existing explicit acceptance flow. Stop/failure/Retry/navigation/reload/tab closure discard partial output and fence late callbacks. Deliberate completed-response mode remains available. No schema change, automatic fallback or AI preview persistence.
 
 Readiness application CI and independent source/coverage/security/documentation/eight-capture review PASS; a separate limited live Qwen3/ROCm/Linux Firefox streaming smoke test PASS. After the checked handoff and explicit named-PR approval request, the user authorised finalising/merging PR #22 on 2026-11-10: “looks good lets close it up and kill the servers”. Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of that same PR. Review/test hosts and the agent-launched provider are stopped; persistent libraries are preserved. Cloud/credentials, other named local adapters, broader diagnostics/pipelines/interpretation and nonempty effects remain later; B9-D12 remains deferred. No next child starts automatically.
+
+### DEV-004C — Explicit local connection testing
+
+**IN PROGRESS**, selected under the user's separate 2026-11-11 DEV-004 launch after confirmed PR #22 merge. [Remaining requirement/dependency audit and three affected acceptance rows](./requirements/DEV-004C.md) own the boundary. Explicitly test the entered llama.cpp/Custom URL/model/timeout with one small synthetic request; report complete/limited/failed/stopped truthfully, discard stale results and preserve story/drafts/settings. Testing and discovery remain optional. No schema/Go-service/credential change or automatic retry/fallback. Implementation, CI/review, controls and eventual approved closure belong in one primary PR. Other accepted provider/diagnostic/pipeline/world work and B9-D12 remain outside the child; finalise/merge approval follows the hands-on review.
 
 ## Prerequisite maintenance: CI, concise controls and hands-on review
 
