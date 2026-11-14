@@ -4,8 +4,8 @@ status: current
 created: "2026-11-03"
 updated: "2026-11-14"
 current_task: "DEV-004D — Local generation diagnostics"
-current_task_status: "READY — AWAITING USER REVIEW / FINALISE-MERGE APPROVAL"
-next_task: "DEV-004D"
+current_task_status: "VERIFIED ON CONFIRMED PR #24 MERGE"
+next_task: "DEV-004"
 tags:
   - planning/development
 ---
@@ -14,18 +14,16 @@ tags:
 
 Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](./FEATURES.md), [journal](./JOURNAL.md) and [runbook](./AGENT-RUNBOOK.md). Requirements own scope/coverage; CI owns execution output.
 
-## Current authorised slice
+## Approved closure — conditional on merge
 
-Confirmed [PR #23](https://github.com/Levelleor/lorebound/pull/23) merge `bed467ac991a34a0acc157dc6b188584a102e546` satisfies DEV-004C's approved closure. The user's separate 2026-11-14 launch selects [DEV-004D](./requirements/DEV-004D.md): inspect the latest local Story generation's requested configuration, observed browser elapsed time and optional validated provider token usage. That record owns the remaining dependency audit and three affected requirements.
+After the checked preview/demo, feedback and named-PR approval request, the user authorised closing [PR #24](https://github.com/Levelleor/lorebound/pull/24) on 2026-11-14: “I approve this for closure.” [DEV-004D](./requirements/DEV-004D.md) owns the dependency audit, three affected diagnostics requirements, passing CI/review and limited live-test evidence. Implementation, evidence, controls and closure remain in this one primary PR.
 
-[Primary PR #24](https://github.com/Levelleor/lorebound/pull/24) contains implementation, evidence and controls. Application CI and independent source/control/eight-capture review PASS. The PR owns applicable readiness-head repository checks; documentation-only updates reuse the reviewed application evidence. The requirement record owns verification and the limited live Qwen3 result. User review and verbal approval to finalise/merge this named PR remain required; no closure approval is inferred from this launch.
-
-Parent DEV-004 and original IDEAs remain PARTIAL. Cloud/credentials, other adapters, capability/sampling controls, broader pipelines/interpretation and world effects remain later. IDEA-0068 remains accepted in staging for refinement. **B9-D12 remains DEFERRED — NO WORK.** Prior review/user libraries are preserved.
+Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge. Then DEV-004D is VERIFIED within its bounded local diagnostics scope; parent DEV-004 and original IDEAs remain PARTIAL. The user's separate future request for automatic acceptance of new messages/completions is captured as [IDEA-0069](../inbox/Automatic%20Acceptance%20of%20New%20Turns.md), with a linked future task and active brainstorm. Edited turns and other confirmation workflows are excluded. It is an unaccepted candidate, not an implementation launch. IDEA-0068 remains staged. Other providers/credentials/settings/pipelines/interpretation/world obligations remain later. **B9-D12 remains DEFERRED — NO WORK.** Actual merge provenance/final CI belongs in PR #24 and the final handoff.
 
 ## Review access and next action
 
-[Review adventure](http://127.0.0.1:8086/?adventure=311f696a-19f2-4b6e-ae63-cf5cdbf77502): one saved turn, Local Qwen3 review selected and retained input after Stop. App/provider are running on loopback ports 8086/18085, with persistent `.local/review/dev004d`. Generate, expand Generation details, then try Retry or Stop; reload clears diagnostics. Canon still needs explicit Accept. The PR/chat owns the demo and exact process stop command.
+Agent-launched review app/provider are stopped; ports 8086/18085 are confirmed closed. Persistent `.local/review/dev004d`, its saved connection, accepted review turn and retained input are preserved, along with prior review/user libraries.
 
-Relaunch current source with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004d"`; Ctrl+C stops a foreground launch.
+Rebuild/relaunch current source with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004d"`; Ctrl+C stops it. The [authorised provider recipe](./README.md#local-llamacpp-testing) can use loopback port 18085 to match the saved profile. Generate, expand Generation details to inspect requested configuration/time/optional usage, and try Stop or reload. Canon still requires explicit Accept; IDEA-0069 has not changed the app.
 
-**Exactly one next task: DEV-004D — obtain hands-on feedback and verbal approval to finalise/merge PR #24, then complete conditional closure in that same PR.** No further child starts automatically.
+**Exactly one next task: DEV-004 — audit/select a further bounded child only after DEV-004D closes and a separate user launch.** Closure approval and future capture start no next slice.
