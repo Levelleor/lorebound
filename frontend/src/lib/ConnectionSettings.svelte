@@ -165,11 +165,11 @@
     testMessage = 'Testing the entered endpoint and model…';
     try
     {
-      const result = await testConnection({ baseUrl: baseUrl.trim(), model: model.trim(), timeoutMs: timeoutSeconds * 1000 }, request.signal);
+      const result = await testConnection({ kind, baseUrl: baseUrl.trim(), model: model.trim(), timeoutMs: timeoutSeconds * 1000 }, request.signal);
       if (disposed || request !== probe || request.signal.aborted) return;
       testMessage = result === 'complete'
-        ? 'The endpoint returned a complete text response to the test request. Full Story generation and streaming were not tested.'
-        : 'The endpoint answered the test request but reached the 32-token limit. Full Story generation and streaming remain unverified.';
+        ? 'Connection successful. The endpoint returned a text response to the test request.'
+        : 'Connection successful. The endpoint accepted the test request and reached its 32-token limit.';
     }
     catch (cause)
     {
@@ -243,7 +243,7 @@
         <button type="button" disabled={busy || probing} onclick={test}>Test connection</button>
         {#if testing}<button type="button" class="stop-test" onclick={stopTest}>Stop connection test</button>{/if}
       </div>
-      <p class="supporting">Optional · Sends “Reply with OK.” with a 32-token limit using the entered URL/model and timeout. Generates test output only; no story text is sent and no settings are saved. Results apply to this test only.</p>
+      <p class="supporting">Optional · Sends “Reply with OK.” with a 32-token limit using the entered URL/model and timeout. No story text is sent and no settings are saved. This checks the connection; full Story generation and streaming are separate.</p>
       {#if testMessage}<p class:story-error={testFailed} class="supporting test-result" role={testFailed ? 'alert' : 'status'} aria-label="Connection test result">{testMessage}</p>{/if}
       <div class="dialog-actions"><button type="button" disabled={busy} onclick={() => dialog.close()}>Cancel</button><button class="primary" disabled={busy || probing} type="submit">Save and use profile</button></div>
       {#if settings.profiles.some(profile => profile.id === editingId)}<button class="quiet delete-profile" type="button" disabled={busy || probing} onclick={deleteProfile}>Delete profile</button>{/if}

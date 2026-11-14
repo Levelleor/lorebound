@@ -1,8 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { modelError, testConnection } from '../src/lib/models.ts';
+import { generateLocal, modelError, testConnection } from '../src/lib/models.ts';
 
-const connection = { baseUrl: 'http://127.0.0.1:8081/v1', model: 'entered-model', timeoutMs: 1000 };
+const connection = { kind: 'llamacpp' as const, baseUrl: 'http://127.0.0.1:8081/v1', model: 'entered-model', timeoutMs: 1000 };
 const responseValue = (content: unknown = 'OK', finish: unknown = 'stop') => ({ choices: [{ finish_reason: finish, message: { role: 'assistant', content } }] });
 const json = (value: unknown) => new Response(JSON.stringify(value));
 
@@ -24,6 +24,7 @@ test('DEV-004C: connection test sends one bounded synthetic request using a capt
     assert.deepEqual(options?.headers, { 'Content-Type': 'application/json' });
     assert.deepEqual(JSON.parse(String(options?.body)), {
       model: 'entered-model', stream: false, max_tokens: 32,
+      chat_template_kwargs: { enable_thinking: false },
       messages: [{ role: 'user', content: 'Reply with OK.' }]
     });
     return new Promise(resolve => { respond = resolve; });
@@ -33,6 +34,19 @@ test('DEV-004C: connection test sends one bounded synthetic request using a capt
   respond(json(responseValue()));
   assert.equal(await pending, 'complete');
   assert.equal(calls, 1);
+});
+
+test('DEV-004C: Custom tests and Story generation retain the provider’s reasoning defaults', async () =>
+{
+  const fetcher: typeof fetch = async (_url, options) =>
+  {
+    const body = JSON.parse(String(options?.body));
+    assert.equal(body.chat_template_kwargs, undefined);
+    assert.equal(body.reasoning_effort, undefined);
+    return json(responseValue());
+  };
+  assert.equal(await testConnection({ ...connection, kind: 'custom' }, new AbortController().signal, fetcher), 'complete');
+  assert.equal(await generateLocal({ ...connection, id: 'profile', name: 'Local model' }, { input: 'Story prose.', history: [] }, new AbortController().signal, fetcher), 'OK');
 });
 
 test('DEV-004C: token-limited tests report their limit, including reasoning models without final text', async () =>

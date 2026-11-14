@@ -87,7 +87,8 @@ export async function exerciseConnectionTest(browser, base, artifacts)
     {
       await page.getByLabel('Server type', { exact: true }).selectOption(kind);
       await test();
-      await result.filter({ hasText: 'complete text response' }).waitFor();
+      await result.filter({ hasText: 'Connection successful.' }).waitFor();
+      assert.deepEqual(requests.at(-1).body.chat_template_kwargs, kind === 'llamacpp' ? { enable_thinking: false } : undefined);
     }
     for (const field of ['#connection-name', '#model-base-url', '#model-id', '#model-timeout'])
     {
@@ -97,7 +98,7 @@ export async function exerciseConnectionTest(browser, base, artifacts)
       assert.equal(await result.count(), 0, 'Every edited field invalidates test feedback');
       await input.fill(original);
       await test();
-      await result.filter({ hasText: 'complete text response' }).waitFor();
+      await result.filter({ hasText: 'Connection successful.' }).waitFor();
     }
     if (artifacts)
     {
@@ -118,6 +119,8 @@ export async function exerciseConnectionTest(browser, base, artifacts)
     behavior = 'length';
     await test();
     await result.filter({ hasText: '32-token limit' }).waitFor();
+    assert.match(await result.innerText(), /Connection successful/);
+    assert.equal(await result.getAttribute('role'), 'status', 'A valid limited reply is a successful connection, not an error');
     for (const failure of ['auth', 'model', 'malformed', 'tool', 'redirect', 'cors'])
     {
       behavior = failure;
@@ -154,9 +157,9 @@ export async function exerciseConnectionTest(browser, base, artifacts)
     const finishOld = finishDelayed;
     behavior = 'ok';
     await test();
-    await result.filter({ hasText: 'complete text response' }).waitFor();
+    await result.filter({ hasText: 'Connection successful.' }).waitFor();
     finishOld();
-    assert.match(await result.innerText(), /complete text response/);
+    assert.match(await result.innerText(), /Connection successful/);
     const escaped = prepareDelay();
     await test();
     await escaped.received;
@@ -187,7 +190,11 @@ export async function exerciseConnectionTest(browser, base, artifacts)
       assert.equal(request.headers.cookie, undefined);
       assert.equal(request.headers.referer, undefined);
       assert.equal(request.headers.origin, base);
-      assert.deepEqual(request.body, { model: 'entered-fixture-model', stream: false, max_tokens: 32, messages: [{ role: 'user', content: 'Reply with OK.' }] });
+      assert.deepEqual(request.body, {
+        model: 'entered-fixture-model', stream: false, max_tokens: 32,
+        ...(request.body.chat_template_kwargs !== undefined ? { chat_template_kwargs: { enable_thinking: false } } : {}),
+        messages: [{ role: 'user', content: 'Reply with OK.' }]
+      });
     }
     // A failed optional test must not gate saving a manual profile.
     await open();

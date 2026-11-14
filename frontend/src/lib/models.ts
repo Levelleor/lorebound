@@ -279,15 +279,18 @@ export async function discoverModels(profile: ModelEndpoint, signal: AbortSignal
   return [...new Set(value.data.map(model => model.id as string))];
 }
 
-export async function testConnection(profile: ModelEndpoint & Pick<ModelProfile, 'model'>, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<'complete' | 'limited'>
+export async function testConnection(profile: ModelEndpoint & Pick<ModelProfile, 'kind' | 'model'>, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<'complete' | 'limited'>
 {
   const selected = { ...profile };
+  if (selected.kind !== 'llamacpp' && selected.kind !== 'custom')
+    throw new ModelError('Choose a supported server type before testing the connection.');
   if (typeof selected.model !== 'string' || !selected.model.trim() || !selected.model.isWellFormed() || [...selected.model].length > 200)
     throw new ModelError('Enter a model ID up to 200 characters before testing the connection. Discovery is optional.');
   const value = await requestValue(selected, 'chat/completions', signal, readJson, {
     model: selected.model,
     stream: false,
     max_tokens: 32,
+    ...(selected.kind === 'llamacpp' ? { chat_template_kwargs: { enable_thinking: false } } : {}),
     messages: [{ role: 'user', content: 'Reply with OK.' }]
   }, fetcher);
   const choice = isObject(value) && !value.error && Array.isArray(value.choices) && value.choices.length === 1 ? value.choices[0] : null;
