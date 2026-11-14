@@ -3,13 +3,14 @@ import { documentToText, plainTextToDocument, reconstruct, type Projection, type
 import { TextDraft, type DraftStatus, type DraftStorage } from './draft.ts';
 import { TextHistory, type TextSelection } from './textHistory.ts';
 import type { SaveRecovery } from './saveRecovery.ts';
+import type { DiagnosticsObserver, GenerationDiagnostics } from './generationDiagnostics.ts';
 
 export interface GenerationInput
 {
   input: string;
   history: string[];
 }
-export type Generator = (request: GenerationInput, signal: AbortSignal, onProgress?: (text: string) => void) => Promise<string>;
+export type Generator = (request: GenerationInput, signal: AbortSignal, onProgress?: (text: string) => void, onDiagnostics?: DiagnosticsObserver) => Promise<string>;
 export interface StoryStorage
 {
   commit(request: CommitRequest): Promise<CommitResult>;
@@ -25,6 +26,7 @@ export interface CoordinatorState
   edit: { turnId: string; passageId: string; order: number; source: 'authored' | 'generated'; text: string; draftStatus: DraftStatus; draftError: string; canUndo: boolean; canRedo: boolean; composing: boolean } | null;
   candidate: Turn | null;
   preview: string;
+  diagnostics: GenerationDiagnostics | null;
   undoTurn: { id: string; order: number } | null;
   notice: string;
   error: string;
@@ -124,6 +126,7 @@ export class StoryCoordinator
   private sequence = 0;
   private disposed = false;
   private abort: AbortController | null = null;
+  private generationStartedAt = 0;
   private pending: CommitRequest | null = null;
   private readonly recoveryStorage?: SaveRecovery;
   private recovered = false;
@@ -147,6 +150,7 @@ export class StoryCoordinator
       phase: projection.blocked ? 'blocked' : 'idle',
       candidate: null,
       preview: '',
+      diagnostics: null,
       undoTurn: null,
       recovery: null,
       notice: '',
@@ -458,7 +462,7 @@ export class StoryCoordinator
     const snapshot = this.state.snapshot;
     this.abort?.abort();
     this.abort = new AbortController();
-    this.update({ phase: 'generating', candidate: null, preview: '', error: '', notice: '', recovery: null });
+    this.update({ phase: 'generating', candidate: null, preview: '', diagnostics: null, error: '', notice: '', recovery: null });
     let authored;
     try
     {
@@ -475,12 +479,17 @@ export class StoryCoordinator
     try
     {
       // Provider-facing input contains natural prose only, never internal IDs.
+      this.generationStartedAt = performance.now();
       const text = await this.generator({
         input: documentToText(authored),
         history: this.state.projection.passages.map(passage => documentToText(passage.body))
       }, this.abort.signal, preview =>
       {
         if (this.live(sequence) && this.state.phase === 'generating') this.update({ preview });
+      }, details =>
+      {
+        if (this.live(sequence) && this.state.phase === 'generating')
+          this.update({ diagnostics: { ...structuredClone(details), status: 'running', elapsedMs: null } });
       });
       if (!this.live(sequence)) return;
       const candidate: Turn = {
@@ -499,7 +508,7 @@ export class StoryCoordinator
         adventure: { ...snapshot.adventure, version: snapshot.adventure.version + 1 },
         turns: [...snapshot.turns, candidate]
       });
-      this.update({ phase: 'ready', candidate: frozenCopy(candidate), preview: '' });
+      this.update({ phase: 'ready', candidate: frozenCopy(candidate), preview: '', diagnostics: this.finishedDiagnostics('complete') });
     }
     catch (cause)
     {
@@ -507,6 +516,7 @@ export class StoryCoordinator
         phase: 'idle',
         candidate: null,
         preview: '',
+        diagnostics: this.finishedDiagnostics('failed'),
         error: this.generationError(cause)
       });
     }
@@ -517,13 +527,19 @@ export class StoryCoordinator
     }
   }
 
+  private finishedDiagnostics(status: 'complete' | 'failed' | 'stopped'): GenerationDiagnostics | null
+  {
+    if (!this.state.diagnostics) return null;
+    return { ...this.state.diagnostics, status, elapsedMs: Math.max(0, Math.round(performance.now() - this.generationStartedAt)) };
+  }
+
   stop(): void
   {
     if (this.state.phase !== 'generating') return;
     ++this.sequence;
     this.abort?.abort();
     this.abort = null;
-    this.update({ phase: 'idle', candidate: null, preview: '', error: '', notice: 'Generation stopped. Uncommitted output was discarded.' });
+    this.update({ phase: 'idle', candidate: null, preview: '', diagnostics: this.finishedDiagnostics('stopped'), error: '', notice: 'Generation stopped. Uncommitted output was discarded.' });
     this.refreshIfRequested();
   }
 
