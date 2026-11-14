@@ -1,6 +1,6 @@
 # Planning vault rules
 
-These are standing planning rules. Keep current task/progress information in [development/NOW](development/NOW.md), task scope in [TASKS](development/TASKS.md), coverage in [FEATURES](development/FEATURES.md) and significant decisions in [JOURNAL](development/JOURNAL.md). Do not append task-specific execution reports, feature-count snapshots or architecture approval histories to instruction files.
+These are standing planning rules. Keep current task/progress information in [development/NOW](development/NOW.md), task scope in [TASKS](development/TASKS.md), coverage in [FEATURES](development/FEATURES.md), structured gaps in [INCOMPLETE-FEATURES](development/INCOMPLETE-FEATURES.md) and significant decisions in [JOURNAL](development/JOURNAL.md). Do not append task-specific execution reports, feature-count snapshots or architecture approval histories to instruction files.
 
 ## Read first
 

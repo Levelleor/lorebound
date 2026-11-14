@@ -2,7 +2,7 @@
 type: development-agent-runbook
 status: current
 created: "2026-11-03"
-updated: "2026-11-06"
+updated: "2026-11-14"
 tags:
   - planning/development
   - agents
@@ -13,7 +13,7 @@ tags:
 
 ## Preflight
 
-Read [NOW](./NOW.md), the relevant [TASKS](./TASKS.md) entry, affected [FEATURES](./FEATURES.md) rows, recent [JOURNAL](./JOURNAL.md) decisions and the [development workflow](./README.md). Before application changes or architectural review, read the [system overview](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md), relevant original production IDEAs and later ADRs. For UI work, read the [approved design](../design/README.md). Inspect actual source and tests.
+Read [NOW](./NOW.md), the relevant [TASKS](./TASKS.md) entry, affected [FEATURES](./FEATURES.md) rows and [implemented-feature gaps](./INCOMPLETE-FEATURES.md), recent [JOURNAL](./JOURNAL.md) decisions and the [development workflow](./README.md). Before application changes or architectural review, read the [system overview](../architecture/Lorebound%20-%20System%20Architecture%20Overview.md), relevant original production IDEAs and later ADRs. For UI work, read the [approved design](../design/README.md). Inspect actual source and tests.
 
 Use the required personal-development-style skill. Confirm the user's execution authority and one bounded task; production promotion or closure of another child does not launch it. State scope and material uncertainties briefly before working.
 

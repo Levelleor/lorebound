@@ -12,7 +12,7 @@ tags:
 
 # Lorebound — Current Development Status
 
-Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](./FEATURES.md), [journal](./JOURNAL.md) and [runbook](./AGENT-RUNBOOK.md). Requirements own scope/coverage; CI owns execution output.
+Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](./FEATURES.md), [implemented-feature gaps](./INCOMPLETE-FEATURES.md), [journal](./JOURNAL.md) and [runbook](./AGENT-RUNBOOK.md). Requirements own scope/coverage; CI owns execution output.
 
 ## Current authorised work
 

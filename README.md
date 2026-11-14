@@ -2,7 +2,7 @@
 
 **Try the current checkout:** run `bash scripts/dev.sh`, then open [http://127.0.0.1:8080](http://127.0.0.1:8080). It rebuilds and uses a separate persistent review library; stop with Ctrl+C. [Setup and options](docs/development.md).
 
-**Development status and next task:** [NOW](planning/development/NOW.md) · [development workflow](planning/development/README.md) · [feature coverage](planning/development/FEATURES.md) · [task queue](planning/development/TASKS.md). These own current work, verified scope and remaining implementation. CI owns repeatable checks and execution output; planning keeps decisions and concise PR/run links.
+**Development status and next task:** [NOW](planning/development/NOW.md) · [development workflow](planning/development/README.md) · [feature coverage](planning/development/FEATURES.md) · [implemented but unfinished features](planning/development/INCOMPLETE-FEATURES.md) · [task queue](planning/development/TASKS.md). These own current work, verified scope and remaining implementation. CI owns repeatable checks and execution output; planning keeps decisions and concise PR/run links.
 
 **Read the full [System Architecture Overview](planning/architecture/Lorebound%20-%20System%20Architecture%20Overview.md)** for a self-contained explanation of the player experience, all 52 approved features, twelve subsystem boundaries, AI/Go/SQLite data flows, design style and real implementation status. A short root [ARCHITECTURE.md](ARCHITECTURE.md) also points there. This is the **current architectural entry point**, unlike chronological historical review documents.
 

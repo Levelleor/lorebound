@@ -8,7 +8,7 @@ current_next_task: "DEV-004"
 
 # Lorebound — Development Task Queue
 
-[NOW](./NOW.md) owns the single next development task. This queue owns scope/dependencies; [FEATURES](./FEATURES.md) owns IDEA completion, requirement records own coverage, and PR/CI owns execution details. Split large tasks into bounded children when separately authorised; closing a child never launches another.
+[NOW](./NOW.md) owns the single next development task. This queue owns scope/dependencies; [FEATURES](./FEATURES.md) owns IDEA completion, requirement records own coverage, the [incomplete-feature register](./INCOMPLETE-FEATURES.md) explains remaining gaps in existing implementations, and PR/CI owns execution details. Split large tasks into bounded children when separately authorised; closing a child never launches another.
 
 ## Ordered execution queue
 
