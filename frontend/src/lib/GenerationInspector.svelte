@@ -38,6 +38,7 @@
     margin: 24px 0;
     border: 1px solid var(--border);
     border-radius: 4px;
+    background: var(--card);
     color: var(--muted-foreground);
     font: 12px/1.6 var(--font-ui);
     overflow-wrap: anywhere;
