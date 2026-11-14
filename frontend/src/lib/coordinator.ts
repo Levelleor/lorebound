@@ -530,7 +530,12 @@ export class StoryCoordinator
   private finishedDiagnostics(status: 'complete' | 'failed' | 'stopped'): GenerationDiagnostics | null
   {
     if (!this.state.diagnostics) return null;
-    return { ...this.state.diagnostics, status, elapsedMs: Math.max(0, Math.round(performance.now() - this.generationStartedAt)) };
+    return {
+      ...this.state.diagnostics,
+      status,
+      usage: status === 'complete' ? this.state.diagnostics.usage : null,
+      elapsedMs: Math.max(0, Math.round(performance.now() - this.generationStartedAt))
+    };
   }
 
   stop(): void

@@ -139,7 +139,7 @@ test('DEV-004D: Retry replaces diagnostics, fences old callbacks, and a new work
     attempts++;
     observers.push(diagnostics!);
     if (attempts === 3) return 'Simulated prose.';
-    diagnostics!({ ...details, requestedModel: `model-${attempts}` });
+    diagnostics!({ ...details, requestedModel: `model-${attempts}`, usage: { prompt: 1, completion: 2, total: 3 } });
     if (attempts === 2) throw new Error('SECRET_ERROR');
     return 'Valid prose.';
   });
@@ -147,6 +147,7 @@ test('DEV-004D: Retry replaces diagnostics, fences old callbacks, and a new work
   await coordinator.retry();
   assert.equal(coordinator.state.diagnostics?.requestedModel, 'model-2');
   assert.equal(coordinator.state.diagnostics?.status, 'failed');
+  assert.equal(coordinator.state.diagnostics?.usage, null, 'Failure clears even previously reported usage');
   assert.doesNotMatch(coordinator.state.error, /SECRET_ERROR/);
   observers[0]({ ...details, requestedModel: 'obsolete' });
   assert.equal(coordinator.state.diagnostics?.requestedModel, 'model-2');
