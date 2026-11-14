@@ -86,6 +86,13 @@ export async function exerciseOllama(browser, base, artifacts)
         {
           await page.setViewportSize({ width, height: 900 });
           assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+          if (name === 'settings') await page.getByRole('dialog').evaluate(element => { element.scrollTop = 0; });
+          else
+          {
+            await page.locator('.generation-inspector').scrollIntoViewIfNeeded();
+            assert.equal(await page.locator('.generation-inspector').evaluate(element => element.scrollWidth <= element.clientWidth), true);
+            assert.ok(await page.getByRole('button', { name: 'Accept turn', exact: true }).evaluate(element => element.getBoundingClientRect().bottom <= innerHeight));
+          }
           await page.screenshot({ path: path.join(artifacts, `ollama-${name}-${theme}-${width}.png`) });
         }
       }
