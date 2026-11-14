@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: in-progress
+status: ready-for-user-review
 created: "2026-11-14"
 updated: "2026-11-14"
 task: "DEV-004D"
@@ -45,4 +45,10 @@ Paths resolve under [frontend/src/lib](../../../frontend/src/lib/), [frontend/te
 
 ## Verification and handoff
 
-Implementation is in progress on `feat/dev-004d-generation-diagnostics`. Focused local provider/stream/diagnostic unit checks, Svelte typecheck and frontend build PASS. Primary PR, applicable CI, independent final source/coverage/capture review and hands-on review handoff are pending. No merged-main or live-provider result is claimed. Hosted fixtures do not establish live-server interoperability, other operating systems or full accessibility certification.
+[Primary PR #24](https://github.com/Levelleor/lorebound/pull/24) owns implementation, evidence, controls and eventual conditional closure on `feat/dev-004d-generation-diagnostics`. [Application CI](https://github.com/Levelleor/lorebound/actions/runs/43626800597) PASS at `b3e8e10de8dcf52a4ea1644aae7b51aee5171c7a`: build/typecheck, named TypeScript contracts, Go/SQLite, actual Linux Firefox direct HTTP/lifecycle/diagnostics and exact process restart. Focused local provider/stream/diagnostic checks and the browser exercise also passed; no full local suite was repeated for review. Independent final source/accepted-scope/coverage/security/control review PASS with no remaining blockers; failure-usage retention and Bright contrast findings were fixed. All eight actual affected CI captures (Dark/Bright at 390/768/1024/1440) PASS independent visual review, including readability, wrapping and docked controls. Documentation-only readiness updates reuse that application evidence with applicable final-head repository checks.
+
+A separate agent-operated live Linux Firefox smoke check PASS using llama.cpp 0.6.0-dev build 11429 (`d812350493`), Qwen3-4B-Q4_K_M.gguf, ROCm0 with 28 GPU layers/8192 context and loopback port 18085. Completed-response usage matched the provider's actual reported fields; explicit Accept/reload, subsequent streamed Stop, unchanged one-turn canon and cleared-on-reload diagnostics worked. The input used Qwen3's `/no_think` text instruction; no new API parameter was sent. This is a limited completed-usage/streamed-cancellation configuration check, not live terminal-stream-usage or universal interoperability certification. Hosted CI's provider replies remain simulated. Other OS packaging and full accessibility are unverified.
+
+The checked [review adventure](http://127.0.0.1:8086/?adventure=311f696a-19f2-4b6e-ae63-cf5cdbf77502) serves the exact current frontend JavaScript/CSS for application source `b3e8e10`, with its own persistent `.local/review/dev004d` library, one accepted turn, Local Qwen3 review selected and retained input after Stop. Review app/provider remain running on loopback ports 8086/18085. The PR/chat owns the Generate → Generation details, Retry, Stop and reload walkthrough. Relaunch from the repository root with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004d"`; Ctrl+C stops a foreground launch. Prior review/user libraries remain preserved.
+
+**Ready for hands-on review; no verbal finalise/merge approval has been received.** No verified-main or whole-IDEA completion is claimed. After user feedback, named-PR approval, conditional closure review/checks and confirmed merge, only this bounded child can become verified. Other requirements and deferrals remain open; no next child starts automatically.
