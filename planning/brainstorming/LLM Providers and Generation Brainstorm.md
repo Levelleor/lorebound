@@ -5,9 +5,12 @@ mode: autonomous
 topic: "Cloud/local model adapters, model profiles and generation strategies"
 goal: "Support many AI providers with model-aware settings while remaining practical with one locally hosted model."
 created: 2026-10-16
-updated: 2026-10-16
-sources: []
-outputs: []
+updated: "2026-11-14"
+sources:
+  - "[[Provider Connection Profiles and Discovery]]"
+  - "[[DEV-004C]]"
+outputs:
+  - "[[Separate Provider Connection and Generation Tests]]"
 tags:
   - planning/brainstorm
   - planning/llm
@@ -79,20 +82,27 @@ No option guarantees that every implicit state change is extracted.
 - 2026-10-16 — **User concern:** Most local users may host only one model, or at most two.
 - 2026-10-16 — **User challenge:** TypeScript cannot understand arbitrary language; second-pass extraction may not be sufficient.
 - 2026-10-16 — **AI possibility:** Compare single-pass, plan-first and plan-plus-audit strategies; reuse one loaded model for all roles.
+- 2026-11-14 — **User idea:** While reviewing the current local connection test, asked for reliable frontend testing across their own endpoints/providers, including Gemini, and suggested a health check instead of a short `OK` generation. Challenged an agent-selected llama.cpp-specific no-thinking workaround.
+- 2026-11-14 — **AI possibility:** Separate basic connection/access checks from optional generation testing; let each provider adapter choose supported checks and avoid making literal `OK` output or reasoning-disable support a universal success condition.
+- 2026-11-14 — **Decision:** User replied “yeah, I agree with that. Lets ensure we log that for future as an idea”. Record this as agreed exploratory direction and a future-capture request, not staging promotion, implementation-readiness, implementation launch or PR merge approval.
+- 2026-11-14 — **Direction:** Captured one mixed-origin Inbox candidate, [IDEA-0068](../staging/Separate%20Provider%20Connection%20and%20Generation%20Tests.md). Existing production IDEA-0014 and current application behavior remain unchanged by this capture.
+- 2026-11-14 — **Decision:** User explicitly replied “accepted idea”. Moved the same IDEA-0068 note from Inbox to staging for refinement, preserving identity and history. This acceptance does not approve production readiness, launch implementation or authorise merging PR #23.
 
 ## Current Threads
 - Test model compliance on RP-specific local models and measure omissions, correction rates and latency.
 - Decide default strategy and strictness mode.
 - Maintain accurate provider/model capability metadata as APIs evolve.
 - Determine fallback when a local model cannot reliably emit structured output.
+- Refine IDEA-0068: what can each provider's basic connection/access check establish without inference, and what belongs in a separate optional generation test?
 
 ## Decisions
 - Local and remote model coverage and settings are explicit user requirements.
 - Unsupported controls should be handled clearly, with preference toward greyed-out/omitted behaviour still subject to exact UI design.
 - One locally loaded model should be a viable configuration.
+- 2026-11-14 — The user explicitly accepted IDEA-0068 into staging: separate provider-appropriate connection/access testing from optional generation testing. Exact provider checks and behavior still need refinement; production readiness, implementation and merge approval remain separate.
 
 ## Outputs
-- None. No idea has been promoted to staging or production by this documentation request.
+- [IDEA-0068 — Separate Provider Connection and Generation Tests](../staging/Separate%20Provider%20Connection%20and%20Generation%20Tests.md), explicitly accepted into staging for refinement. No production promotion or implementation launch follows from that acceptance.
 
 ## Resume Here
-Prototype one-model narration/state-extraction against ambiguous language and invalid travel/item changes before freezing a default generation pipeline.
+Latest thread: IDEA-0068 is accepted into staging to separate provider connection/access checks from optional generation. Resume refinement by comparing available checks and their limits for accepted cloud/local providers and custom endpoints, including unsupported discovery and required authentication. Existing production IDEA-0014 owns the broader accepted profile/testing scope; no application change is launched here. Earlier one-model narration/state-extraction and pipeline questions remain open.

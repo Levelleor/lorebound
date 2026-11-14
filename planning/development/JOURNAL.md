@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-10"
+updated: "2026-11-14"
 tags:
   - planning/development
   - decisions
@@ -188,3 +188,21 @@ Confirmed PR #21 merge `3e37f2dcd9d2f6018990a33579b44d87ee3cfe7f` satisfies DEV-
 After the checked review URL/demo and explicit request for approval to finalise and merge [PR #22](https://github.com/Levelleor/lorebound/pull/22), the user replied: “looks good lets close it up and kill the servers”. This accepts the handoff and authorises closure of that same primary PR. Readiness CI, independent source/coverage/security/documentation/eight-capture review and a separate limited live Qwen3 streaming smoke test PASS; [DEV-004B](./requirements/DEV-004B.md) owns scope, coverage and limits. The review app and agent-launched llama.cpp server are stopped as requested, with both ports confirmed closed and persistent review libraries preserved.
 
 Prepared closure takes effect only after independent closure review, applicable final-head checks and confirmed merge. Parent DEV-004 and affected IDEAs remain PARTIAL; sixteen partial / 36 without feature-level evidence / zero complete originals, 145 inventoried rows and three formal IDEA-0006 certifications stay unchanged. All originals remain in production. Remaining providers/credentials/diagnostics/pipelines/world obligations and B9-D12 deferral remain open. Actual merge provenance/final CI belongs in PR #22/final handoff; no routine post-merge repository write, reconciliation PR or next child follows.
+
+## 2026-11-11 — Separate DEV-004 launch selects explicit connection testing
+
+Confirmed PR #22 merge `b6c9c79de0b51564a3007a0a946f5e5242d746e8` satisfies DEV-004B's approved conditional closure. The user's separate launch selects [DEV-004C](./requirements/DEV-004C.md) after auditing remaining requirements and dependencies: optional explicit testing of the entered local URL/model/timeout with one small synthetic completed request. The result is temporary and never changes settings, drafts or canon. A token-limited response is labelled as limited, rather than certifying full Story generation; Stop and page abandonment invalidate callbacks and abort the direct request/body. No automatic health gate, retry or fallback is introduced. Other adapters, cloud/credentials, broader diagnostics, pipeline/interpretation/world scope and B9-D12 deferral remain open. The same primary PR owns implementation, CI/review and eventual closure after the hands-on handoff and verbal named-PR finalise/merge approval.
+
+## 2026-11-14 — Connection tests cannot certify server model routing
+
+DEV-004C's separate live single-model llama.cpp check returned the loaded Qwen3 model even for an unknown entered model ID. A compatible response proves only that the endpoint answered the entered test request; aliases and server behavior prevent assuming exact model identity or future availability from that response. The UI's complete/limited labels remain bounded accordingly. [DEV-004C](./requirements/DEV-004C.md#verification-and-handoff) owns the live configuration/limits and simulated error coverage; [PR #23](https://github.com/Levelleor/lorebound/pull/23) owns review/readiness. No automatic discovery requirement or new routing validator is introduced.
+
+## 2026-11-14 — Hands-on feedback refines the client connection test
+
+The user found the 32-token-limit message confusing and requested a client-side fix, suggesting an API no-thinking option or a health check. One direct Qwen3 request confirmed that browser-supplied `chat_template_kwargs: { enable_thinking: false }` returns `OK.` with a normal stop within the existing cap. DEV-004C applies that option to llama.cpp test requests; Custom tests and Story generation keep their defaults. Valid complete and token-limited replies explicitly say **Connection successful**, while preserving error/cancellation handling and the distinction from full Story/stream verification. A server health endpoint would not exercise the entered chat/model request, so no health-only substitution, server reconfiguration or automatic retry is introduced. This feedback remains in primary PR #23 and is not merge approval.
+
+## 2026-11-14 — Future test separation accepted and current closure authorised
+
+The user questioned the agent-selected llama.cpp-specific override and asked about their own APIs and Gemini. The discussed separation of provider-appropriate connection/access checks from optional generation testing was captured as mixed-origin IDEA-0068; the user then explicitly said “accepted idea”. The same note is now in [staging](../staging/Separate%20Provider%20Connection%20and%20Generation%20Tests.md), with history/provenance and the active brainstorm preserved. This accepts refinement, not production readiness or implementation; current cloud/credential support is not implied.
+
+After the checked PR #23 handoff, feedback, provider-scope clarification and that separate idea acceptance, the user said “im done with the current task as well lets close it now.” This authorises finalising/merging the current [primary PR #23](https://github.com/Levelleor/lorebound/pull/23), without claiming the user personally ran every check. [DEV-004C](./requirements/DEV-004C.md#conditional-single-pr-closure) owns the passing CI/review, live-test limits and conditional closure. The agent-launched review app/provider are stopped, ports 8086/18085 confirmed closed, and persistent review/user data preserved. Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge; parent/IDEA scopes stay partial, B9-D12 stays deferred and no further child starts. Actual provenance/final CI belongs in the PR/final handoff, with no separate reconciliation PR.

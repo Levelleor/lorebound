@@ -2,9 +2,9 @@
 type: development-status
 status: current
 created: "2026-11-03"
-updated: "2026-11-10"
-current_task: "DEV-004B — Provisional local Story streaming"
-current_task_status: "VERIFIED ON CONFIRMED PR #22 MERGE"
+updated: "2026-11-14"
+current_task: "DEV-004C — Explicit local connection testing"
+current_task_status: "VERIFIED ON CONFIRMED PR #23 MERGE"
 next_task: "DEV-004"
 tags:
   - planning/development
@@ -16,12 +16,14 @@ Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](.
 
 ## Approved closure — conditional on merge
 
-After the checked preview/demo and explicit named-PR approval request, the user authorised finalising/merging [PR #22](https://github.com/Levelleor/lorebound/pull/22) on 2026-11-10: “looks good lets close it up and kill the servers”. [DEV-004B](./requirements/DEV-004B.md) owns the remaining DEV-004 audit, five bounded streaming requirements, CI/review and live-test limits. The same primary PR contains implementation, evidence and closure.
+After the checked preview/demo, feedback and named-PR approval request, the user authorised closing [PR #23](https://github.com/Levelleor/lorebound/pull/23) on 2026-11-14: “im done with the current task as well lets close it now.” [DEV-004C](./requirements/DEV-004C.md) owns the scope/dependency audit, three affected requirements, passing CI/review and live-test limits. The same primary PR includes implementation, evidence, controls and closure.
 
-Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge. Then DEV-004B is VERIFIED within its bounded scope; parent DEV-004 and affected IDEAs remain PARTIAL. DEV-003 retains its [remaining dependencies](./requirements/DEV-003.md#remaining-scope-audit--2026-11-08). Cloud/credentials, other named adapters, broader diagnostics, pipelines/interpretation and world effects remain later. **B9-D12 remains DEFERRED — NO WORK.** Actual merge provenance/final CI belongs in PR #22 and the final handoff.
+Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge. Then DEV-004C is VERIFIED within its bounded local test scope; parent DEV-004 and original IDEAs remain PARTIAL. The separately accepted [IDEA-0068](../staging/Separate%20Provider%20Connection%20and%20Generation%20Tests.md) is staged for future refinement, not implementation-ready or launched. Cloud/credentials, other adapters, broader diagnostics, pipelines/interpretation and world effects remain later. **B9-D12 remains DEFERRED — NO WORK.** Actual merge provenance/final CI belongs in PR #23 and the final handoff.
 
-## Review access and next task
+## Review access and next action
 
-The user accepted the checked handoff. Review/test apps and the agent-launched llama.cpp server are stopped as requested; persistent `.local/review/dev004b` and earlier libraries are preserved. Relaunch current source with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004b"`; Ctrl+C stops it. Start the [local provider](./README.md#local-llamacpp-testing) on loopback port 18085 to match the saved review profile. Enter Story prose, check Stream output and Generate; Accept appears after completion. Stop discards preview and preserves input/canon.
+The user accepted closure after the checked handoff and provider-scope discussion. Agent-launched review app/provider are stopped; ports 8086/18085 were confirmed closed. Persistent `.local/review/dev004c`, its saved profile and prior review/user libraries are preserved.
 
-**Exactly one next task: DEV-004 — audit/select a further bounded child only after DEV-004B closes and a separate user launch.** Closure approval starts no next slice; existing dependencies and deferrals remain open.
+Rebuild/relaunch current source with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004c"`; Ctrl+C stops it. The [authorised provider recipe](./README.md#local-llamacpp-testing) can use loopback port 18085 to match the saved profile. Models → Saved connection → Local Qwen3 review → Test connection checks the short request; editing clears feedback and Stop abandons it. Testing never saves the profile selection or story.
+
+**Exactly one next task: DEV-004 — audit/select a further bounded child only after DEV-004C closes and a separate user launch.** Closure approval and staging acceptance start no next slice.
