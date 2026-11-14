@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: ready-awaiting-user-review
+status: verified-on-confirmed-merge
 created: "2026-11-11"
 updated: "2026-11-14"
 task: "DEV-004C"
@@ -11,7 +11,7 @@ tags:
 
 # DEV-004C — Explicit local connection testing
 
-The user's separate 2026-11-11 launch authorises auditing DEV-004, selecting and implementing one bounded child, tests, independent review and one primary PR. Finalise/merge approval must follow the hands-on handoff for that named PR. Base: confirmed [PR #22](https://github.com/Levelleor/lorebound/pull/22) merge `b6c9c79de0b51564a3007a0a946f5e5242d746e8`, satisfying DEV-004B's approved conditional closure.
+The user's separate 2026-11-11 launch authorises auditing DEV-004, selecting and implementing one bounded child, tests, independent review and one primary PR. After the checked handoff, feedback and named-PR approval request, the user authorised finalising/merging current PR #23 on 2026-11-14: “im done with the current task as well lets close it now.” Base: confirmed [PR #22](https://github.com/Levelleor/lorebound/pull/22) merge `b6c9c79de0b51564a3007a0a946f5e5242d746e8`, satisfying DEV-004B's approved conditional closure.
 
 ## Remaining requirements and dependency audit
 
@@ -45,10 +45,20 @@ Paths resolve under [frontend/src/lib](../../../frontend/src/lib/), [frontend/te
 
 ## Verification and handoff
 
-[Primary PR #23](https://github.com/Levelleor/lorebound/pull/23) owns implementation, CI, independent review, hands-on demo and eventual conditional closure on `feat/dev-004c-connection-test`. Provider fixtures are simulated; real Linux Firefox/Go/SQLite integration does not certify live servers, universal compatible APIs, other operating systems or full accessibility. No merge approval or verified-main claim is made.
+[Primary PR #23](https://github.com/Levelleor/lorebound/pull/23) owns implementation, CI, independent review, hands-on demo and approved conditional closure on `feat/dev-004c-connection-test`. Provider fixtures are simulated; real Linux Firefox/Go/SQLite integration does not certify live servers, universal compatible APIs, other operating systems or full accessibility. Verification becomes main truth only after the confirmed merge described below.
 
 [Application CI](https://github.com/Levelleor/lorebound/actions/runs/43622415712) PASS at feedback-fix source `3d61a65523df9583e30dd9c4e4f985a83ead1b5c`: build/typecheck, named TypeScript provider/defaults contracts, Go/SQLite contracts, actual Firefox direct HTTP/response/failure/cancellation and exact process restart. Independent accepted-scope/source/coverage/security review PASS with no blockers. All nine actual affected CI captures PASS independent visual review: success/helper text at four widths in Dark/Bright and narrow Stop. Focused local request/defaults tests and a single live browser request PASS. No full local suite was repeated for review. Documentation-only readiness/closure reuses this reviewed application evidence with applicable final-head repository checks.
 
 Separate live Linux Firefox checks used llama.cpp `0.6.0-dev`, build 11429 (`d812350493`), `Qwen3-4B-Q4_K_M.gguf`, ROCm0 with 28 GPU layers/8192 context and loopback port 18085. The initial request reached the short cap while reasoning. After user feedback, one direct request and one focused browser request with the test-only no-thinking option returned `OK.` in 3 tokens with a normal stop. The refreshed browser source `3d61a65` displayed **Connection successful** and retained exact saved settings/draft/canon. Credentials/cookies/referrer were omitted. An invalid-model rejection was **not established live**: this single-model configuration answered an unknown model ID with HTTP 200 and the loaded model. The test establishes a response to the entered request, not server routing fidelity or future availability; simulated 404 fixtures cover rejection feedback. No universal provider/model/browser/OS support follows.
 
-The [local review adventure](http://127.0.0.1:8086/?adventure=fe32e057-197a-4f3b-895b-e284cdca5fa5) was refreshed/rechecked on 2026-11-14 at application source `3d61a65`. Its existing data and saved **Local Qwen3 review** profile are preserved; Simulation was selected at the check. Choose Models → Saved connection → Local Qwen3 review → Test connection. The successful live check used temporary fields and saved nothing. App/provider run on loopback 8086/18085; `.local/review/dev004c` persists separately from prior review/user libraries. The PR/chat supplies the test/edit/failure/Stop walkthrough and `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004c"` relaunch command; Ctrl+C stops a foreground relaunch. Ask the agent to stop current review servers. The user tried the earlier handoff and requested this fix; renewed hands-on acceptance and approval to finalise/merge PR #23 remain pending. Ready is not verified main. Closure stays in this PR and remains conditional on subsequent approval, review, final-head checks and confirmed merge; no automatic next child follows.
+The [review adventure](http://127.0.0.1:8086/?adventure=fe32e057-197a-4f3b-895b-e284cdca5fa5) was refreshed/rechecked on 2026-11-14 at application source `3d61a65`. Existing data and **Local Qwen3 review** profile are preserved; Simulation was selected at the check. The successful live check used temporary fields and saved nothing. The PR/chat supplied Models → Saved connection → Local Qwen3 review → Test connection, edit/failure/Stop walkthrough and `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004c"` relaunch command; Ctrl+C stops a foreground relaunch. The user tried the handoff, queried provider scope, separately accepted the future idea below and then authorised closure. This records acceptance of the bounded handoff without claiming the user personally ran every check. Agent-launched app/provider are now stopped, with ports 8086/18085 confirmed closed. Persistent `.local/review/dev004c` and prior review/user libraries remain intact.
+
+## Conditional single-PR closure
+
+The user's 2026-11-14 instruction authorises finalising/merging PR #23. [Readiness-head CI](https://github.com/Levelleor/lorebound/actions/runs/43623141906) PASS at `2075aa483a97ea75a3e81d496220a25d3854187c`, including the automatic complete application/browser/restart rerun. Independent readiness-documentation review PASS; application source is unchanged from independently reviewed `3d61a65`.
+
+Prepared closure becomes effective only after independent closure review, applicable final-head checks and confirmed merge of this same PR. Then DEV-004C is VERIFIED within its three affected local connection-test requirements; parent DEV-004 and IDEA-0014 remain PARTIAL. Original counts stay sixteen partial / 36 without merged feature-level evidence / zero complete, with 148 inventoried rows and three formal IDEA-0006 certifications unchanged. No whole-IDEA archival or additional whole-row certification follows.
+
+The separately accepted [IDEA-0068](../../staging/Separate%20Provider%20Connection%20and%20Generation%20Tests.md) stages provider-appropriate basic connection/access checks separately from optional generation tests. Its original ID, mixed provenance, user acceptance and active brainstorm are preserved in this same PR; it is outside the original 52 and is not implementation-ready or launched. This does not add cloud/credential support or change this child's single short synthetic test. Other accepted scope and B9-D12 deferral remain open.
+
+Exactly one next task is DEV-004 audit/selection after confirmed closure and a separate user launch. Actual merge/head/tree provenance and final CI belong in PR #23/final handoff; no routine post-merge repository write, separate reconciliation PR or automatic next child follows.

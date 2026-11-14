@@ -4,8 +4,8 @@ status: current
 created: "2026-11-03"
 updated: "2026-11-14"
 current_task: "DEV-004C — Explicit local connection testing"
-current_task_status: "READY AFTER FEEDBACK — AWAITING PR #23 REVIEW / MERGE APPROVAL"
-next_task: "DEV-004C"
+current_task_status: "VERIFIED ON CONFIRMED PR #23 MERGE"
+next_task: "DEV-004"
 tags:
   - planning/development
 ---
@@ -14,16 +14,16 @@ tags:
 
 Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](./FEATURES.md), [journal](./JOURNAL.md) and [runbook](./AGENT-RUNBOOK.md). Requirements own scope/coverage; CI owns execution output.
 
-## Active bounded child
+## Approved closure — conditional on merge
 
-Confirmed [PR #22](https://github.com/Levelleor/lorebound/pull/22) merge `b6c9c79de0b51564a3007a0a946f5e5242d746e8` satisfies DEV-004B's approved closure. The user's separate 2026-11-11 DEV-004 launch selects [DEV-004C](./requirements/DEV-004C.md): explicit optional testing of the entered local endpoint/model with a small synthetic request, temporary truthful feedback and cancellation. The owning record contains the remaining-scope/dependency audit and three affected requirements.
+After the checked preview/demo, feedback and named-PR approval request, the user authorised closing [PR #23](https://github.com/Levelleor/lorebound/pull/23) on 2026-11-14: “im done with the current task as well lets close it now.” [DEV-004C](./requirements/DEV-004C.md) owns the scope/dependency audit, three affected requirements, passing CI/review and live-test limits. The same primary PR includes implementation, evidence, controls and closure.
 
-Implementation, tests, independent review, evidence and controls stay in [primary PR #23](https://github.com/Levelleor/lorebound/pull/23). The user's hands-on feedback identified confusing token-limit feedback with a reasoning model. The client fix requests no thinking for llama.cpp tests and labels valid complete/limited replies as connection success. Fresh application CI and independent source/coverage/security/nine-capture review PASS at `3d61a65`; the updated preview's focused live request returned `OK.` in 3 tokens. The [owning requirement record](./requirements/DEV-004C.md#verification-and-handoff) records evidence and live-test limits. No named-PR merge approval has been given. Parent DEV-004 and original IDEAs remain PARTIAL; other adapters, cloud/credentials, broader diagnostics, pipelines/interpretation and world effects remain later. **B9-D12 remains DEFERRED — NO WORK.**
+Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge. Then DEV-004C is VERIFIED within its bounded local test scope; parent DEV-004 and original IDEAs remain PARTIAL. The separately accepted [IDEA-0068](../staging/Separate%20Provider%20Connection%20and%20Generation%20Tests.md) is staged for future refinement, not implementation-ready or launched. Cloud/credentials, other adapters, broader diagnostics, pipelines/interpretation and world effects remain later. **B9-D12 remains DEFERRED — NO WORK.** Actual merge provenance/final CI belongs in PR #23 and the final handoff.
 
 ## Review access and next action
 
-The [local review adventure](http://127.0.0.1:8086/?adventure=fe32e057-197a-4f3b-895b-e284cdca5fa5) was refreshed/rechecked on 2026-11-14 with application source `3d61a65`. App and local provider run on loopback 8086/18085; existing review data and saved **Local Qwen3 review** profile are preserved. Simulation was selected at the check, so choose **Models → Saved connection → Local Qwen3 review → Test connection**. A focused browser request with the client option returned `OK.` in 3 tokens and displayed **Connection successful** without settings/draft/canon changes. Editing clears feedback, unavailable endpoints give recoverable errors and Stop abandons pending tests.
+The user accepted closure after the checked handoff and provider-scope discussion. Agent-launched review app/provider are stopped; ports 8086/18085 were confirmed closed. Persistent `.local/review/dev004c`, its saved profile and prior review/user libraries are preserved.
 
-The app uses separate persistent `.local/review/dev004c`; prior review/user libraries are preserved. Ask the agent to stop the review servers. To rebuild/relaunch the current checkout, use `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004c"`; Ctrl+C stops that foreground launch. The [authorised provider recipe](./README.md#local-llamacpp-testing) can use loopback port 18085 to match the saved profile.
+Rebuild/relaunch current source with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004c"`; Ctrl+C stops it. The [authorised provider recipe](./README.md#local-llamacpp-testing) can use loopback port 18085 to match the saved profile. Models → Saved connection → Local Qwen3 review → Test connection checks the short request; editing clears feedback and Stop abandons it. Testing never saves the profile selection or story.
 
-**Exactly one next task: renewed hands-on review and verbal approval to finalise and merge PR #23, then same-PR conditional closure and applicable final-head checks.** No next child starts through closure.
+**Exactly one next task: DEV-004 — audit/select a further bounded child only after DEV-004C closes and a separate user launch.** Closure approval and staging acceptance start no next slice.
