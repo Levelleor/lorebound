@@ -52,4 +52,6 @@ The [checked local review adventure](http://127.0.0.1:8086/?adventure=30a22957-9
 
 ## Closure boundary
 
+The [incomplete-feature register](../INCOMPLETE-FEATURES.md#inc-001--native-ollama-live-server-verification-outstanding) records the outstanding live Ollama verification separately from the implemented native adapter and the broader provider obligations. This addition follows the user's review feedback; it is not finalise/merge approval.
+
 Ready for hands-on feedback; **no verbal finalise/merge approval has been given**. Any eventual closure stays conditional on the user's approval of this named PR, routine same-branch reconciliation, independent closure review, applicable final-head checks and confirmed merge. DEV-004 and original IDEAs remain PARTIAL; no original is archived. IDEA-0068 remains staged, IDEA-0069 unaccepted and B9-D12 deferred. Exactly one next task remains DEV-004 audit/selection only after this child closes and a separate user launch. No reconciliation PR or automatic next child follows.

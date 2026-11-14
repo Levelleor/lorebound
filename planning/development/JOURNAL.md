@@ -233,3 +233,7 @@ One primary PR owns implementation, evidence, controls and eventual conditional 
 ## 2026-11-14 — DEV-004E ready for user review
 
 [PR #25](https://github.com/Levelleor/lorebound/pull/25) has passing application CI and independent accepted-source/coverage/security/control/sixteen-CI-capture review. The [requirement record](./requirements/DEV-004E.md#verification-and-handoff) owns the checked source, bounded evidence and limitations. The isolated persistent review app and explicitly simulated native protocol fixture are running for hands-on feedback; no live Ollama compatibility result is claimed. No verbal finalise/merge approval, verified-main claim or next child follows from readiness.
+
+## 2026-11-14 — Structured register for implemented but unfinished features
+
+The user requested a document logging features that have implementation but remain unfinished, citing Ollama's simulated demonstration. [INCOMPLETE-FEATURES](./INCOMPLETE-FEATURES.md) records implemented behavior, remaining gaps, practical effects, source/evidence, resolution and dependencies. Its initial entries distinguish the real native Ollama adapter's outstanding live-server verification from functional provider/credential and tracked-world gaps. FEATURES remains the IDEA ledger; requirements and TASKS retain scope/dependency ownership. Recording a gap launches no follow-up, adds no mandatory live-AI gate and does not approve finalising/merging PR #25.

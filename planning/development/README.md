@@ -2,7 +2,7 @@
 type: development-guide
 status: current
 created: "2026-11-03"
-updated: "2026-11-09"
+updated: "2026-11-14"
 tags:
   - planning/development
   - implementation
@@ -18,6 +18,7 @@ This directory records scope, decisions, remaining work and links to delivered c
 | [NOW](./NOW.md) | Short current handoff, active work and exactly one next development task |
 | [TASKS](./TASKS.md) | Task scope, dependencies and acceptance criteria |
 | [FEATURES](./FEATURES.md) | All 52 original IDEA notes and their completion status |
+| [INCOMPLETE-FEATURES](./INCOMPLETE-FEATURES.md) | Structured gaps in already implemented features: existing behavior, unfinished scope, verification limits and resolution |
 | [JOURNAL](./JOURNAL.md) | Significant decisions, discoveries and unresolved constraints |
 | [AGENT-RUNBOOK](./AGENT-RUNBOOK.md) | Implementation, review and handoff rules |
 | [requirements](./requirements/) | Accepted requirement IDs, coverage and remaining obligations |

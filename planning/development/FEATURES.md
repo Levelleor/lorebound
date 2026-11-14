@@ -11,6 +11,8 @@ verified_idea_count: 0
 
 **This is the authoritative live feature-completion ledger for the development workflow.** Exactly **52 original accepted IDEA notes** exist in [production](../production/). They are *approved scopes*, not implemented features. A partial technical foundation is **not** completion of a whole IDEA. The [current task](./NOW.md), [task queue](./TASKS.md) and [runbook](./AGENT-RUNBOOK.md) govern how evidence is added.
 
+For concrete explanations of implemented features that remain unfinished, see the [incomplete-feature register](./INCOMPLETE-FEATURES.md). It distinguishes missing behavior from missing verification; this ledger retains overall IDEA status.
+
 ## Reconciled completeness, 2026-11-14
 
 [PR #15](https://github.com/Levelleor/lorebound/pull/15) is confirmed merged at `987310abf8ad39d43144c53ae77c78da937bff3b`, satisfying DEV-003E's conditional closure. At that merge, work gave eleven partial / 41 without feature-level evidence / zero complete original ideas, with three formally certified IDEA-0006 rows unchanged. PR #14's composer-only scope remains historical; #15 removed those custom controls and delivered committed-turn Undo.
