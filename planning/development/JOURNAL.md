@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-11"
+updated: "2026-11-14"
 tags:
   - planning/development
   - decisions
@@ -192,3 +192,7 @@ Prepared closure takes effect only after independent closure review, applicable 
 ## 2026-11-11 — Separate DEV-004 launch selects explicit connection testing
 
 Confirmed PR #22 merge `b6c9c79de0b51564a3007a0a946f5e5242d746e8` satisfies DEV-004B's approved conditional closure. The user's separate launch selects [DEV-004C](./requirements/DEV-004C.md) after auditing remaining requirements and dependencies: optional explicit testing of the entered local URL/model/timeout with one small synthetic completed request. The result is temporary and never changes settings, drafts or canon. A token-limited response is labelled as limited, rather than certifying full Story generation; Stop and page abandonment invalidate callbacks and abort the direct request/body. No automatic health gate, retry or fallback is introduced. Other adapters, cloud/credentials, broader diagnostics, pipeline/interpretation/world scope and B9-D12 deferral remain open. The same primary PR owns implementation, CI/review and eventual closure after the hands-on handoff and verbal named-PR finalise/merge approval.
+
+## 2026-11-14 — Connection tests cannot certify server model routing
+
+DEV-004C's separate live single-model llama.cpp check returned the loaded Qwen3 model even for an unknown entered model ID. A compatible response proves only that the endpoint answered the entered test request; aliases and server behavior prevent assuming exact model identity or future availability from that response. The UI's complete/limited labels remain bounded accordingly. [DEV-004C](./requirements/DEV-004C.md#verification-and-handoff) owns the live configuration/limits and simulated error coverage; [PR #23](https://github.com/Levelleor/lorebound/pull/23) owns review/readiness. No automatic discovery requirement or new routing validator is introduced.

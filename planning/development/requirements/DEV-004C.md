@@ -1,8 +1,8 @@
 ---
 type: development-requirements
-status: in-progress
+status: ready-awaiting-user-review
 created: "2026-11-11"
-updated: "2026-11-11"
+updated: "2026-11-14"
 task: "DEV-004C"
 parent: "DEV-004"
 tags:
@@ -45,4 +45,10 @@ Paths resolve under [frontend/src/lib](../../../frontend/src/lib/), [frontend/te
 
 ## Verification and handoff
 
-Implementation and verification are in progress on `feat/dev-004c-connection-test`; the primary PR will own CI, independent review, hands-on demo and eventual conditional closure. Provider fixtures are simulated; real Linux Firefox/Go/SQLite integration does not certify live servers, universal compatible APIs, other operating systems or full accessibility. No merge approval or verified-main claim is made.
+[Primary PR #23](https://github.com/Levelleor/lorebound/pull/23) owns implementation, CI, independent review, hands-on demo and eventual conditional closure on `feat/dev-004c-connection-test`. Provider fixtures are simulated; real Linux Firefox/Go/SQLite integration does not certify live servers, universal compatible APIs, other operating systems or full accessibility. No merge approval or verified-main claim is made.
+
+[Application CI](https://github.com/Levelleor/lorebound/actions/runs/43056644894) attempt 2 PASS at `27a0eeec468e989c2542839203f1ab0928aaeef1`: build/typecheck, named TypeScript contracts, Go/SQLite contracts, actual Firefox direct-HTTP/failure/cancellation checks and exact process restart. Focused local provider/stream/test contracts and browser checks also PASS. Independent accepted-scope/source/coverage/security/control review PASS, with its viewport/wording findings resolved. All nine actual affected CI captures PASS independent visual review: four widths in Dark/Bright and the narrow Stop state. Reviewed application evidence is reused for documentation-only readiness/closure; applicable final-head repository checks remain required. No full local suite was repeated for review.
+
+A separate live Linux Firefox check used llama.cpp `0.6.0-dev`, build 11429 (`d812350493`), `Qwen3-4B-Q4_K_M.gguf`, ROCm0 with 28 GPU layers/8192 context and loopback port 18085. Discovery and a synthetic-only request PASS; the server reached the short token limit and the UI reported that limitation without saving settings or canon. Credentials/cookies/referrer were omitted. An invalid-model rejection was **not established live**: this single-model configuration answered an unknown model ID with HTTP 200 and the loaded model. The test establishes a response to the entered request, not server routing fidelity or future availability; simulated 404 fixtures cover the application's rejection feedback. No universal provider/model/browser/OS support follows.
+
+The [local review adventure](http://127.0.0.1:8086/?adventure=fe32e057-197a-4f3b-895b-e284cdca5fa5) was rechecked on 2026-11-14, serving application source `27a0eee`: **Connection testing review** has no accepted turns, empty input and saved **Local Qwen3 review** profile. App/provider run on loopback 8086/18085; `.local/review/dev004c` persists separately from prior review/user libraries. The PR/chat supplies the test/edit/failure/Stop walkthrough and `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004c"` relaunch command; Ctrl+C stops a foreground relaunch. Ask the agent to stop current review servers. The user has not yet accepted this handoff or approved finalising/merging PR #23. Ready is not verified main. Closure stays in this PR and remains conditional on subsequent approval, review, final-head checks and confirmed merge; no automatic next child follows.
