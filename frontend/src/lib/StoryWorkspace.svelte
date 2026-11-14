@@ -8,6 +8,7 @@
   import { SessionSaveRecovery } from './saveRecovery';
   import { SessionForkRecovery } from './forkRecovery';
   import { modelError } from './models';
+  import GenerationInspector from './GenerationInspector.svelte';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -337,7 +338,7 @@
       storage: host,
       draftStorage: host,
       recoveryStorage: new SessionSaveRecovery(() => window.sessionStorage),
-      generate: (request, signal, onProgress) => generateNarration(request, signal, canStream && streamOutput ? onProgress : undefined),
+      generate: (request, signal, onProgress, onDiagnostics) => generateNarration(request, signal, canStream && streamOutput ? onProgress : undefined, onDiagnostics),
       generationError: modelError,
       onChange: publish
     });
@@ -490,6 +491,7 @@
           {/each}
         </section>
       {/if}
+      {#if state.diagnostics}<GenerationInspector diagnostics={state.diagnostics} />{/if}
     {/if}
   </article>
   <div class="composer">

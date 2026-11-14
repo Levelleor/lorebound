@@ -1,6 +1,7 @@
 import { schemaVersion } from './library.ts';
 import { isID, isObject, plainTextToDocument } from './story.ts';
 import type { GenerationInput } from './coordinator.ts';
+import type { DiagnosticsObserver, TokenUsage } from './generationDiagnostics.ts';
 
 export interface ModelProfile
 {
@@ -111,7 +112,15 @@ async function readJson(response: Response, signal: AbortSignal): Promise<unknow
 
 type ModelEndpoint = Pick<ModelProfile, 'baseUrl' | 'timeoutMs'>;
 
-async function readContinuationStream(response: Response, signal: AbortSignal, onProgress: (text: string) => void): Promise<string>
+function readUsage(value: unknown): TokenUsage | null
+{
+  if (!isObject(value)) return null;
+  const count = (value: unknown) => Number.isSafeInteger(value) && Number(value) >= 0 ? Number(value) : null;
+  const usage = { prompt: count(value.prompt_tokens), completion: count(value.completion_tokens), total: count(value.total_tokens) };
+  return Object.values(usage).some(value => value !== null) ? usage : null;
+}
+
+async function readContinuationStream(response: Response, signal: AbortSignal, onProgress: (text: string) => void): Promise<{ text: string; usage: TokenUsage | null }>
 {
   const invalid = () => new ModelError('The stream did not contain a complete text continuation. Partial output was discarded. Check the server or uncheck Stream output to request a completed response.');
   if (!response.body) throw invalid();
@@ -125,6 +134,7 @@ async function readContinuationStream(response: Response, signal: AbortSignal, o
   let stopped = false;
   let completed = false;
   let skipLF = false;
+  let usage: TokenUsage | null = null;
   const cancel = () => { void reader.cancel().catch(() => {}); };
 
   function dispatch(): void
@@ -143,8 +153,9 @@ async function readContinuationStream(response: Response, signal: AbortSignal, o
     }
     const value: unknown = JSON.parse(payload);
     if (!isObject(value) || value.error || !Array.isArray(value.choices)) throw invalid();
+    if (value.usage !== undefined) usage = readUsage(value.usage);
     // Compatible servers may send a final usage-only chunk. It is not prose.
-    if (value.choices.length === 0 && stopped && isObject(value.usage)) return;
+    if (value.choices.length === 0 && stopped && value.usage !== undefined) return;
     if (value.choices.length !== 1 || stopped) throw invalid();
     const choice = value.choices[0];
     const delta = isObject(choice) && isObject(choice.delta) ? choice.delta : null;
@@ -201,10 +212,10 @@ async function readContinuationStream(response: Response, signal: AbortSignal, o
           if (field === 'event') event = value;
         }
         signal.throwIfAborted();
-        if (completed) return text;
+        if (completed) return { text, usage };
       }
     }
-    return text;
+    return { text, usage };
   }
   catch (cause)
   {
@@ -306,9 +317,18 @@ export async function testConnection(profile: ModelEndpoint & Pick<ModelProfile,
   return 'complete';
 }
 
-export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch, onProgress?: (text: string) => void): Promise<string>
+export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch, onProgress?: (text: string) => void, onDiagnostics?: DiagnosticsObserver): Promise<string>
 {
   const selected = structuredClone(readProfile(profile));
+  const details = {
+    profileName: selected.name,
+    server: selected.kind,
+    requestedModel: selected.model,
+    streaming: Boolean(onProgress),
+    timeoutMs: selected.timeoutMs,
+    usage: null
+  };
+  onDiagnostics?.(details);
   const body = {
     model: selected.model,
     stream: Boolean(onProgress),
@@ -319,7 +339,11 @@ export async function generateLocal(profile: ModelProfile, input: GenerationInpu
     ]
   };
   if (onProgress)
-    return requestValue(selected, 'chat/completions', signal, (response, activeSignal) => readContinuationStream(response, activeSignal, onProgress), body, fetcher);
+  {
+    const result = await requestValue(selected, 'chat/completions', signal, (response, activeSignal) => readContinuationStream(response, activeSignal, onProgress), body, fetcher);
+    onDiagnostics?.({ ...details, usage: result.usage });
+    return result.text;
+  }
   const value = await requestValue(selected, 'chat/completions', signal, readJson, body, fetcher);
   const choice = isObject(value) && Array.isArray(value.choices) && value.choices.length === 1 ? value.choices[0] : null;
   const message = isObject(choice) && isObject(choice.message) ? choice.message : null;
@@ -328,5 +352,6 @@ export async function generateLocal(profile: ModelProfile, input: GenerationInpu
     throw new ModelError('The server did not return a complete text continuation. Incomplete output and tool calls were discarded.');
   try { plainTextToDocument(message.content); }
   catch { throw new ModelError('The server returned empty, malformed or oversized prose. No proposal was retained.'); }
+  onDiagnostics?.({ ...details, usage: isObject(value) ? readUsage(value.usage) : null });
   return message.content;
 }

@@ -37,7 +37,9 @@ export async function exerciseStreaming(browser, base, artifacts)
       if (selected === 'truncated') { response.end(); return; }
       if (selected === 'malformed') { response.end('data: {SECRET_STREAM_BODY\n\n'); return; }
       if (selected === 'tool') { response.end(frame('', 'tool_calls', { tool_calls: [{ id: 'tool' }] }) + 'data: [DONE]\n\n'); return; }
-      response.end(frame('\n\nThe lantern is lit.', selected === 'length' ? 'length' : 'stop') + 'data: [DONE]\n\n');
+      response.end(frame('\n\nThe lantern is lit.', selected === 'length' ? 'length' : 'stop')
+        + `data: ${JSON.stringify({ choices: [], usage: { prompt_tokens: 23, completion_tokens: 8, total_tokens: 31, secret: 'SECRET_DIAGNOSTIC' } })}\n\n`
+        + 'data: [DONE]\n\n');
     };
   });
   await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
@@ -68,6 +70,8 @@ export async function exerciseStreaming(browser, base, artifacts)
     const before = await read();
     const proposal = () => page.getByRole('region', { name: 'Proposed turn', exact: true });
     const preview = () => page.getByRole('region', { name: 'Generating proposal', exact: true });
+    const inspector = () => page.locator('.generation-inspector');
+    const detail = name => inspector().locator('dt').filter({ hasText: new RegExp(`^${name}$`) }).locator('+ dd');
     const begin = async (text = 'Keep this player input.') =>
     {
       await page.getByLabel('Stream output', { exact: false }).check();
@@ -78,6 +82,12 @@ export async function exerciseStreaming(browser, base, artifacts)
       assert.equal(await page.getByLabel('Stream output', { exact: false }).isDisabled(), true);
     };
     await begin();
+    await inspector().getByText('Generation details · In progress', { exact: true }).waitFor();
+    assert.equal(await inspector().evaluate(element => element.open), false);
+    await inspector().locator('summary').focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await inspector().evaluate(element => element.open), true, 'Native disclosure supports keyboard access');
+    assert.equal(await detail('Browser elapsed').innerText(), 'Available when this attempt ends');
     assert.deepEqual(await read(), before, 'Received prose does not change canon');
     for (const theme of ['dark', 'bright'])
     {
@@ -96,6 +106,31 @@ export async function exerciseStreaming(browser, base, artifacts)
     }
     release();
     await proposal().waitFor();
+    await inspector().getByText('Generation details · Response complete', { exact: true }).waitFor();
+    assert.equal(await detail('Requested model').innerText(), 'stream-fixture');
+    assert.equal(await detail('Response mode').innerText(), 'Streaming');
+    assert.equal(await detail('Input tokens').innerText(), '23');
+    assert.equal(await detail('Output tokens').innerText(), '8');
+    assert.equal(await detail('Total tokens').innerText(), '31');
+    assert.match(await detail('Browser elapsed').innerText(), /^\d+ ms$/);
+    assert.match(await inspector().innerText(), /effective values and model routing are unknown/);
+    assert.doesNotMatch(await inspector().innerText(), /SECRET_DIAGNOSTIC|Keep this player input|Harbour preview|http:\/\//);
+    for (const theme of ['dark', 'bright'])
+    {
+      await page.evaluate(theme => document.documentElement.dataset.loreboundUi = theme, theme);
+      for (const width of [390, 768, 1024, 1440])
+      {
+        await page.setViewportSize({ width, height: 900 });
+        await inspector().scrollIntoViewIfNeeded();
+        await inspector().locator('summary').focus();
+        assert.equal(await inspector().locator('summary').evaluate(element => element === document.activeElement), true);
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+        assert.equal(await inspector().evaluate(element => element.scrollWidth <= element.clientWidth), true);
+        const accept = page.getByRole('button', { name: 'Accept turn', exact: true });
+        assert.ok(await accept.evaluate(element => element.getBoundingClientRect().bottom <= innerHeight));
+        if (artifacts) await page.screenshot({ path: path.join(artifacts, `generation-details-${theme}-${width}.png`) });
+      }
+    }
     assert.deepEqual(await read(), before);
     await page.getByRole('button', { name: 'Accept turn', exact: true }).click();
     await page.locator('.accepted-turn').waitFor();
@@ -106,6 +141,7 @@ export async function exerciseStreaming(browser, base, artifacts)
     await page.locator('.accepted-turn').waitFor();
     assert.deepEqual(await read(), accepted);
     assert.equal(await page.getByLabel('Stream output', { exact: false }).isChecked(), false, 'Streaming preference is session-only');
+    assert.equal(await inspector().count(), 0, 'Diagnostics are not stored across reload');
 
     // Retry removes the previous complete candidate even if the replacement fails.
     await begin();
@@ -114,9 +150,12 @@ export async function exerciseStreaming(browser, base, artifacts)
     behavior = 'truncated';
     await page.getByRole('button', { name: 'Retry', exact: true }).click();
     await preview().getByText(/Harbour preview/).waitFor();
+    await inspector().getByText('Generation details · In progress', { exact: true }).waitFor();
+    assert.equal(await inspector().locator('dt').filter({ hasText: 'Total tokens' }).count(), 0, 'Retry clears prior usage');
     assert.equal(await proposal().count(), 0);
     release();
     await page.getByRole('alert').waitFor();
+    await inspector().getByText('Generation details · Failed', { exact: true }).waitFor();
     assert.equal(await preview().count(), 0);
     for (const failure of ['length', 'tool', 'malformed'])
     {
@@ -135,6 +174,7 @@ export async function exerciseStreaming(browser, base, artifacts)
     const afterStop = closed;
     await page.getByRole('button', { name: 'Stop generation', exact: true }).click();
     await afterStop;
+    await inspector().getByText('Generation details · Stopped', { exact: true }).waitFor();
     release();
     assert.equal(await preview().count(), 0);
     assert.equal(await proposal().count(), 0);
@@ -156,11 +196,15 @@ export async function exerciseStreaming(browser, base, artifacts)
       assert.equal(await page.getByLabel('Story input', { exact: true }).inputValue(), `Input retained after ${leave}.`);
       assert.equal(await preview().count(), 0);
       assert.equal(await proposal().count(), 0);
+      assert.equal(await inspector().count(), 0);
       assert.deepEqual(await read(), accepted);
     }
     await page.getByLabel('Stream output', { exact: false }).uncheck();
     await page.getByRole('button', { name: 'Generate continuation', exact: true }).click();
     await proposal().getByText('Completed response mode still works.', { exact: true }).waitFor();
+    await inspector().locator('summary').click();
+    assert.equal(await detail('Response mode').innerText(), 'Completed response');
+    assert.match(await inspector().innerText(), /No valid usage reported/);
     await page.getByRole('button', { name: 'Discard', exact: true }).click();
     assert.deepEqual(await read(), accepted);
     assert.equal(requests.at(-1).body.stream, false);
@@ -173,6 +217,7 @@ export async function exerciseStreaming(browser, base, artifacts)
     const timedOut = closed;
     await page.getByRole('alert').filter({ hasText: 'timed out' }).waitFor();
     await timedOut;
+    await inspector().getByText('Generation details · Failed', { exact: true }).waitFor();
     release();
     assert.equal(await preview().count(), 0);
     assert.equal(await proposal().count(), 0);
@@ -184,9 +229,10 @@ export async function exerciseStreaming(browser, base, artifacts)
       assert.equal(request.headers.cookie, undefined);
       assert.equal(request.headers.authorization, undefined);
       assert.equal(request.headers.referer, undefined);
+      assert.equal('stream_options' in request.body, false);
     }
     assert.deepEqual(errors, []);
-    console.log('PASS: real Firefox SSE preview/explicit acceptance, Retry/failures/Stop/navigation/reload/close, retained drafts, completed mode and responsive controls; provider prose is simulated');
+    console.log('PASS: real Firefox SSE preview/explicit acceptance, Retry/failures/Stop/navigation/reload/close, retained drafts, completed mode, optional usage/timing diagnostics and responsive keyboard controls; provider prose is simulated');
   }
   finally
   {
