@@ -11,7 +11,7 @@
     <dl>
       <dt>Stage</dt><dd>Story narration</dd>
       <dt>Requested connection</dt><dd>{diagnostics.profileName}</dd>
-      <dt>Server type</dt><dd>{diagnostics.server === 'llamacpp' ? 'llama.cpp' : 'Custom compatible'}</dd>
+      <dt>Server type</dt><dd>{diagnostics.server === 'llamacpp' ? 'llama.cpp' : diagnostics.server === 'ollama' ? 'Ollama' : 'Custom compatible'}</dd>
       <dt>Requested model</dt><dd>{diagnostics.requestedModel}</dd>
       <dt>Response mode</dt><dd>{diagnostics.streaming ? 'Streaming' : 'Completed response'}</dd>
       <dt>Request timeout</dt><dd>{diagnostics.timeoutMs / 1000} seconds</dd>

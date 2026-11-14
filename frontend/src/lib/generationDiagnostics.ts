@@ -8,7 +8,7 @@ export interface TokenUsage
 export interface GenerationDetails
 {
   profileName: string;
-  server: 'llamacpp' | 'custom';
+  server: 'llamacpp' | 'custom' | 'ollama';
   requestedModel: string;
   streaming: boolean;
   timeoutMs: number;

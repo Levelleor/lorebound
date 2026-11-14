@@ -26,6 +26,16 @@
   let probe: AbortController | null = null;
   let disposed = false;
 
+  function selectServer(value: ModelProfile['kind'])
+  {
+    const defaultUrl = (server: ModelProfile['kind']) => server === 'ollama' ? 'http://127.0.0.1:11434/api' : 'http://127.0.0.1:8081/v1';
+    if (baseUrl === defaultUrl(kind)) baseUrl = defaultUrl(value);
+    kind = value;
+    models = [];
+    notice = '';
+    error = '';
+  }
+
   function selectProfile(id: string)
   {
     probe?.abort();
@@ -128,7 +138,7 @@
     models = [];
     try
     {
-      const found = await discoverModels({ baseUrl: baseUrl.trim(), timeoutMs: timeoutSeconds * 1000 }, request.signal);
+      const found = await discoverModels({ kind, baseUrl: baseUrl.trim(), timeoutMs: timeoutSeconds * 1000 }, request.signal);
       if (disposed || request !== probe) return;
       models = found;
       notice = found.length ? 'Model list received. Choose an ID or enter one manually. Narration has not been tested.'
@@ -211,7 +221,7 @@
 
 <dialog bind:this={dialog} aria-labelledby="models-title" onclose={onClose} oncancel={(event) => { if (busy) event.preventDefault(); }}>
   <div class="dialog-heading"><h2 id="models-title">Model connections</h2><button class="quiet" aria-label="Close model settings" disabled={busy} onclick={() => dialog.close()}>✕</button></div>
-  <p class="supporting">Connect to your running llama.cpp server or a compatible endpoint. Requests go directly from this browser. Completed text and optional Story streaming are supported; authentication is not available yet.</p>
+  <p class="supporting">Connect to your running llama.cpp or Ollama server, or a compatible endpoint. Requests go directly from this browser. Completed text and optional Story streaming are supported; authentication is not available yet.</p>
   {#if error}<p class="story-error" role="alert">{error}</p>{/if}
   {#if notice}<p class="supporting" role="status" aria-label="Model discovery result">{notice}</p>{/if}
   {#if settings}
@@ -229,10 +239,10 @@
       <label for="connection-name">Connection name</label>
       <input id="connection-name" bind:value={name} maxlength="80" required disabled={busy || probing} autocomplete="off" />
       <label for="server-kind">Server type</label>
-      <select id="server-kind" bind:value={kind} disabled={busy || probing}><option value="llamacpp">llama.cpp (llama-server)</option><option value="custom">Custom compatible endpoint</option></select>
+      <select id="server-kind" value={kind} disabled={busy || probing} onchange={(event) => selectServer(event.currentTarget.value as ModelProfile['kind'])}><option value="llamacpp">llama.cpp (llama-server)</option><option value="ollama">Ollama (native API)</option><option value="custom">Custom compatible endpoint</option></select>
       <label for="model-base-url">API base URL</label>
       <input id="model-base-url" bind:value={baseUrl} maxlength="2048" required disabled={busy || probing} spellcheck="false" autocomplete="off" />
-      <p class="supporting">Include the API path, usually /v1. Use the server’s actual port; it must allow this Lorebound browser origin. Do not put keys, passwords or secret parameters in these fields.</p>
+      <p class="supporting">{kind === 'ollama' ? 'Include /api, for example http://127.0.0.1:11434/api. Ollama must allow this browser origin (OLLAMA_ORIGINS).' : 'Include the API path, usually /v1. Use the server’s actual port; it must allow this Lorebound browser origin.'} Do not put keys, passwords or secret parameters in these fields.</p>
       <label for="model-id">Model ID</label>
       <input id="model-id" bind:value={model} list="discovered-models" maxlength="200" required disabled={busy || probing} autocomplete="off" spellcheck="false" />
       <datalist id="discovered-models">{#each models as id}<option value={id}></option>{/each}</datalist>

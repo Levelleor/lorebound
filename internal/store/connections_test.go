@@ -17,6 +17,12 @@ func modelSettings(epoch string) SaveConnectionsRequest {
 }
 
 func TestConnectionsPersistenceConflictEpochAndCanonicalIsolation(t *testing.T) {
+	for _, kind := range []string{"llamacpp", "ollama"} {
+		t.Run(kind, func(t *testing.T) { testConnectionsPersistence(t, kind) })
+	}
+}
+
+func testConnectionsPersistence(t *testing.T, kind string) {
 	s, path, library := createStory(t)
 	ctx := context.Background()
 	first := storyRequest(library.Epoch, "story", 0, "first")
@@ -29,6 +35,7 @@ func TestConnectionsPersistenceConflictEpochAndCanonicalIsolation(t *testing.T) 
 		t.Fatal(err)
 	}
 	req := modelSettings(library.Epoch)
+	req.Profiles[0].Kind = kind
 	settings, err := s.SaveConnections(ctx, req)
 	if err != nil || settings.Revision != 1 || settings.ActiveProfileID != "local" {
 		t.Fatalf("save: %+v %v", settings, err)
