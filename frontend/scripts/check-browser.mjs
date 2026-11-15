@@ -15,6 +15,7 @@ import { exerciseStreaming } from './check-streaming.mjs';
 import { exerciseConnectionTest } from './check-connection-test.mjs';
 import { exerciseOllama } from './check-ollama.mjs';
 import { exerciseNamedServers } from './check-named-servers.mjs';
+import { exerciseNarration } from './check-narration.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -53,6 +54,8 @@ try {
       else await page.locator('.accepted-turn').first().waitFor();
       const snapshot = await page.evaluate(({ epoch, id }) => window.wails.Call.ByName('main.LibraryService.Read', { schemaVersion: 4, epoch, adventureId: id }), { epoch: initial.epoch, id: adventure.id });
       assert.deepEqual(snapshot, expected.snapshots[adventure.id], 'Exact structured history survives process restart');
+      const narration = await page.evaluate(request => window.wails.Call.ByName('main.LibraryService.ReadNarration', request), { schemaVersion: 4, epoch: initial.epoch, adventureId: adventure.id });
+      assert.deepEqual(narration, expected.narration[adventure.id], 'Exact per-adventure narration settings survive process restart');
       for (const passage of snapshot.turns.flatMap(turn => turn.passages))
       {
         const target = `passage:${passage.id}`;
@@ -187,6 +190,7 @@ try {
     await exerciseConnectionTest(browser, base, artifacts);
     await exerciseOllama(browser, base, artifacts);
     await exerciseNamedServers(browser, base, artifacts);
+    await exerciseNarration(browser, base, artifacts);
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};
@@ -218,7 +222,14 @@ try {
       return saved;
     }, { library: finalLibrary, snapshots });
     const connections = await page.evaluate(epoch => window.wails.Call.ByName('main.LibraryService.ReadConnections', { schemaVersion: 4, epoch }), finalLibrary.epoch);
-    await writeFile(statePath, JSON.stringify({ library: finalLibrary, snapshots, drafts, passageDrafts, connections }));
+    const narration = await page.evaluate(async library =>
+    {
+      const settings = {};
+      for (const adventure of library.adventures)
+        settings[adventure.id] = await window.wails.Call.ByName('main.LibraryService.ReadNarration', { schemaVersion: 4, epoch: library.epoch, adventureId: adventure.id });
+      return settings;
+    }, finalLibrary);
+    await writeFile(statePath, JSON.stringify({ library: finalLibrary, snapshots, drafts, passageDrafts, connections, narration }));
   }
   assert.equal(await page.getByRole('alert').count(), 0);
   assert.deepEqual(errors, [], 'No uncaught browser exceptions');

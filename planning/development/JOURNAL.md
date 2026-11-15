@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-14"
+updated: "2026-11-15"
 tags:
   - planning/development
   - decisions
@@ -262,3 +262,10 @@ Independent scope review found no blocker. Automated replies remain simulated an
 After the checked preview/demo and explicit request to finalise/merge [PR #26](https://github.com/Levelleor/lorebound/pull/26), the user said “ok proceed with closure”. This accepts the handoff and authorises closing that same primary PR, without claiming the user personally ran every check. [DEV-004F](./requirements/DEV-004F.md#conditional-single-pr-closure) owns passing application/readiness CI, independent source/coverage/security/control/actual-CI-capture/readiness-documentation review, limits and prepared closure. The agent-launched app/simulated provider are stopped, ports 8086/18086 confirmed closed, and all review/user data preserved.
 
 Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of PR #26. Parent/IDEA scopes remain PARTIAL; INC-004's live LM Studio/vLLM and INC-001's live Ollama gaps stay OPEN. IDEA-0068 stays staged, IDEA-0069 unaccepted and B9-D12 deferred. Actual merge provenance/final CI belongs in PR #26/final handoff. Exactly one next task is DEV-004 audit/selection after confirmed closure and a separate launch; no automatic next slice, post-merge repository write or reconciliation PR follows.
+
+
+## 2026-11-15 — Separate DEV-004 launch selects current adventure narration guidance
+
+Confirmed PR #26 merge `4e565762c03660a9f4ee4fe3f961a453ca060fbf` satisfies DEV-004F's approved closure. The user's separate launch and “proceed” select [DEV-004G](./requirements/DEV-004G.md) after auditing accepted remaining scope and actual source: per-adventure creative controls/custom instructions applied to subsequent existing local Story requests, with fresh persisted reads for Generate/Retry, deterministic complete guidance and captured requested-setting diagnostics. Scope review found no blocker. No semantic contradiction solving, character requirement, style-preset library, sampling override or context-token claim is introduced.
+
+Creative settings use separate noncanonical SQLite metadata (format 7, wire 4 unchanged), with revision/epoch guards and identical uncertain-save recovery. Fork atomically copies **current saved** style into independent metadata rather than reconstructing historical creative settings; drafts/pending form text remain separate. Accepted prose/world/version is unchanged by settings saves. Later author-note/template/context/mode integration remains visible in INC-005; live-provider gaps remain open. One primary PR owns implementation/evidence/controls/reconciliation, with hands-on review and verbal named-PR finalise/merge approval still required. IDEA-0068 stays staged, IDEA-0069 unaccepted and B9-D12 deferred. No next child follows automatically.

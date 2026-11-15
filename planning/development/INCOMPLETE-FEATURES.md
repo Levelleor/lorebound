@@ -2,7 +2,7 @@
 type: incomplete-feature-register
 status: current
 created: "2026-11-14"
-updated: "2026-11-14"
+updated: "2026-11-15"
 tags:
   - planning/development
   - implementation-gaps
@@ -63,6 +63,18 @@ Use **functional**, **integration** or **verification** to identify the gap; com
 | Source / evidence | [DEV-004F scope/coverage/limits](./requirements/DEV-004F.md); [server definitions](../../frontend/src/lib/modelServers.ts); [shared browser model API](../../frontend/src/lib/models.ts); [named browser fixture](../../frontend/scripts/check-named-servers.mjs). [Application CI](https://github.com/Levelleor/lorebound/actions/runs/43661108182) PASS; [PR #26](https://github.com/Levelleor/lorebound/pull/26) owns independent review/readiness, without live-server certification. |
 | Resolution | After an authorised focused live check for each server, record the exercised version/model/browser, discovery/manual entry, completed/SSE, Stop and explicit acceptance/reload, fix mismatches and retain remaining configuration limits. |
 | Dependencies / boundary | Requires separately configured available servers/models and browser access. No installation, server reconfiguration, credential workaround or mandatory live-AI CI/merge gate follows from this entry. |
+
+## INC-005 — Narration guidance: remaining context and mode integration
+
+| Field | Detail |
+| --- | --- |
+| Status / gap | **OPEN — integration**; DEV-004G implementation is unmerged and under verification/review. |
+| Implemented | Current adventure style controls/custom instructions, future-only guidance for existing local Story Generate/Retry, separate revision/epoch-fenced metadata and requested-guidance inspection. Fork copies current saved settings independently. |
+| Unfinished | Persistent global/adventure/scene author-note layers, scenario-template starting directions, measured context-budget/omission inspection and future narration modes are not integrated. Model adherence is best-effort and context capacity is unknown. |
+| Practical effect | Current supported Story narration sends selected style guidance in full. It adds no author-note manager, style presets, token-capacity guarantee or automatic rewrite of accepted prose. Simulation ignores style. |
+| Source / evidence | [DEV-004G requirements/limits](./requirements/DEV-004G.md); [prompt assembly](../../frontend/src/lib/narration.ts); [settings dialog](../../frontend/src/lib/NarrationSettings.svelte); [browser contracts](../../frontend/scripts/check-narration.mjs). CI/review readiness remains pending. |
+| Resolution | Separately authorise and verify owning context/author-note/template/mode slices, integrate their inputs in the accepted deterministic order and preserve future-only behavior. Do not infer whole-IDEA completion from the current controls. |
+| Dependencies / boundary | IDEA-0010/0024/0025 and DEV-005/008/009; later provider/mode integration. No automatic next child or change to staged/unaccepted ideas and B9-D12 deferral. |
 
 ## Maintaining entries
 
