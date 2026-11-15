@@ -2,7 +2,7 @@
 type: guide
 status: current
 created: "2026-10-16"
-updated: "2026-11-06"
+updated: "2026-11-14"
 tags:
   - planning/guide
 ---
@@ -12,6 +12,8 @@ tags:
 Open `planning/` as the Obsidian vault, or use ordinary Markdown tools. Start development from [NOW](development/NOW.md) and the [development workflow](development/README.md); this page explains planning stages, not current implementation status.
 
 Read [repository instructions](../AGENTS.md), [vault rules](AGENTS.md) and the [System Architecture Overview](architecture/Lorebound%20-%20System%20Architecture%20Overview.md). Relevant original IDEAs and later accepted ADRs own detailed approval/provenance. [Design guidance](design/README.md) owns the approved appearance. Dated approval histories remain in their source notes rather than this entry point.
+
+See [implemented but unfinished features](development/INCOMPLETE-FEATURES.md) for concrete implementation and verification gaps; [FEATURES](development/FEATURES.md) retains overall IDEA completion status.
 
 ## Promotion flow
 

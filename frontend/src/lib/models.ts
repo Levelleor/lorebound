@@ -1,3 +1,6 @@
+import { ModelError, endpointUrl, readJson, requestValue, type ModelEndpoint } from './modelTransport.ts';
+import { discoverOllamaModels, generateOllama, testOllamaConnection } from './ollama.ts';
+export { ModelError, endpointUrl } from './modelTransport.ts';
 import { schemaVersion } from './library.ts';
 import { isID, isObject, plainTextToDocument } from './story.ts';
 import type { GenerationInput } from './coordinator.ts';
@@ -7,7 +10,7 @@ export interface ModelProfile
 {
   id: string;
   name: string;
-  kind: 'llamacpp' | 'custom';
+  kind: 'llamacpp' | 'custom' | 'ollama';
   baseUrl: string;
   model: string;
   timeoutMs: number;
@@ -25,30 +28,16 @@ export interface Connections
 
 export type SaveConnections = Omit<Connections, 'revision'> & { expectedRevision: number };
 
-export class ModelError extends Error {}
-
 export function modelError(cause: unknown): string
 {
   return cause instanceof ModelError ? cause.message
     : 'The response could not be prepared. Your input is retained. Check Models and try again.';
 }
 
-export function endpointUrl(value: string): string
-{
-  if (value.length > 2048 || /[\s?#\\]/u.test(value))
-    throw new ModelError('Use an HTTP(S) base URL without credentials, spaces, query or fragment.');
-  let url: URL;
-  try { url = new URL(value); }
-  catch { throw new ModelError('Enter the server’s complete HTTP(S) API base URL.'); }
-  if (!['http:', 'https:'].includes(url.protocol) || !url.hostname || url.username || url.password)
-    throw new ModelError('Use an HTTP(S) base URL without credentials, query or fragment.');
-  return url.href.replace(/\/+$/, '');
-}
-
 export function readProfile(value: unknown): ModelProfile
 {
   if (!isObject(value) || Object.keys(value).length !== 6 || !isID(value.id)
-    || (value.kind !== 'llamacpp' && value.kind !== 'custom')
+    || (value.kind !== 'llamacpp' && value.kind !== 'custom' && value.kind !== 'ollama')
     || typeof value.name !== 'string' || !value.name.trim() || !value.name.isWellFormed() || [...value.name].length > 80
     || typeof value.model !== 'string' || !value.model.trim() || !value.model.isWellFormed() || [...value.model].length > 200
     || typeof value.baseUrl !== 'string' || !Number.isInteger(value.timeoutMs) || Number(value.timeoutMs) < 1000 || Number(value.timeoutMs) > 300000)
@@ -71,46 +60,6 @@ export function readConnections(value: unknown, epoch: string): Connections
     throw new Error('unsupported_model_settings');
   return value as unknown as Connections;
 }
-
-async function readJson(response: Response, signal: AbortSignal): Promise<unknown>
-{
-  if (!response.body) throw new ModelError('The server returned an empty response. Check its compatible API settings.');
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder('utf-8', { fatal: true });
-  let text = '';
-  let size = 0;
-  const cancel = () => { void reader.cancel().catch(() => {}); };
-  signal.addEventListener('abort', cancel, { once: true });
-  try
-  {
-    signal.throwIfAborted();
-    for (;;)
-    {
-      const { done, value } = await reader.read();
-      signal.throwIfAborted();
-      if (done) break;
-      size += value.byteLength;
-      if (size > 1048576) throw new ModelError('The server response exceeded the supported size. Try a shorter response.');
-      text += decoder.decode(value, { stream: true });
-    }
-    text += decoder.decode();
-    return JSON.parse(text);
-  }
-  catch (cause)
-  {
-    signal.throwIfAborted();
-    if (cause instanceof ModelError) throw cause;
-    throw new ModelError('The server response could not be read as supported UTF-8 JSON. Check its compatible API settings and server logs. No response was retained.');
-  }
-  finally
-  {
-    signal.removeEventListener('abort', cancel);
-    await reader.cancel().catch(() => {});
-    reader.releaseLock();
-  }
-}
-
-type ModelEndpoint = Pick<ModelProfile, 'baseUrl' | 'timeoutMs'>;
 
 function readUsage(value: unknown): TokenUsage | null
 {
@@ -231,58 +180,9 @@ async function readContinuationStream(response: Response, signal: AbortSignal, o
   }
 }
 
-async function requestValue<T>(profile: ModelEndpoint, path: string, signal: AbortSignal, read: (response: Response, signal: AbortSignal) => Promise<T>, body?: unknown, fetcher: typeof fetch = fetch): Promise<T>
+export async function discoverModels(profile: ModelEndpoint & { kind?: ModelProfile['kind'] }, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<string[]>
 {
-  const selected = { ...profile, baseUrl: endpointUrl(profile.baseUrl) };
-  if (!Number.isInteger(selected.timeoutMs) || selected.timeoutMs < 1000 || selected.timeoutMs > 300000)
-    throw new ModelError('Use a timeout from 1 to 300 seconds.');
-  const timeout = new AbortController();
-  const timer = setTimeout(() => timeout.abort(), selected.timeoutMs);
-  const combined = AbortSignal.any([signal, timeout.signal]);
-  try
-  {
-    combined.throwIfAborted();
-    const response = await fetcher(`${endpointUrl(selected.baseUrl)}/${path}`, {
-      method: body ? 'POST' : 'GET',
-      mode: 'cors',
-      credentials: 'omit',
-      redirect: 'error',
-      referrerPolicy: 'no-referrer',
-      cache: 'no-store',
-      headers: body ? { 'Content-Type': 'application/json' } : {},
-      ...(body ? { body: JSON.stringify(body) } : {}),
-      signal: combined
-    });
-    combined.throwIfAborted();
-    if (!response.ok)
-    {
-      await response.body?.cancel();
-      if (response.status === 401 || response.status === 403)
-        throw new ModelError('The server requires access this connection cannot provide. Authenticated connections are not supported yet.');
-      if (response.status === 404)
-        throw new ModelError('The server could not find this API or model. Check the base URL and model ID; discovery is optional.');
-      if (response.status === 400)
-        throw new ModelError('The server rejected this request. Check the model ID, API path and supported request settings (HTTP 400).');
-      if (response.status === 429)
-        throw new ModelError('The server is busy or rate limited. Try again when ready; no automatic retry was sent.');
-      throw new ModelError(`The server returned HTTP ${response.status}. Check the server and try again.`);
-    }
-    const value = await read(response, combined);
-    combined.throwIfAborted();
-    return value;
-  }
-  catch (cause)
-  {
-    if (signal.aborted) throw signal.reason;
-    if (timeout.signal.aborted) throw new ModelError('The model request timed out. Your input is retained; check the server or increase its timeout.');
-    if (cause instanceof ModelError) throw cause;
-    throw new ModelError('The model request failed. Check the server, HTTP(S) URL, browser CORS/origin and network permissions. No proxy or fallback was used.');
-  }
-  finally { clearTimeout(timer); }
-}
-
-export async function discoverModels(profile: ModelEndpoint, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<string[]>
-{
+  if (profile.kind === 'ollama') return discoverOllamaModels(profile, signal, fetcher);
   const value = await requestValue(profile, 'models', signal, readJson, undefined, fetcher);
   if (!isObject(value) || !Array.isArray(value.data) || value.data.length > 1000
     || !value.data.every(model => isObject(model) && typeof model.id === 'string' && model.id.trim() && model.id.isWellFormed() && [...model.id].length <= 200))
@@ -293,10 +193,11 @@ export async function discoverModels(profile: ModelEndpoint, signal: AbortSignal
 export async function testConnection(profile: ModelEndpoint & Pick<ModelProfile, 'kind' | 'model'>, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<'complete' | 'limited'>
 {
   const selected = { ...profile };
-  if (selected.kind !== 'llamacpp' && selected.kind !== 'custom')
+  if (selected.kind !== 'llamacpp' && selected.kind !== 'custom' && selected.kind !== 'ollama')
     throw new ModelError('Choose a supported server type before testing the connection.');
   if (typeof selected.model !== 'string' || !selected.model.trim() || !selected.model.isWellFormed() || [...selected.model].length > 200)
     throw new ModelError('Enter a model ID up to 200 characters before testing the connection. Discovery is optional.');
+  if (selected.kind === 'ollama') return testOllamaConnection(selected, signal, fetcher);
   const value = await requestValue(selected, 'chat/completions', signal, readJson, {
     model: selected.model,
     stream: false,
@@ -338,6 +239,12 @@ export async function generateLocal(profile: ModelProfile, input: GenerationInpu
       { role: 'user', content: input.input }
     ]
   };
+  if (selected.kind === 'ollama')
+  {
+    const result = await generateOllama(selected, body, signal, fetcher, onProgress);
+    onDiagnostics?.({ ...details, usage: result.usage });
+    return result.text;
+  }
   if (onProgress)
   {
     const result = await requestValue(selected, 'chat/completions', signal, (response, activeSignal) => readContinuationStream(response, activeSignal, onProgress), body, fetcher);

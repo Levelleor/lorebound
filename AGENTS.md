@@ -4,7 +4,7 @@
 
 These are standing rules, not a development-status snapshot. Do not add task IDs, branch names, progress counts or dated execution reports here.
 
-- For development, start with [planning/development/NOW.md](planning/development/NOW.md), then the relevant [task](planning/development/TASKS.md), [feature coverage](planning/development/FEATURES.md), [journal decisions](planning/development/JOURNAL.md) and [runbook](planning/development/AGENT-RUNBOOK.md). NOW owns the current focus and exactly one next task.
+- For development, start with [planning/development/NOW.md](planning/development/NOW.md), then the relevant [task](planning/development/TASKS.md), [feature coverage](planning/development/FEATURES.md), [implemented-feature gaps](planning/development/INCOMPLETE-FEATURES.md), [journal decisions](planning/development/JOURNAL.md) and [runbook](planning/development/AGENT-RUNBOOK.md). NOW owns the current focus and exactly one next task.
 - Before application development or architectural review, read the [System Architecture Overview](planning/architecture/Lorebound%20-%20System%20Architecture%20Overview.md), relevant original production IDEA notes and later accepted ADRs. Specific later user-approved decisions govern earlier prose; the overview is navigation, not new feature authority.
 - For planning work, read [planning/AGENTS.md](planning/AGENTS.md) and [planning/Start Here.md](planning/Start%20Here.md).
 - For exploratory ideation, use the [brainstorm skill](.agents/skills/brainstorm/SKILL.md). Capturing a candidate is not acceptance.
