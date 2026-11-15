@@ -157,7 +157,7 @@
     color: var(--foreground);
   }
 
-  .shelf-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin: 8px 0; flex-wrap: wrap; }
+  .shelf-actions { position: sticky; bottom: 0; z-index: 1; display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin: 8px 0; padding-top: 6px; background: var(--background); flex-wrap: wrap; }
   .shelf-actions button { padding: 6px 10px; font-size: 12px; }
   form, fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
   .style-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 12px; }

@@ -92,9 +92,10 @@ export async function exerciseNarration(browser, base, artifacts)
           const shelf = document.querySelector('#narration-style-panel').getBoundingClientRect();
           const toggle = document.querySelector('.narration-toggle').getBoundingClientRect();
           const input = document.querySelector('#story-input').getBoundingClientRect();
-          return { aboveInput: shelf.bottom <= input.top, nearInput: toggle.bottom <= input.top && input.top - toggle.bottom < 100, inputVisible: input.bottom <= innerHeight };
+          const actions = document.querySelector('.shelf-actions').getBoundingClientRect();
+          return { aboveInput: shelf.bottom <= input.top, nearInput: toggle.bottom <= input.top && input.top - toggle.bottom < 100, inputVisible: input.bottom <= innerHeight, actionsVisible: actions.top >= shelf.top && actions.bottom <= shelf.bottom };
         });
-        assert.deepEqual(geometry, { aboveInput: true, nearInput: true, inputVisible: true });
+        assert.deepEqual(geometry, { aboveInput: true, nearInput: true, inputVisible: true, actionsVisible: true });
         assert.equal(await page.getByRole('dialog').count(), 0, 'Narration controls expand inline');
         assert.equal(await page.getByRole('button', { name: 'Narration style', exact: true }).getAttribute('aria-expanded'), 'true');
         if (artifacts) await page.screenshot({ path: path.join(artifacts, `narration-${theme}-${width}.png`) });
