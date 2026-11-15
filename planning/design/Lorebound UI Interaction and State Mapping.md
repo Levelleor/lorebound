@@ -3,7 +3,7 @@ type: design
 status: approved-visual-direction
 phase: "C"
 created: "2026-11-03"
-updated: "2026-11-06"
+updated: "2026-11-15"
 source: "User-supplied lorebound-design-only-kit(1).zip / UX_INTERACTION_MAP.md"
 tags:
   - planning/design
@@ -30,7 +30,7 @@ This is the **visual and user-feedback companion** to the [approved Command Cita
 | Right-rail tabs | selected tab gold-underlined, inactive tabs muted | Scene/Items/Lore/Context content, only currently supported features |
 | Playing As selector | current actor highlighted in rail and other selectors; current marker/text | Only grounded existing character; Do/Say unavailable without a selected actor |
 | Composer mode selection | one gold/glowing selected mode; different concise hint; other modes muted | Do/Say/Story/Continue are eventual modes; Story is first Pass C slice, not evidence all modes work |
-| Advanced/steering toggle | compact outlined shelf expands above composer; open icon gold | Do not introduce model features only to reproduce visual demo |
+| Advanced/steering toggle | compact outlined shelf expands over the lower story above the docked composer; open icon gold; input and current story position stay fixed | Shared main scrolling reaches overflowing controls on short screens; no nested interaction scrollbar. Do not introduce model features only to reproduce visual demo |
 | Composer input | three-line bordered field; Story may use 18px serif; Do/Say 14px sans | Ctrl/Cmd+Enter where supported, visible hint and named send action; default disabled states grounded in actual capabilities |
 | Continue mode | replaces typing with calm dashed explanatory box | No text entry required; availability follows implemented mode semantics |
 | Send/start | 36px gold primary circular control transitions to red-outlined Stop during actual generation | Pending narrative text is noncanonical; never auto-accept solely because UI says Send |

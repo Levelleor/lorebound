@@ -77,7 +77,7 @@
     void load().then(async () =>
     {
       await tick();
-      if (!disposed) perspective?.focus();
+      if (!disposed) perspective?.focus({ preventScroll: true });
     });
     return () => { disposed = true; };
   });
@@ -151,9 +151,8 @@
   .narration-settings
   {
     padding: 16px;
-    margin-bottom: 16px;
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 6px;
     background: var(--background);
     color: var(--foreground);
   }
@@ -161,10 +160,11 @@
   .shelf-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); flex-wrap: wrap; }
   .shelf-actions button { padding: 6px 10px; font-size: 12px; }
   .story-error { max-height: none; overflow: visible; }
+  input, select, textarea, button, summary { scroll-margin-top: 16px; scroll-margin-bottom: calc(var(--composer-height) + 16px); }
   form, fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
   .style-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 16px; }
   .style-grid > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-  label { font: 600 10px/1.4 var(--font-ui); text-transform: uppercase; letter-spacing: .08em; margin: 0; }
+  label { color: var(--muted-foreground); font: 600 10.88px/1.4 var(--font-ui); text-transform: uppercase; letter-spacing: .14em; margin: 0; }
   input, select, textarea { box-sizing: border-box; width: 100%; min-width: 0; padding: 6px 8px; margin: 0; border: 1px solid var(--border); border-radius: 4px; background: var(--background); color: var(--foreground); font: 12px/1.5 var(--font-ui); }
   input, select { height: 32px; }
   form > fieldset > label { margin: 16px 0 6px; }

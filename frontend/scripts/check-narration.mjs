@@ -46,12 +46,61 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     const call = (method, value = request) => page.evaluate(({ method, value }) => window.wails.Call.ByName(`main.LibraryService.${method}`, value), { method, value });
     const read = () => call('Read');
     const settings = () => call('ReadNarration');
+    // Persist enough real history to catch reader/composer movement at nonzero scroll.
+    const document = content => ({ schemaVersion: 1, type: 'doc', content: content.map(text => ({ type: 'paragraph', content: [{ type: 'text', text }] })) });
+    await call('Commit', { ...request, operationId: crypto.randomUUID(), expectedVersion: 0, kind: 'append_story_turn', turn: {
+      schemaVersion: 1, id: crypto.randomUUID(), order: 1, events: [], passages: [
+        { id: crypto.randomUUID(), source: 'authored', body: document(['A long harbour watch.']) },
+        { id: crypto.randomUUID(), source: 'generated', body: document(Array.from({ length: 40 }, (_, index) => `Harbour watch ${index + 1}. The lantern crossed the quay without a sound.`)) }
+      ]
+    } });
     const before = await read();
     const connections = await call('ReadConnections', { schemaVersion: 4, epoch: library.epoch });
     const profile = { id: 'narration-fixture', name: 'Simulated narration protocol', kind: 'custom', baseUrl: `http://127.0.0.1:${server.address().port}/v1`, model: 'fixture', timeoutMs: 10000 };
     await call('SaveConnections', { schemaVersion: 4, epoch: library.epoch, expectedRevision: connections.revision, mode: 'local', activeProfileId: profile.id, profiles: [...connections.profiles.filter(value => value.id !== profile.id), profile] });
     await page.reload({ waitUntil: 'networkidle' });
     await page.locator('.composer-heading').getByText('Simulated narration protocol · fixture', { exact: true }).waitFor();
+    const loadedFonts = await page.evaluate(async () =>
+    {
+      const faces = await Promise.all(['400 21px "Cormorant Garamond"', '400 14px "IBM Plex Sans"', 'italic 400 14px "IBM Plex Sans"', '400 10px "IBM Plex Mono"'].map(font => document.fonts.load(font)));
+      await document.fonts.ready;
+      return faces.every(group => group.length > 0 && group.every(face => face.status === 'loaded'));
+    });
+    assert.equal(loadedFonts, true, 'Reference serif, UI/italic and technical fonts load from bundled assets');
+    const retainedDraft = Array.from({ length: 14 }, () => 'A harbour lantern passed silently beyond the narrow quay.').join(' ');
+    await page.getByLabel('Story input', { exact: true }).fill(retainedDraft);
+    await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
+    let releaseFonts;
+    let fontsStarted;
+    const fontsRequested = new Promise(resolve => fontsStarted = resolve);
+    const delayedFonts = new Promise(resolve => releaseFonts = resolve);
+    await page.route('**/fonts/*.ttf', async route =>
+    {
+      fontsStarted();
+      await delayedFonts;
+      await route.continue();
+    });
+    try
+    {
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await fontsRequested;
+      await page.waitForFunction(text => document.querySelector('#story-input')?.value === text, retainedDraft);
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      const fallbackHeight = await page.getByLabel('Story input', { exact: true }).evaluate(element => element.clientHeight);
+      releaseFonts();
+      await page.evaluate(() => document.fonts.ready);
+      await page.waitForFunction(height =>
+      {
+        const field = document.querySelector('#story-input');
+        return field.clientHeight !== height && field.scrollHeight <= field.clientHeight + 1;
+      }, fallbackHeight);
+      assert.equal(await page.getByLabel('Story input', { exact: true }).inputValue(), retainedDraft, 'Font swap remeasures the restored draft without an input event or text loss');
+    }
+    finally
+    {
+      releaseFonts();
+      await page.unroute('**/fonts/*.ttf');
+    }
     await page.getByLabel('Story input', { exact: true }).fill('Retain the lantern input.');
 
     async function openStyle(target = page)
@@ -59,6 +108,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
       await target.getByRole('button', { name: 'Narration style', exact: true }).click();
       await target.getByLabel('Perspective', { exact: true }).waitFor();
       await target.waitForFunction(() => !document.querySelector('#narration-style-panel fieldset')?.disabled);
+      await target.waitForFunction(() => document.activeElement?.id === 'narration-perspective');
     }
     async function storyView()
     {
@@ -70,21 +120,38 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
       await page.getByRole('button', { name: 'Save narration settings', exact: true }).click();
       await page.getByRole('region', { name: 'Narration style', exact: true }).waitFor({ state: 'detached' });
     };
-    await openStyle();
-    await page.getByLabel('Perspective', { exact: true }).selectOption('third');
-    await page.getByLabel('Tense', { exact: true }).selectOption('past');
-    await page.getByLabel('Genre', { exact: true }).fill('Harbour mystery');
-    await page.getByLabel('Tone', { exact: true }).fill('Quietly ominous');
-    await page.getByLabel('Pacing', { exact: true }).selectOption('slow');
-    await page.getByLabel('Response length', { exact: true }).selectOption('brief');
-    await page.getByLabel('Custom style instructions', { exact: true }).fill('Keep the lantern mysterious.\nUse concrete sounds.');
+    async function fillStyle()
+    {
+      await page.getByLabel('Perspective', { exact: true }).selectOption('third');
+      await page.getByLabel('Tense', { exact: true }).selectOption('past');
+      await page.getByLabel('Genre', { exact: true }).fill('Harbour mystery');
+      await page.getByLabel('Tone', { exact: true }).fill('Quietly ominous');
+      await page.getByLabel('Pacing', { exact: true }).selectOption('slow');
+      await page.getByLabel('Response length', { exact: true }).selectOption('brief');
+      await page.getByLabel('Custom style instructions', { exact: true }).fill('Keep the lantern mysterious.\nUse concrete sounds.');
+    }
+    const anchor = () => page.evaluate(() =>
+    {
+      const box = selector =>
+      {
+        const { x, y, width, height } = document.querySelector(selector).getBoundingClientRect();
+        return { x, y, width, height };
+      };
+      return { input: box('#story-input'), toggle: box('.narration-toggle'), reader: box('.reader'), scroll: document.querySelector('.story-pane').scrollTop };
+    });
     for (const theme of ['dark', 'bright'])
     {
       await page.evaluate(theme => document.documentElement.dataset.loreboundUi = theme, theme);
       for (const width of [390, 768, 1024, 1440])
       {
         await page.setViewportSize({ width, height: 900 });
-        await page.locator('.composer').scrollIntoViewIfNeeded();
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        await page.locator('.story-pane').evaluate(element => element.scrollTop = 200);
+        const beforeOpen = await anchor();
+        if (artifacts && theme === 'dark' && [390, 1440].includes(width)) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-closed-${width}.png`) });
+        await openStyle();
+        assert.deepEqual(await anchor(), beforeOpen, 'Opening style preserves input, toolbar, story geometry and scroll position without corrective scrolling');
+        await fillStyle();
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
         assert.equal(await page.getByRole('region', { name: 'Narration style', exact: true }).evaluate(element => element.scrollWidth <= element.clientWidth && element.scrollHeight <= element.clientHeight + 1), true);
         const geometry = await page.evaluate(() =>
@@ -111,12 +178,21 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
           const source = heading.querySelector('.model-source').getBoundingClientRect();
           const checkbox = document.querySelector('.stream-option input').getBoundingClientRect();
           const stream = document.querySelector('.stream-option').getBoundingClientRect();
-          return { aboveInput: shelf.bottom <= input.top, nearInput: toggle.bottom <= input.top && input.top - toggle.bottom < 100,
+          const main = document.querySelector('.story-pane');
+          const mainBox = main.getBoundingClientRect();
+          const workspace = document.querySelector('.workspace').getBoundingClientRect();
+          const rail = document.querySelector('.context-rail').getBoundingClientRect();
+          const reader = document.querySelector('.reader');
+          const fullHeightScroll = mainBox.top === workspace.top && mainBox.bottom === workspace.bottom
+            && getComputedStyle(main).paddingRight === '0px' && getComputedStyle(main).scrollbarGutter === 'stable'
+            && getComputedStyle(reader).overflowY === 'visible' && main.scrollHeight > main.clientHeight
+            && (innerWidth < 1024 || mainBox.right === rail.left);
+          return { fullHeightScroll, inputVisible: input.top >= mainBox.top && input.bottom <= mainBox.bottom, aboveInput: shelf.bottom <= input.top, nearInput: toggle.bottom <= input.top && input.top - toggle.bottom < 100,
             actionsSeparated: actions.top >= panel.querySelector('fieldset').getBoundingClientRect().bottom + 8,
             fieldsSeparated: separated, noInnerScroll, toolbarSeparated: mode.right + 8 <= source.left && source.right + 8 <= toggle.left,
             checkboxAligned: checkbox.top >= stream.top && checkbox.bottom <= stream.bottom };
         });
-        assert.deepEqual(geometry, { aboveInput: true, nearInput: true, actionsSeparated: true, fieldsSeparated: true, noInnerScroll: true, toolbarSeparated: true, checkboxAligned: true });
+        assert.deepEqual(geometry, { fullHeightScroll: true, inputVisible: true, aboveInput: true, nearInput: true, actionsSeparated: true, fieldsSeparated: true, noInnerScroll: true, toolbarSeparated: true, checkboxAligned: true });
         assert.equal(await page.getByRole('dialog').count(), 0, 'Narration controls expand inline');
         assert.equal(await page.getByRole('button', { name: 'Narration style', exact: true }).getAttribute('aria-expanded'), 'true');
         if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-${theme}-${width}.png`) });
@@ -134,14 +210,38 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
           assert.equal(visible, true, 'Focused instruction field must be fully visible above the nonoverlapping action footer');
           if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-focus-${theme}-${width}.png`) });
         }
+        await page.getByRole('button', { name: 'Narration style', exact: true }).click();
+        assert.deepEqual(await anchor(), beforeOpen, 'Closing style also preserves the view');
       }
     }
     await page.setViewportSize({ width: 390, height: 600 });
-    await page.getByRole('button', { name: 'Save narration settings', exact: true }).scrollIntoViewIfNeeded();
+    await page.locator('.story-pane').evaluate(element => element.scrollTop = 200);
+    const shortAnchor = await anchor();
+    await openStyle();
+    assert.deepEqual(await anchor(), shortAnchor, 'Short-screen expansion keeps the input docked and story still');
+    for (const selector of ['#narration-perspective', '#narration-instructions', '.shelf-actions button[type=submit]'])
+    {
+      await page.locator(selector).focus();
+      await page.locator('.story-pane').evaluate((main, selector) =>
+      {
+        const field = document.querySelector(selector).getBoundingClientRect();
+        const dock = document.querySelector('.composer').getBoundingClientRect();
+        if (field.bottom > dock.top - 16) main.scrollTop += field.bottom - dock.top + 16;
+        else if (field.top < main.getBoundingClientRect().top + 16) main.scrollTop += field.top - main.getBoundingClientRect().top - 16;
+      }, selector);
+      const field = await page.locator(selector).boundingBox();
+      const dock = await page.locator('.composer').boundingBox();
+      assert.ok(field.y >= 92 && field.y + field.height <= dock.y, 'Every style control is reachable through the shared main scrollbar');
+      assert.deepEqual((await anchor()).input, shortAnchor.input, 'Scrolling the shelf never moves the input');
+    }
+    if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-short-390.png`) });
     assert.equal(await page.locator('.composer').evaluate(element => element.scrollHeight <= element.clientHeight + 1), true, 'Short screens scroll outside the interaction block');
     await page.getByLabel('Story input', { exact: true }).scrollIntoViewIfNeeded();
     assert.equal(await page.getByLabel('Story input', { exact: true }).isVisible(), true);
+    await page.getByRole('button', { name: 'Narration style', exact: true }).click();
     await page.setViewportSize({ width: 1440, height: 900 });
+    await openStyle();
+    await fillStyle();
     const instructions = page.getByLabel('Custom style instructions', { exact: true });
     await instructions.fill(Array.from({ length: 16 }, (_, index) => `Writing direction line ${index + 1}.`).join('\n'));
     await page.waitForFunction(() => { const field = document.querySelector('#narration-instructions'); return field.clientHeight > 200 && field.scrollHeight <= field.clientHeight + 1; });
@@ -174,7 +274,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     if (layoutOnly)
     {
       assert.deepEqual(errors, []);
-      console.log('PASS: Chromium narration layout, no internal scrollbars, field/toolbar spacing, growing textareas and saved settings');
+      console.log('PASS: Chromium narration layout, anchored expansion/shared edge scrollbar, no internal scrollbars, field/toolbar spacing, growing textareas and saved settings');
       return;
     }
 
@@ -199,7 +299,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
       }
     }
     await page.getByRole('button', { name: 'Accept turn', exact: true }).click();
-    await page.locator('.accepted-turn').waitFor();
+    await page.waitForFunction(() => document.querySelectorAll('.accepted-turn').length === 2);
     const accepted = await read();
 
     // A stale form cannot silently overwrite a newer tab's current preferences.
@@ -348,7 +448,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     await page.getByRole('button', { name: 'Cancel', exact: true }).click();
     await page.reload({ waitUntil: 'networkidle' });
     assert.deepEqual(errors, []);
-    console.log('PASS: inline composer narration shelf, no internal scrollbars/overlaps, growing textareas, toggle/Escape/focus, saved-only generation, pinned library identity, persistence/conflicts/lost replies and Retry/Stop');
+    console.log('PASS: inline composer narration shelf, anchored expansion/shared edge scrollbar, no internal scrollbars/overlaps, growing textareas, toggle/Escape/focus, saved-only generation, pinned library identity, persistence/conflicts/lost replies and Retry/Stop');
   }
   finally
   {

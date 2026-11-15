@@ -41,6 +41,10 @@
   let narrationOpen = false;
   let narrationBusy = false;
   let narrationButton: HTMLButtonElement;
+  let storyPane: HTMLElement;
+  let storyHeight = 0;
+  let composerHeight = 0;
+  let narrationTop = 0;
   $: editTargetMissing = state?.edit && !state.snapshot.turns.some(turn => turn.passages.some(passage => passage.id === state?.edit?.passageId));
   $: editHasContinuation = state?.edit && state.snapshot.turns.some(turn => turn.id === state?.edit?.turnId && turn.passages.some(passage => passage.source === 'generated'));
   $: detachedFork = forkState?.phase === 'blocked' || Boolean(forkState && forkTurnId && state && !state.snapshot.turns.some(turn => turn.id === forkTurnId));
@@ -314,6 +318,7 @@
   function toggleNarration()
   {
     if (forkBusy || narrationBusy || state?.phase !== 'idle' || state.refreshing) return;
+    if (!narrationOpen) narrationTop = storyPane.scrollTop;
     narrationOpen = !narrationOpen;
     publish(coordinator.state);
   }
@@ -324,7 +329,7 @@
     narrationBusy = false;
     publish(coordinator.state);
     await tick();
-    narrationButton?.focus();
+    narrationButton?.focus({ preventScroll: true });
   }
 
   onMount(() =>
@@ -410,10 +415,13 @@
   </div>
 {/snippet}
 
-<main class:mobile-hidden={mobileHidden} class:narration-expanded={narrationOpen} class="story-pane">
+<main class:mobile-hidden={mobileHidden} class="story-pane" bind:this={storyPane} bind:clientHeight={storyHeight}
+  style:--story-height={`${storyHeight}px`} style:--composer-height={`${composerHeight}px`}>
   <article class="reader" aria-label="Story reader">
-    <p class="eyebrow">Your adventure</p>
-    <h1 tabindex="-1">{snapshot.adventure.title}</h1>
+    <header class="story-heading">
+      <p class="eyebrow">Adventure · Turn {state?.snapshot.turns.at(-1)?.order ?? 0}</p>
+      <h1 tabindex="-1">{snapshot.adventure.title}</h1>
+    </header>
     {#if state}
       {#if detachedFork}
         <section class="provisional" aria-label="Fork recovery">
@@ -518,16 +526,20 @@
       {#if state.diagnostics}<GenerationInspector diagnostics={state.diagnostics} />{/if}
     {/if}
   </article>
-  <div class="composer">
+  {#if narrationOpen && state}
+    <div class="narration-drawer" style:top={`${narrationTop}px`}>
+      <div class="narration-drawer-inner">
+        <NarrationSettings request={{ schemaVersion, epoch: state.snapshot.epoch, adventureId: state.snapshot.adventure.id }}
+          onBusy={(value) => narrationBusy = value} onClose={closeNarration} />
+      </div>
+    </div>
+  {/if}
+  <div class="composer" bind:clientHeight={composerHeight}>
     <div class="composer-inner">
       {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
       {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
-      {#if narrationOpen && state}
-        <NarrationSettings request={{ schemaVersion, epoch: state.snapshot.epoch, adventureId: state.snapshot.adventure.id }}
-          onBusy={(value) => narrationBusy = value} onClose={closeNarration} />
-      {/if}
       <div class="composer-heading">
-        <span class="mode-selected">✎ Story</span>
+        <span class="mode-selected"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 12.2a6 6 0 0 0-8.4-8.4L3 12.5V21h8.5ZM16 8 2 22m15.5-7H9" /></svg>Story</span>
         <span class="supporting model-source" title={sourceLabel}>{sourceLabel}</span>
         <button class="narration-toggle" class:selected={narrationOpen} bind:this={narrationButton} aria-label="Narration style" title="Narration style"
           aria-expanded={narrationOpen} aria-controls="narration-style-panel" disabled={forkBusy || narrationBusy || state?.phase !== 'idle' || state.refreshing} onclick={toggleNarration}>
@@ -599,11 +611,11 @@
             </div>
           </div>
         {:else if state?.phase === 'generating'}
-          <button class="send stop" bind:this={stopButton} aria-label="Stop generation" onclick={stop}>■</button>
+          <button class="send stop" bind:this={stopButton} aria-label="Stop generation" onclick={stop}><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="14" height="14" rx="2" /></svg></button>
         {:else if state?.phase === 'blocked'}
           <div class="pending-overlay"><p>Story writes are unavailable.</p><button onclick={() => coordinator.refresh()}>Reload story</button></div>
         {:else}
-          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={narrationOpen || forkBusy || !state?.input.trim() || state.refreshing}>↑</button>
+          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={narrationOpen || forkBusy || !state?.input.trim() || state.refreshing}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m-7 7 7-7 7 7" /></svg></button>
         {/if}
       </div>
       <p class="composer-hint" role="status" aria-label="Draft status">{state?.draftError || (state?.phase === 'recovery-blocked' || (state?.recovery && (state.phase === 'saving' || state.phase === 'uncertain')) ? 'Input draft resumes after save recovery.' : state?.draftStatus === 'saved' ? 'Draft saved · Not accepted story.' : state?.draftStatus === 'saving' ? 'Saving draft…' : state?.draftStatus === 'loading' ? 'Loading saved draft…' : 'Input autosaves after a short pause.')}</p>
@@ -616,11 +628,22 @@
 </main>
 
 <style>
-  .story-pane { overflow-y: auto; }
-  .story-pane.narration-expanded > .reader { flex: 0 0 auto; overflow: visible; }
+  .story-pane { position: relative; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: var(--border) var(--background); overflow-anchor: none; scroll-padding-top: 16px; }
+  .story-pane > .reader { flex: 1 0 auto; overflow: visible; }
+  .story-heading { text-align: center; margin-bottom: 40px; }
+  .story-heading .eyebrow { margin: 0; }
+  .story-heading h1 { margin: 8px 0 0; line-height: 1.111; }
+  .accepted-turn { margin: 0 0 32px; }
+  .turn-label { font-family: var(--font-mono); font-size: 10px; }
+  .composer { position: sticky; bottom: 0; z-index: 2; background: color-mix(in oklch, var(--card) 80%, var(--background)); }
+  .narration-drawer { position: absolute; inset-inline: 0; min-height: var(--story-height); padding: 16px 16px calc(var(--composer-height) + 16px); display: flex; flex-direction: column; justify-content: flex-end; pointer-events: none; z-index: 1; }
+  .narration-drawer-inner { width: 100%; max-width: 672px; margin: 0 auto; pointer-events: auto; }
   .composer-heading { display: grid; grid-template-columns: auto minmax(0, 1fr) 30px; align-items: center; gap: 12px; }
   .composer-heading .model-source { max-width: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
-  #story-input { max-height: none; overflow: hidden; resize: none; }
+  .mode-selected { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; border-radius: 6px; box-shadow: 0 0 0 1px oklch(.76 .12 70 / .35), 0 8px 30px -10px oklch(.76 .12 70 / .35); }
+  #story-input { max-height: none; overflow: hidden; resize: none; border-radius: 6px; }
+  .send { display: grid; place-items: center; }
+  .send.primary { box-shadow: 0 0 0 1px oklch(.76 .12 70 / .35), 0 8px 30px -10px oklch(.76 .12 70 / .35); }
   .composer .story-error { max-height: none; overflow: visible; }
   .narration-toggle { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 30px; height: 30px; padding: 5px; color: var(--muted-foreground); }
   .narration-toggle.selected { color: var(--primary); border-color: var(--primary); }

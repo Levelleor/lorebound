@@ -20,6 +20,7 @@ export function autoSize(node: HTMLTextAreaElement, _value?: string): { update()
   });
   observer.observe(node);
   node.addEventListener('input', schedule);
+  node.ownerDocument.fonts.addEventListener('loadingdone', schedule);
   schedule();
   return {
     update: schedule,
@@ -28,6 +29,7 @@ export function autoSize(node: HTMLTextAreaElement, _value?: string): { update()
       cancelAnimationFrame(frame);
       observer.disconnect();
       node.removeEventListener('input', schedule);
+      node.ownerDocument.fonts.removeEventListener('loadingdone', schedule);
     }
   };
 }
