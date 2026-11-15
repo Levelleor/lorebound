@@ -54,6 +54,8 @@ Fork copies the **current saved** creative settings at its transaction, includin
 
 ## Verification and handoff
 
+Open implementation review finding: an auto-growing Story draft taller than the available window can make the composer base exceed the main area. The user’s choice between input-only overflow and whole-composer overflow for that exceptional case is pending; full readiness and merge approval are withheld until it is resolved and checked. Current normal-layout CI/capture review is owned by the primary PR.
+
 Independent accepted-source scope review PASS. Focused TypeScript all-provider prompt contracts, Go narration/storage regressions, Svelte typecheck/build and real Firefox narration regression PASS. Before the screenshot feedback, independent published source/coverage/security/control review PASS at application source `5ee7c0000064c881481f8577e00a1448a9617644`; fixture/documentation deltas through `c49e06c5076a5a28da78063349b01580b56d0e98` also PASS, no blockers. Diagnostics distinguish requested guidance from dispatch. Existing provider fixtures now wait for actual preview and open current-attempt diagnostics; focused affected browser checks PASS.
 
 [Primary PR #27](https://github.com/Levelleor/lorebound/pull/27) owns the current CI run/revision/result and actual-CI-capture review disposition; see its [current checks](https://github.com/Levelleor/lorebound/pull/27/checks). Applicable CI and fresh actual four-width Dark/Bright Firefox/Chromium shelf and Firefox disclosure review must pass before the verbal finalise/merge request. Documentation-only readiness changes reuse reviewed application evidence; final-head repository checks remain required. This remains unmerged and awaiting hands-on user review, not verified-main truth.
