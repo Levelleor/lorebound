@@ -68,7 +68,7 @@ Use **functional**, **integration** or **verification** to identify the gap; com
 
 | Field | Detail |
 | --- | --- |
-| Status / gap | **OPEN — integration**; DEV-004G implementation is unmerged and under verification/review. |
+| Status / gap | **OPEN — integration**; DEV-004G implementation is unmerged in [PR #27](https://github.com/Levelleor/lorebound/pull/27), under verification/review. |
 | Implemented | Current adventure style controls/custom instructions, future-only guidance for existing local Story Generate/Retry, separate revision/epoch-fenced metadata and requested-guidance inspection. Fork copies current saved settings independently. |
 | Unfinished | Persistent global/adventure/scene author-note layers, scenario-template starting directions, measured context-budget/omission inspection and future narration modes are not integrated. Model adherence is best-effort and context capacity is unknown. |
 | Practical effect | Current supported Story narration sends selected style guidance in full. It adds no author-note manager, style presets, token-capacity guarantee or automatic rewrite of accepted prose. Simulation ignores style. |

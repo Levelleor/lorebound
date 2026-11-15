@@ -177,7 +177,7 @@ export async function exerciseOllama(browser, base, artifacts)
     {
       behavior = mode;
       await begin();
-      await page.getByRole('region', { name: 'Generating proposal', exact: true }).waitFor();
+      await page.getByRole('region', { name: 'Generating proposal', exact: true }).getByText(/Native preview/).waitFor();
       release();
       await page.getByRole('alert').waitFor();
       assert.equal(await page.getByRole('button', { name: 'Accept turn', exact: true }).count(), 0);
@@ -194,14 +194,14 @@ export async function exerciseOllama(browser, base, artifacts)
     }
     behavior = 'ok';
     await begin();
-    await page.getByRole('region', { name: 'Generating proposal', exact: true }).waitFor();
+    await page.getByRole('region', { name: 'Generating proposal', exact: true }).getByText(/Native preview/).waitFor();
     await page.getByRole('button', { name: 'Stop generation', exact: true }).click();
     await closed;
     release();
     await page.locator('.generation-inspector summary').getByText('Generation details · Stopped', { exact: true }).waitFor();
     assert.deepEqual(await read(), accepted);
     await begin();
-    await page.getByRole('region', { name: 'Generating proposal', exact: true }).waitFor();
+    await page.getByRole('region', { name: 'Generating proposal', exact: true }).getByText(/Native preview/).waitFor();
     await page.getByRole('button', { name: 'Library', exact: true }).click();
     await closed;
     release();

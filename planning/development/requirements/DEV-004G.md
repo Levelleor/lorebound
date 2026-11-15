@@ -11,7 +11,7 @@ tags:
 
 # DEV-004G — Current adventure narration settings
 
-The user's separate launch and “proceed” authorise auditing DEV-004, selecting one bounded child, implementation, tests, independent review and one primary PR. Confirmed [PR #26](https://github.com/Levelleor/lorebound/pull/26) merge `4e565762c03660a9f4ee4fe3f961a453ca060fbf` satisfies DEV-004F's approved closure. No merge approval for this child has been given.
+The user's separate launch and “proceed” authorise auditing DEV-004, selecting one bounded child, implementation, tests, independent review and one primary PR. Confirmed [PR #26](https://github.com/Levelleor/lorebound/pull/26) merge `4e565762c03660a9f4ee4fe3f961a453ca060fbf` satisfies DEV-004F's approved closure. [Primary PR #27](https://github.com/Levelleor/lorebound/pull/27) owns this work. No merge approval for this child has been given.
 
 ## Remaining scope and dependency audit
 
@@ -52,6 +52,11 @@ Fork copies the **current saved** creative settings at its transaction, includin
 
 ## Verification and handoff
 
-Independent accepted-source scope review PASS. Focused TypeScript all-provider prompt contracts, Go narration/storage regressions, Svelte typecheck/build PASS. Browser regression/CI, independent final-source/control/actual-CI-capture review and hands-on handoff remain in progress; execution links and checked revision will be recorded here and in the primary PR. No verified-main claim.
+Independent accepted-source scope review PASS. Focused TypeScript all-provider prompt contracts, Go narration/storage regressions, Svelte typecheck/build PASS. Focused real Firefox narration regression PASS. Independent published source/coverage/security/control review PASS at `5ee7c0000064c881481f8577e00a1448a9617644`, with no blockers; diagnostic wording was corrected to distinguish requested guidance from dispatch. Application CI is pending after correcting an existing native-provider fixture to wait for actual provider preview rather than the earlier generating state; actual-CI-capture review and hands-on handoff remain in progress; execution links and checked revision will be recorded here and in the primary PR. No verified-main claim.
 
 External model replies are simulated. Real Firefox/Wails/Go/SQLite checks establish only their exercised path; live model adherence, live Ollama/LM Studio/vLLM interoperability, other-OS packaging and full accessibility remain unverified. Parent DEV-004 and IDEA-0010 remain unfinished; all original notes stay in production. [INC-005](../INCOMPLETE-FEATURES.md#inc-005--narration-guidance-remaining-context-and-mode-integration) owns the remaining integration gap. One primary PR owns implementation, evidence, controls and reconciliation. Finalise/merge requires named-PR verbal approval after the hands-on handoff; closure starts no next child.
+
+
+Separate live smoke scope: Linux Firefox 157.0 → llama.cpp `0.6.0-dev`, build 11429 / `d812350493`, Qwen3-4B-Q4_K_M, ROCm0 RX 6700 XT, 8,192-token context, loopback port 18085. Completed style prompt/proposal, explicit acceptance/exact reload and future-only settings change succeeded. A separate focused exercise PASS for a changed-style streamed request, visible preview, Stop, retained input and unchanged accepted snapshot. No application fix or server thinking/sampling override was required. This establishes only that exercised configuration, not universal style adherence or other server compatibility.
+
+The current application source is running locally on port 8086 with separate persistent `.local/review/dev004g`; the live Qwen3 profile points to the agent-started port 18085. Prior review/user libraries are preserved. Hands-on starting state is one accepted live-model turn and retained gangplank input. Final review/demo and user acceptance remain pending. Relaunch current app source with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004g"`; Ctrl+C stops it. The saved profile requires the live provider; its separately authorised launch recipe is in the development workflow.
