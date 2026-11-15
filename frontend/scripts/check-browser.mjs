@@ -14,6 +14,7 @@ import { exerciseModels } from './check-models.mjs';
 import { exerciseStreaming } from './check-streaming.mjs';
 import { exerciseConnectionTest } from './check-connection-test.mjs';
 import { exerciseOllama } from './check-ollama.mjs';
+import { exerciseNamedServers } from './check-named-servers.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -185,6 +186,7 @@ try {
     await exerciseStreaming(browser, base, artifacts);
     await exerciseConnectionTest(browser, base, artifacts);
     await exerciseOllama(browser, base, artifacts);
+    await exerciseNamedServers(browser, base, artifacts);
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};

@@ -17,7 +17,7 @@ func modelSettings(epoch string) SaveConnectionsRequest {
 }
 
 func TestConnectionsPersistenceConflictEpochAndCanonicalIsolation(t *testing.T) {
-	for _, kind := range []string{"llamacpp", "ollama"} {
+	for _, kind := range []string{"llamacpp", "ollama", "custom", "lmstudio", "vllm"} {
 		t.Run(kind, func(t *testing.T) { testConnectionsPersistence(t, kind) })
 	}
 }

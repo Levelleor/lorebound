@@ -20,7 +20,7 @@ Use **functional**, **integration** or **verification** to identify the gap; com
 
 | Field | Detail |
 | --- | --- |
-| Status / gap | **OPEN — verification**; native implementation delivery takes effect on confirmed [PR #25](https://github.com/Levelleor/lorebound/pull/25) merge after approved closure. This verification gap stays open after that merge. |
+| Status / gap | **OPEN — verification**; native implementation merged in [PR #25](https://github.com/Levelleor/lorebound/pull/25). This verification gap stays open. |
 | Implemented | Native Ollama profiles, optional model discovery and synthetic connection testing, completed/NDJSON Story narration, cancellation and reported input/output token usage. Runtime requests use the configured server directly from the browser. |
 | Unfinished | No check against an installed, running Ollama server/model has been recorded. CI and the review preview supply simulated Ollama replies. Actual server-version, model, thinking-output and browser-origin interoperability remain unverified. |
 | Practical effect | The adapter can attempt a real configured Ollama endpoint, but a successful fixture demonstration does not establish that a particular local installation works. The **Simulated Ollama review** demonstration used fixed prose rather than AI generation. Its temporary fixture is stopped; the saved profile needs a running fixture or a real configured endpoint for another request. |
@@ -32,11 +32,11 @@ Use **functional**, **integration** or **verification** to identify the gap; com
 
 | Field | Detail |
 | --- | --- |
-| Status / gap | **OPEN — functional/integration**; llama.cpp/Custom profiles are merged; native Ollama delivery takes effect on confirmed PR #25 merge after approved closure. |
+| Status / gap | **OPEN — functional/integration**; llama.cpp/Custom/native Ollama profiles are merged; named LM Studio/vLLM profiles are implemented but unmerged in [DEV-004F](./requirements/DEV-004F.md). |
 | Implemented | Named reusable nonsecret profiles, selected endpoint/model/timeout, manual model entry, optional discovery/testing and direct browser narration. Existing metadata saves retain revision/epoch guards. |
-| Unfinished | Named LM Studio/vLLM and cloud adapters, authenticated connections/custom headers, accepted secure credential persistence and configurable retry preferences remain outstanding. Generic Custom compatibility does not certify the other named adapters. |
+| Unfinished | Cloud adapters, authenticated connections/custom headers, accepted secure credential persistence and configurable retry preferences remain outstanding. LM Studio/vLLM implementation is awaiting CI/review and merge; live-server interoperability stays open in INC-004. |
 | Practical effect | Existing unauthenticated connections are usable within their supported protocols. An endpoint requiring credentials cannot be configured through a supported secret-storage/request path yet. |
-| Source / evidence | [IDEA-0014](../production/Provider%20Connection%20Profiles%20and%20Discovery.md); [DEV-004 remaining dependency audit](./requirements/DEV-004E.md#remaining-scope-and-dependency-audit); [browser model API](../../frontend/src/lib/models.ts); [nonsecret Go profile storage](../../internal/store/connections.go). |
+| Source / evidence | [IDEA-0014](../production/Provider%20Connection%20Profiles%20and%20Discovery.md); [DEV-004 remaining dependency audit](./requirements/DEV-004F.md#remaining-scope-and-dependency-audit); [browser model API](../../frontend/src/lib/models.ts); [nonsecret Go profile storage](../../internal/store/connections.go). |
 | Resolution | Deliver and verify separately bounded accepted provider/credential/settings obligations, maintaining their individual requirement coverage and evidence. Update this entry as each named gap closes; broader IDEA completion remains in FEATURES. |
 | Dependencies / boundary | Sensitive credential services require the accepted security/platform work; credentials stay outside canonical SQLite and browser persistent storage. IDEA-0068's separate test redesign remains staged. No additional implementation is launched here. |
 
@@ -51,6 +51,18 @@ Use **functional**, **integration** or **verification** to identify the gap; com
 | Source / evidence | [DEV-002C bounded scope](./requirements/DEV-002C.md); [DEV-003 remaining dependency audit](./requirements/DEV-003.md#remaining-scope-audit--2026-11-08); [proposal construction](../../frontend/src/lib/coordinator.ts); [reconstruction boundary](../../frontend/src/lib/story.ts); [feature coverage](./FEATURES.md). |
 | Resolution | Implement and verify accepted typed effects with their owning subsystems, stable identity, atomic persistence and deterministic reconstruction, then extend affected history/edit/Undo/Fork coverage to those supported effects. Existing zero-effects checks alone cannot close this gap. |
 | Dependencies / boundary | Requires separately authorised interpretation and entity/world subsystem slices. **B9-D12 spatial migration remains DEFERRED — NO WORK.** No new effect type, migration or development child is authorised by this entry. |
+
+## INC-004 — Named LM Studio/vLLM: live-server verification outstanding
+
+| Field | Detail |
+| --- | --- |
+| Status / gap | **OPEN — verification**; named profile implementation is **unmerged**, in [DEV-004F](./requirements/DEV-004F.md), awaiting CI/review. This live gap remains after a bounded simulated-contract merge. |
+| Implemented | Named nonsecret LM Studio/vLLM profiles/defaults/setup guidance, reused compatible discovery/synthetic test, completed/SSE Story narration, cancellation and named diagnostics. |
+| Unfinished | No installed/running LM Studio or vLLM server/model/browser integration check has been recorded. Simulated compatible replies do not prove server-version, loaded-model, chat-template, CORS or reasoning-output interoperability. |
+| Practical effect | The application can attempt a configured unauthenticated compatible endpoint; a fixture demonstration does not establish that the player's installation works. Authentication-required endpoints remain unsupported. |
+| Source / evidence | [DEV-004F scope/coverage/limits](./requirements/DEV-004F.md); [server definitions](../../frontend/src/lib/modelServers.ts); [shared browser model API](../../frontend/src/lib/models.ts); [named browser fixture](../../frontend/scripts/check-named-servers.mjs). CI/review evidence is pending in the primary PR. |
+| Resolution | After an authorised focused live check for each server, record the exercised version/model/browser, discovery/manual entry, completed/SSE, Stop and explicit acceptance/reload, fix mismatches and retain remaining configuration limits. |
+| Dependencies / boundary | Requires separately configured available servers/models and browser access. No installation, server reconfiguration, credential workaround or mandatory live-AI CI/merge gate follows from this entry. |
 
 ## Maintaining entries
 
