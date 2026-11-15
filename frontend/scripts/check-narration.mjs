@@ -84,7 +84,7 @@ export async function exerciseNarration(browser, base, artifacts)
       for (const width of [390, 768, 1024, 1440])
       {
         await page.setViewportSize({ width, height: 900 });
-        await page.getByRole('region', { name: 'Narration style', exact: true }).evaluate(element => element.scrollTop = 0);
+        await page.locator('#narration-style-panel fieldset').evaluate(element => element.scrollTop = 0);
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
         assert.equal(await page.getByRole('region', { name: 'Narration style', exact: true }).evaluate(element => element.scrollWidth <= element.clientWidth && element.getBoundingClientRect().height <= Math.min(300, innerHeight * .3) + 1), true);
         const geometry = await page.evaluate(() =>
@@ -99,6 +99,20 @@ export async function exerciseNarration(browser, base, artifacts)
         assert.equal(await page.getByRole('dialog').count(), 0, 'Narration controls expand inline');
         assert.equal(await page.getByRole('button', { name: 'Narration style', exact: true }).getAttribute('aria-expanded'), 'true');
         if (artifacts) await page.screenshot({ path: path.join(artifacts, `narration-${theme}-${width}.png`) });
+        if (width === 390)
+        {
+          await page.getByLabel('Custom style instructions', { exact: true }).focus();
+          await page.getByLabel('Custom style instructions', { exact: true }).scrollIntoViewIfNeeded();
+          const visible = await page.evaluate(() =>
+          {
+            const field = document.querySelector('#narration-instructions').getBoundingClientRect();
+            const body = document.querySelector('#narration-style-panel fieldset').getBoundingClientRect();
+            const actions = document.querySelector('.shelf-actions').getBoundingClientRect();
+            return field.top >= body.top && field.bottom <= body.bottom && field.bottom < actions.top;
+          });
+          assert.equal(visible, true, 'Focused instruction field must be fully visible above the nonoverlapping action footer');
+          if (artifacts) await page.screenshot({ path: path.join(artifacts, `narration-focus-${theme}-${width}.png`) });
+        }
       }
     }
     await page.setViewportSize({ width: 390, height: 600 });

@@ -132,23 +132,27 @@
         <label for="narration-instructions">Custom style instructions</label>
         <textarea id="narration-instructions" bind:value={style.instructions} maxlength="2000" rows="2" placeholder="Optional writing direction · sent with each AI continuation"></textarea>
         <p class="supporting shelf-hint">Save to guide future AI continuations. Existing prose stays unchanged; Simulation ignores style.</p>
-        <div class="shelf-actions"><button type="button" onclick={onClose}>Cancel</button><button class="primary" type="submit">Save narration settings</button></div>
         <details class="supporting">
           <summary>About narration guidance</summary>
           <p>Genre and tone: up to 200 characters each. Custom instructions: up to 2,000. Sent in the order shown; conflicting creative directions are left for the model to interpret. No character selection is required.</p>
           <p>Adherence and length are best-effort, not decoding parameters or a token cap. Model context capacity is unknown; guidance is sent in full without automatic trimming. Inspect Generation details after a request.</p>
         </details>
+        <button class="quiet" type="button" onclick={load}>Reload settings</button>
       </fieldset>
+      <div class="shelf-actions"><button type="button" disabled={busy} onclick={onClose}>Cancel</button><button class="primary" disabled={busy} type="submit">Save narration settings</button></div>
     </form>
+  {:else}
+    <button class="quiet" disabled={busy} onclick={load}>{busy ? 'Loading…' : 'Reload settings'}</button>
   {/if}
-  <button class="quiet" disabled={busy} onclick={load}>{busy ? 'Loading…' : 'Reload settings'}</button>
 </section>
 
 <style>
   .narration-settings
   {
     max-height: min(300px, 30dvh);
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     padding: 12px;
     margin-bottom: 12px;
     border: 1px solid var(--border);
@@ -157,9 +161,11 @@
     color: var(--foreground);
   }
 
-  .shelf-actions { position: sticky; bottom: 0; z-index: 1; display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin: 8px 0; padding-top: 6px; background: var(--background); flex-wrap: wrap; }
+  .shelf-actions { flex-shrink: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); flex-wrap: wrap; }
   .shelf-actions button { padding: 6px 10px; font-size: 12px; }
   form, fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+  form { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  fieldset { flex: 1; min-height: 0; overflow-y: auto; padding: 6px; }
   .style-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 12px; }
   label { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; margin: 0 0 5px; }
   input, select, textarea { width: 100%; min-width: 0; padding: 6px 8px; margin: 0; border: 1px solid var(--border); border-radius: 4px; background: var(--background); color: var(--foreground); font: 12px/1.4 var(--font-ui); }
