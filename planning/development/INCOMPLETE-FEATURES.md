@@ -68,11 +68,11 @@ Use **functional**, **integration** or **verification** to identify the gap; com
 
 | Field | Detail |
 | --- | --- |
-| Status / gap | **OPEN — integration**; DEV-004G implementation is unmerged in [PR #27](https://github.com/Levelleor/lorebound/pull/27), under verification/review. |
+| Status / gap | **OPEN — integration**; DEV-004G implementation is unmerged in [PR #27](https://github.com/Levelleor/lorebound/pull/27), awaiting final checks and hands-on user review. |
 | Implemented | Current adventure style controls/custom instructions, future-only guidance for existing local Story Generate/Retry, separate revision/epoch-fenced metadata and requested-guidance inspection. Fork copies current saved settings independently. |
 | Unfinished | Persistent global/adventure/scene author-note layers, scenario-template starting directions, measured context-budget/omission inspection and future narration modes are not integrated. Model adherence is best-effort and context capacity is unknown. |
 | Practical effect | Current supported Story narration sends selected style guidance in full. It adds no author-note manager, style presets, token-capacity guarantee or automatic rewrite of accepted prose. Simulation ignores style. |
-| Source / evidence | [DEV-004G requirements/limits](./requirements/DEV-004G.md); [prompt assembly](../../frontend/src/lib/narration.ts); [settings dialog](../../frontend/src/lib/NarrationSettings.svelte); [browser contracts](../../frontend/scripts/check-narration.mjs). CI/review readiness remains pending. |
+| Source / evidence | [DEV-004G requirements/limits](./requirements/DEV-004G.md); [prompt assembly](../../frontend/src/lib/narration.ts); [settings dialog](../../frontend/src/lib/NarrationSettings.svelte); [browser contracts](../../frontend/scripts/check-narration.mjs). The primary PR owns current CI/actual-capture readiness and user-review disposition. |
 | Resolution | Separately authorise and verify owning context/author-note/template/mode slices, integrate their inputs in the accepted deterministic order and preserve future-only behavior. Do not infer whole-IDEA completion from the current controls. |
 | Dependencies / boundary | IDEA-0010/0024/0025 and DEV-005/008/009; later provider/mode integration. No automatic next child or change to staged/unaccepted ideas and B9-D12 deferral. |
 
