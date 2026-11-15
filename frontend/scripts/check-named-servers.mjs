@@ -135,6 +135,8 @@ export async function exerciseNamedServers(browser, base, artifacts)
           else
           {
             await proposal.waitFor();
+            const inspector = page.locator('.generation-inspector');
+            if (!await inspector.evaluate(element => element.open)) await inspector.locator('summary').click();
             assert.equal(await serverType.innerText(), label);
             assert.deepEqual(await read(), before);
             await page.getByRole('button', { name: 'Accept turn', exact: true }).click();
