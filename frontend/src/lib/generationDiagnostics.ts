@@ -1,3 +1,5 @@
+import type { ModelServer } from './modelServers.ts';
+
 export interface TokenUsage
 {
   prompt: number | null;
@@ -8,7 +10,7 @@ export interface TokenUsage
 export interface GenerationDetails
 {
   profileName: string;
-  server: 'llamacpp' | 'custom' | 'ollama';
+  server: ModelServer;
   requestedModel: string;
   streaming: boolean;
   timeoutMs: number;

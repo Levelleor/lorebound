@@ -132,7 +132,7 @@ func (s *Store) ReadConnections(ctx context.Context, req ConnectionsRequest) (Co
 }
 
 func validProfile(profile ModelProfile) bool {
-	if !identifier.MatchString(profile.ID) || (profile.Kind != "llamacpp" && profile.Kind != "custom" && profile.Kind != "ollama") ||
+	if !identifier.MatchString(profile.ID) || (profile.Kind != "llamacpp" && profile.Kind != "custom" && profile.Kind != "ollama" && profile.Kind != "lmstudio" && profile.Kind != "vllm") ||
 		!utf8.ValidString(profile.Name) || strings.TrimSpace(profile.Name) == "" || utf8.RuneCountInString(profile.Name) > 80 ||
 		!utf8.ValidString(profile.Model) || strings.TrimSpace(profile.Model) == "" || utf8.RuneCountInString(profile.Model) > 200 ||
 		profile.TimeoutMS < 1000 || profile.TimeoutMS > 300000 || len(profile.BaseURL) > 2048 ||

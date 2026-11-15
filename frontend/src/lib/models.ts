@@ -1,5 +1,6 @@
 import { ModelError, endpointUrl, readJson, requestValue, type ModelEndpoint } from './modelTransport.ts';
 import { discoverOllamaModels, generateOllama, testOllamaConnection } from './ollama.ts';
+import { isModelServer, type ModelServer } from './modelServers.ts';
 export { ModelError, endpointUrl } from './modelTransport.ts';
 import { schemaVersion } from './library.ts';
 import { isID, isObject, plainTextToDocument } from './story.ts';
@@ -10,7 +11,7 @@ export interface ModelProfile
 {
   id: string;
   name: string;
-  kind: 'llamacpp' | 'custom' | 'ollama';
+  kind: ModelServer;
   baseUrl: string;
   model: string;
   timeoutMs: number;
@@ -37,7 +38,7 @@ export function modelError(cause: unknown): string
 export function readProfile(value: unknown): ModelProfile
 {
   if (!isObject(value) || Object.keys(value).length !== 6 || !isID(value.id)
-    || (value.kind !== 'llamacpp' && value.kind !== 'custom' && value.kind !== 'ollama')
+    || !isModelServer(value.kind)
     || typeof value.name !== 'string' || !value.name.trim() || !value.name.isWellFormed() || [...value.name].length > 80
     || typeof value.model !== 'string' || !value.model.trim() || !value.model.isWellFormed() || [...value.model].length > 200
     || typeof value.baseUrl !== 'string' || !Number.isInteger(value.timeoutMs) || Number(value.timeoutMs) < 1000 || Number(value.timeoutMs) > 300000)
@@ -193,7 +194,7 @@ export async function discoverModels(profile: ModelEndpoint & { kind?: ModelProf
 export async function testConnection(profile: ModelEndpoint & Pick<ModelProfile, 'kind' | 'model'>, signal: AbortSignal, fetcher: typeof fetch = fetch): Promise<'complete' | 'limited'>
 {
   const selected = { ...profile };
-  if (selected.kind !== 'llamacpp' && selected.kind !== 'custom' && selected.kind !== 'ollama')
+  if (!isModelServer(selected.kind))
     throw new ModelError('Choose a supported server type before testing the connection.');
   if (typeof selected.model !== 'string' || !selected.model.trim() || !selected.model.isWellFormed() || [...selected.model].length > 200)
     throw new ModelError('Enter a model ID up to 200 characters before testing the connection. Discovery is optional.');
