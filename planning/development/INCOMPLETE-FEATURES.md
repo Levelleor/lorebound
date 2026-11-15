@@ -32,9 +32,9 @@ Use **functional**, **integration** or **verification** to identify the gap; com
 
 | Field | Detail |
 | --- | --- |
-| Status / gap | **OPEN — functional/integration**; llama.cpp/Custom/native Ollama profiles are merged; named LM Studio/vLLM profiles are implemented but unmerged in [DEV-004F](./requirements/DEV-004F.md). |
+| Status / gap | **OPEN — functional/integration**; llama.cpp/Custom/native Ollama profiles are merged; named LM Studio/vLLM delivery takes effect on confirmed [PR #26](https://github.com/Levelleor/lorebound/pull/26) merge after approved closure. |
 | Implemented | Named reusable nonsecret profiles, selected endpoint/model/timeout, manual model entry, optional discovery/testing and direct browser narration. Existing metadata saves retain revision/epoch guards. |
-| Unfinished | Cloud adapters, authenticated connections/custom headers, accepted secure credential persistence and configurable retry preferences remain outstanding. LM Studio/vLLM implementation has passing application CI/source review and is awaiting hands-on review/merge; live-server interoperability stays open in INC-004. |
+| Unfinished | Cloud adapters, authenticated connections/custom headers, accepted secure credential persistence and configurable retry preferences remain outstanding. LM Studio/vLLM has approved conditional closure in PR #26; live-server interoperability stays open in INC-004. |
 | Practical effect | Existing unauthenticated connections are usable within their supported protocols. An endpoint requiring credentials cannot be configured through a supported secret-storage/request path yet. |
 | Source / evidence | [IDEA-0014](../production/Provider%20Connection%20Profiles%20and%20Discovery.md); [DEV-004 remaining dependency audit](./requirements/DEV-004F.md#remaining-scope-and-dependency-audit); [browser model API](../../frontend/src/lib/models.ts); [nonsecret Go profile storage](../../internal/store/connections.go). |
 | Resolution | Deliver and verify separately bounded accepted provider/credential/settings obligations, maintaining their individual requirement coverage and evidence. Update this entry as each named gap closes; broader IDEA completion remains in FEATURES. |
@@ -56,7 +56,7 @@ Use **functional**, **integration** or **verification** to identify the gap; com
 
 | Field | Detail |
 | --- | --- |
-| Status / gap | **OPEN — verification**; named profile implementation is **unmerged**, in [DEV-004F](./requirements/DEV-004F.md), with passing application CI/source review and awaiting hands-on review/merge. This live gap remains after a bounded simulated-contract merge. |
+| Status / gap | **OPEN — verification**; named implementation delivery takes effect on confirmed [PR #26](https://github.com/Levelleor/lorebound/pull/26) merge after approved closure. This live gap stays open after that bounded simulated-contract merge. |
 | Implemented | Named nonsecret LM Studio/vLLM profiles/defaults/setup guidance, reused compatible discovery/synthetic test, completed/SSE Story narration, cancellation and named diagnostics. |
 | Unfinished | No installed/running LM Studio or vLLM server/model/browser integration check has been recorded. Simulated compatible replies do not prove server-version, loaded-model, chat-template, CORS or reasoning-output interoperability. |
 | Practical effect | The application can attempt a configured unauthenticated compatible endpoint; a fixture demonstration does not establish that the player's installation works. Authentication-required endpoints remain unsupported. |

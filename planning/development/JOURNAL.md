@@ -255,3 +255,10 @@ Independent scope review found no blocker. Automated replies remain simulated an
 ## 2026-11-14 — DEV-004F ready for hands-on review
 
 [PR #26](https://github.com/Levelleor/lorebound/pull/26) has passing corrected-source application CI and independent source/coverage/security/control/actual-CI-capture review. [DEV-004F](./requirements/DEV-004F.md#verification-and-handoff) owns checked scope, evidence limits and the isolated running handoff. Existing diagnostic labels are preserved after CI caught their unintended change during metadata centralisation. App and labelled fixed-response provider are running with retained review input; no live LM Studio/vLLM inference is claimed. Verbal approval to finalise and merge PR #26 remains required; this readiness launches no next child and makes no verified-main claim.
+
+
+## 2026-11-14 — DEV-004F closure approval
+
+After the checked preview/demo and explicit request to finalise/merge [PR #26](https://github.com/Levelleor/lorebound/pull/26), the user said “ok proceed with closure”. This accepts the handoff and authorises closing that same primary PR, without claiming the user personally ran every check. [DEV-004F](./requirements/DEV-004F.md#conditional-single-pr-closure) owns passing application/readiness CI, independent source/coverage/security/control/actual-CI-capture/readiness-documentation review, limits and prepared closure. The agent-launched app/simulated provider are stopped, ports 8086/18086 confirmed closed, and all review/user data preserved.
+
+Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of PR #26. Parent/IDEA scopes remain PARTIAL; INC-004's live LM Studio/vLLM and INC-001's live Ollama gaps stay OPEN. IDEA-0068 stays staged, IDEA-0069 unaccepted and B9-D12 deferred. Actual merge provenance/final CI belongs in PR #26/final handoff. Exactly one next task is DEV-004 audit/selection after confirmed closure and a separate launch; no automatic next slice, post-merge repository write or reconciliation PR follows.
