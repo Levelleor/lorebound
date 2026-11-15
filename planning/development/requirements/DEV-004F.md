@@ -1,6 +1,6 @@
 ---
 type: development-requirements
-status: in-progress
+status: ready-for-user-review
 created: "2026-11-14"
 updated: "2026-11-14"
 task: "DEV-004F"
@@ -46,6 +46,8 @@ Go only extends the permitted values in the existing nonsecret kind column. Old 
 
 ## Verification and handoff
 
-Implementation and review are in progress on `feat/dev-004f-named-compatible-servers`; primary PR/CI and independent review will be linked here. Focused tests and CI must pass before readiness. A separate persistent review library and one current-checkout launch command/demo will accompany the handoff.
+[Primary PR #26](https://github.com/Levelleor/lorebound/pull/26) owns implementation, evidence, controls and eventual conditional closure. [Application CI](https://github.com/Levelleor/lorebound/actions/runs/43661108182) PASS at `2d65e03a2f79a1977809714c044fc07d7fc5bc73`: repository/build/typecheck, TypeScript contracts, Go/SQLite, real Firefox direct HTTP/CORS/provider lifecycle and exact process restart. Focused local contracts, typecheck/build, Go profile persistence and the named Firefox exercise also passed; no full local suite was repeated. Initial CI caught an unintended change to the existing Ollama diagnostic label; explicit diagnostic labels restore all prior names, and the unchanged Ollama regression passes in this fresh run. Independent accepted-source/security/coverage/control review and correction review PASS, no blockers. Independent inspection of all sixteen actual named-server CI captures (Dark/Bright at 390/768/1024/1440), plus representative existing generation/Ollama disclosures PASS: readable guidance/names, themed surfaces, wrapping/scrollable dialog and unchanged docked acceptance controls. No visual blocker remains; no design deviation is introduced. Documentation-only readiness updates reuse this application evidence and require applicable final-head repository checks.
+
+The [local review adventure](http://127.0.0.1:8086/?adventure=80362858-0217-4f08-95eb-94530f96b58c) serves corrected source `2d65e03`; served assets match the current build. Its separate persistent `.local/review/dev004f` library contains labelled **Simulated LM Studio protocol** and **Simulated vLLM protocol** profiles, an empty accepted story and retained player input. A temporary fixed-response compatible fixture runs on loopback port 18086; no live model inference is running. Agent-operated completed proposal/Discard and streamed Stop checks PASS with no accepted turn. The chat/PR owns Generate → details → Accept/Discard, five-second streamed Stop and optional Models walkthrough. App/fixture are running for hands-on feedback; prior review/user libraries are preserved. Relaunch the app with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004f"`; Ctrl+C stops a foreground launch. The temporary fixture is separate from installed application functionality; its saved profiles need that running fixture or replacement with a real endpoint/model.
 
 Evidence boundary: provider replies in automated checks are simulated, while Linux Firefox HTTP/CORS/cancellation and Go/SQLite are real. Installed/live LM Studio or vLLM model interoperability is **NOT RUN**; [INC-004](../INCOMPLETE-FEATURES.md#inc-004--named-lm-studiovllm-live-server-verification-outstanding) retains that gap without inventing a mandatory live-model gate. Cloud/authentication, other OS packaging and full accessibility remain outside this evidence. No merge approval or next child follows from implementation readiness.
