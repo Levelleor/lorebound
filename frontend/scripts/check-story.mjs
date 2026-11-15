@@ -50,7 +50,7 @@ export async function exerciseStory(page, base, artifacts, adventureId) {
       const composerBottom = await page.locator('.composer').evaluate(el => el.getBoundingClientRect().bottom);
       assert.ok(Math.abs(composerBottom - 900) <= 1, `Composer docked at ${width}`);
       const before = await page.locator('.composer').boundingBox();
-      await page.locator('.story-pane').evaluate(el => el.scrollTop = el.scrollHeight);
+      await page.locator('.story-scroll').evaluate(el => el.scrollTop = el.scrollHeight);
       assert.deepEqual(await page.locator('.composer').boundingBox(), before, 'Reader scroll cannot move composer');
       if (width < 1024) {
         await page.getByRole('button', { name: 'World', exact: true }).click();
@@ -134,7 +134,7 @@ export async function exerciseStory(page, base, artifacts, adventureId) {
     for (const width of [390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-      await page.locator('.story-pane').evaluate(el => el.scrollTop = 0);
+      await page.locator('.story-scroll').evaluate(el => el.scrollTop = 0);
       if (artifacts) await page.screenshot({ path: path.join(artifacts, `story-accepted-${theme}-${width}.png`), fullPage: true });
     }
   }

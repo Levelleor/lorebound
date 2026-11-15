@@ -150,17 +150,20 @@
 <style>
   .narration-settings
   {
-    padding: 16px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--background);
+    max-height: var(--narration-height);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    padding: 6px;
+    margin-inline: -6px;
     color: var(--foreground);
   }
 
-  .shelf-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .shelf-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .shelf-actions button { padding: 6px 10px; font-size: 12px; }
   .story-error { max-height: none; overflow: visible; }
-  input, select, textarea, button, summary { scroll-margin-top: 16px; scroll-margin-bottom: calc(var(--composer-height) + 16px); }
+  input, select, textarea, button, summary { scroll-margin-block: 8px; }
   form, fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
   .style-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 16px; }
   .style-grid > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
