@@ -8,7 +8,6 @@
   import { ModelError, generateLocal, type Connections } from '../lib/models';
   import { simulatedGeneration, type GenerationInput } from '../lib/coordinator';
   import type { DiagnosticsObserver } from '../lib/generationDiagnostics';
-  import NarrationSettings from '../lib/NarrationSettings.svelte';
   import { schemaVersion } from '../lib/library';
 
   let library: Library | null = null;
@@ -24,7 +23,6 @@
   let storyLocked = false;
   let modelLocked = false;
   let modelsOpen = false;
-  let narrationOpen = false;
   let connections: Connections | null = null;
   let modelSequence = 0;
   $: activeProfile = connections?.profiles.find(profile => profile.id === connections?.activeProfileId);
@@ -91,7 +89,7 @@
   }
   async function load() {
     const sequence = ++loadSequence;
-    busy = true; error = ''; current = null; storyLocked = false; modelLocked = false; modelsOpen = false; narrationOpen = false; storyStatus = '✓ Saved';
+    busy = true; error = ''; current = null; storyLocked = false; modelLocked = false; modelsOpen = false; storyStatus = '✓ Saved';
     try {
       const next = await host.list();
       const id = new URL(window.location.href).searchParams.get('adventure');
@@ -159,11 +157,6 @@
 </header>
 
 {#if modelsOpen && library}<ConnectionSettings epoch={library.epoch} onSaved={modelsSaved} onClose={() => modelsOpen = false} />{/if}
-{#if narrationOpen && current}
-  {#key `${current.epoch}:${current.adventure.id}`}
-    <NarrationSettings request={{ schemaVersion, epoch: current.epoch, adventureId: current.adventure.id }} onClose={() => narrationOpen = false} />
-  {/key}
-{/if}
 
 {#if error || (pending && !busy)}
   <div class="error-banner" role="alert">
@@ -186,10 +179,7 @@
     {/key}
     <aside class:mobile-hidden={mobileView !== 'world'} class="context-rail" aria-label="World context">
       <div class="context-tabs"><span class="selected">Scene</span><span>Items</span><span>Lore</span><span>Context</span></div>
-      <div class="context-body"><p class="eyebrow">Current scene</p><h2>An unwritten world</h2><p>No characters or places recorded.</p>
-        <button onclick={() => narrationOpen = true} disabled={busy || modelLocked}>Narration style</button>
-        <p class="supporting">Writing preferences for this adventure.</p>
-      </div>
+      <div class="context-body"><p class="eyebrow">Current scene</p><h2>An unwritten world</h2><p>No characters or places recorded.</p></div>
     </aside>
   </div>
 {:else}

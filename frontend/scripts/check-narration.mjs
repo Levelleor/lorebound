@@ -56,11 +56,9 @@ export async function exerciseNarration(browser, base, artifacts)
 
     async function openStyle(target = page)
     {
-      const world = target.getByRole('button', { name: 'World', exact: true });
-      if (await world.isVisible()) await world.click();
       await target.getByRole('button', { name: 'Narration style', exact: true }).click();
       await target.getByLabel('Perspective', { exact: true }).waitFor();
-      await target.waitForFunction(() => !document.querySelector('dialog fieldset')?.disabled);
+      await target.waitForFunction(() => !document.querySelector('#narration-style-panel fieldset')?.disabled);
     }
     async function storyView()
     {
@@ -70,7 +68,7 @@ export async function exerciseNarration(browser, base, artifacts)
     const save = async () =>
     {
       await page.getByRole('button', { name: 'Save narration settings', exact: true }).click();
-      await page.getByRole('dialog').waitFor({ state: 'detached' });
+      await page.getByRole('region', { name: 'Narration style', exact: true }).waitFor({ state: 'detached' });
     };
     await openStyle();
     await page.getByLabel('Perspective', { exact: true }).selectOption('third');
@@ -86,12 +84,31 @@ export async function exerciseNarration(browser, base, artifacts)
       for (const width of [390, 768, 1024, 1440])
       {
         await page.setViewportSize({ width, height: 900 });
-        await page.getByRole('dialog').evaluate(element => element.scrollTop = 0);
+        await page.getByRole('region', { name: 'Narration style', exact: true }).evaluate(element => element.scrollTop = 0);
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-        assert.equal(await page.getByRole('dialog').evaluate(element => element.scrollWidth <= element.clientWidth && element.getBoundingClientRect().height <= innerHeight * .9 + 1), true);
+        assert.equal(await page.getByRole('region', { name: 'Narration style', exact: true }).evaluate(element => element.scrollWidth <= element.clientWidth && element.getBoundingClientRect().height <= Math.min(300, innerHeight * .3) + 1), true);
+        const geometry = await page.evaluate(() =>
+        {
+          const shelf = document.querySelector('#narration-style-panel').getBoundingClientRect();
+          const toggle = document.querySelector('.narration-toggle').getBoundingClientRect();
+          const input = document.querySelector('#story-input').getBoundingClientRect();
+          return { aboveInput: shelf.bottom <= input.top, nearInput: toggle.bottom <= input.top && input.top - toggle.bottom < 100, inputVisible: input.bottom <= innerHeight };
+        });
+        assert.deepEqual(geometry, { aboveInput: true, nearInput: true, inputVisible: true });
+        assert.equal(await page.getByRole('dialog').count(), 0, 'Narration controls expand inline');
+        assert.equal(await page.getByRole('button', { name: 'Narration style', exact: true }).getAttribute('aria-expanded'), 'true');
         if (artifacts) await page.screenshot({ path: path.join(artifacts, `narration-${theme}-${width}.png`) });
       }
     }
+    await page.setViewportSize({ width: 390, height: 600 });
+    const composer = page.locator('.composer');
+    assert.equal(await composer.evaluate(element => element.getBoundingClientRect().bottom <= innerHeight), true, 'Expanded composer stays within a short mobile viewport');
+    await page.getByLabel('Story input', { exact: true }).scrollIntoViewIfNeeded();
+    assert.equal(await page.getByLabel('Story input', { exact: true }).isVisible(), true);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.getByLabel('Story input', { exact: true }).press('Control+Enter');
+    assert.equal(requests.length, 0, 'Unsaved shelf edits cannot silently generate with older settings');
+    assert.equal(await page.getByRole('button', { name: 'Generate continuation', exact: true }).isDisabled(), true);
     await save();
     const saved = await settings();
     assert.equal(saved.revision, 1);
@@ -101,9 +118,15 @@ export async function exerciseNarration(browser, base, artifacts)
     await openStyle();
     assert.equal(await page.getByLabel('Genre', { exact: true }).inputValue(), 'Harbour mystery');
     assert.equal(await page.getByLabel('Custom style instructions', { exact: true }).inputValue(), saved.style.instructions);
+    await page.getByLabel('Tone', { exact: true }).fill('Unsaved tone discarded by Escape');
     await page.keyboard.press('Escape');
-    await page.getByRole('dialog').waitFor({ state: 'detached' });
+    await page.getByRole('region', { name: 'Narration style', exact: true }).waitFor({ state: 'detached' });
     assert.equal(await page.getByRole('button', { name: 'Narration style', exact: true }).evaluate(element => document.activeElement === element), true, 'Escape restores focus');
+    assert.deepEqual(await settings(), saved, 'Escape discards unsaved preferences');
+    await openStyle();
+    await page.getByRole('button', { name: 'Narration style', exact: true }).click();
+    await page.getByRole('region', { name: 'Narration style', exact: true }).waitFor({ state: 'detached' });
+    assert.equal(await page.getByRole('button', { name: 'Narration style', exact: true }).getAttribute('aria-expanded'), 'false');
     await storyView();
 
     const generate = () => page.getByRole('button', { name: 'Generate continuation', exact: true }).click();
@@ -137,7 +160,7 @@ export async function exerciseNarration(browser, base, artifacts)
     await openStyle(other);
     await other.getByLabel('Tone', { exact: true }).fill('Warm and hopeful');
     await other.getByRole('button', { name: 'Save narration settings', exact: true }).click();
-    await other.getByRole('dialog').waitFor({ state: 'detached' });
+    await other.getByRole('region', { name: 'Narration style', exact: true }).waitFor({ state: 'detached' });
     await page.getByLabel('Tone', { exact: true }).fill('Stale form');
     await page.getByRole('button', { name: 'Save narration settings', exact: true }).click();
     await page.getByRole('alert').filter({ hasText: 'changed elsewhere' }).waitFor();
@@ -232,8 +255,51 @@ export async function exerciseNarration(browser, base, artifacts)
     release();
     assert.deepEqual(await read(), accepted, 'Settings changes and stopped streams preserve canon');
     assert.equal(await page.getByLabel('Story input', { exact: true }).inputValue(), 'Keep after settings failure.');
+
+    // Simulate a replacement library with the same adventure ID while a form is open.
+    // Responses change identity; the real host rejects the translated obsolete save.
+    await openStyle();
+    await page.getByLabel('Tone', { exact: true }).fill('Retained old-library form');
+    const beforeReplacement = await settings();
+    let submittedEpoch = '';
+    await page.route('**/wails/runtime', async route =>
+    {
+      const payload = route.request().postDataJSON();
+      const method = payload?.args?.methodName;
+      if (method === 'main.LibraryService.List' || method === 'main.LibraryService.Read')
+      {
+        const body = method.endsWith('.Read')
+          ? { ...payload, args: { ...payload.args, args: [{ ...payload.args.args[0], epoch: library.epoch }] } }
+          : payload;
+        const response = await route.fetch({ postData: body });
+        const value = await response.json();
+        value.epoch = 'replacement-library-fixture';
+        if (value.adventure) value.adventure.title = 'Replacement library fixture';
+        await route.fulfill({ response, json: value });
+        return;
+      }
+      if (method === 'main.LibraryService.SaveNarration')
+      {
+        submittedEpoch = payload.args.args[0].epoch;
+        const response = await route.fetch({ postData: { ...payload, args: { ...payload.args, args: [{ ...payload.args.args[0], epoch: 'obsolete-library-fixture' }] } } });
+        await route.fulfill({ response });
+        return;
+      }
+      await route.continue();
+    });
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await page.getByRole('heading', { name: 'Replacement library fixture', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Save narration settings', exact: true }).click();
+    await page.getByRole('alert').filter({ hasText: 'The library changed' }).waitFor();
+    assert.equal(submittedEpoch, library.epoch, 'Retained form must not borrow a replacement library epoch');
+    assert.equal(await page.getByLabel('Tone', { exact: true }).inputValue(), 'Retained old-library form');
+    await page.unroute('**/wails/runtime');
+    assert.deepEqual(await settings(), beforeReplacement);
+    assert.deepEqual(await read(), accepted);
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await page.reload({ waitUntil: 'networkidle' });
     assert.deepEqual(errors, []);
-    console.log('PASS: narration settings real browser persistence, future-only prompts, cross-tab conflicts, lost-reply retry, read failure, Retry and stream snapshot/Stop');
+    console.log('PASS: inline composer narration shelf, responsive geometry/toggle/Escape/focus, saved-only generation, pinned library identity, persistence/conflicts/lost replies and Retry/Stop');
   }
   finally
   {

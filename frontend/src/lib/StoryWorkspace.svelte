@@ -2,13 +2,14 @@
   import { onMount, tick } from 'svelte';
   import { host } from './host';
   import { StoryCoordinator, simulatedGeneration, type CoordinatorState, type Generator } from './coordinator';
-  import type { Snapshot } from './library';
+  import { schemaVersion, type Snapshot } from './library';
   import { ForkController, defaultForkTitle, type ForkState } from './fork';
   import type { TextSelection } from './textHistory';
   import { SessionSaveRecovery } from './saveRecovery';
   import { SessionForkRecovery } from './forkRecovery';
   import { modelError } from './models';
   import GenerationInspector from './GenerationInspector.svelte';
+  import NarrationSettings from './NarrationSettings.svelte';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -36,6 +37,9 @@
   let passageInput: HTMLTextAreaElement;
   let reviewEditButton: HTMLButtonElement;
   let keepLaterButton: HTMLButtonElement;
+  let narrationOpen = false;
+  let narrationBusy = false;
+  let narrationButton: HTMLButtonElement;
   $: editTargetMissing = state?.edit && !state.snapshot.turns.some(turn => turn.passages.some(passage => passage.id === state?.edit?.passageId));
   $: editHasContinuation = state?.edit && state.snapshot.turns.some(turn => turn.id === state?.edit?.turnId && turn.passages.some(passage => passage.source === 'generated'));
   $: detachedFork = forkState?.phase === 'blocked' || Boolean(forkState && forkTurnId && state && !state.snapshot.turns.some(turn => turn.id === forkTurnId));
@@ -92,6 +96,7 @@
 
   async function startEdit(passageId: string)
   {
+    if (narrationOpen) return;
     await coordinator.startEdit(passageId);
     await tick();
     passageInput?.focus();
@@ -128,6 +133,7 @@
 
   async function requestUndo()
   {
+    if (narrationOpen) return;
     coordinator.requestUndo();
     await tick();
     confirmUndoButton?.focus();
@@ -228,7 +234,7 @@
 
   async function openFork(turnId: string)
   {
-    if (!state || forkBusy || state.phase !== 'idle' || state.refreshing || state.projection.blocked) return;
+    if (!state || narrationOpen || forkBusy || state.phase !== 'idle' || state.refreshing || state.projection.blocked) return;
     forkTurnId = turnId;
     forkUrl = '';
     forkError = '';
@@ -262,6 +268,7 @@
 
   async function generate()
   {
+    if (narrationOpen) return;
     await coordinator.generate();
     await tick();
     candidateSection?.scrollIntoView({ block: 'nearest' });
@@ -298,9 +305,25 @@
   {
     if (event.isComposing) return;
     if (!(event.ctrlKey || event.metaKey) || event.key !== 'Enter') return;
-    if (forkBusy || state?.phase !== 'idle' || state.refreshing) return;
+    if (forkBusy || narrationOpen || state?.phase !== 'idle' || state.refreshing) return;
     event.preventDefault();
     void generate();
+  }
+
+  function toggleNarration()
+  {
+    if (forkBusy || narrationBusy || state?.phase !== 'idle' || state.refreshing) return;
+    narrationOpen = !narrationOpen;
+    publish(coordinator.state);
+  }
+
+  async function closeNarration()
+  {
+    narrationOpen = false;
+    narrationBusy = false;
+    publish(coordinator.state);
+    await tick();
+    narrationButton?.focus();
   }
 
   onMount(() =>
@@ -331,8 +354,8 @@
         : next.draftStatus === 'error' ? 'Draft needs attention'
         : next.draftStatus === 'unsaved' ? 'Unsaved input'
         : next.input ? 'Draft saved' : '✓ Saved';
-      onUpdate({ snapshot: next.snapshot, status, locked: forkBusy || next.phase === 'saving' || next.phase === 'uncertain',
-        modelLocked: forkBusy || next.phase !== 'idle' });
+      onUpdate({ snapshot: next.snapshot, status, locked: narrationOpen || forkBusy || next.phase === 'saving' || next.phase === 'uncertain',
+        modelLocked: narrationOpen || forkBusy || next.phase !== 'idle' });
     };
     coordinator = new StoryCoordinator(snapshot, {
       storage: host,
@@ -450,13 +473,13 @@
                   <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
                 {/each}
                 <button class="quiet edit-passage" data-edit-passage={passage.id} aria-label={`Edit ${passage.source === 'authored' ? 'Story text' : 'continuation'} for turn ${turn.order}`}
-                  onclick={() => startEdit(passage.id)} disabled={forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>✎ Edit</button>
+                  onclick={() => startEdit(passage.id)} disabled={narrationOpen || forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>✎ Edit</button>
               {/if}
             </div>
           {/each}
           <div class="turn-actions">
             <button class="quiet fork-action" aria-label={`Fork from turn ${turn.order}`} title={`Fork from turn ${turn.order} in a new tab`}
-              onclick={() => openFork(turn.id)} disabled={forkBusy || state.phase !== 'idle' || state.refreshing}>
+              onclick={() => openFork(turn.id)} disabled={narrationOpen || forkBusy || state.phase !== 'idle' || state.refreshing}>
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="6" cy="5" r="2.5" /><circle cx="6" cy="19" r="2.5" /><circle cx="18" cy="5" r="2.5" />
                 <path d="M6 7.5v9M18 7.5v1a5 5 0 0 1-5 5H6" />
@@ -464,7 +487,7 @@
             </button>
             {#if turn.id === state.snapshot.turns.at(-1)?.id}
               <button class="quiet undo-turn" bind:this={undoButton} aria-label={`Undo turn ${turn.order}`} onclick={requestUndo}
-                disabled={forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>↶ Undo turn {turn.order}</button>
+                disabled={narrationOpen || forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>↶ Undo turn {turn.order}</button>
             {/if}
           </div>
           {#if forkTurnId === turn.id && !detachedFork}
@@ -494,11 +517,24 @@
       {#if state.diagnostics}<GenerationInspector diagnostics={state.diagnostics} />{/if}
     {/if}
   </article>
-  <div class="composer">
+  <div class="composer" class:narration-expanded={narrationOpen}>
     <div class="composer-inner">
       {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
       {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
-      <div class="composer-heading"><span class="mode-selected">✎ Story</span><span class="supporting model-source">{sourceLabel}</span></div>
+      {#if narrationOpen && state}
+        <NarrationSettings request={{ schemaVersion, epoch: state.snapshot.epoch, adventureId: state.snapshot.adventure.id }}
+          onBusy={(value) => narrationBusy = value} onClose={closeNarration} />
+      {/if}
+      <div class="composer-heading">
+        <span class="mode-selected">✎ Story</span>
+        <div class="composer-tools">
+          <span class="supporting model-source">{sourceLabel}</span>
+          <button class="narration-toggle" class:selected={narrationOpen} bind:this={narrationButton} aria-label="Narration style" title="Narration style"
+            aria-expanded={narrationOpen} aria-controls="narration-style-panel" disabled={forkBusy || narrationBusy || state?.phase !== 'idle' || state.refreshing} onclick={toggleNarration}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 12 9 5 9-5M3 16l9 5 9-5" /></svg>
+          </button>
+        </div>
+      </div>
       {#if canStream}
         <label class="stream-option"><input type="checkbox" bind:checked={streamOutput} disabled={forkBusy || state?.phase !== 'idle' || state.refreshing} /> Stream output <span class="supporting">This session · Server support required</span></label>
       {/if}
@@ -568,7 +604,7 @@
         {:else if state?.phase === 'blocked'}
           <div class="pending-overlay"><p>Story writes are unavailable.</p><button onclick={() => coordinator.refresh()}>Reload story</button></div>
         {:else}
-          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={forkBusy || !state?.input.trim() || state.refreshing}>↑</button>
+          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={narrationOpen || forkBusy || !state?.input.trim() || state.refreshing}>↑</button>
         {/if}
       </div>
       <p class="composer-hint" role="status" aria-label="Draft status">{state?.draftError || (state?.phase === 'recovery-blocked' || (state?.recovery && (state.phase === 'saving' || state.phase === 'uncertain')) ? 'Input draft resumes after save recovery.' : state?.draftStatus === 'saved' ? 'Draft saved · Not accepted story.' : state?.draftStatus === 'saving' ? 'Saving draft…' : state?.draftStatus === 'loading' ? 'Loading saved draft…' : 'Input autosaves after a short pause.')}</p>
@@ -581,6 +617,10 @@
 </main>
 
 <style>
+  .composer.narration-expanded { max-height: calc(100% - 96px); overflow-y: auto; }
+  .composer-tools { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; }
+  .narration-toggle { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 30px; height: 30px; padding: 5px; color: var(--muted-foreground); }
+  .narration-toggle.selected { color: var(--primary); border-color: var(--primary); }
   .stream-preview { white-space: pre-wrap; overflow-wrap: anywhere; }
   .stream-option { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; margin-bottom: 8px; }
   .stream-option input { width: auto; }
