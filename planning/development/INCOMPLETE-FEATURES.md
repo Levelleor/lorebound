@@ -20,10 +20,10 @@ Use **functional**, **integration** or **verification** to identify the gap; com
 
 | Field | Detail |
 | --- | --- |
-| Status / gap | **OPEN — verification**; implementation exists in unmerged [PR #25](https://github.com/Levelleor/lorebound/pull/25). |
+| Status / gap | **OPEN — verification**; native implementation delivery takes effect on confirmed [PR #25](https://github.com/Levelleor/lorebound/pull/25) merge after approved closure. This verification gap stays open after that merge. |
 | Implemented | Native Ollama profiles, optional model discovery and synthetic connection testing, completed/NDJSON Story narration, cancellation and reported input/output token usage. Runtime requests use the configured server directly from the browser. |
 | Unfinished | No check against an installed, running Ollama server/model has been recorded. CI and the review preview supply simulated Ollama replies. Actual server-version, model, thinking-output and browser-origin interoperability remain unverified. |
-| Practical effect | The adapter can attempt a real configured Ollama endpoint, but a successful fixture demonstration does not establish that a particular local installation works. The selected **Simulated Ollama review** profile returns fixed prose rather than AI generation. |
+| Practical effect | The adapter can attempt a real configured Ollama endpoint, but a successful fixture demonstration does not establish that a particular local installation works. The **Simulated Ollama review** demonstration used fixed prose rather than AI generation. Its temporary fixture is stopped; the saved profile needs a running fixture or a real configured endpoint for another request. |
 | Source / evidence | [DEV-004E requirements and limits](./requirements/DEV-004E.md); [native adapter](../../frontend/src/lib/ollama.ts); [browser protocol fixture](../../frontend/scripts/check-ollama.mjs); [passing simulated-provider application CI](https://github.com/Levelleor/lorebound/actions/runs/43651970773). Firefox transport and Go/SQLite in that CI are real. |
 | Resolution | After an authorised focused live check, record the actual Ollama/server/model/browser configuration, exercised completed/streamed requests, cancellation, explicit acceptance/reload and remaining limits in the owning task/PR; fix any discovered mismatch. A result establishes only that exercised configuration. |
 | Dependencies / boundary | Requires an available configured Ollama installation/model and permitted browser origin. No model installation or live test is launched by this entry. This records a verification gap without adding a mandatory live-AI CI or merge gate to DEV-004E. |
@@ -32,7 +32,7 @@ Use **functional**, **integration** or **verification** to identify the gap; com
 
 | Field | Detail |
 | --- | --- |
-| Status / gap | **OPEN — functional/integration**; llama.cpp/Custom profiles are merged; native Ollama is implemented in unmerged PR #25. |
+| Status / gap | **OPEN — functional/integration**; llama.cpp/Custom profiles are merged; native Ollama delivery takes effect on confirmed PR #25 merge after approved closure. |
 | Implemented | Named reusable nonsecret profiles, selected endpoint/model/timeout, manual model entry, optional discovery/testing and direct browser narration. Existing metadata saves retain revision/epoch guards. |
 | Unfinished | Named LM Studio/vLLM and cloud adapters, authenticated connections/custom headers, accepted secure credential persistence and configurable retry preferences remain outstanding. Generic Custom compatibility does not certify the other named adapters. |
 | Practical effect | Existing unauthenticated connections are usable within their supported protocols. An endpoint requiring credentials cannot be configured through a supported secret-storage/request path yet. |

@@ -4,7 +4,7 @@ status: current
 created: "2026-11-03"
 updated: "2026-11-14"
 current_task: "DEV-004E — Native Ollama Story connections"
-current_task_status: "READY FOR USER REVIEW — UNMERGED"
+current_task_status: "VERIFIED ON CONFIRMED PR #25 MERGE"
 next_task: "DEV-004"
 tags:
   - planning/development
@@ -14,18 +14,16 @@ tags:
 
 Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](./FEATURES.md), [implemented-feature gaps](./INCOMPLETE-FEATURES.md), [journal](./JOURNAL.md) and [runbook](./AGENT-RUNBOOK.md). Requirements own scope/coverage; CI owns execution output.
 
-## Current authorised work
+## Approved closure — conditional on merge
 
-The user's separate 2026-11-14 launch selects [DEV-004E — Native Ollama Story connections](./requirements/DEV-004E.md) after confirmed PR #24 merge `2fc74e8`. That record owns the remaining dependency audit and three bounded requirements: native profiles/completed Story requests, NDJSON/cancellation/usage, and optional discovery/current synthetic connection testing. Implementation, evidence, controls and reconciliation stay in [primary PR #25](https://github.com/Levelleor/lorebound/pull/25). Explicit Accept remains; no whole-IDEA completion follows.
+After the checked preview/demo, documentation feedback and named-PR finalise/merge request, the user authorised closing [PR #25](https://github.com/Levelleor/lorebound/pull/25) on 2026-11-14: “alright, lest close this task now”. [DEV-004E](./requirements/DEV-004E.md) owns the dependency audit, three bounded native Ollama requirements, CI/review and evidence limits. Implementation, the requested incomplete-feature register/navigation, evidence, controls and closure remain in this one primary PR.
 
-Focused checks, [application CI](https://github.com/Levelleor/lorebound/actions/runs/43651970773) at `0cece95` and independent source/coverage review PASS. Independent review of all sixteen affected CI captures and readiness controls PASS with no blockers. Awaiting hands-on feedback and verbal approval to finalise and merge PR #25; no merge approval has been given. Prior persistent review/user libraries remain preserved.
+Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge. Then DEV-004E is VERIFIED within its simulated-provider native protocol scope; parent DEV-004 and original IDEAs remain PARTIAL. [INC-001](./INCOMPLETE-FEATURES.md#inc-001--native-ollama-live-server-verification-outstanding) remains OPEN: the adapter is implemented, but live Ollama/server/model interoperability is unverified. Other provider/credential/settings/pipeline/world gaps stay open. IDEA-0068 remains staged, IDEA-0069 unaccepted and **B9-D12 DEFERRED — NO WORK**. Actual merge provenance/final CI belongs in PR #25 and the final handoff.
 
-## Hands-on review
+## Review access and next action
 
-[Local review adventure](http://127.0.0.1:8086/?adventure=30a22957-9e1e-4d54-b54c-5aa4fbe97c9c) serves checked application source `0cece95`, using its own persistent `.local/review/dev004e` library. The selected **Simulated Ollama review** profile talks directly to a clearly labelled protocol fixture on loopback port 18086; no live Ollama model is running. Generate, inspect Generation details, Accept/Discard, or enable Stream output and Stop during its five-second preview. Input survives and stopped output never joins canon. Models supports optional discovery/current synthetic testing; model ID `missing-fixture` exercises a recoverable server/model error. The PR/chat owns the full short walkthrough.
+Agent-launched review app and simulated provider are stopped; ports 8086/18086 are confirmed closed. Persistent `.local/review/dev004e`, its saved simulated connection and retained input are preserved, along with prior review/user libraries.
 
-Rebuild/relaunch the application with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004e"`; Ctrl+C stops a foreground launch. The temporary simulated provider is a separate review process and is not installed application functionality; a real running Ollama uses its configured `/api` endpoint/model instead.
+Rebuild/relaunch current source with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004e"`; Ctrl+C stops it. The temporary fixture is stopped and is not installed application functionality. In Models, configure your own running Ollama `/api` endpoint/model (or another supported connection), optionally discover/test, Generate, inspect Generation details and explicitly Accept. Stream output remains opt-in; Stop retains input and saves no new turn. Live Ollama compatibility has not been established by the simulated demo.
 
-Other local/cloud providers, credentials/settings/pipelines/world obligations remain later. IDEA-0068 stays staged and IDEA-0069 stays an unaccepted future candidate. **B9-D12 remains DEFERRED — NO WORK.**
-
-**Exactly one next task: DEV-004 — audit/select a further bounded child only after DEV-004E closes and a separate user launch.** No automatic next slice or separate reconciliation PR follows.
+**Exactly one next task: DEV-004 — audit/select a further bounded child only after DEV-004E closes and a separate user launch.** Closure approval starts no next slice or reconciliation PR.
