@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import path from 'node:path';
 
 // Provider replies and lost service replies are simulated; browser/Go/SQLite are real.
-export async function exerciseNarration(browser, base, artifacts)
+export async function exerciseNarration(browser, base, artifacts, { capturePrefix = 'narration', layoutOnly = false } = {})
 {
   const requests = [];
   let release = () => {};
@@ -84,21 +84,42 @@ export async function exerciseNarration(browser, base, artifacts)
       for (const width of [390, 768, 1024, 1440])
       {
         await page.setViewportSize({ width, height: 900 });
-        await page.locator('#narration-style-panel fieldset').evaluate(element => element.scrollTop = 0);
+        await page.locator('.composer').scrollIntoViewIfNeeded();
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-        assert.equal(await page.getByRole('region', { name: 'Narration style', exact: true }).evaluate(element => element.scrollWidth <= element.clientWidth && element.getBoundingClientRect().height <= Math.min(300, innerHeight * .3) + 1), true);
+        assert.equal(await page.getByRole('region', { name: 'Narration style', exact: true }).evaluate(element => element.scrollWidth <= element.clientWidth && element.scrollHeight <= element.clientHeight + 1), true);
         const geometry = await page.evaluate(() =>
         {
-          const shelf = document.querySelector('#narration-style-panel').getBoundingClientRect();
+          const panel = document.querySelector('#narration-style-panel');
+          const shelf = panel.getBoundingClientRect();
           const toggle = document.querySelector('.narration-toggle').getBoundingClientRect();
           const input = document.querySelector('#story-input').getBoundingClientRect();
           const actions = document.querySelector('.shelf-actions').getBoundingClientRect();
-          return { aboveInput: shelf.bottom <= input.top, nearInput: toggle.bottom <= input.top && input.top - toggle.bottom < 100, inputVisible: input.bottom <= innerHeight, actionsVisible: actions.top >= shelf.top && actions.bottom <= shelf.bottom };
+          const fields = [...panel.querySelectorAll('.style-grid > div')];
+          const separated = fields.every(field =>
+          {
+            const label = field.querySelector('label').getBoundingClientRect();
+            const control = field.querySelector('input,select').getBoundingClientRect();
+            return label.bottom + 5 <= control.top;
+          });
+          const noInnerScroll = ['#narration-style-panel', '#narration-style-panel form', '#narration-style-panel fieldset', '.composer', '#narration-instructions', '#story-input'].every(selector =>
+          {
+            const element = document.querySelector(selector);
+            return element.scrollHeight <= element.clientHeight + 1 && !['auto', 'scroll'].includes(getComputedStyle(element).overflowY);
+          });
+          const heading = document.querySelector('.composer-heading');
+          const mode = heading.querySelector('.mode-selected').getBoundingClientRect();
+          const source = heading.querySelector('.model-source').getBoundingClientRect();
+          const checkbox = document.querySelector('.stream-option input').getBoundingClientRect();
+          const stream = document.querySelector('.stream-option').getBoundingClientRect();
+          return { aboveInput: shelf.bottom <= input.top, nearInput: toggle.bottom <= input.top && input.top - toggle.bottom < 100,
+            actionsSeparated: actions.top >= panel.querySelector('fieldset').getBoundingClientRect().bottom + 8,
+            fieldsSeparated: separated, noInnerScroll, toolbarSeparated: mode.right + 8 <= source.left && source.right + 8 <= toggle.left,
+            checkboxAligned: checkbox.top >= stream.top && checkbox.bottom <= stream.bottom };
         });
-        assert.deepEqual(geometry, { aboveInput: true, nearInput: true, inputVisible: true, actionsVisible: true });
+        assert.deepEqual(geometry, { aboveInput: true, nearInput: true, actionsSeparated: true, fieldsSeparated: true, noInnerScroll: true, toolbarSeparated: true, checkboxAligned: true });
         assert.equal(await page.getByRole('dialog').count(), 0, 'Narration controls expand inline');
         assert.equal(await page.getByRole('button', { name: 'Narration style', exact: true }).getAttribute('aria-expanded'), 'true');
-        if (artifacts) await page.screenshot({ path: path.join(artifacts, `narration-${theme}-${width}.png`) });
+        if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-${theme}-${width}.png`) });
         if (width === 390)
         {
           await page.getByLabel('Custom style instructions', { exact: true }).focus();
@@ -111,16 +132,23 @@ export async function exerciseNarration(browser, base, artifacts)
             return field.top >= body.top && field.bottom <= body.bottom && field.bottom < actions.top;
           });
           assert.equal(visible, true, 'Focused instruction field must be fully visible above the nonoverlapping action footer');
-          if (artifacts) await page.screenshot({ path: path.join(artifacts, `narration-focus-${theme}-${width}.png`) });
+          if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-focus-${theme}-${width}.png`) });
         }
       }
     }
     await page.setViewportSize({ width: 390, height: 600 });
-    const composer = page.locator('.composer');
-    assert.equal(await composer.evaluate(element => element.getBoundingClientRect().bottom <= innerHeight), true, 'Expanded composer stays within a short mobile viewport');
+    await page.getByRole('button', { name: 'Save narration settings', exact: true }).scrollIntoViewIfNeeded();
+    assert.equal(await page.locator('.composer').evaluate(element => element.scrollHeight <= element.clientHeight + 1), true, 'Short screens scroll outside the interaction block');
     await page.getByLabel('Story input', { exact: true }).scrollIntoViewIfNeeded();
     assert.equal(await page.getByLabel('Story input', { exact: true }).isVisible(), true);
     await page.setViewportSize({ width: 1440, height: 900 });
+    const instructions = page.getByLabel('Custom style instructions', { exact: true });
+    await instructions.fill(Array.from({ length: 16 }, (_, index) => `Writing direction line ${index + 1}.`).join('\n'));
+    await page.waitForFunction(() => { const field = document.querySelector('#narration-instructions'); return field.clientHeight > 200 && field.scrollHeight <= field.clientHeight + 1; });
+    await instructions.fill('Keep the lantern mysterious.\nUse concrete sounds.');
+    await page.getByLabel('Story input', { exact: true }).fill(Array.from({ length: 25 }, (_, index) => `Player prose line ${index + 1}.`).join('\n'));
+    await page.waitForFunction(() => { const field = document.querySelector('#story-input'); return field.clientHeight > 300 && field.scrollHeight <= field.clientHeight + 1; });
+    await page.getByLabel('Story input', { exact: true }).fill('Retain the lantern input.');
     await page.getByLabel('Story input', { exact: true }).press('Control+Enter');
     assert.equal(requests.length, 0, 'Unsaved shelf edits cannot silently generate with older settings');
     assert.equal(await page.getByRole('button', { name: 'Generate continuation', exact: true }).isDisabled(), true);
@@ -143,6 +171,12 @@ export async function exerciseNarration(browser, base, artifacts)
     await page.getByRole('region', { name: 'Narration style', exact: true }).waitFor({ state: 'detached' });
     assert.equal(await page.getByRole('button', { name: 'Narration style', exact: true }).getAttribute('aria-expanded'), 'false');
     await storyView();
+    if (layoutOnly)
+    {
+      assert.deepEqual(errors, []);
+      console.log('PASS: Chromium narration layout, no internal scrollbars, field/toolbar spacing, growing textareas and saved settings');
+      return;
+    }
 
     const generate = () => page.getByRole('button', { name: 'Generate continuation', exact: true }).click();
     const proposal = page.getByRole('region', { name: 'Proposed turn', exact: true });
@@ -161,7 +195,7 @@ export async function exerciseNarration(browser, base, artifacts)
         await page.setViewportSize({ width, height: 900 });
         await page.locator('.generation-inspector pre').scrollIntoViewIfNeeded();
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-        if (artifacts) await page.screenshot({ path: path.join(artifacts, `narration-details-${theme}-${width}.png`) });
+        if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-details-${theme}-${width}.png`) });
       }
     }
     await page.getByRole('button', { name: 'Accept turn', exact: true }).click();
@@ -314,7 +348,7 @@ export async function exerciseNarration(browser, base, artifacts)
     await page.getByRole('button', { name: 'Cancel', exact: true }).click();
     await page.reload({ waitUntil: 'networkidle' });
     assert.deepEqual(errors, []);
-    console.log('PASS: inline composer narration shelf, responsive geometry/toggle/Escape/focus, saved-only generation, pinned library identity, persistence/conflicts/lost replies and Retry/Stop');
+    console.log('PASS: inline composer narration shelf, no internal scrollbars/overlaps, growing textareas, toggle/Escape/focus, saved-only generation, pinned library identity, persistence/conflicts/lost replies and Retry/Stop');
   }
   finally
   {

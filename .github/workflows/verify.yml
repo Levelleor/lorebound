@@ -90,9 +90,9 @@ jobs:
         run: go vet -tags server ./...
       - name: Real SQLite contract and recovery tests
         run: go test -count=1 -tags server -v ./...
-      - name: Install Firefox and system dependencies
+      - name: Install Firefox, Chromium and system dependencies
         working-directory: frontend
-        run: npx --no-install playwright install --with-deps firefox
+        run: npx --no-install playwright install --with-deps firefox chromium
       - name: Real browser, host restrictions and restart persistence
         timeout-minutes: 5
         run: bash scripts/verify-host.sh

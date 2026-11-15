@@ -18,7 +18,7 @@ Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](.
 
 Confirmed [PR #26](https://github.com/Levelleor/lorebound/pull/26) merge `4e56576` satisfies DEV-004F closure. The user's separate launch and “proceed” select [DEV-004G](./requirements/DEV-004G.md): current adventure narration settings for subsequent existing local Story generation. Its requirement record owns the remaining dependency audit, four bounded requirements and evidence limits.
 
-Implementation, evidence, independent review, controls and reconciliation stay in [primary PR #27](https://github.com/Levelleor/lorebound/pull/27). Focused checks and independent source/control/fixture review PASS; the PR owns current CI links/results and actual-capture review. The user requested composer-adjacent inline controls from their screenshot; that feedback is implemented. Fresh applicable CI and shelf-capture review must pass before requesting merge approval again. No finalise/merge approval or verified-main claim.
+Implementation, evidence, independent review, controls and reconciliation stay in [primary PR #27](https://github.com/Levelleor/lorebound/pull/27). Focused checks and independent source/control/fixture review PASS; the PR owns current CI links/results and actual-capture review. The user’s composer-adjacent controls, overlap and no-inner-scrollbar feedback are implemented with natural-height controls and growing textareas. Fresh applicable CI and shelf-capture review must pass before requesting merge approval again. No finalise/merge approval or verified-main claim.
 
 ## Hands-on review
 

@@ -2,6 +2,7 @@
   import { onMount, tick } from 'svelte';
   import { host } from './host';
   import { readStyle, type NarrationRequest, type NarrationSettings } from './narration';
+  import { autoSize } from './autoSize';
 
   export let request: NarrationRequest;
   export let onClose: () => void;
@@ -130,14 +131,14 @@
           </div>
         </div>
         <label for="narration-instructions">Custom style instructions</label>
-        <textarea id="narration-instructions" bind:value={style.instructions} maxlength="2000" rows="2" placeholder="Optional writing direction · sent with each AI continuation"></textarea>
-        <p class="supporting shelf-hint">Save to guide future AI continuations. Existing prose stays unchanged; Simulation ignores style.</p>
-        <details class="supporting">
+        <textarea id="narration-instructions" use:autoSize={style.instructions} bind:value={style.instructions} maxlength="2000" rows="2" placeholder="Optional writing direction · sent with each AI continuation"></textarea>
+        <details class="supporting" open={Boolean(error)}>
           <summary>About narration guidance</summary>
+          <p>Saved for future AI continuations. Existing prose stays unchanged; Simulation ignores style.</p>
           <p>Genre and tone: up to 200 characters each. Custom instructions: up to 2,000. Sent in the order shown; conflicting creative directions are left for the model to interpret. No character selection is required.</p>
           <p>Adherence and length are best-effort, not decoding parameters or a token cap. Model context capacity is unknown; guidance is sent in full without automatic trimming. Inspect Generation details after a request.</p>
+          <button class="quiet" type="button" onclick={load}>Reload settings</button>
         </details>
-        <button class="quiet" type="button" onclick={load}>Reload settings</button>
       </fieldset>
       <div class="shelf-actions"><button type="button" disabled={busy} onclick={onClose}>Cancel</button><button class="primary" disabled={busy} type="submit">Save narration settings</button></div>
     </form>
@@ -149,29 +150,26 @@
 <style>
   .narration-settings
   {
-    max-height: min(300px, 30dvh);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
     border: 1px solid var(--border);
     border-radius: 4px;
     background: var(--background);
     color: var(--foreground);
   }
 
-  .shelf-actions { flex-shrink: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .shelf-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); flex-wrap: wrap; }
   .shelf-actions button { padding: 6px 10px; font-size: 12px; }
+  .story-error { max-height: none; overflow: visible; }
   form, fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
-  form { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-  fieldset { flex: 1; min-height: 0; overflow-y: auto; padding: 6px; }
-  .style-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 12px; }
-  label { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; margin: 0 0 5px; }
-  input, select, textarea { width: 100%; min-width: 0; padding: 6px 8px; margin: 0; border: 1px solid var(--border); border-radius: 4px; background: var(--background); color: var(--foreground); font: 12px/1.4 var(--font-ui); }
-  form > fieldset > label { margin-top: 12px; }
-  textarea { min-height: 52px; max-height: 120px; resize: vertical; }
-  .shelf-hint { margin: 8px 0; }
+  .style-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 16px; }
+  .style-grid > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  label { font: 600 10px/1.4 var(--font-ui); text-transform: uppercase; letter-spacing: .08em; margin: 0; }
+  input, select, textarea { box-sizing: border-box; width: 100%; min-width: 0; padding: 6px 8px; margin: 0; border: 1px solid var(--border); border-radius: 4px; background: var(--background); color: var(--foreground); font: 12px/1.5 var(--font-ui); }
+  input, select { height: 32px; }
+  form > fieldset > label { margin: 16px 0 6px; }
+  textarea { min-height: 64px; max-height: none; overflow: hidden; resize: none; }
+  details { margin-top: 12px; }
   summary { cursor: pointer; }
   @media (max-width: 639px)
   {

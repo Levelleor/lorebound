@@ -10,6 +10,7 @@
   import { modelError } from './models';
   import GenerationInspector from './GenerationInspector.svelte';
   import NarrationSettings from './NarrationSettings.svelte';
+  import { autoSize } from './autoSize';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -409,7 +410,7 @@
   </div>
 {/snippet}
 
-<main class:mobile-hidden={mobileHidden} class="story-pane">
+<main class:mobile-hidden={mobileHidden} class:narration-expanded={narrationOpen} class="story-pane">
   <article class="reader" aria-label="Story reader">
     <p class="eyebrow">Your adventure</p>
     <h1 tabindex="-1">{snapshot.adventure.title}</h1>
@@ -517,7 +518,7 @@
       {#if state.diagnostics}<GenerationInspector diagnostics={state.diagnostics} />{/if}
     {/if}
   </article>
-  <div class="composer" class:narration-expanded={narrationOpen}>
+  <div class="composer">
     <div class="composer-inner">
       {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
       {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
@@ -527,20 +528,18 @@
       {/if}
       <div class="composer-heading">
         <span class="mode-selected">✎ Story</span>
-        <div class="composer-tools">
-          <span class="supporting model-source">{sourceLabel}</span>
-          <button class="narration-toggle" class:selected={narrationOpen} bind:this={narrationButton} aria-label="Narration style" title="Narration style"
-            aria-expanded={narrationOpen} aria-controls="narration-style-panel" disabled={forkBusy || narrationBusy || state?.phase !== 'idle' || state.refreshing} onclick={toggleNarration}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 12 9 5 9-5M3 16l9 5 9-5" /></svg>
-          </button>
-        </div>
+        <span class="supporting model-source" title={sourceLabel}>{sourceLabel}</span>
+        <button class="narration-toggle" class:selected={narrationOpen} bind:this={narrationButton} aria-label="Narration style" title="Narration style"
+          aria-expanded={narrationOpen} aria-controls="narration-style-panel" disabled={forkBusy || narrationBusy || state?.phase !== 'idle' || state.refreshing} onclick={toggleNarration}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 12 9 5 9-5M3 16l9 5 9-5" /></svg>
+        </button>
       </div>
       {#if canStream}
-        <label class="stream-option"><input type="checkbox" bind:checked={streamOutput} disabled={forkBusy || state?.phase !== 'idle' || state.refreshing} /> Stream output <span class="supporting">This session · Server support required</span></label>
+        <label class="stream-option"><input type="checkbox" bind:checked={streamOutput} disabled={forkBusy || state?.phase !== 'idle' || state.refreshing} /><span>Stream output</span><span class="supporting">This session · Server support required</span></label>
       {/if}
       <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)} class:edit-pending={Boolean(state?.edit)}>
         <label class="sr-only" for="story-input">Story input</label>
-        <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
+        <textarea id="story-input" use:autoSize={state?.input} bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
           disabled={forkBusy || !state || state.phase !== 'idle'}
           oninput={(event) => coordinator.setInput(event.currentTarget.value)}
           onkeydown={handleInputKey}></textarea>
@@ -617,13 +616,21 @@
 </main>
 
 <style>
-  .composer.narration-expanded { max-height: calc(100% - 96px); overflow-y: auto; }
-  .composer-tools { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; }
+  .story-pane { overflow-y: auto; }
+  .story-pane.narration-expanded > .reader { flex: 0 0 auto; overflow: visible; }
+  .composer-heading { display: grid; grid-template-columns: auto minmax(0, 1fr) 30px; align-items: center; gap: 12px; }
+  .composer-heading .model-source { max-width: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+  #story-input { max-height: none; overflow: hidden; resize: none; }
+  .composer .story-error { max-height: none; overflow: visible; }
   .narration-toggle { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 30px; height: 30px; padding: 5px; color: var(--muted-foreground); }
   .narration-toggle.selected { color: var(--primary); border-color: var(--primary); }
   .stream-preview { white-space: pre-wrap; overflow-wrap: anywhere; }
-  .stream-option { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; margin-bottom: 8px; }
-  .stream-option input { width: auto; }
+  .stream-option { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12px; line-height: 18px; margin: 0 0 12px; }
+  .stream-option input { flex: none; width: 14px; height: 14px; margin: 0; padding: 0; accent-color: var(--primary); }
+  @media (max-width: 639px)
+  {
+    .stream-option .supporting { flex-basis: 100%; padding-left: 22px; font-size: 11px; }
+  }
   .recovery-text { width: 100%; box-sizing: border-box; padding: 8px; background: transparent; color: var(--ink); resize: vertical; }
   .editing { border-left: 2px solid var(--primary); padding-left: 12px; }
   .passage-editor { width: 100%; box-sizing: border-box; padding: 12px 16px; color: var(--ink); background: transparent; font-family: var(--font-prose); font-size: 21px; line-height: 1.625; resize: vertical; min-height: 180px; }

@@ -1,4 +1,4 @@
-import { firefox } from 'playwright';
+import { chromium, firefox } from 'playwright';
 import assert from 'node:assert/strict';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -191,6 +191,9 @@ try {
     await exerciseOllama(browser, base, artifacts);
     await exerciseNamedServers(browser, base, artifacts);
     await exerciseNarration(browser, base, artifacts);
+    const chromiumBrowser = await chromium.launch({ headless: true });
+    try { await exerciseNarration(chromiumBrowser, base, artifacts, { capturePrefix: 'narration-chromium', layoutOnly: true }); }
+    finally { await chromiumBrowser.close(); }
     const finalLibrary = await list();
     const snapshots = await page.evaluate(async library => {
       const snapshots = {};
