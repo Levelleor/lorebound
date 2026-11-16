@@ -11,6 +11,7 @@
   import GenerationInspector from './GenerationInspector.svelte';
   import NarrationSettings from './NarrationSettings.svelte';
   import { autoSize } from './autoSize';
+  import { keepCaretInView } from './keepCaretInView';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -46,6 +47,13 @@
   let mainHeight = 0;
   let composerBaseHeight = 0;
   let composerHeight = 0;
+  let inputHeight = 0;
+  let narrationHeight = 0;
+  let composerViewport: HTMLDivElement;
+  $: inputBudget = Math.min(240, Math.max(160, mainHeight * .4));
+  $: composerControlsHeight = Math.max(0, composerBaseHeight - inputHeight) + 2 * 16 + 1;
+  $: composerOverflow = mainHeight > 0 && (inputHeight > inputBudget || composerBaseHeight + 2 * 16 + 1 > mainHeight);
+  $: composerLimit = Math.min(mainHeight, composerControlsHeight + inputBudget + (narrationOpen ? narrationHeight : 0));
   $: editTargetMissing = state?.edit && !state.snapshot.turns.some(turn => turn.passages.some(passage => passage.id === state?.edit?.passageId));
   $: editHasContinuation = state?.edit && state.snapshot.turns.some(turn => turn.id === state?.edit?.turnId && turn.passages.some(passage => passage.source === 'generated'));
   $: detachedFork = forkState?.phase === 'blocked' || Boolean(forkState && forkTurnId && state && !state.snapshot.turns.some(turn => turn.id === forkTurnId));
@@ -417,7 +425,7 @@
 
 <main class:mobile-hidden={mobileHidden} class="story-pane" bind:clientWidth={mainWidth} bind:clientHeight={mainHeight}
   style:--scrollbar-width={`${Math.max(8, mainWidth - storyWidth)}px`} style:--composer-height={`${composerHeight}px`}
-  style:--narration-height={`${Math.max(0, mainHeight - composerBaseHeight - 2 * 16 - 1)}px`}>
+  style:--narration-height={`${Math.max(0, mainHeight - composerBaseHeight - 2 * 16 - 2)}px`} style:--composer-limit={`${composerLimit}px`}>
   <div class="story-scroll" bind:clientWidth={storyWidth}>
     <article class="reader" aria-label="Story reader">
       <header class="story-heading">
@@ -529,11 +537,13 @@
       {/if}
     </article>
   </div>
-  <div class="composer" bind:clientHeight={composerHeight}>
+  <div class="composer" class:oversized={composerOverflow} bind:this={composerViewport} bind:clientHeight={composerHeight}>
     <div class="composer-inner">
       {#if narrationOpen && state}
-        <NarrationSettings request={{ schemaVersion, epoch: state.snapshot.epoch, adventureId: state.snapshot.adventure.id }}
-          onBusy={(value) => narrationBusy = value} onClose={closeNarration} />
+        <div bind:clientHeight={narrationHeight}>
+          <NarrationSettings request={{ schemaVersion, epoch: state.snapshot.epoch, adventureId: state.snapshot.adventure.id }} scrollWithComposer={composerOverflow}
+            onBusy={(value) => narrationBusy = value} onClose={closeNarration} />
+        </div>
       {/if}
       <div class="composer-base" bind:clientHeight={composerBaseHeight}>
         {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
@@ -551,7 +561,7 @@
         {/if}
         <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)} class:edit-pending={Boolean(state?.edit)}>
           <label class="sr-only" for="story-input">Story input</label>
-          <textarea id="story-input" use:autoSize={state?.input} bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
+          <textarea id="story-input" use:autoSize={state?.input} use:keepCaretInView={{ viewport: composerViewport, enabled: composerOverflow }} bind:this={input} bind:offsetHeight={inputHeight} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
             disabled={forkBusy || !state || state.phase !== 'idle'}
             oninput={(event) => coordinator.setInput(event.currentTarget.value)}
             onkeydown={handleInputKey}></textarea>
@@ -637,7 +647,8 @@
   .story-heading h1 { margin: 8px 0 0; line-height: 1.111; }
   .accepted-turn { margin: 0 0 32px; }
   .turn-label { font-family: var(--font-mono); font-size: 10px; }
-  .composer { grid-area: 1 / 1; align-self: end; margin-right: var(--scrollbar-width); z-index: 1; background: color-mix(in oklch, var(--card) 80%, var(--background)); }
+  .composer { grid-area: 1 / 1; align-self: end; min-height: 0; max-height: 100%; overflow-y: auto; overflow-anchor: none; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--border) transparent; margin-right: var(--scrollbar-width); z-index: 1; background: color-mix(in oklch, var(--card) 80%, var(--background)); }
+  .composer.oversized { max-height: var(--composer-limit); }
   .composer-heading { display: grid; grid-template-columns: auto minmax(0, 1fr) 30px; align-items: center; gap: 12px; }
   .composer-heading .model-source { max-width: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
   .mode-selected { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; border-radius: 6px; box-shadow: 0 0 0 1px oklch(.76 .12 70 / .35), 0 8px 30px -10px oklch(.76 .12 70 / .35); }

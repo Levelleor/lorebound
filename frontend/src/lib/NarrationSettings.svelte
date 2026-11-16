@@ -7,6 +7,7 @@
   export let request: NarrationRequest;
   export let onClose: () => void;
   export let onBusy: (value: boolean) => void;
+  export let scrollWithComposer = false;
   // Keep retained edits bound to the library that supplied them.
   const target = { ...request };
   let perspective: HTMLSelectElement;
@@ -90,7 +91,7 @@
   onClose();
 }} />
 
-<section id="narration-style-panel" class="narration-settings" aria-labelledby="narration-title" aria-busy={busy}>
+<section id="narration-style-panel" class="narration-settings" class:scroll-with-composer={scrollWithComposer} aria-labelledby="narration-title" aria-busy={busy}>
   <h2 id="narration-title" class="sr-only">Narration style</h2>
   {#if error}<p class="story-error" role="alert">{error}</p>{/if}
   {#if style}
@@ -160,6 +161,7 @@
     color: var(--foreground);
   }
 
+  .scroll-with-composer { max-height: none; overflow: visible; }
   .shelf-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .shelf-actions button { padding: 6px 10px; font-size: 12px; }
   .story-error { max-height: none; overflow: visible; }

@@ -4,7 +4,7 @@ status: current
 created: "2026-11-03"
 updated: "2026-11-15"
 current_task: "DEV-004G — Current adventure narration settings"
-current_task_status: "IMPLEMENTED — OVERSIZED DRAFT DECISION PENDING"
+current_task_status: "IMPLEMENTED — AWAITING USER REVIEW"
 next_task: "DEV-004"
 tags:
   - planning/development
@@ -18,7 +18,7 @@ Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](.
 
 Confirmed [PR #26](https://github.com/Levelleor/lorebound/pull/26) merge `4e56576` satisfies DEV-004F closure. The user's separate launch and “proceed” select [DEV-004G](./requirements/DEV-004G.md): current adventure narration settings for subsequent existing local Story generation. Its requirement record owns the remaining dependency audit, four bounded requirements and evidence limits.
 
-Implementation, evidence, independent review, controls and reconciliation stay in [primary PR #27](https://github.com/Levelleor/lorebound/pull/27). Focused checks and independent source/control/fixture review PASS; the PR owns current CI links/results and actual-capture review. The user’s direct Command Citadel reference and overlay choice govern the feedback revision: stable bottom input with an attached fixed narration section, conditional narration-only scrolling, one full-height story edge scrollbar and actual bundled reference fonts. INC-006 owns the remaining design alignment work. Normal-layout CI and actual-capture review are recorded in the PR. An oversized-draft overflow fallback remains unresolved before full readiness; the user’s preference is pending. Fresh applicable checks/review must pass after that fix before requesting merge approval. No finalise/merge approval or verified-main claim.
+Implementation, evidence, independent review, controls and reconciliation stay in [primary PR #27](https://github.com/Levelleor/lorebound/pull/27). Focused checks and independent source/control/fixture review PASS; the PR owns current CI links/results and actual-capture review. The user’s direct Command Citadel reference and overlay choice govern the feedback revision: stable bottom input with an attached fixed narration section, conditional narration-only scrolling, one full-height story edge scrollbar and actual bundled reference fonts. INC-006 owns the remaining design alignment work. Normal-layout CI and actual-capture review are recorded in the PR. The user selected whole-composer scrolling for oversized drafts and requested bounded input growth; that fallback is implemented with a responsive visible-composer input budget. Fresh applicable CI/capture review must pass before requesting merge approval. No finalise/merge approval or verified-main claim.
 
 ## Hands-on review
 
