@@ -267,7 +267,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     });
     if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-long-instructions-1440.png`) });
     await instructions.fill('Keep the lantern mysterious.\nUse concrete sounds.');
-    const oversizedDraft = Array.from({ length: 80 }, (_, index) => `Player prose line ${index + 1}.`).join('\n');
+    const oversizedDraft = [...Array.from({ length: 79 }, (_, index) => `Player prose line ${index + 1}.`), 'The final wrapped line stays readable beside the Send button. '.repeat(8)].join('\n');
     await page.getByLabel('Story input', { exact: true }).fill(oversizedDraft);
     const waitForInputOverflow = () => page.waitForFunction(() =>
     {
@@ -304,6 +304,12 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
         };
         return { input: bounds('#story-input'), toolbar: bounds('.composer-heading'), story: document.querySelector('.story-scroll').scrollTop, composer: document.querySelector('.composer').scrollTop };
       });
+      assert.equal(await page.getByLabel('Story input', { exact: true }).evaluate(field =>
+      {
+        const style = getComputedStyle(field);
+        const send = field.closest('.composer-input').querySelector('.send');
+        return parseFloat(style.paddingRight) >= send.offsetWidth + parseFloat(getComputedStyle(send).right) + 8;
+      }), true, 'Wrapped text reserves horizontal space beside the fixed Send button during native scrolling');
       const beforeInputScroll = await anchor();
       await page.getByLabel('Story input', { exact: true }).press('Control+Home');
       await page.waitForFunction(() =>

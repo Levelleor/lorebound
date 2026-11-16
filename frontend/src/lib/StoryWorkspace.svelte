@@ -650,7 +650,7 @@
   .composer-heading { display: grid; grid-template-columns: auto minmax(0, 1fr) 30px; align-items: center; gap: 12px; }
   .composer-heading .model-source { max-width: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
   .mode-selected { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; border-radius: 6px; box-shadow: 0 0 0 1px oklch(.76 .12 70 / .35), 0 8px 30px -10px oklch(.76 .12 70 / .35); }
-  #story-input { min-height: min(140px, var(--input-limit)); max-height: var(--input-limit); overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; scrollbar-gutter: stable; resize: none; border-radius: 6px; }
+  #story-input { min-height: min(140px, var(--input-limit)); max-height: var(--input-limit); padding-right: 64px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; scrollbar-gutter: stable; resize: none; border-radius: 6px; }
   #story-input.compact { max-height: min(147px, var(--input-limit)); }
   .send { display: grid; place-items: center; }
   .send.primary { box-shadow: 0 0 0 1px oklch(.76 .12 70 / .35), 0 8px 30px -10px oklch(.76 .12 70 / .35); }
