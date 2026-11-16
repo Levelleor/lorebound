@@ -3,14 +3,17 @@
   import { host } from './host';
   import { readStyle, type NarrationRequest, type NarrationSettings } from './narration';
   import { autoSize } from './autoSize';
+  import { keepCaretInView } from './keepCaretInView';
 
   export let request: NarrationRequest;
   export let onClose: () => void;
   export let onBusy: (value: boolean) => void;
   export let scrollWithComposer = false;
+  export let composerViewport: HTMLElement | undefined = undefined;
   // Keep retained edits bound to the library that supplied them.
   const target = { ...request };
   let perspective: HTMLSelectElement;
+  let panel: HTMLElement;
   let settings: NarrationSettings | null = null;
   let style: NarrationSettings['style'] | null = null;
   let busy = true;
@@ -91,7 +94,7 @@
   onClose();
 }} />
 
-<section id="narration-style-panel" class="narration-settings" class:scroll-with-composer={scrollWithComposer} aria-labelledby="narration-title" aria-busy={busy}>
+<section id="narration-style-panel" class="narration-settings" class:scroll-with-composer={scrollWithComposer} bind:this={panel} aria-labelledby="narration-title" aria-busy={busy}>
   <h2 id="narration-title" class="sr-only">Narration style</h2>
   {#if error}<p class="story-error" role="alert">{error}</p>{/if}
   {#if style}
@@ -132,7 +135,7 @@
           </div>
         </div>
         <label for="narration-instructions">Custom style instructions</label>
-        <textarea id="narration-instructions" use:autoSize={style.instructions} bind:value={style.instructions} maxlength="2000" rows="2" placeholder="Optional writing direction · sent with each AI continuation"></textarea>
+        <textarea id="narration-instructions" use:autoSize={style.instructions} use:keepCaretInView={{ viewport: scrollWithComposer ? composerViewport : panel, enabled: true }} bind:value={style.instructions} maxlength="2000" rows="2" placeholder="Optional writing direction · sent with each AI continuation"></textarea>
         <details class="supporting" open={Boolean(error)}>
           <summary>About narration guidance</summary>
           <p>Saved for future AI continuations. Existing prose stays unchanged; Simulation ignores style.</p>

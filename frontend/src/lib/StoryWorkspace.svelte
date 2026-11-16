@@ -549,7 +549,7 @@
     <div class="composer-inner">
       {#if narrationOpen && state}
         <div use:measureHeight={(height) => narrationHeight = height}>
-          <NarrationSettings request={{ schemaVersion, epoch: state.snapshot.epoch, adventureId: state.snapshot.adventure.id }} scrollWithComposer={composerOverflow}
+          <NarrationSettings request={{ schemaVersion, epoch: state.snapshot.epoch, adventureId: state.snapshot.adventure.id }} scrollWithComposer={composerOverflow} {composerViewport}
             onBusy={(value) => narrationBusy = value} onClose={closeNarration} />
         </div>
       {/if}
@@ -569,7 +569,7 @@
         {/if}
         <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)} class:edit-pending={Boolean(state?.edit)}>
           <label class="sr-only" for="story-input">Story input</label>
-          <textarea id="story-input" use:autoSize={state?.input} use:keepCaretInView={{ viewport: composerViewport, enabled: composerOverflow }} bind:this={input} bind:offsetHeight={inputHeight} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
+          <textarea id="story-input" class:compact={state?.phase !== 'idle'} use:autoSize={state?.input} use:keepCaretInView={{ viewport: composerViewport, enabled: composerOverflow }} bind:this={input} bind:offsetHeight={inputHeight} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
             disabled={forkBusy || !state || state.phase !== 'idle'}
             oninput={(event) => coordinator.setInput(event.currentTarget.value)}
             onkeydown={handleInputKey}></textarea>
@@ -661,6 +661,7 @@
   .composer-heading .model-source { max-width: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
   .mode-selected { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; border-radius: 6px; box-shadow: 0 0 0 1px oklch(.76 .12 70 / .35), 0 8px 30px -10px oklch(.76 .12 70 / .35); }
   #story-input { max-height: none; overflow: hidden; resize: none; border-radius: 6px; }
+  #story-input.compact { max-height: 147px; }
   .send { display: grid; place-items: center; }
   .send.primary { box-shadow: 0 0 0 1px oklch(.76 .12 70 / .35), 0 8px 30px -10px oklch(.76 .12 70 / .35); }
   .composer .story-error { max-height: none; overflow: visible; }

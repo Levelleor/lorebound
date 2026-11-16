@@ -256,8 +256,16 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     await openStyle();
     await fillStyle();
     const instructions = page.getByLabel('Custom style instructions', { exact: true });
-    await instructions.fill(Array.from({ length: 16 }, (_, index) => `Writing direction line ${index + 1}.`).join('\n'));
-    await page.waitForFunction(() => { const field = document.querySelector('#narration-instructions'); return field.clientHeight > 200 && field.scrollHeight <= field.clientHeight + 1; });
+    await instructions.fill(Array.from({ length: 32 }, (_, index) => `Writing direction line ${index + 1}.`).join('\n'));
+    await page.waitForFunction(() =>
+    {
+      const field = document.querySelector('#narration-instructions');
+      const style = getComputedStyle(field);
+      const caret = field.getBoundingClientRect().bottom - parseFloat(style.paddingBottom) - parseFloat(style.borderBottomWidth) - parseFloat(style.lineHeight) / 2;
+      const panel = field.closest('#narration-style-panel').getBoundingClientRect();
+      return field.clientHeight > 500 && field.scrollHeight <= field.clientHeight + 1 && caret >= panel.top && caret <= panel.bottom;
+    });
+    if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-long-instructions-1440.png`) });
     await instructions.fill('Keep the lantern mysterious.\nUse concrete sounds.');
     const oversizedDraft = Array.from({ length: 80 }, (_, index) => `Player prose line ${index + 1}.`).join('\n');
     await page.getByLabel('Story input', { exact: true }).fill(oversizedDraft);
@@ -409,6 +417,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     assert.equal(saved.revision, 1);
     assert.deepEqual(await read(), before, 'Style saves do not change accepted history/version');
     assert.equal(await page.getByLabel('Story input', { exact: true }).inputValue(), 'Retain the lantern input.');
+    await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
     await page.reload({ waitUntil: 'networkidle' });
     await openStyle();
     assert.equal(await page.getByLabel('Genre', { exact: true }).inputValue(), 'Harbour mystery');
@@ -423,6 +432,32 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     await page.getByRole('region', { name: 'Narration style', exact: true }).waitFor({ state: 'detached' });
     assert.equal(await page.getByRole('button', { name: 'Narration style', exact: true }).getAttribute('aria-expanded'), 'false');
     await storyView();
+    await page.getByLabel('Story input', { exact: true }).fill(oversizedDraft);
+    await page.locator('.composer.oversized').waitFor();
+    await page.getByRole('button', { name: 'Generate continuation', exact: true }).click();
+    await page.getByRole('region', { name: 'Proposed turn', exact: true }).waitFor();
+    for (const width of [390, 1440])
+    {
+      await page.setViewportSize({ width, height: 600 });
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      for (const name of ['Accept turn', 'Retry', 'Discard'])
+      {
+        const button = await page.getByRole('button', { name, exact: true }).boundingBox();
+        const composer = await page.locator('.composer').boundingBox();
+        assert.ok(button.y >= composer.y && button.y + button.height <= composer.y + composer.height, 'Pending actions are visible without scrolling after oversized generation');
+      }
+      assert.equal(await page.getByLabel('Story input', { exact: true }).inputValue(), oversizedDraft, 'Compact pending controls preserve the full draft');
+      assert.equal(await page.getByLabel('Story input', { exact: true }).evaluate(element => element.offsetHeight <= 147), true);
+      if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-oversized-pending-${width}.png`) });
+    }
+    await page.getByRole('button', { name: 'Discard', exact: true }).click();
+    await page.locator('.composer.oversized').waitFor();
+    assert.equal(await page.getByLabel('Story input', { exact: true }).inputValue(), oversizedDraft);
+    assert.deepEqual(await read(), before, 'Oversized proposal/discard does not change canon');
+    await page.getByLabel('Story input', { exact: true }).fill('Retain the lantern input.');
+    await page.locator('.composer:not(.oversized)').waitFor();
+    await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
+    await page.setViewportSize({ width: 1440, height: 900 });
     if (layoutOnly)
     {
       assert.deepEqual(errors, []);
