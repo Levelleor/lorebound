@@ -8,8 +8,6 @@
   export let request: NarrationRequest;
   export let onClose: () => void;
   export let onBusy: (value: boolean) => void;
-  export let scrollWithComposer = false;
-  export let composerViewport: HTMLElement | undefined = undefined;
   // Keep retained edits bound to the library that supplied them.
   const target = { ...request };
   let perspective: HTMLSelectElement;
@@ -94,7 +92,7 @@
   onClose();
 }} />
 
-<section id="narration-style-panel" class="narration-settings" class:scroll-with-composer={scrollWithComposer} bind:this={panel} aria-labelledby="narration-title" aria-busy={busy}>
+<section id="narration-style-panel" class="narration-settings" bind:this={panel} aria-labelledby="narration-title" aria-busy={busy}>
   <h2 id="narration-title" class="sr-only">Narration style</h2>
   {#if error}<p class="story-error" role="alert">{error}</p>{/if}
   {#if style}
@@ -135,7 +133,7 @@
           </div>
         </div>
         <label for="narration-instructions">Custom style instructions</label>
-        <textarea id="narration-instructions" use:autoSize={style.instructions} use:keepCaretInView={{ viewport: scrollWithComposer ? composerViewport : panel, enabled: true }} bind:value={style.instructions} maxlength="2000" rows="2" placeholder="Optional writing direction · sent with each AI continuation"></textarea>
+        <textarea id="narration-instructions" use:autoSize={style.instructions} use:keepCaretInView={{ viewport: panel, enabled: true }} bind:value={style.instructions} maxlength="2000" rows="2" placeholder="Optional writing direction · sent with each AI continuation"></textarea>
         <details class="supporting" open={Boolean(error)}>
           <summary>About narration guidance</summary>
           <p>Saved for future AI continuations. Existing prose stays unchanged; Simulation ignores style.</p>
@@ -164,7 +162,6 @@
     color: var(--foreground);
   }
 
-  .scroll-with-composer { max-height: none; overflow: visible; }
   .shelf-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .shelf-actions button { padding: 6px 10px; font-size: 12px; }
   .story-error { max-height: none; overflow: visible; }

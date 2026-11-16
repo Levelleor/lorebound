@@ -67,7 +67,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
       return faces.every(group => group.length > 0 && group.every(face => face.status === 'loaded'));
     });
     assert.equal(loadedFonts, true, 'Reference serif, UI/italic and technical fonts load from bundled assets');
-    const retainedDraft = Array.from({ length: 14 }, () => 'A harbour lantern passed silently beyond the narrow quay.').join(' ');
+    const retainedDraft = Array.from({ length: 7 }, () => 'A harbour lantern passed silently beyond the narrow quay.').join(' ');
     await page.getByLabel('Story input', { exact: true }).fill(retainedDraft);
     await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
     let releaseFonts;
@@ -269,72 +269,63 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     await instructions.fill('Keep the lantern mysterious.\nUse concrete sounds.');
     const oversizedDraft = Array.from({ length: 80 }, (_, index) => `Player prose line ${index + 1}.`).join('\n');
     await page.getByLabel('Story input', { exact: true }).fill(oversizedDraft);
-    await page.locator('.composer.oversized').waitFor();
-    await page.waitForFunction(() =>
+    const waitForInputOverflow = () => page.waitForFunction(() =>
     {
-      const input = document.querySelector('#story-input');
-      const style = getComputedStyle(input);
-      const caret = input.getBoundingClientRect().bottom - parseFloat(style.paddingBottom) - parseFloat(style.borderBottomWidth) - parseFloat(style.lineHeight) / 2;
-      const composer = input.closest('.composer').getBoundingClientRect();
-      return caret >= composer.top && caret <= composer.bottom;
+      const field = document.querySelector('#story-input');
+      return field.scrollHeight > field.clientHeight + 1;
     });
+    const waitForInputFit = () => page.waitForFunction(() =>
+    {
+      const field = document.querySelector('#story-input');
+      return field.scrollHeight <= field.clientHeight + 1;
+    });
+    await waitForInputOverflow();
     await page.evaluate(() => document.documentElement.dataset.loreboundUi = 'dark');
     for (const [width, height] of [[1440, 900], [390, 600], [390, 320]])
     {
       await page.setViewportSize({ width, height });
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      const contained = await page.locator('.composer').evaluate(composer =>
+      assert.equal(await page.locator('.composer').evaluate(composer =>
       {
         const bounds = composer.getBoundingClientRect();
         const main = composer.closest('main').getBoundingClientRect();
         const field = composer.querySelector('#story-input');
-        const panel = composer.querySelector('#narration-style-panel');
         return bounds.top >= main.top && bounds.bottom <= main.bottom + 1
-          && composer.scrollHeight > composer.clientHeight
-          && field.scrollHeight <= field.clientHeight + 1
-          && panel.scrollHeight <= panel.clientHeight + 1 && getComputedStyle(panel).overflowY === 'visible';
-      });
-      assert.equal(contained, true, 'Oversized drafts use the contained whole-composer scrollbar, with no nested input/settings scrollbar');
-      const storyScroll = await page.locator('.story-scroll').evaluate(element => element.scrollTop);
-      for (const selector of ['#narration-perspective', '#narration-instructions', '.shelf-actions button[type=submit]', '.narration-toggle'])
+          && composer.scrollHeight <= composer.clientHeight + 1
+          && field.scrollHeight > field.clientHeight + 1
+          && field.offsetHeight <= Math.min(240, Math.max(80, main.height * .4)) + 1;
+      }), true, 'Long drafts scroll inside the capped textarea while the whole composer fits');
+      const anchor = () => page.evaluate(() =>
       {
-        await page.locator(selector).scrollIntoViewIfNeeded();
-        const field = await page.locator(selector).boundingBox();
-        const composer = await page.locator('.composer').boundingBox();
-        assert.ok(field.y >= composer.y - 1 && field.y + field.height <= composer.y + composer.height + 1, 'Oversized composer keeps each setting and toolbar control reachable');
-      }
-      await page.locator('.composer').evaluate(element => element.scrollTop = 0);
-      if (artifacts && height !== 320) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-oversized-start-${width}.png`) });
+        const bounds = selector =>
+        {
+          const { x, y, width, height } = document.querySelector(selector).getBoundingClientRect();
+          return { x, y, width, height };
+        };
+        return { input: bounds('#story-input'), toolbar: bounds('.composer-heading'), story: document.querySelector('.story-scroll').scrollTop, composer: document.querySelector('.composer').scrollTop };
+      });
+      const beforeInputScroll = await anchor();
       await page.getByLabel('Story input', { exact: true }).press('Control+Home');
-      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      assert.equal(await page.getByLabel('Story input', { exact: true }).evaluate(input =>
+      await page.waitForFunction(() =>
       {
-        const style = getComputedStyle(input);
-        const caret = input.getBoundingClientRect().top + parseFloat(style.paddingTop) + parseFloat(style.borderTopWidth) + parseFloat(style.lineHeight) / 2;
-        const composer = input.closest('.composer').getBoundingClientRect();
-        return caret >= composer.top && caret <= composer.bottom;
-      }), true, 'Keyboard navigation can reach the first line through the whole composer');
-      await page.getByLabel('Story input', { exact: true }).press('Control+End');
-      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      const caretVisible = await page.getByLabel('Story input', { exact: true }).evaluate(input =>
-      {
-        const style = getComputedStyle(input);
-        const caret = input.getBoundingClientRect().bottom - parseFloat(style.paddingBottom) - parseFloat(style.borderBottomWidth) - parseFloat(style.lineHeight) / 2;
-        const composer = input.closest('.composer').getBoundingClientRect();
-        return caret >= composer.top && caret <= composer.bottom;
+        const field = document.querySelector('#story-input');
+        const style = getComputedStyle(field);
+        return field.selectionStart === 0 && field.scrollTop <= parseFloat(style.paddingTop) + parseFloat(style.lineHeight) / 2;
       });
-      assert.equal(caretVisible, true, 'Keyboard navigation can reach the last line through the whole composer');
-      await page.getByLabel('Story input', { exact: true }).press('Enter');
-      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      assert.equal(await page.getByLabel('Story input', { exact: true }).evaluate(input =>
+      if (artifacts && height !== 320) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-oversized-start-${width}.png`) });
+      await page.getByLabel('Story input', { exact: true }).press('Control+End');
+      const waitForLastLine = () => page.waitForFunction(() =>
       {
-        const style = getComputedStyle(input);
-        const caret = input.getBoundingClientRect().bottom - parseFloat(style.paddingBottom) - parseFloat(style.borderBottomWidth) - parseFloat(style.lineHeight) / 2;
-        const composer = input.closest('.composer').getBoundingClientRect();
-        return caret >= composer.top && caret <= composer.bottom;
-      }), true, 'Typing a new line keeps the caret visible after growth');
+        const field = document.querySelector('#story-input');
+        const style = getComputedStyle(field);
+        const lastLineCenter = field.scrollHeight - parseFloat(style.paddingBottom) - parseFloat(style.lineHeight) / 2;
+        return lastLineCenter >= field.scrollTop && lastLineCenter - field.scrollTop <= field.clientHeight;
+      });
+      await waitForLastLine();
+      await page.getByLabel('Story input', { exact: true }).press('Enter');
+      await waitForLastLine();
       await page.getByLabel('Story input', { exact: true }).press('Backspace');
-      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      await waitForLastLine();
       if (width === 390 && height === 600)
       {
         await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
@@ -354,25 +345,25 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
         {
           await page.getByLabel('Story input', { exact: true }).press('Space');
           await started;
-          await page.locator('.composer').evaluate(element => element.scrollTop = 0);
+          await page.getByLabel('Story input', { exact: true }).evaluate(field => field.scrollTop = 0);
           releaseSave();
           await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
           await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-          assert.equal(await page.locator('.composer').evaluate(element => element.scrollTop), 0, 'A draft-save status update cannot undo manual composer scrolling');
+          assert.equal(await page.getByLabel('Story input', { exact: true }).evaluate(field => field.scrollTop), 0, 'A draft-save status update preserves manual textarea scrolling');
         }
         finally
         {
           releaseSave();
           await page.unroute('**/wails/runtime');
         }
+        await page.getByLabel('Story input', { exact: true }).press('Control+End');
         await page.getByLabel('Story input', { exact: true }).press('Backspace');
-        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        await waitForLastLine();
       }
-      await page.locator('.composer').evaluate(element => element.scrollTop = element.scrollHeight);
-      const end = await page.getByRole('button', { name: 'Generate continuation', exact: true }).boundingBox();
+      const send = await page.getByRole('button', { name: 'Generate continuation', exact: true }).boundingBox();
       const composer = await page.locator('.composer').boundingBox();
-      assert.ok(end.y >= composer.y && end.y + end.height <= composer.y + composer.height, 'The input end and send control remain reachable');
-      assert.equal(await page.locator('.story-scroll').evaluate(element => element.scrollTop), storyScroll, 'Composer scrolling cannot move the story');
+      assert.ok(send.y >= composer.y && send.y + send.height <= composer.y + composer.height, 'Send stays visible without scrolling the composer');
+      assert.deepEqual(await anchor(), beforeInputScroll, 'Textarea navigation and typing cannot move the input, toolbar, composer or story');
       assert.equal(await page.getByLabel('Story input', { exact: true }).inputValue(), oversizedDraft);
       if (artifacts && height !== 320) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-oversized-end-${width}.png`) });
     }
@@ -391,21 +382,20 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     await page.setViewportSize({ width: 390, height: 600 });
     await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
     await page.reload({ waitUntil: 'networkidle' });
-    await page.locator('.composer.oversized').waitFor();
+    await waitForInputOverflow();
     await page.evaluate(() => document.fonts.ready);
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
     assert.equal(await page.getByLabel('Story input', { exact: true }).inputValue(), oversizedDraft);
     const capped = await page.locator('.composer').evaluate(composer =>
     {
-      const base = composer.querySelector('.composer-base');
       const input = composer.querySelector('#story-input');
-      const controls = base.clientHeight - input.offsetHeight + 33;
-      return composer.clientHeight <= controls + 240 + 1 && composer.getBoundingClientRect().top >= composer.closest('main').getBoundingClientRect().top;
+      return input.offsetHeight <= 240 && input.scrollHeight > input.clientHeight + 1
+        && composer.scrollHeight <= composer.clientHeight + 1;
     });
-    assert.equal(capped, true, 'A reopened oversized draft respects the 240px visible input budget plus controls');
+    assert.equal(capped, true, 'A reopened long draft retains its full text in a capped native textarea without scrolling the composer');
     if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-oversized-reopen-390.png`) });
     await page.getByLabel('Story input', { exact: true }).fill('Retain the lantern input.');
-    await page.locator('.composer:not(.oversized)').waitFor();
+    await waitForInputFit();
     await page.setViewportSize({ width: 1440, height: 900 });
     await openStyle();
     await fillStyle();
@@ -433,7 +423,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     assert.equal(await page.getByRole('button', { name: 'Narration style', exact: true }).getAttribute('aria-expanded'), 'false');
     await storyView();
     await page.getByLabel('Story input', { exact: true }).fill(oversizedDraft);
-    await page.locator('.composer.oversized').waitFor();
+    await waitForInputOverflow();
     await page.getByRole('button', { name: 'Generate continuation', exact: true }).click();
     await page.getByRole('region', { name: 'Proposed turn', exact: true }).waitFor();
     for (const width of [390, 1440])
@@ -451,17 +441,17 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
       if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-oversized-pending-${width}.png`) });
     }
     await page.getByRole('button', { name: 'Discard', exact: true }).click();
-    await page.locator('.composer.oversized').waitFor();
+    await waitForInputOverflow();
     assert.equal(await page.getByLabel('Story input', { exact: true }).inputValue(), oversizedDraft);
     assert.deepEqual(await read(), before, 'Oversized proposal/discard does not change canon');
     await page.getByLabel('Story input', { exact: true }).fill('Retain the lantern input.');
-    await page.locator('.composer:not(.oversized)').waitFor();
+    await waitForInputFit();
     await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
     await page.setViewportSize({ width: 1440, height: 900 });
     if (layoutOnly)
     {
       assert.deepEqual(errors, []);
-      console.log('PASS: Chromium narration layout, fixed attached expansion/story-only edge scrollbar, conditional narration overflow, field/toolbar spacing, capped whole-composer oversized drafts, growing textareas and saved settings');
+      console.log('PASS: Chromium narration layout, fixed attached expansion/story-only edge scrollbar, conditional narration overflow, field/toolbar spacing, capped native textarea scrolling, growing textareas and saved settings');
       return;
     }
 
@@ -635,7 +625,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     await page.getByRole('button', { name: 'Cancel', exact: true }).click();
     await page.reload({ waitUntil: 'networkidle' });
     assert.deepEqual(errors, []);
-    console.log('PASS: inline composer narration shelf, fixed attached expansion/story-only edge scrollbar, no input scrollbars/overlaps, conditional narration overflow, capped whole-composer oversized drafts, growing textareas, toggle/Escape/focus, saved-only generation, pinned library identity, persistence/conflicts/lost replies and Retry/Stop');
+    console.log('PASS: inline composer narration shelf, fixed attached expansion/story-only edge scrollbar, no control overlaps, conditional narration overflow, capped native textarea scrolling, growing textareas, toggle/Escape/focus, saved-only generation, pinned library identity, persistence/conflicts/lost replies and Retry/Stop');
   }
   finally
   {

@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-15"
+updated: "2026-11-16"
 tags:
   - planning/development
   - decisions
@@ -288,3 +288,7 @@ The user subsequently clarified the remaining ownership mismatch: narration must
 The user resolved the oversized-draft question with “Let the whole composer scroll only for oversized drafts” and separately requested a maximum size for the textarea block. The implementation bounds the visible composer viewport using an input contribution budget of at most 240px (responsive on short windows), while retaining the full native textarea and one outer composer scrollbar for text/control access. Narration’s separate scroll owner is disabled in this exceptional mode; ordinary fixed input and narration-only overflow remain unchanged. This is a visible-composer budget, not a native textarea DOM cap, clipping policy or new character limit. Fresh checks/review still precede any finalise/merge request.
 
 Independent actual-capture review found that an oversized retained draft could stretch the pending composer overlay into a blank panel with acceptance controls out of view. The correction keeps the blocked input’s background compact while preserving its full value and restoring editable growth on return to idle; explicit oversized Generate/Discard coverage checks action visibility before any helper scroll. The normal diagnostic fixture also waits for its replacement draft to save before reloading. Long narration instructions use the same caret protection with their actual scroll owner. This remains in PR #27 and requires fresh applicable CI/capture review.
+
+## 2026-11-16 — Native Story textarea overflow clarification
+
+The user replaced the earlier oversized-draft whole-composer choice: lock the main textarea's maximum visible height and show its own scrollbar only when text exceeds it. Surrounding action controls remain fixed; the attached narration section retains the previously selected conditional scrolling above the input. The existing reference alignment is otherwise accepted as improved, without granting merge approval. [PR #27](https://github.com/Levelleor/lorebound/pull/27) retains implementation, regression coverage, independent review and closure; existing deferrals and the separate named-PR verbal approval gate remain unchanged.
