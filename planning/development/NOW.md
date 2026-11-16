@@ -4,7 +4,7 @@ status: current
 created: "2026-11-03"
 updated: "2026-11-16"
 current_task: "DEV-004G — Current adventure narration settings"
-current_task_status: "IMPLEMENTED — AWAITING USER REVIEW"
+current_task_status: "VERIFIED ON CONFIRMED MERGE — PR #27"
 next_task: "DEV-004"
 tags:
   - planning/development
@@ -12,22 +12,14 @@ tags:
 
 # Lorebound — Current Development Status
 
-Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](./FEATURES.md), [implemented-feature gaps](./INCOMPLETE-FEATURES.md), [journal](./JOURNAL.md) and [runbook](./AGENT-RUNBOOK.md).
+Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](./FEATURES.md), [incomplete-feature register](./INCOMPLETE-FEATURES.md), [journal](./JOURNAL.md) and [runbook](./AGENT-RUNBOOK.md).
 
-## Current work
+## Current handoff
 
-Confirmed [PR #26](https://github.com/Levelleor/lorebound/pull/26) merge `4e56576` satisfies DEV-004F closure. The user's separate launch and “proceed” select [DEV-004G](./requirements/DEV-004G.md): current adventure narration settings for subsequent existing local Story generation. Its requirement record owns the remaining dependency audit, four bounded requirements and evidence limits.
+After the checked preview and final feedback, the user approved finalising/merging [PR #27](https://github.com/Levelleor/lorebound/pull/27) on 2026-11-16: “perfect proceed to closure of this now”. [DEV-004G](./requirements/DEV-004G.md#conditional-single-pr-closure) owns scope, application CI, independent source/actual-capture review, limits and conditional closure. Its current adventure narration controls, future-only saved guidance and fixed composer/reference styling are complete within that bounded scope. The primary PR owns final checks and actual merge/head/tree provenance.
 
-Implementation, evidence, independent review, controls and reconciliation stay in [primary PR #27](https://github.com/Levelleor/lorebound/pull/27). Focused checks and independent source/control/fixture review PASS; the PR owns current CI links/results and actual-capture review. The user’s direct Command Citadel reference and overlay choice govern the feedback revision: stable bottom input with an attached fixed narration section, conditional narration-only scrolling, one full-height story edge scrollbar and actual bundled reference fonts. INC-006 owns the remaining design alignment work. Normal-layout CI and actual-capture review are recorded in the PR. The latest user clarification supersedes the whole-composer fallback: the main textarea grows to a responsive maximum of 240px, then scrolls internally while its surrounding controls stay fixed. Narration retains conditional scrolling above it. Fresh applicable CI/capture review must pass before requesting merge approval. No finalise/merge approval or verified-main claim.
+**Closure becomes effective only after independent closure review, applicable final-head checks and confirmed merge of PR #27.** Then DEV-004G is VERIFIED within scope and IDEA-0010 becomes PARTIAL: seventeen partial / 35 without merged feature-level evidence / zero complete originals. All originals remain in production; inventory stays 161 rows and three formal IDEA-0006 certifications. Parent DEV-004 remains unfinished. INC-001/004/005/006 stay OPEN, IDEA-0068 staged, IDEA-0069 unaccepted and **B9-D12 DEFERRED — NO WORK**.
 
-## Hands-on review
+Agent-started review app/provider are stopped, ports 8086/18085 confirmed closed, and persistent `.local/review/dev004g` plus all other review/user data preserved. Relaunch the app with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004g"`; Ctrl+C stops it. Its saved live profile requires the separately started provider; the [workflow](./README.md#local-llamacpp-testing) owns its authorised recipe. The requirement record retains demo and evidence limits.
 
-Checked local preview: [The Harbour Lantern](http://127.0.0.1:8086/?adventure=6c3ea526-df3e-46bb-bbfe-47812fd94b0c), refreshed after the composer-shelf correction (current checked source and CI are recorded in PR #27). Separate persistent library: `.local/review/dev004g`; prior review/user data is preserved. Live Qwen3/llama.cpp runs on loopback port 18085; this is not the CI simulation. One live-model turn is accepted and the current review draft is retained. The requirement record owns the limited live result.
-
-Click the **Narration style** stack icon beside the composer. Its inline shelf opens above the input on desktop/mobile; change tone/tense and Save. Cancel/Escape/toggle close discards unsaved form changes. Generation waits until Save or Cancel. Existing prose stays unchanged; reopening/reloading retains preferences. Generate, expand Generation details and inspect **Requested narration guidance**; explicitly Accept or Discard. Stream output → Generate → Stop preserves input and saves no new turn. Adherence is best-effort; author-note/template/context/mode integration remains later.
-
-Relaunch current source with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004g"`; Ctrl+C stops a foreground launch. The saved live profile needs the separately started provider; the development workflow owns its authorised launch recipe. Agent-launched review processes will be stopped during approved closure, preserving data. A checked preview or CI PASS does not establish user acceptance.
-
-IDEA-0010/DEV-004 remain unfinished; context/author-note/template/cloud/credential/sampling/pipeline/world scope stays later. INC-001/004 stay OPEN, IDEA-0068 staged, IDEA-0069 unaccepted and **B9-D12 DEFERRED — NO WORK**.
-
-**Exactly one next task: DEV-004 — audit/select a further bounded child only after DEV-004G closes and a separate user launch.** No next slice or reconciliation PR follows automatically.
+**Exactly one next task: DEV-004 — audit/select a further bounded child only after confirmed DEV-004G closure and a separate user launch.** No next slice, routine post-merge repository write or reconciliation PR follows automatically.
