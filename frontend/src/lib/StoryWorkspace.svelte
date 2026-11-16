@@ -2,13 +2,15 @@
   import { onMount, tick } from 'svelte';
   import { host } from './host';
   import { StoryCoordinator, simulatedGeneration, type CoordinatorState, type Generator } from './coordinator';
-  import type { Snapshot } from './library';
+  import { schemaVersion, type Snapshot } from './library';
   import { ForkController, defaultForkTitle, type ForkState } from './fork';
   import type { TextSelection } from './textHistory';
   import { SessionSaveRecovery } from './saveRecovery';
   import { SessionForkRecovery } from './forkRecovery';
   import { modelError } from './models';
   import GenerationInspector from './GenerationInspector.svelte';
+  import NarrationSettings from './NarrationSettings.svelte';
+  import { autoSize } from './autoSize';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -36,9 +38,26 @@
   let passageInput: HTMLTextAreaElement;
   let reviewEditButton: HTMLButtonElement;
   let keepLaterButton: HTMLButtonElement;
+  let narrationOpen = false;
+  let narrationBusy = false;
+  let narrationButton: HTMLButtonElement;
+  let mainWidth = 0;
+  let storyWidth = 0;
+  let mainHeight = 0;
+  let composerBaseHeight = 0;
+  let composerHeight = 0;
+  $: inputLimit = Math.min(240, Math.max(80, mainHeight * .4));
   $: editTargetMissing = state?.edit && !state.snapshot.turns.some(turn => turn.passages.some(passage => passage.id === state?.edit?.passageId));
   $: editHasContinuation = state?.edit && state.snapshot.turns.some(turn => turn.id === state?.edit?.turnId && turn.passages.some(passage => passage.source === 'generated'));
   $: detachedFork = forkState?.phase === 'blocked' || Boolean(forkState && forkTurnId && state && !state.snapshot.turns.some(turn => turn.id === forkTurnId));
+
+  function measureHeight(node: HTMLElement, update: (height: number) => void): { destroy(): void }
+  {
+    // Preserve fractional font metrics when sizing the composer viewport.
+    const observer = new ResizeObserver(() => update(node.getBoundingClientRect().height));
+    observer.observe(node);
+    return { destroy: () => observer.disconnect() };
+  }
 
   function editSelection(): TextSelection
   {
@@ -92,6 +111,7 @@
 
   async function startEdit(passageId: string)
   {
+    if (narrationOpen) return;
     await coordinator.startEdit(passageId);
     await tick();
     passageInput?.focus();
@@ -128,6 +148,7 @@
 
   async function requestUndo()
   {
+    if (narrationOpen) return;
     coordinator.requestUndo();
     await tick();
     confirmUndoButton?.focus();
@@ -228,7 +249,7 @@
 
   async function openFork(turnId: string)
   {
-    if (!state || forkBusy || state.phase !== 'idle' || state.refreshing || state.projection.blocked) return;
+    if (!state || narrationOpen || forkBusy || state.phase !== 'idle' || state.refreshing || state.projection.blocked) return;
     forkTurnId = turnId;
     forkUrl = '';
     forkError = '';
@@ -262,6 +283,7 @@
 
   async function generate()
   {
+    if (narrationOpen) return;
     await coordinator.generate();
     await tick();
     candidateSection?.scrollIntoView({ block: 'nearest' });
@@ -298,9 +320,25 @@
   {
     if (event.isComposing) return;
     if (!(event.ctrlKey || event.metaKey) || event.key !== 'Enter') return;
-    if (forkBusy || state?.phase !== 'idle' || state.refreshing) return;
+    if (forkBusy || narrationOpen || state?.phase !== 'idle' || state.refreshing) return;
     event.preventDefault();
     void generate();
+  }
+
+  function toggleNarration()
+  {
+    if (forkBusy || narrationBusy || state?.phase !== 'idle' || state.refreshing) return;
+    narrationOpen = !narrationOpen;
+    publish(coordinator.state);
+  }
+
+  async function closeNarration()
+  {
+    narrationOpen = false;
+    narrationBusy = false;
+    publish(coordinator.state);
+    await tick();
+    narrationButton?.focus({ preventScroll: true });
   }
 
   onMount(() =>
@@ -331,8 +369,8 @@
         : next.draftStatus === 'error' ? 'Draft needs attention'
         : next.draftStatus === 'unsaved' ? 'Unsaved input'
         : next.input ? 'Draft saved' : '✓ Saved';
-      onUpdate({ snapshot: next.snapshot, status, locked: forkBusy || next.phase === 'saving' || next.phase === 'uncertain',
-        modelLocked: forkBusy || next.phase !== 'idle' });
+      onUpdate({ snapshot: next.snapshot, status, locked: narrationOpen || forkBusy || next.phase === 'saving' || next.phase === 'uncertain',
+        modelLocked: narrationOpen || forkBusy || next.phase !== 'idle' });
     };
     coordinator = new StoryCoordinator(snapshot, {
       storage: host,
@@ -386,204 +424,255 @@
   </div>
 {/snippet}
 
-<main class:mobile-hidden={mobileHidden} class="story-pane">
-  <article class="reader" aria-label="Story reader">
-    <p class="eyebrow">Your adventure</p>
-    <h1 tabindex="-1">{snapshot.adventure.title}</h1>
-    {#if state}
-      {#if detachedFork}
-        <section class="provisional" aria-label="Fork recovery">
-          <p class="passage-label">Previous fork{forkState?.turnOrder ? ` · Turn ${forkState.turnOrder}` : ''}</p>
-          <p class="supporting">Check the original fork before continuing. Your current saved story is shown below.</p>
-          {@render forkFeedback()}
-        </section>
-      {/if}
-      {#if state.recovery}
-        <section class="provisional" aria-label="Save recovery">
-          <p class="passage-label">Previous save · {state.recovery.summary}</p>
-          <p class="supporting">Your current saved story is shown below. Retained text is available to copy while you check this save.</p>
-          {#if state.recovery.text}
-            <label class="sr-only" for="save-recovery-text">Retained save text</label>
-            <textarea id="save-recovery-text" class="recovery-text" rows="4" readonly value={state.recovery.text}></textarea>
-          {/if}
-        </section>
-      {/if}
-      {#if state.edit && editTargetMissing}
-        <section class="editing" aria-label="Retained passage edit">
-          <p class="supporting">This passage is no longer in the current story. Copy any text you want to keep before closing the edit.</p>
-          <label class="sr-only" for="retained-edit">Retained edit text</label>
-          <textarea id="retained-edit" class="passage-editor" rows="7" readonly value={state.edit.text}></textarea>
-        </section>
-      {/if}
-      {#if state.snapshot.turns.length === 0}
-        <div class="empty-story"><span aria-hidden="true">✧</span><p>No passages yet.</p><p class="supporting">A blank beginning, ready for your story.</p></div>
-      {/if}
-      {#each state.snapshot.turns as turn (turn.id)}
-        <section class="accepted-turn" data-turn-id={turn.id} aria-label={`Accepted turn ${turn.order}`}>
-          <p class="turn-label"><span class="confirmed">✓ Accepted</span> · Turn {turn.order}</p>
-          {#each turn.passages as passage (passage.id)}
-            <div class:authored={passage.source === 'authored'} class:editing={state.edit?.passageId === passage.id} class="passage" data-passage-id={passage.id}>
-              <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Continuation'}</p>
-              {#if state.edit?.passageId === passage.id}
-                <label class="sr-only" for="passage-edit">Edit {passage.source === 'authored' ? 'Story text' : 'continuation'} for turn {turn.order}</label>
-                <textarea id="passage-edit" class="passage-editor" bind:this={passageInput} rows="7" value={state.edit.text}
-                  readonly={state.phase !== 'editing' || state.edit.draftStatus === 'loading'}
-                  onbeforeinput={handleEditBeforeInput} oninput={handleEditInput} onkeydown={handleEditKey}
-                  onselect={() => coordinator.selectEditText(editSelection())}
-                  oncompositionstart={() => coordinator.beginEditComposition(editSelection())}
-                  oncompositionend={() => coordinator.endEditComposition(passageInput.value, editSelection())}></textarea>
-                <div class="edit-history" role="group" aria-label="Temporary passage edits">
-                  <button class="quiet" onclick={() => moveEditHistory('undo')} disabled={state.phase !== 'editing' || state.edit.draftStatus === 'loading' || !state.edit.canUndo || state.edit.composing}>Undo edit</button>
-                  <button class="quiet" onclick={() => moveEditHistory('redo')} disabled={state.phase !== 'editing' || state.edit.draftStatus === 'loading' || !state.edit.canRedo || state.edit.composing}>Redo edit</button>
-                  <span class="supporting">Temporary edits in this session</span>
-                </div>
-                <details open={state.phase === 'edit-conflict' || Boolean(state.error)}>
-                  <summary>Current accepted passage</summary>
+<main class:mobile-hidden={mobileHidden} class="story-pane" bind:clientWidth={mainWidth} bind:clientHeight={mainHeight}
+  style:--scrollbar-width={`${Math.max(8, mainWidth - storyWidth)}px`} style:--composer-height={`${composerHeight}px`}
+  style:--narration-height={`${Math.max(0, mainHeight - composerBaseHeight - 2 * 16 - 2)}px`} style:--input-limit={`${inputLimit}px`}>
+  <div class="story-scroll" bind:clientWidth={storyWidth}>
+    <article class="reader" aria-label="Story reader">
+      <header class="story-heading">
+        <p class="eyebrow">Adventure · Turn {state?.snapshot.turns.at(-1)?.order ?? 0}</p>
+        <h1 tabindex="-1">{snapshot.adventure.title}</h1>
+      </header>
+      {#if state}
+        {#if detachedFork}
+          <section class="provisional" aria-label="Fork recovery">
+            <p class="passage-label">Previous fork{forkState?.turnOrder ? ` · Turn ${forkState.turnOrder}` : ''}</p>
+            <p class="supporting">Check the original fork before continuing. Your current saved story is shown below.</p>
+            {@render forkFeedback()}
+          </section>
+        {/if}
+        {#if state.recovery}
+          <section class="provisional" aria-label="Save recovery">
+            <p class="passage-label">Previous save · {state.recovery.summary}</p>
+            <p class="supporting">Your current saved story is shown below. Retained text is available to copy while you check this save.</p>
+            {#if state.recovery.text}
+              <label class="sr-only" for="save-recovery-text">Retained save text</label>
+              <textarea id="save-recovery-text" class="recovery-text" rows="4" readonly value={state.recovery.text}></textarea>
+            {/if}
+          </section>
+        {/if}
+        {#if state.edit && editTargetMissing}
+          <section class="editing" aria-label="Retained passage edit">
+            <p class="supporting">This passage is no longer in the current story. Copy any text you want to keep before closing the edit.</p>
+            <label class="sr-only" for="retained-edit">Retained edit text</label>
+            <textarea id="retained-edit" class="passage-editor" rows="7" readonly value={state.edit.text}></textarea>
+          </section>
+        {/if}
+        {#if state.snapshot.turns.length === 0}
+          <div class="empty-story"><span aria-hidden="true">✧</span><p>No passages yet.</p><p class="supporting">A blank beginning, ready for your story.</p></div>
+        {/if}
+        {#each state.snapshot.turns as turn (turn.id)}
+          <section class="accepted-turn" data-turn-id={turn.id} aria-label={`Accepted turn ${turn.order}`}>
+            <p class="turn-label"><span class="confirmed">✓ Accepted</span> · Turn {turn.order}</p>
+            {#each turn.passages as passage (passage.id)}
+              <div class:authored={passage.source === 'authored'} class:editing={state.edit?.passageId === passage.id} class="passage" data-passage-id={passage.id}>
+                <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Continuation'}</p>
+                {#if state.edit?.passageId === passage.id}
+                  <label class="sr-only" for="passage-edit">Edit {passage.source === 'authored' ? 'Story text' : 'continuation'} for turn {turn.order}</label>
+                  <textarea id="passage-edit" class="passage-editor" bind:this={passageInput} rows="7" value={state.edit.text}
+                    readonly={state.phase !== 'editing' || state.edit.draftStatus === 'loading'}
+                    onbeforeinput={handleEditBeforeInput} oninput={handleEditInput} onkeydown={handleEditKey}
+                    onselect={() => coordinator.selectEditText(editSelection())}
+                    oncompositionstart={() => coordinator.beginEditComposition(editSelection())}
+                    oncompositionend={() => coordinator.endEditComposition(passageInput.value, editSelection())}></textarea>
+                  <div class="edit-history" role="group" aria-label="Temporary passage edits">
+                    <button class="quiet" onclick={() => moveEditHistory('undo')} disabled={state.phase !== 'editing' || state.edit.draftStatus === 'loading' || !state.edit.canUndo || state.edit.composing}>Undo edit</button>
+                    <button class="quiet" onclick={() => moveEditHistory('redo')} disabled={state.phase !== 'editing' || state.edit.draftStatus === 'loading' || !state.edit.canRedo || state.edit.composing}>Redo edit</button>
+                    <span class="supporting">Temporary edits in this session</span>
+                  </div>
+                  <details open={state.phase === 'edit-conflict' || Boolean(state.error)}>
+                    <summary>Current accepted passage</summary>
+                    {#each passage.body.content as paragraph}
+                      <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
+                    {/each}
+                  </details>
+                  <p class="supporting" role="status" aria-label="Passage draft status">{state.edit.draftError || (state.edit.draftStatus === 'saved' ? 'Passage draft saved · Not accepted.' : state.edit.draftStatus === 'loading' ? 'Loading passage draft…' : state.edit.draftStatus === 'saving' ? 'Saving passage draft…' : 'Editing · Not accepted. Autosaves after a short pause.')}</p>
+                  {#if state.edit.draftError}<button class="quiet" onclick={() => coordinator.editDraft?.retry()} disabled={state.phase !== 'editing'}>Retry passage draft</button>{/if}
+                {:else}
                   {#each passage.body.content as paragraph}
                     <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
                   {/each}
-                </details>
-                <p class="supporting" role="status" aria-label="Passage draft status">{state.edit.draftError || (state.edit.draftStatus === 'saved' ? 'Passage draft saved · Not accepted.' : state.edit.draftStatus === 'loading' ? 'Loading passage draft…' : state.edit.draftStatus === 'saving' ? 'Saving passage draft…' : 'Editing · Not accepted. Autosaves after a short pause.')}</p>
-                {#if state.edit.draftError}<button class="quiet" onclick={() => coordinator.editDraft?.retry()} disabled={state.phase !== 'editing'}>Retry passage draft</button>{/if}
-              {:else}
-                {#each passage.body.content as paragraph}
-                  <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
-                {/each}
-                <button class="quiet edit-passage" data-edit-passage={passage.id} aria-label={`Edit ${passage.source === 'authored' ? 'Story text' : 'continuation'} for turn ${turn.order}`}
-                  onclick={() => startEdit(passage.id)} disabled={forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>✎ Edit</button>
-              {/if}
-            </div>
-          {/each}
-          <div class="turn-actions">
-            <button class="quiet fork-action" aria-label={`Fork from turn ${turn.order}`} title={`Fork from turn ${turn.order} in a new tab`}
-              onclick={() => openFork(turn.id)} disabled={forkBusy || state.phase !== 'idle' || state.refreshing}>
-              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="6" cy="5" r="2.5" /><circle cx="6" cy="19" r="2.5" /><circle cx="18" cy="5" r="2.5" />
-                <path d="M6 7.5v9M18 7.5v1a5 5 0 0 1-5 5H6" />
-              </svg>
-            </button>
-            {#if turn.id === state.snapshot.turns.at(-1)?.id}
-              <button class="quiet undo-turn" bind:this={undoButton} aria-label={`Undo turn ${turn.order}`} onclick={requestUndo}
-                disabled={forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>↶ Undo turn {turn.order}</button>
-            {/if}
-          </div>
-          {#if forkTurnId === turn.id && !detachedFork}
-            {@render forkFeedback()}
-          {/if}
-        </section>
-      {/each}
-      {#if state.phase === 'generating'}
-        <section class="provisional" aria-label="Generating proposal" aria-busy="true">
-          <p class="passage-label" role="status">{state.preview ? 'Streaming · Provisional · Not saved' : 'Waiting for a proposed continuation…'}</p>
-          <p class="supporting model-source">{sourceLabel}</p>
-          {#if state.preview}<p class="prose stream-preview">{state.preview}</p>{/if}
-          <p class="supporting">Nothing has been added to your story. Stop discards this output.</p>
-        </section>
-      {:else if state.candidate}
-        <section class="provisional" bind:this={candidateSection} data-turn-id={state.candidate.id} aria-label="Proposed turn">
-          <p class="passage-label">{state.phase === 'uncertain' ? 'Save unconfirmed' : state.phase === 'saving' ? 'Saving…' : 'Proposed · Not saved'}</p>
-          <p class="supporting model-source">{sourceLabel}</p>
-          {#each state.candidate.passages as passage}
-            <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Continuation'}</p>
-            {#each passage.body.content as paragraph}
-              <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
+                  <button class="quiet edit-passage" data-edit-passage={passage.id} aria-label={`Edit ${passage.source === 'authored' ? 'Story text' : 'continuation'} for turn ${turn.order}`}
+                    onclick={() => startEdit(passage.id)} disabled={narrationOpen || forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>✎ Edit</button>
+                {/if}
+              </div>
             {/each}
-          {/each}
-        </section>
-      {/if}
-      {#if state.diagnostics}<GenerationInspector diagnostics={state.diagnostics} />{/if}
-    {/if}
-  </article>
-  <div class="composer">
-    <div class="composer-inner">
-      {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
-      {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
-      <div class="composer-heading"><span class="mode-selected">✎ Story</span><span class="supporting model-source">{sourceLabel}</span></div>
-      {#if canStream}
-        <label class="stream-option"><input type="checkbox" bind:checked={streamOutput} disabled={forkBusy || state?.phase !== 'idle' || state.refreshing} /> Stream output <span class="supporting">This session · Server support required</span></label>
-      {/if}
-      <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)} class:edit-pending={Boolean(state?.edit)}>
-        <label class="sr-only" for="story-input">Story input</label>
-        <textarea id="story-input" bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
-          disabled={forkBusy || !state || state.phase !== 'idle'}
-          oninput={(event) => coordinator.setInput(event.currentTarget.value)}
-          onkeydown={handleInputKey}></textarea>
-        {#if state?.phase === 'recovery-blocked'}
-          <div class="pending-overlay" aria-label="Save recovery unavailable">
-            <p>Check the previous save before continuing.</p>
-            <button class="primary" onclick={() => coordinator.restoreSave()}>Retry recovery access</button>
-          </div>
-        {:else if state?.recovery && (state.phase === 'uncertain' || state.phase === 'saving')}
-          <div class="pending-overlay" aria-label="Save recovery controls">
-            <p>{state.phase === 'saving' ? 'Checking the previous save…' : 'Recover the previously confirmed save before continuing.'}</p>
-            <button class="primary" onclick={() => coordinator.retrySave()} disabled={state.phase === 'saving'}>Recover save</button>
-          </div>
-        {:else if state?.edit}
-          <div class="pending-overlay edit-overlay" aria-label="Passage edit controls">
-            <p>{state.phase === 'edit-conflict' ? 'The story changed. Review the current story before a fresh decision.' : state.phase === 'uncertain' ? 'Confirm this edit’s result before continuing.' : state.phase === 'saving' ? 'Saving passage edit…' : state.phase === 'discarding-edit' ? 'Discarding draft…' : `Uncommitted edit · Turn ${state.edit.order}`}</p>
-            {#if state.phase === 'edit-ready'}
-              <p class="supporting">{state.edit.source === 'authored' && editHasContinuation
-                ? `Keep the continuation and later turns unchanged, or permanently delete the continuation in Turn ${state.edit.order} and every later turn.`
-                : `Keep later turns unchanged, or permanently delete every turn after Turn ${state.edit.order}.`} Your edited passage stays. No previous version is retained.</p>
-            {/if}
-            <div class="pending-actions">
-              {#if state.phase === 'editing'}
-                <button class="primary" bind:this={reviewEditButton} onclick={reviewEdit} disabled={state.edit.draftStatus === 'loading' || state.edit.composing}>Review edit</button>
-                <button onclick={discardEdit} disabled={state.edit.draftStatus === 'loading'}>Discard</button>
-              {:else if state.phase === 'edit-ready'}
-                <button class="primary" bind:this={keepLaterButton} onclick={() => confirmEdit('keep')}>Keep Later Turns</button>
-                <button onclick={() => confirmEdit('truncate')}>Delete All After Point</button>
-                <button onclick={continueEditing}>Continue Editing</button>
-                <button onclick={discardEdit}>Discard</button>
-              {:else if state.phase === 'edit-conflict'}
-                <button onclick={() => coordinator.reconsiderEdit()} disabled={state.refreshing}>Review against current story</button>
-                <button onclick={() => coordinator.closeConflictedEdit()} disabled={state.refreshing}>Close edit</button>
-              {:else if state.phase === 'uncertain'}
-                <button class="primary" onclick={() => coordinator.retrySave()}>Recover edit</button>
+            <div class="turn-actions">
+              <button class="quiet fork-action" aria-label={`Fork from turn ${turn.order}`} title={`Fork from turn ${turn.order} in a new tab`}
+                onclick={() => openFork(turn.id)} disabled={narrationOpen || forkBusy || state.phase !== 'idle' || state.refreshing}>
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="6" cy="5" r="2.5" /><circle cx="6" cy="19" r="2.5" /><circle cx="18" cy="5" r="2.5" />
+                  <path d="M6 7.5v9M18 7.5v1a5 5 0 0 1-5 5H6" />
+                </svg>
+              </button>
+              {#if turn.id === state.snapshot.turns.at(-1)?.id}
+                <button class="quiet undo-turn" bind:this={undoButton} aria-label={`Undo turn ${turn.order}`} onclick={requestUndo}
+                  disabled={narrationOpen || forkBusy || state.phase !== 'idle' || state.refreshing || state.draftStatus === 'loading'}>↶ Undo turn {turn.order}</button>
               {/if}
             </div>
-          </div>
-        {:else if state?.phase === 'undo-ready' || ((state?.phase === 'saving' || state?.phase === 'uncertain') && state.undoTurn)}
-          <div class="pending-overlay" aria-label="Turn Undo confirmation">
-            <p>{state.phase === 'saving' ? 'Removing the accepted turn…' : state.phase === 'uncertain' ? 'Confirm the Undo result before continuing.' : `Remove turn ${state.undoTurn?.order} and return to ${state.undoTurn?.order === 1 ? 'the beginning' : `turn ${(state.undoTurn?.order ?? 1) - 1}`}?`}</p>
-            {#if state.phase === 'undo-ready'}<p class="supporting">All saved passages in this turn will be permanently removed. Fork first to keep this future. Your unfinished input stays.</p>{/if}
-            <div class="pending-actions">
-              {#if state.phase === 'uncertain'}<button class="primary" onclick={() => coordinator.retrySave()}>Recover Undo</button>
-              {:else}<button class="primary" bind:this={confirmUndoButton} onclick={confirmUndo} disabled={state.phase === 'saving'}>Confirm Undo</button>{/if}
-              <button onclick={cancelUndo} disabled={state.phase !== 'undo-ready'}>Cancel</button>
-            </div>
-          </div>
-        {:else if state?.phase === 'ready' || state?.phase === 'saving' || state?.phase === 'uncertain'}
-          <div class="pending-overlay" aria-label="Turn acceptance">
-            <p>{state.phase === 'saving' ? 'Saving your accepted turn…' : state.phase === 'uncertain' ? 'Confirm the save before continuing.' : 'Accept both passages into your story?'}</p>
-            <div class="pending-actions">
-              {#if state.phase === 'uncertain'}<button class="primary" onclick={() => coordinator.retrySave()}>Recover save</button>
-              {:else}<button class="primary" bind:this={acceptButton} onclick={() => coordinator.accept()} disabled={state.phase === 'saving'}>Accept turn</button>{/if}
-              <button onclick={retry} disabled={state.phase !== 'ready'}>Retry</button>
-              <button onclick={discard} disabled={state.phase !== 'ready'}>Discard</button>
-            </div>
-          </div>
-        {:else if state?.phase === 'generating'}
-          <button class="send stop" bind:this={stopButton} aria-label="Stop generation" onclick={stop}>■</button>
-        {:else if state?.phase === 'blocked'}
-          <div class="pending-overlay"><p>Story writes are unavailable.</p><button onclick={() => coordinator.refresh()}>Reload story</button></div>
-        {:else}
-          <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={forkBusy || !state?.input.trim() || state.refreshing}>↑</button>
+            {#if forkTurnId === turn.id && !detachedFork}
+              {@render forkFeedback()}
+            {/if}
+          </section>
+        {/each}
+        {#if state.phase === 'generating'}
+          <section class="provisional" aria-label="Generating proposal" aria-busy="true">
+            <p class="passage-label" role="status">{state.preview ? 'Streaming · Provisional · Not saved' : 'Waiting for a proposed continuation…'}</p>
+            <p class="supporting model-source">{sourceLabel}</p>
+            {#if state.preview}<p class="prose stream-preview">{state.preview}</p>{/if}
+            <p class="supporting">Nothing has been added to your story. Stop discards this output.</p>
+          </section>
+        {:else if state.candidate}
+          <section class="provisional" bind:this={candidateSection} data-turn-id={state.candidate.id} aria-label="Proposed turn">
+            <p class="passage-label">{state.phase === 'uncertain' ? 'Save unconfirmed' : state.phase === 'saving' ? 'Saving…' : 'Proposed · Not saved'}</p>
+            <p class="supporting model-source">{sourceLabel}</p>
+            {#each state.candidate.passages as passage}
+              <p class="passage-label">{passage.source === 'authored' ? 'Story · You' : 'Continuation'}</p>
+              {#each passage.body.content as paragraph}
+                <p class="prose">{#each paragraph.content as node}{#if node.type === 'text'}{node.text}{:else}<br />{/if}{/each}</p>
+              {/each}
+            {/each}
+          </section>
         {/if}
-      </div>
-      <p class="composer-hint" role="status" aria-label="Draft status">{state?.draftError || (state?.phase === 'recovery-blocked' || (state?.recovery && (state.phase === 'saving' || state.phase === 'uncertain')) ? 'Input draft resumes after save recovery.' : state?.draftStatus === 'saved' ? 'Draft saved · Not accepted story.' : state?.draftStatus === 'saving' ? 'Saving draft…' : state?.draftStatus === 'loading' ? 'Loading saved draft…' : 'Input autosaves after a short pause.')}</p>
-      {#if state?.draftError}
-        <button class="quiet" onclick={() => coordinator.draft?.retry()}>Retry draft</button>
+        {#if state.diagnostics}<GenerationInspector diagnostics={state.diagnostics} />{/if}
       {/if}
-      <p class="composer-hint">Ctrl / ⌘ + Enter to generate. Only accepted passages join your story. Choose your source in Models.</p>
+    </article>
+  </div>
+  <div class="composer" bind:clientHeight={composerHeight}>
+    <div class="composer-inner">
+      {#if narrationOpen && state}
+        <NarrationSettings request={{ schemaVersion, epoch: state.snapshot.epoch, adventureId: state.snapshot.adventure.id }}
+          onBusy={(value) => narrationBusy = value} onClose={closeNarration} />
+      {/if}
+      <div class="composer-base" use:measureHeight={(height) => composerBaseHeight = height}>
+        {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
+        {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
+        <div class="composer-heading">
+          <span class="mode-selected"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 12.2a6 6 0 0 0-8.4-8.4L3 12.5V21h8.5ZM16 8 2 22m15.5-7H9" /></svg>Story</span>
+          <span class="supporting model-source" title={sourceLabel}>{sourceLabel}</span>
+          <button class="narration-toggle" class:selected={narrationOpen} bind:this={narrationButton} aria-label="Narration style" title="Narration style"
+            aria-expanded={narrationOpen} aria-controls="narration-style-panel" disabled={forkBusy || narrationBusy || state?.phase !== 'idle' || state.refreshing} onclick={toggleNarration}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 12 9 5 9-5M3 16l9 5 9-5" /></svg>
+          </button>
+        </div>
+        {#if canStream}
+          <label class="stream-option"><input type="checkbox" bind:checked={streamOutput} disabled={forkBusy || state?.phase !== 'idle' || state.refreshing} /><span>Stream output</span><span class="supporting">This session · Server support required</span></label>
+        {/if}
+        <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)} class:edit-pending={Boolean(state?.edit)}>
+          <label class="sr-only" for="story-input">Story input</label>
+          <textarea id="story-input" class:compact={state?.phase !== 'idle'} use:autoSize={state?.input} bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
+            disabled={forkBusy || !state || state.phase !== 'idle'}
+            oninput={(event) => coordinator.setInput(event.currentTarget.value)}
+            onkeydown={handleInputKey}></textarea>
+          {#if state?.phase === 'recovery-blocked'}
+            <div class="pending-overlay" aria-label="Save recovery unavailable">
+              <p>Check the previous save before continuing.</p>
+              <button class="primary" onclick={() => coordinator.restoreSave()}>Retry recovery access</button>
+            </div>
+          {:else if state?.recovery && (state.phase === 'uncertain' || state.phase === 'saving')}
+            <div class="pending-overlay" aria-label="Save recovery controls">
+              <p>{state.phase === 'saving' ? 'Checking the previous save…' : 'Recover the previously confirmed save before continuing.'}</p>
+              <button class="primary" onclick={() => coordinator.retrySave()} disabled={state.phase === 'saving'}>Recover save</button>
+            </div>
+          {:else if state?.edit}
+            <div class="pending-overlay edit-overlay" aria-label="Passage edit controls">
+              <p>{state.phase === 'edit-conflict' ? 'The story changed. Review the current story before a fresh decision.' : state.phase === 'uncertain' ? 'Confirm this edit’s result before continuing.' : state.phase === 'saving' ? 'Saving passage edit…' : state.phase === 'discarding-edit' ? 'Discarding draft…' : `Uncommitted edit · Turn ${state.edit.order}`}</p>
+              {#if state.phase === 'edit-ready'}
+                <p class="supporting">{state.edit.source === 'authored' && editHasContinuation
+                  ? `Keep the continuation and later turns unchanged, or permanently delete the continuation in Turn ${state.edit.order} and every later turn.`
+                  : `Keep later turns unchanged, or permanently delete every turn after Turn ${state.edit.order}.`} Your edited passage stays. No previous version is retained.</p>
+              {/if}
+              <div class="pending-actions">
+                {#if state.phase === 'editing'}
+                  <button class="primary" bind:this={reviewEditButton} onclick={reviewEdit} disabled={state.edit.draftStatus === 'loading' || state.edit.composing}>Review edit</button>
+                  <button onclick={discardEdit} disabled={state.edit.draftStatus === 'loading'}>Discard</button>
+                {:else if state.phase === 'edit-ready'}
+                  <button class="primary" bind:this={keepLaterButton} onclick={() => confirmEdit('keep')}>Keep Later Turns</button>
+                  <button onclick={() => confirmEdit('truncate')}>Delete All After Point</button>
+                  <button onclick={continueEditing}>Continue Editing</button>
+                  <button onclick={discardEdit}>Discard</button>
+                {:else if state.phase === 'edit-conflict'}
+                  <button onclick={() => coordinator.reconsiderEdit()} disabled={state.refreshing}>Review against current story</button>
+                  <button onclick={() => coordinator.closeConflictedEdit()} disabled={state.refreshing}>Close edit</button>
+                {:else if state.phase === 'uncertain'}
+                  <button class="primary" onclick={() => coordinator.retrySave()}>Recover edit</button>
+                {/if}
+              </div>
+            </div>
+          {:else if state?.phase === 'undo-ready' || ((state?.phase === 'saving' || state?.phase === 'uncertain') && state.undoTurn)}
+            <div class="pending-overlay" aria-label="Turn Undo confirmation">
+              <p>{state.phase === 'saving' ? 'Removing the accepted turn…' : state.phase === 'uncertain' ? 'Confirm the Undo result before continuing.' : `Remove turn ${state.undoTurn?.order} and return to ${state.undoTurn?.order === 1 ? 'the beginning' : `turn ${(state.undoTurn?.order ?? 1) - 1}`}?`}</p>
+              {#if state.phase === 'undo-ready'}<p class="supporting">All saved passages in this turn will be permanently removed. Fork first to keep this future. Your unfinished input stays.</p>{/if}
+              <div class="pending-actions">
+                {#if state.phase === 'uncertain'}<button class="primary" onclick={() => coordinator.retrySave()}>Recover Undo</button>
+                {:else}<button class="primary" bind:this={confirmUndoButton} onclick={confirmUndo} disabled={state.phase === 'saving'}>Confirm Undo</button>{/if}
+                <button onclick={cancelUndo} disabled={state.phase !== 'undo-ready'}>Cancel</button>
+              </div>
+            </div>
+          {:else if state?.phase === 'ready' || state?.phase === 'saving' || state?.phase === 'uncertain'}
+            <div class="pending-overlay" aria-label="Turn acceptance">
+              <p>{state.phase === 'saving' ? 'Saving your accepted turn…' : state.phase === 'uncertain' ? 'Confirm the save before continuing.' : 'Accept both passages into your story?'}</p>
+              <div class="pending-actions">
+                {#if state.phase === 'uncertain'}<button class="primary" onclick={() => coordinator.retrySave()}>Recover save</button>
+                {:else}<button class="primary" bind:this={acceptButton} onclick={() => coordinator.accept()} disabled={state.phase === 'saving'}>Accept turn</button>{/if}
+                <button onclick={retry} disabled={state.phase !== 'ready'}>Retry</button>
+                <button onclick={discard} disabled={state.phase !== 'ready'}>Discard</button>
+              </div>
+            </div>
+          {:else if state?.phase === 'generating'}
+            <button class="send stop" bind:this={stopButton} aria-label="Stop generation" onclick={stop}><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="14" height="14" rx="2" /></svg></button>
+          {:else if state?.phase === 'blocked'}
+            <div class="pending-overlay"><p>Story writes are unavailable.</p><button onclick={() => coordinator.refresh()}>Reload story</button></div>
+          {:else}
+            <button class="send primary" aria-label="Generate continuation" onclick={generate} disabled={narrationOpen || forkBusy || !state?.input.trim() || state.refreshing}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m-7 7 7-7 7 7" /></svg></button>
+          {/if}
+        </div>
+        <p class="composer-hint" role="status" aria-label="Draft status">{state?.draftError || (state?.phase === 'recovery-blocked' || (state?.recovery && (state.phase === 'saving' || state.phase === 'uncertain')) ? 'Input draft resumes after save recovery.' : state?.draftStatus === 'saved' ? 'Draft saved · Not accepted story.' : state?.draftStatus === 'saving' ? 'Saving draft…' : state?.draftStatus === 'loading' ? 'Loading saved draft…' : 'Input autosaves after a short pause.')}</p>
+        {#if state?.draftError}
+          <button class="quiet" onclick={() => coordinator.draft?.retry()}>Retry draft</button>
+        {/if}
+        <p class="composer-hint">Ctrl / ⌘ + Enter to generate. Only accepted passages join your story. Choose your source in Models.</p>
+      </div>
     </div>
   </div>
 </main>
 
 <style>
+  .story-pane { position: relative; display: grid; grid-template-rows: minmax(0, 1fr); min-height: 0; }
+  .story-scroll { grid-area: 1 / 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: var(--border) var(--background); overflow-anchor: none; padding-bottom: var(--composer-height); scroll-padding: 16px 0 calc(var(--composer-height) + 16px); }
+  .story-scroll > .reader { overflow: visible; }
+  .story-heading { text-align: center; margin-bottom: 40px; }
+  .story-heading .eyebrow { margin: 0; }
+  .story-heading h1 { margin: 8px 0 0; line-height: 1.111; }
+  .accepted-turn { margin: 0 0 32px; }
+  .turn-label { font-family: var(--font-mono); font-size: 10px; }
+  .composer { grid-area: 1 / 1; align-self: end; min-height: 0; max-height: 100%; overflow-y: auto; overflow-anchor: none; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--border) transparent; margin-right: var(--scrollbar-width); z-index: 1; background: color-mix(in oklch, var(--card) 80%, var(--background)); }
+  .composer-heading { display: grid; grid-template-columns: auto minmax(0, 1fr) 30px; align-items: center; gap: 12px; }
+  .composer-heading .model-source { max-width: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+  .mode-selected { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; border-radius: 6px; box-shadow: 0 0 0 1px oklch(.76 .12 70 / .35), 0 8px 30px -10px oklch(.76 .12 70 / .35); }
+  #story-input { min-height: min(140px, var(--input-limit)); max-height: var(--input-limit); padding-right: 64px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; scrollbar-gutter: stable; resize: none; border-radius: 6px; }
+  #story-input.compact { max-height: min(147px, var(--input-limit)); }
+  .send { display: grid; place-items: center; }
+  .send.primary { box-shadow: 0 0 0 1px oklch(.76 .12 70 / .35), 0 8px 30px -10px oklch(.76 .12 70 / .35); }
+  .composer .story-error { max-height: none; overflow: visible; }
+  .narration-toggle { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 30px; height: 30px; padding: 5px; color: var(--muted-foreground); }
+  .narration-toggle.selected { color: var(--primary); border-color: var(--primary); }
   .stream-preview { white-space: pre-wrap; overflow-wrap: anywhere; }
-  .stream-option { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; margin-bottom: 8px; }
-  .stream-option input { width: auto; }
+  .stream-option { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12px; line-height: 18px; margin: 0 0 12px; }
+  .stream-option input { flex: none; width: 14px; height: 14px; margin: 0; padding: 0; accent-color: var(--primary); }
+  @media (max-width: 639px)
+  {
+    .stream-option .supporting { flex-basis: 100%; padding-left: 22px; font-size: 11px; }
+  }
+  @media (max-height: 420px)
+  {
+    .composer-heading { margin-bottom: 8px; }
+    .stream-option { margin-bottom: 8px; }
+    .stream-option .supporting, .composer-hint:not([role]) { display: none; }
+    .composer-hint { margin-top: 4px; }
+    #story-input { padding-top: 8px; }
+    .composer-input:has(.pending-overlay) { min-height: 112px; }
+  }
   .recovery-text { width: 100%; box-sizing: border-box; padding: 8px; background: transparent; color: var(--ink); resize: vertical; }
   .editing { border-left: 2px solid var(--primary); padding-left: 12px; }
   .passage-editor { width: 100%; box-sizing: border-box; padding: 12px 16px; color: var(--ink); background: transparent; font-family: var(--font-prose); font-size: 21px; line-height: 1.625; resize: vertical; min-height: 180px; }

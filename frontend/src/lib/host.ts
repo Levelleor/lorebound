@@ -2,6 +2,7 @@ import type { ForkRequest } from './fork';
 import { readDraft, type Draft, type DraftRequest } from './draft';
 import { readCreateResult, readCommitResult, readLibrary, readSnapshot, schemaVersion, type CreateRequest, type CommitRequest } from './library';
 import { readConnections, type SaveConnections } from './models';
+import { readNarration, type NarrationRequest, type SaveNarration } from './narration';
 
 interface WailsRuntime
 {
@@ -19,6 +20,8 @@ async function call(method: string, ...args: unknown[]): Promise<unknown>
 }
 
 export const host = {
+  readNarration: async (request: NarrationRequest) => readNarration(await call('ReadNarration', request), request),
+  saveNarration: async (request: SaveNarration) => readNarration(await call('SaveNarration', request), request),
   readConnections: async (epoch: string) => readConnections(await call('ReadConnections', { schemaVersion, epoch }), epoch),
   saveConnections: async (request: SaveConnections) => readConnections(await call('SaveConnections', request), request.epoch),
   list: async () => readLibrary(await call('List')),

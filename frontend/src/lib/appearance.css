@@ -1,9 +1,11 @@
-/* Approved Command Citadel tokens; typography includes the specified offline fallbacks. */
+@import './fonts.css';
+
+/* Approved Command Citadel tokens and locally bundled reference typography. */
 :root { --background: oklch(0.17 0.012 60); --foreground: oklch(0.9 0.025 80); --card: oklch(0.205 0.014 60); --primary: oklch(0.76 0.12 70); --primary-foreground: oklch(0.18 0.02 60); --muted-foreground: oklch(0.64 0.025 75); --border: oklch(0.3 0.015 60); --parchment: oklch(0.93 0.03 82); --ink: oklch(0.86 0.03 80); --success: oklch(0.72 0.12 150); --sidebar: oklch(0.145 0.01 60); --sidebar-border: oklch(0.26 0.014 60); --font-prose: 'Cormorant Garamond', Georgia, serif; --font-ui: 'IBM Plex Sans', system-ui, sans-serif; --font-mono: 'IBM Plex Mono', ui-monospace, monospace; }
 :root[data-lorebound-ui='bright'] { --background: oklch(0.97 0.012 85); --foreground: oklch(0.25 0.02 60); --card: oklch(0.99 0.008 85); --primary: oklch(0.55 0.13 60); --primary-foreground: oklch(0.98 0.01 85); --muted-foreground: oklch(0.5 0.02 60); --border: oklch(0.86 0.015 75); --parchment: oklch(0.3 0.04 55); --ink: oklch(0.28 0.02 60); --sidebar: oklch(0.94 0.014 82); --sidebar-border: oklch(0.86 0.015 75); --success: oklch(0.42 0.1 150); }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--background); color: var(--foreground); font: 14px var(--font-ui); }
-button, input, textarea { font: inherit; }
+button, input, textarea, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { cursor: pointer; border: 1px solid var(--border); border-radius: 4px; background: transparent; color: var(--foreground); padding: 9px 12px; }
 button:hover:not(:disabled) { background: var(--card); }

@@ -6,6 +6,7 @@ import { schemaVersion } from './library.ts';
 import { isID, isObject, plainTextToDocument } from './story.ts';
 import type { GenerationInput } from './coordinator.ts';
 import type { DiagnosticsObserver, TokenUsage } from './generationDiagnostics.ts';
+import { narrationInstructions, type NarrationStyle } from './narration.ts';
 
 export interface ModelProfile
 {
@@ -219,23 +220,25 @@ export async function testConnection(profile: ModelEndpoint & Pick<ModelProfile,
   return 'complete';
 }
 
-export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch, onProgress?: (text: string) => void, onDiagnostics?: DiagnosticsObserver): Promise<string>
+export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch, onProgress?: (text: string) => void, onDiagnostics?: DiagnosticsObserver, style?: NarrationStyle): Promise<string>
 {
   const selected = structuredClone(readProfile(profile));
+  const narration = style ? narrationInstructions(style) : '';
   const details = {
     profileName: selected.name,
     server: selected.kind,
     requestedModel: selected.model,
     streaming: Boolean(onProgress),
     timeoutMs: selected.timeoutMs,
-    usage: null
+    usage: null,
+    ...(style ? { narration } : {})
   };
   onDiagnostics?.(details);
   const body = {
     model: selected.model,
     stream: Boolean(onProgress),
     messages: [
-      { role: 'system', content: 'Continue the player’s fiction as narrative prose. Return only the next continuation. Do not call tools or change application state.' },
+      { role: 'system', content: 'Continue the player’s fiction as narrative prose. Return only the next continuation. Do not call tools or change application state.' + (narration ? `\n\n${narration}` : '') },
       ...(input.history.length ? [{ role: 'user', content: `Accepted story so far:\n\n${input.history.join('\n\n')}` }] : []),
       { role: 'user', content: input.input }
     ]

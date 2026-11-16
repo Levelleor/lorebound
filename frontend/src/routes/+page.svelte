@@ -8,6 +8,7 @@
   import { ModelError, generateLocal, type Connections } from '../lib/models';
   import { simulatedGeneration, type GenerationInput } from '../lib/coordinator';
   import type { DiagnosticsObserver } from '../lib/generationDiagnostics';
+  import { schemaVersion } from '../lib/library';
 
   let library: Library | null = null;
   let current: Snapshot | null = null;
@@ -48,7 +49,20 @@
     if (settings.mode === 'simulation') return simulatedGeneration(request, signal);
     const profile = settings.profiles.find(profile => profile.id === settings.activeProfileId);
     if (!profile) throw new ModelError('Choose and save a local profile in Models before generating. Your input is retained.');
-    return generateLocal(profile, request, signal, fetch, onProgress, onDiagnostics);
+    const snapshot = current;
+    if (!snapshot) throw new ModelError('Open an adventure before generating.');
+    let narration;
+    try
+    {
+      narration = await host.readNarration({ schemaVersion, epoch: snapshot.epoch, adventureId: snapshot.adventure.id });
+    }
+    catch
+    {
+      signal.throwIfAborted();
+      throw new ModelError('Narration settings could not be read. Open Narration style and reload settings before trying again. Your input is retained; no model request was sent.');
+    }
+    signal.throwIfAborted();
+    return generateLocal(profile, request, signal, fetch, onProgress, onDiagnostics, narration.style);
   }
 
   function modelsSaved(value: Connections)

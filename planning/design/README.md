@@ -2,7 +2,7 @@
 type: design-index
 status: current
 created: "2026-11-03"
-updated: "2026-11-03"
+updated: "2026-11-15"
 tags:
   - planning/design
   - visual-style
@@ -27,3 +27,5 @@ The supplied ZIP contains `README.md` (detailed visual spec), `ALL_IN_ONE.md` (c
 Warm charcoal literary desktop console, old-style serif reading column (Cormorant Garamond), compact IBM Plex Sans controls, IBM Plex Mono metrics, antique gold active/primary, blue dashed pending, green checks for committed, restrained red stop. The 48px full-width header, max-672px centred reading column, 320px darker contextual rail ≥1024px and bottom-docked composer are the principal composition constraints.
 
 Visual choices apply **throughout the 52 production-approved ideas as features are implemented**, starting with the Story-mode slice. They do not imply the features already exist, require immediate all-at-once development, or overrule accepted B1–B9/Pass C functional decisions. **Deferred B9-D12 spatial migrations are not approved.** Validate the visual layout at 390/768/1024/1440px and with Dark/Bright themes when the UI exists.
+
+The user directly reaffirmed the [source repository](https://github.com/Levelleor/lorebound-command-citadel/tree/0be367d3886e803207e1bc582cca4fb8fc50ac8c) on 2026-11-15. Use its actual Workspace, Dialogs, styles and font-loading source alongside the contract; approved functional behavior still governs. [INC-006](../development/INCOMPLETE-FEATURES.md#inc-006--command-citadel-design-alignment-remaining-surfaces) records the remaining design alignment audit for later execution.

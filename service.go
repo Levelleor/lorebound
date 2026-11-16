@@ -39,3 +39,11 @@ func (s *LibraryService) ReadConnections(req store.ConnectionsRequest) (store.Co
 func (s *LibraryService) SaveConnections(req store.SaveConnectionsRequest) (store.Connections, error) {
 	return s.store.SaveConnections(context.Background(), req)
 }
+
+func (s *LibraryService) ReadNarration(req store.ReadRequest) (store.NarrationSettings, error) {
+	return s.store.ReadNarration(context.Background(), req)
+}
+
+func (s *LibraryService) SaveNarration(req store.SaveNarrationRequest) (store.NarrationSettings, error) {
+	return s.store.SaveNarration(context.Background(), req)
+}

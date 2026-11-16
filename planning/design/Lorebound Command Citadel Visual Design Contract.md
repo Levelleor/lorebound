@@ -3,7 +3,7 @@ type: design
 status: approved-visual-direction
 phase: "C"
 created: "2026-11-03"
-updated: "2026-11-03"
+updated: "2026-11-16"
 source: "User-supplied lorebound-design-only-kit(1).zip"
 source_reference: "Levelleor/lorebound-command-citadel@0be367d3886e803207e1bc582cca4fb8fc50ac8c"
 tags:
@@ -24,6 +24,8 @@ tags:
 **Scope:** This note establishes the **visual contract** for the actual Lorebound app, including layout, spacing, responsive behaviour, typography, appearance, component styling and state signalling. The companion [UI interaction and state mapping](./Lorebound%20UI%20Interaction%20and%20State%20Mapping.md) explains how its visual gestures correspond to the accepted product. The [portable CSS palette](./palette-and-presets.css) preserves source palette values and appearance presets. The uploaded kit remains the originating full design document; this note makes the operative visual requirements accessible to agents reviewing the GitHub planning vault.
 
 **Authority boundary:** Where the demo design describes **behaviour** that contradicts accepted Lorebound B1–B9, Pass C or production-idea contracts, **those existing functional decisions win**, while the visual treatment remains the intended design. This design acceptance is **not approval to implement a particular feature or library**, to revise canonical data models, to execute tests, to run AI, to change architectural decisions or to start **deferred B9-D12 spatial migrations**. Use Wails v3 headless Go + ordinary-browser SvelteKit architecture already in place; the kit itself prescribes no framework.
+
+**Later user clarification (2026-11-15):** the [actual Command Citadel source](https://github.com/Levelleor/lorebound-command-citadel/tree/0be367d3886e803207e1bc582cca4fb8fc50ac8c) is the intended implementation reference, including typography, scroll ownership, story blocks and action controls. Inspect `Workspace.tsx`, `Dialogs.tsx`, `styles.css` and the root font-loading declarations. For narration expansion, the user explicitly selected controls over the lower story while the input and current story position stay fixed; one full-height main scrollbar must sit flush against the sidebar. Keep one primary composer inside the main area. The user further clarified that narration is a fixed section of this same composer, sharing its background with no separator, and never scrolls with the story. Only the narration section may acquire its own scrollbar when its contents do not fit above the fixed input; no narration scrollbar is shown otherwise. The full-height main-edge scrollbar scrolls the story independently. The user's later clarification (2026-11-16) supersedes the whole-composer oversized-draft fallback: cap the native Story textarea at 240px (responsive on short windows) and scroll only its text when it exceeds that height. Keep the toolbar/Send/composer fixed and narration's conditional scrolling independent; preserve the full draft without a new character limit. Relevant existing surfaces are adapted within DEV-004G; [INC-006](../development/INCOMPLETE-FEATURES.md#inc-006--command-citadel-design-alignment-remaining-surfaces) records the remainder without launching it.
 
 ## VIS-01: Visual identity and character
 
@@ -126,7 +128,7 @@ Further exact tokens: `--popover`, `--secondary`, `--accent`, foreground compani
 | Uppercase micro label | IBM Plex Sans **10.88px**, weight 600, **0.14em** letter spacing |
 | Technical/turn/budget readouts | **IBM Plex Mono**, typically **10–12px** |
 
-Available reading alternatives from source: **Literata**, **IBM Plex Sans**, **Atkinson Hyperlegible**. Reference fonts and fallback stacks are visual roles, **not authorisation to redistribute licensed font files**.
+Available reading alternatives from source: **Literata**, **IBM Plex Sans**, **Atkinson Hyperlegible**. Font delivery must preserve upstream licenses. The default Cormorant Garamond, IBM Plex Sans and IBM Plex Mono families are bundled locally with OFL notices for offline rendering; fallback stacks remain available. Additional reading alternatives remain later scope.
 
 ## VIS-06: Shape, focus and motion
 

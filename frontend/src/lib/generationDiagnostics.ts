@@ -15,6 +15,7 @@ export interface GenerationDetails
   streaming: boolean;
   timeoutMs: number;
   usage: TokenUsage | null;
+  narration?: string;
 }
 
 export interface GenerationDiagnostics extends GenerationDetails

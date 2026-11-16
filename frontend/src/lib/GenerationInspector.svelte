@@ -19,6 +19,10 @@
       <dt>Browser elapsed</dt><dd>{diagnostics.elapsedMs === null ? 'Available when this attempt ends' : `${diagnostics.elapsedMs} ms`}</dd>
     </dl>
     <p>Other model settings use server defaults; their effective values and model routing are unknown. Elapsed time includes browser/network work through response validation, not server compute time.</p>
+    <p class="usage-heading">Requested narration guidance</p>
+    {#if diagnostics.narration}<pre>{diagnostics.narration}</pre>
+    {:else}<p>No narration preferences selected.</p>{/if}
+    <p>Writing guidance is best-effort. Model context capacity is unknown; no automatic trimming or token-budget measurement is performed.</p>
     <p class="usage-heading">Provider-reported tokens</p>
     {#if diagnostics.usage}
       <dl>
@@ -74,6 +78,14 @@
   p
   {
     margin: 12px 0 0;
+  }
+
+  pre
+  {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: inherit;
+    color: var(--foreground);
   }
 
   .usage-heading
