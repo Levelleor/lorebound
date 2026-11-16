@@ -58,6 +58,14 @@
   $: editHasContinuation = state?.edit && state.snapshot.turns.some(turn => turn.id === state?.edit?.turnId && turn.passages.some(passage => passage.source === 'generated'));
   $: detachedFork = forkState?.phase === 'blocked' || Boolean(forkState && forkTurnId && state && !state.snapshot.turns.some(turn => turn.id === forkTurnId));
 
+  function measureHeight(node: HTMLElement, update: (height: number) => void): { destroy(): void }
+  {
+    // Preserve fractional font metrics when sizing the composer viewport.
+    const observer = new ResizeObserver(() => update(node.getBoundingClientRect().height));
+    observer.observe(node);
+    return { destroy: () => observer.disconnect() };
+  }
+
   function editSelection(): TextSelection
   {
     return { start: passageInput.selectionStart, end: passageInput.selectionEnd, direction: passageInput.selectionDirection };
@@ -540,12 +548,12 @@
   <div class="composer" class:oversized={composerOverflow} bind:this={composerViewport} bind:clientHeight={composerHeight}>
     <div class="composer-inner">
       {#if narrationOpen && state}
-        <div bind:clientHeight={narrationHeight}>
+        <div use:measureHeight={(height) => narrationHeight = height}>
           <NarrationSettings request={{ schemaVersion, epoch: state.snapshot.epoch, adventureId: state.snapshot.adventure.id }} scrollWithComposer={composerOverflow}
             onBusy={(value) => narrationBusy = value} onClose={closeNarration} />
         </div>
       {/if}
-      <div class="composer-base" bind:clientHeight={composerBaseHeight}>
+      <div class="composer-base" use:measureHeight={(height) => composerBaseHeight = height}>
         {#if state?.error}<div class="story-error" role="alert">{state.error}</div>{/if}
         {#if state?.notice}<p class="story-notice" role="status">{state.notice}</p>{/if}
         <div class="composer-heading">

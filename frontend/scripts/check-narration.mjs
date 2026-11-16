@@ -369,6 +369,17 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
       if (artifacts && height !== 320) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-oversized-end-${width}.png`) });
     }
     await page.getByRole('button', { name: 'Narration style', exact: true }).click();
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await page.locator('.composer').evaluate(element => element.scrollTop = 0);
+    await page.getByRole('button', { name: 'Narration style', exact: true }).focus();
+    const cappedInput = await page.getByLabel('Story input', { exact: true }).boundingBox();
+    await openStyle();
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    assert.deepEqual(await page.getByLabel('Story input', { exact: true }).boundingBox(), cappedInput, 'Expansion preserves capped input geometry including fractional font metrics');
+    await page.getByRole('button', { name: 'Narration style', exact: true }).click();
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    assert.deepEqual(await page.getByLabel('Story input', { exact: true }).boundingBox(), cappedInput);
     await page.setViewportSize({ width: 390, height: 600 });
     await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
     await page.reload({ waitUntil: 'networkidle' });
