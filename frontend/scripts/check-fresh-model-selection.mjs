@@ -131,6 +131,7 @@ export async function exerciseFreshModelSelection(browser, base, artifacts)
     await discard();
 
     // A saved Simulation selection is explicit; deleting all local profiles fails locally.
+    await page.getByLabel('Stream output', { exact: false }).check();
     await save('simulation', '', [first, second]);
     let count = requests.length;
     await generate();
@@ -139,6 +140,17 @@ export async function exerciseFreshModelSelection(browser, base, artifacts)
     assert.equal(await page.locator('.generation-inspector').count(), 0);
     assert.equal(requests.length, count);
     await discard();
+    // Retain explicit streaming intent across a stale Simulation cache.
+    await select(first);
+    await generate();
+    await page.getByRole('region', { name: 'Generating proposal', exact: true }).getByText('Simulated selection preview.', { exact: true }).waitFor();
+    assert.equal(requests.at(-1).body.stream, true);
+    releaseStream();
+    await proposal().waitFor();
+    await assertSource(first);
+    await discard();
+    await page.getByLabel('Stream output', { exact: false }).uncheck();
+    count = requests.length;
     await save('local', '', []);
     await generate();
     await page.getByRole('alert').filter({ hasText: 'Choose and save a local profile' }).waitFor();
