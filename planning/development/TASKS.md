@@ -166,7 +166,7 @@ For a newly split task, record its ID/parent, authorisation, dependency/scope/ac
 
 ### DEV-004H — Fresh saved model selection for Generate/Retry
 
-**IN PROGRESS.** The user's separate 2026-11-23 launch selects this child after confirmed PR #27 closure. [Remaining audit and affected requirements](./requirements/DEV-004H.md) own the bounded shared-profile/lifecycle extension: fresh epoch-fenced reads for each Generate/Retry, captured source/guidance, safe read failure and cancellation/startup ownership. No schema/service expansion, credentials, automatic fallback/retry or continuous background settings sync. Existing deferrals and live-provider gaps remain. Implementation, CI, independent review, controls and closure belong in one primary PR; named-PR verbal finalise/merge approval is still required.
+**IMPLEMENTED / CI PENDING — [PR #28](https://github.com/Levelleor/lorebound/pull/28).** The user's separate 2026-11-23 launch selects this child after confirmed PR #27 closure. [Remaining audit and affected requirements](./requirements/DEV-004H.md) own the bounded shared-profile/lifecycle extension: fresh epoch-fenced reads for each Generate/Retry, captured source/guidance, safe read failure and cancellation/startup ownership. No schema/service expansion, credentials, automatic fallback/retry or continuous background settings sync. Existing deferrals and live-provider gaps remain. Implementation, CI, independent review, controls and closure belong in one primary PR; named-PR verbal finalise/merge approval is still required.
 
 ## Future requested work (not launched)
 

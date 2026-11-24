@@ -156,6 +156,12 @@ export async function exerciseFreshModelSelection(browser, base, artifacts)
       await save(mode, mode === 'local' ? first.id : '', [first, second]);
       for (const fault of ['transport', 'malformed', 'epoch'])
       {
+        const retry = mode === 'local' && fault === 'transport';
+        if (retry)
+        {
+          await generate();
+          await proposal().waitFor();
+        }
         count = requests.length;
         const saved = await settings();
         const handler = async route =>
@@ -165,7 +171,8 @@ export async function exerciseFreshModelSelection(browser, base, artifacts)
           return route.fulfill({ json: fault === 'malformed' ? { invalid: true } : { ...saved, epoch: 'wrong-epoch' } });
         };
         await page.route('**/wails/runtime', handler);
-        await generate();
+        if (retry) await page.getByRole('button', { name: 'Retry', exact: true }).click();
+        else await generate();
         await page.getByRole('alert').filter({ hasText: 'Model settings could not be read' }).waitFor();
         assert.equal(requests.length, count);
         assert.equal(await proposal().count(), 0);
@@ -226,13 +233,15 @@ export async function exerciseFreshModelSelection(browser, base, artifacts)
         if (!owner.isClosed()) await owner.unroute('**/wails/runtime', handler);
       } };
     }
-    for (const action of ['stop', 'replace', 'navigate', 'dispose'])
+    for (const action of ['stop', 'stop-simulation', 'replace', 'navigate', 'dispose'])
     {
+      if (action === 'stop-simulation') await save('simulation', '', [first, second]);
+      else await select(first);
       count = requests.length;
       const delayed = await delayNextRead();
       await generate();
       await delayed.started;
-      if (action === 'stop' || action === 'replace') await page.getByRole('button', { name: 'Stop generation', exact: true }).click();
+      if (action.startsWith('stop') || action === 'replace') await page.getByRole('button', { name: 'Stop generation', exact: true }).click();
       if (action === 'replace')
       {
         await select(second);
