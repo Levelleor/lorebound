@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-23"
+updated: "2026-11-24"
 tags:
   - planning/development
   - decisions
@@ -305,3 +305,10 @@ Closure takes effect only after independent closure review, applicable final-hea
 Confirmed PR #27 merge `54a8ed21bfaaf58ebbd5c303629a4fc0f4295b75` satisfies DEV-004G's approved closure. The user's separate launch selects [DEV-004H](./requirements/DEV-004H.md) after the remaining-scope/dependency audit. Actual source rereads narration guidance but chooses the model from tab-cached connections, allowing a different tab's saved edits/selection/deletion to be missed. Existing coherent `ReadConnections` suffices: refresh on Generate/Retry, capture a detached selection, fail closed and preserve cancellation/startup ownership. No polling, new settings authority, service/schema change or provider feature is selected.
 
 Inherited untracked DEV-004H draft/probe are being replaced with verified source coverage. Unrelated local Pi orchestration is backed up outside the repository under `/tmp/lorebound-pre-dev004h` as authorised cleanup; it is not an application dependency or evidence. One primary PR owns implementation/evidence/controls/reconciliation. Existing partial scopes, IDEA-0068 staging, IDEA-0069 candidate status and B9-D12 deferral remain; no merge approval or next-child authority is inferred.
+
+
+## 2026-11-24 — DEV-004H closure approval
+
+After the checked two-tab preview and named merge request, the user replied “ok close the story now”, approving finalising and merging [PR #28](https://github.com/Levelleor/lorebound/pull/28). [DEV-004H](./requirements/DEV-004H.md#conditional-single-pr-closure) owns the verification and limits. The review app and simulated provider are stopped. The persistent review library is preserved.
+
+Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge. Parent DEV-004 and the affected IDEAs remain partial. The existing live-provider, narration integration and design gaps stay open. IDEA-0068 stays staged, IDEA-0069 stays unaccepted and B9-D12 stays deferred. DEV-004 requires a separate launch to select another child.

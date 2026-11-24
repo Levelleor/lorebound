@@ -1,8 +1,8 @@
 ---
 type: development-requirements
-status: ready-for-user-review
+status: verified-on-confirmed-merge
 created: "2026-11-16"
-updated: "2026-11-23"
+updated: "2026-11-24"
 task: "DEV-004H"
 parent: "DEV-004"
 tags:
@@ -11,11 +11,11 @@ tags:
 
 # DEV-004H — Fresh saved model selection for Generate/Retry
 
-The user's separate 2026-11-23 DEV-004 launch authorises one bounded child, implementation, tests, independent review and one primary PR. Confirmed [PR #27](https://github.com/Levelleor/lorebound/pull/27) merge `54a8ed21bfaaf58ebbd5c303629a4fc0f4295b75` satisfies DEV-004G's approved closure. This record owns the selected boundary; no merge approval has been given for this child.
+The user's separate 2026-11-23 DEV-004 launch authorises one bounded child, implementation, tests, independent review and one primary PR. Confirmed [PR #27](https://github.com/Levelleor/lorebound/pull/27) merge `54a8ed21bfaaf58ebbd5c303629a4fc0f4295b75` satisfies DEV-004G's approved closure. This record owns the selected boundary and conditional closure.
 
 ## Remaining scope and dependency audit
 
-Actual source at this base has all five local server kinds, persisted nonsecret profiles, optional discovery/test, completed/streamed Story generation, diagnostics and saved per-adventure narration guidance. `+page.svelte:narrate` rereads narration guidance but resolves the connection from a tab-local `connections` cache. There is no model-settings cross-tab invalidation. Consequently, saving a changed/deleted/selected profile elsewhere can leave another tab sending its next request to the old endpoint/model. Go already provides a coherent epoch-fenced `ReadConnections`; no schema or service change is needed.
+The base revision had all five local server kinds, persisted nonsecret profiles, optional discovery/test, completed/streamed Story generation, diagnostics and saved per-adventure narration guidance. At that revision `+page.svelte:narrate` reread narration guidance but resolved the connection from a tab-local `connections` cache. A changed, deleted or selected profile saved elsewhere could leave another tab sending its next request to the old endpoint or model. Go already provides a coherent epoch-fenced `ReadConnections`; no schema or service change is needed.
 
 | Remaining DEV-004 scope | Disposition/dependencies |
 | --- | --- |
@@ -46,10 +46,14 @@ These are bounded extensions of existing IDs, not five new inventory rows; inven
 
 ## Verification and handoff
 
-Implementation is complete in [primary PR #28](https://github.com/Levelleor/lorebound/pull/28); no merged feature claim or merge approval is made. Svelte checking/build and the focused Firefox/Wails/Go/SQLite regression PASS. Independent source and coverage review passed. The reviewer directly inspected all 16 affected CI error and source captures across Dark and Bright at 390/768/1024/1440px and found no blocker. The pre-existing Bright gradient issue remains in INC-006. [Application CI #121](https://github.com/Levelleor/lorebound/actions/runs/45325287598) PASS at `1ac194bbb2581383fe903cb45fb72af35f5a094f`, including both browser engines and exact process restart.
+Implementation is complete in [primary PR #28](https://github.com/Levelleor/lorebound/pull/28). Svelte checking/build and the focused Firefox/Wails/Go/SQLite regression PASS. Independent source and coverage review passed. The reviewer directly inspected all 16 affected CI error and source captures across Dark and Bright at 390/768/1024/1440px and found no blocker. The pre-existing Bright gradient issue remains in INC-006. [Application CI #121](https://github.com/Levelleor/lorebound/actions/runs/45325287598) PASS at `1ac194bbb2581383fe903cb45fb72af35f5a094f`, including both browser engines and exact process restart.
 
 The repeatable browser check covers cross-tab edits/endpoint/model/timeout/selection changes, unsaved forms, Generate and Retry, pinned streaming source/guidance, explicit acceptance/reload, saved Simulation, deletion, failed/malformed/wrong-epoch reads, Retry invalidation, deliberate recovery, pending source feedback and delayed Stop in local/Simulation mode, navigation/disposal/replacement and a late startup label fence. Existing CI supplies wider unit/storage/restart regressions. Provider faults/replies remain simulated. The inherited untracked task draft and browser probe were inspected and replaced after confirming actual source. Local Pi orchestration was moved outside the repository for safekeeping; it is not a product dependency.
 
 The primary PR owns implementation, CI, independent review, controls and any conditional closure. Browser provider replies and injected host faults are simulated; Firefox/Wails/Go/SQLite are real. No new live-server interoperability, other-OS packaging or complete accessibility certification is claimed. Existing INC-001/004/005/006 stay OPEN.
 
-The PR owns the checked local preview and two-tab walkthrough. Awaiting the user’s hands-on review and verbal approval to finalise and merge PR #28. Keep exactly one next task, DEV-004 audit/selection, requiring confirmed closure and a separate launch. No automatic next child or reconciliation PR follows.
+## Conditional single-PR closure
+
+After the checked local preview, two-tab walkthrough and named request, the user approved finalising and merging PR #28 on 2026-11-24: “ok close the story now”. The review host and fixed-response provider are stopped and ports 8087 and 18087 are closed. The persistent review library at `.local/review/dev004h` is preserved.
+
+**Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of PR #28.** Then DEV-004H is verified within the five affected requirement rows and DEV-004, IDEA-0014 and IDEA-0019 stay partial. The ledger retains seventeen partial originals, 35 without merged feature-level evidence, zero complete originals, 161 inventory rows and three formal IDEA-0006 certifications. The PR records the checked closure revision and actual merge provenance. DEV-004 remains the sole next task and needs a separate launch to select another child.
