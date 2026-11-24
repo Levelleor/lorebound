@@ -253,7 +253,9 @@ export async function exerciseFreshModelSelection(browser, base, artifacts)
       const delayed = await delayNextRead();
       await generate();
       await delayed.started;
+      assert.equal(await label().innerText(), 'Reading model settings…');
       if (action.startsWith('stop') || action === 'replace') await page.getByRole('button', { name: 'Stop generation', exact: true }).click();
+      if (action.startsWith('stop')) assert.notEqual(await label().innerText(), 'Reading model settings…');
       if (action === 'replace')
       {
         await select(second);

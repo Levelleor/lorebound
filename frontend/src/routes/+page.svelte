@@ -25,8 +25,10 @@
   let modelsOpen = false;
   let connections: Connections | null = null;
   let modelSequence = 0;
+  let pendingModelRead: AbortSignal | null = null;
   $: activeProfile = connections?.profiles.find(profile => profile.id === connections?.activeProfileId);
-  $: narrationLabel = !connections ? 'Models · Settings unavailable'
+  $: narrationLabel = pendingModelRead ? 'Reading model settings…'
+    : !connections ? 'Models · Settings unavailable'
     : connections.mode === 'simulation' ? 'Simulated generation · No AI connected'
     : activeProfile ? `${activeProfile.name} · ${activeProfile.model}` : 'Local model · Choose a profile in Models';
 
@@ -50,6 +52,12 @@
     // A startup read must never overwrite the selection captured by this attempt.
     const sequence = ++modelSequence;
     let settings: Connections;
+    pendingModelRead = signal;
+    const clearPendingRead = () =>
+    {
+      if (pendingModelRead === signal) pendingModelRead = null;
+    };
+    signal.addEventListener('abort', clearPendingRead, { once: true });
     try
     {
       settings = structuredClone(await host.readConnections(snapshot.epoch));
@@ -59,6 +67,11 @@
       signal.throwIfAborted();
       if (sequence === modelSequence) connections = null;
       throw new ModelError('Model settings could not be read. Open Models and reload settings before trying again. Your input is retained; no generation request was sent.');
+    }
+    finally
+    {
+      signal.removeEventListener('abort', clearPendingRead);
+      clearPendingRead();
     }
     signal.throwIfAborted();
     if (sequence !== modelSequence || current?.adventure.id !== snapshot.adventure.id || library?.epoch !== snapshot.epoch)
