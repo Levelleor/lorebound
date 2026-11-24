@@ -44,13 +44,29 @@
 
   async function narrate(request: GenerationInput, signal: AbortSignal, onProgress?: (text: string) => void, onDiagnostics?: DiagnosticsObserver): Promise<string>
   {
-    const settings = connections;
-    if (!settings) throw new ModelError('Model settings are unavailable. Open Models and reload them before generating. Your input is retained.');
+    signal.throwIfAborted();
+    const snapshot = current;
+    if (!snapshot) throw new ModelError('Open an adventure before generating.');
+    // A startup read must never overwrite the selection captured by this attempt.
+    const sequence = ++modelSequence;
+    let settings: Connections;
+    try
+    {
+      settings = structuredClone(await host.readConnections(snapshot.epoch));
+    }
+    catch
+    {
+      signal.throwIfAborted();
+      if (sequence === modelSequence) connections = null;
+      throw new ModelError('Model settings could not be read. Open Models and reload settings before trying again. Your input is retained; no generation request was sent.');
+    }
+    signal.throwIfAborted();
+    if (sequence !== modelSequence || current?.adventure.id !== snapshot.adventure.id || library?.epoch !== snapshot.epoch)
+      throw new DOMException('Generation abandoned.', 'AbortError');
+    connections = settings;
     if (settings.mode === 'simulation') return simulatedGeneration(request, signal);
     const profile = settings.profiles.find(profile => profile.id === settings.activeProfileId);
     if (!profile) throw new ModelError('Choose and save a local profile in Models before generating. Your input is retained.');
-    const snapshot = current;
-    if (!snapshot) throw new ModelError('Open an adventure before generating.');
     let narration;
     try
     {

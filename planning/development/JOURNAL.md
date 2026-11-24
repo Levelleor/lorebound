@@ -2,7 +2,7 @@
 type: development-journal
 status: current
 created: "2026-11-03"
-updated: "2026-11-16"
+updated: "2026-11-23"
 tags:
   - planning/development
   - decisions
@@ -298,3 +298,10 @@ The user replaced the earlier oversized-draft whole-composer choice: lock the ma
 After the checked final preview, textarea-only overflow correction and explicit named-PR finalise/merge request, the user replied “perfect proceed to closure of this now”. This accepts the handoff and authorises finalising/merging [PR #27](https://github.com/Levelleor/lorebound/pull/27), without claiming the user personally ran every check. [DEV-004G](./requirements/DEV-004G.md#conditional-single-pr-closure) owns passing application CI, independent source/control/66-current-capture review, evidence limits and conditional closure. Agent-started app/live provider are stopped, ports 8086/18085 confirmed closed, and review/user libraries preserved.
 
 Closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of this same PR. Then IDEA-0010 becomes PARTIAL, giving seventeen partial / 35 without merged feature-level evidence / zero complete originals, with 161 inventoried rows and three formal certifications unchanged. All originals stay in production, parent DEV-004 remains unfinished and INC-001/004/005/006 stay OPEN. IDEA-0068 stays staged, IDEA-0069 unaccepted and B9-D12 deferred. Actual merge provenance/final CI belongs in PR #27/final handoff. No next child, routine post-merge repository write or separate reconciliation PR follows.
+
+
+## 2026-11-23 — Separate DEV-004 launch selects fresh saved model settings
+
+Confirmed PR #27 merge `54a8ed21bfaaf58ebbd5c303629a4fc0f4295b75` satisfies DEV-004G's approved closure. The user's separate launch selects [DEV-004H](./requirements/DEV-004H.md) after the remaining-scope/dependency audit. Actual source rereads narration guidance but chooses the model from tab-cached connections, allowing a different tab's saved edits/selection/deletion to be missed. Existing coherent `ReadConnections` suffices: refresh on Generate/Retry, capture a detached selection, fail closed and preserve cancellation/startup ownership. No polling, new settings authority, service/schema change or provider feature is selected.
+
+Inherited untracked DEV-004H draft/probe are being replaced with verified source coverage. Unrelated local Pi orchestration is backed up outside the repository under `/tmp/lorebound-pre-dev004h` as authorised cleanup; it is not an application dependency or evidence. One primary PR owns implementation/evidence/controls/reconciliation. Existing partial scopes, IDEA-0068 staging, IDEA-0069 candidate status and B9-D12 deferral remain; no merge approval or next-child authority is inferred.

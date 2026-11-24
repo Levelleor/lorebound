@@ -376,7 +376,7 @@
       storage: host,
       draftStorage: host,
       recoveryStorage: new SessionSaveRecovery(() => window.sessionStorage),
-      generate: (request, signal, onProgress, onDiagnostics) => generateNarration(request, signal, canStream && streamOutput ? onProgress : undefined, onDiagnostics),
+      generate: (request, signal, onProgress, onDiagnostics) => generateNarration(request, signal, streamOutput ? onProgress : undefined, onDiagnostics),
       generationError: modelError,
       onChange: publish
     });

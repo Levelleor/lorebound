@@ -16,6 +16,7 @@ import { exerciseConnectionTest } from './check-connection-test.mjs';
 import { exerciseOllama } from './check-ollama.mjs';
 import { exerciseNamedServers } from './check-named-servers.mjs';
 import { exerciseNarration } from './check-narration.mjs';
+import { exerciseFreshModelSelection } from './check-fresh-model-selection.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
 const statePath = process.env.BROWSER_STATE_PATH;
@@ -190,6 +191,7 @@ try {
     await exerciseConnectionTest(browser, base, artifacts);
     await exerciseOllama(browser, base, artifacts);
     await exerciseNamedServers(browser, base, artifacts);
+    await exerciseFreshModelSelection(browser, base, artifacts);
     await exerciseNarration(browser, base, artifacts);
     const chromiumBrowser = await chromium.launch({ headless: true });
     try { await exerciseNarration(chromiumBrowser, base, artifacts, { capturePrefix: 'narration-chromium', layoutOnly: true }); }

@@ -2,9 +2,9 @@
 type: development-status
 status: current
 created: "2026-11-03"
-updated: "2026-11-16"
-current_task: "DEV-004G — Current adventure narration settings"
-current_task_status: "VERIFIED ON CONFIRMED MERGE — PR #27"
+updated: "2026-11-23"
+current_task: "DEV-004H — Fresh saved model selection"
+current_task_status: "IN PROGRESS"
 next_task: "DEV-004"
 tags:
   - planning/development
@@ -16,10 +16,10 @@ Read the [workflow](./README.md), [task queue](./TASKS.md), [feature coverage](.
 
 ## Current handoff
 
-After the checked preview and final feedback, the user approved finalising/merging [PR #27](https://github.com/Levelleor/lorebound/pull/27) on 2026-11-16: “perfect proceed to closure of this now”. [DEV-004G](./requirements/DEV-004G.md#conditional-single-pr-closure) owns scope, application CI, independent source/actual-capture review, limits and conditional closure. Its current adventure narration controls, future-only saved guidance and fixed composer/reference styling are complete within that bounded scope. The primary PR owns final checks and actual merge/head/tree provenance.
+The user's separate 2026-11-23 launch selects **[DEV-004H — Fresh saved model selection for Generate/Retry](./requirements/DEV-004H.md)** after auditing remaining DEV-004 requirements/dependencies and confirming PR #27 merge `54a8ed21bfaaf58ebbd5c303629a4fc0f4295b75`. Generate/Retry must use current saved settings, fail closed on unreadable settings and preserve per-attempt source/cancellation ownership. The requirement record owns the bounded audit, coverage and evidence limits.
 
-**Closure becomes effective only after independent closure review, applicable final-head checks and confirmed merge of PR #27.** Then DEV-004G is VERIFIED within scope and IDEA-0010 becomes PARTIAL: seventeen partial / 35 without merged feature-level evidence / zero complete originals. All originals remain in production; inventory stays 161 rows and three formal IDEA-0006 certifications. Parent DEV-004 remains unfinished. INC-001/004/005/006 stay OPEN, IDEA-0068 staged, IDEA-0069 unaccepted and **B9-D12 DEFERRED — NO WORK**.
+Implementation/verification are in progress on the primary child branch. No merge approval or verified-main claim is made. All original IDEAs remain in production; inventory stays 161 rows, seventeen partial originals and three formal IDEA-0006 certifications. Parent DEV-004 and INC-001/004/005/006 remain unfinished. IDEA-0068 stays staged, IDEA-0069 unaccepted and **B9-D12 DEFERRED — NO WORK**.
 
-Agent-started review app/provider are stopped, ports 8086/18085 confirmed closed, and persistent `.local/review/dev004g` plus all other review/user data preserved. Relaunch the app with `bash scripts/dev.sh -port 8086 -data-dir "$PWD/.local/review/dev004g"`; Ctrl+C stops it. Its saved live profile requires the separately started provider; the [workflow](./README.md#local-llamacpp-testing) owns its authorised recipe. The requirement record retains demo and evidence limits.
+Existing review/user libraries are preserved. Unrelated untracked Pi configuration and the inherited draft/probe are backed up outside the repository under `/tmp/lorebound-pre-dev004h`; they do not establish implementation evidence.
 
-**Exactly one next task: DEV-004 — audit/select a further bounded child only after confirmed DEV-004G closure and a separate user launch.** No next slice, routine post-merge repository write or reconciliation PR follows automatically.
+**Exactly one next task: DEV-004 — audit/select a further bounded child only after confirmed DEV-004H closure and a separate user launch.** No automatic next slice or reconciliation PR.
