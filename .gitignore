@@ -48,8 +48,7 @@ bin/
 
 # Disposable verification output belongs in CI artifacts or temporary directories
 *.log
-/planning/**/*.jsonl
-/planning/development/evidence/*/
+/.agentctl/runtime/
 /artifacts/
 /test-results/
 /playwright-report/

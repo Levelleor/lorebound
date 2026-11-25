@@ -1,0 +1,72 @@
+---
+id: ADR-0029
+type: adr
+status: accepted
+related:
+- ADR-0042
+- ADR-0027
+- ADR-0028
+- ADR-0020
+- ADR-0023
+- ADR-0014
+- ADR-0013
+- ADR-0017
+- ADR-0019
+supersedes: []
+---
+
+# Preflight Structural Integrity of Current History Mutations
+
+## Context
+
+Approved design decision. This does not certify delivery. Later accepted constraints override only the clauses they address.
+
+[Pinned source B4-D06](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/architecture/decisions/B4-D06%20-%20Preflight%20Structural%20Integrity%20of%20Current%20History%20Mutations.md) · approved at: 2026-10-27; approved by: requesting user (explicit chat approval)
+
+Partially superseded by [ADR-0042](ADR-0042-narrative-first-declarative-outcome-events.md).
+
+## Later accepted supersession — 2026-10-28
+
+**Current operative rule:** [B6-D01 — Narrative-first declarative outcome events](ADR-0042-narrative-first-declarative-outcome-events.md) **supersedes this ADR's former assumption that a later event is invalid merely because its earlier “creation,” item possession, route or story cause was removed**. Deterministic preflight rejects only **technically unrepresentable or unprocessable** current event records (malformed format, unresolvable typed identity, incoherent non-deterministic projection, failed transaction, etc.). A later accepted assertion may establish a **sparse entity identity** with unknown origin/details and replace earlier current properties, regardless of simulation-style preconditions. The preserved original 2026-10-27 alternative text below is approval history, **not** an active requirement to reject fictional contradictions.
+
+
+## Approval and provenance
+
+**Explicit approval, 2026-10-27:** “Review B4 Batch 2: B4-D04: B; B4-D05: A; B4-D06: A. Record only explicitly accepted decisions as Lorebound GitHub ADRs, preserve approval history and continue the B4 review.”
+
+This ADR records **B4-D06 Option A**, separately from D04's selected Option B and D05's accepted Option A. Original alternatives remain in [B4 review](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/architecture/Pass%20B4%20-%20Current%20Canon%20Data%20and%20Replay%20Contract%20Review.md).
+
+## Context
+
+Manual event correction, historical truncation, and committed story-turn Undo can remove or change events within the **single current** canon. If an earlier fictional introduction is deleted, later accepted assertions may still reconstruct a sparse identity; only genuinely unreadable or structurally unrepresentable event data jeopardizes replay. Conversely, the user's deliberate **Keep Later Turns** may leave purely fictional inconsistencies without violating state structure. These must not be confused.
+
+## Accepted decision — Option A
+
+**Before committing a deliberate current-history mutation, deterministically check that the resulting current assertions can be interpreted and projected coherently; do not reject narrative or mechanical discontinuities.**
+
+- S05/S06 browser TypeScript computes and validates the proposed resulting ordered current-event sequence using the established deterministic domain validators, including readable typed stable IDs, deterministic last-assertion property folding, single-valued physical placement, and cross-module projection consistency as applicable; do not require a fictional acquisition, prior movement route or retained entity-introduction event. Do not introduce a new LLM acceptance pass or second Go gameplay validator.
+- A **technical representability failure** (e.g., malformed required event payload or truly unresolvable entity identity/type) results in an **actionable conflict**; a surviving reference to an entity with a deleted earlier introduction instead materializes a **sparse identity** with unknown missing facts. No silent cascade deletion, event rewrite, suspended/reinstated historical effects, guessed state or AI repair is allowed.
+- An invalid/stale proposal is **not committed**. Current canonical passage bodies, event order, state and adventure version remain unchanged; if an explicit pending-commit workflow is active, retain its noncanonical proposal and full composer overlay under B3-D07/B3-D10 until the player resolves or discards it.
+- After validation, S12 Go still checks durable/storage constraints, adventure expected-version, library epoch, global maintenance fence and all-or-nothing transaction integrity under B3-D01. Browser preflight is not permission to accept a stale write or partially apply a complex event mutation.
+- **Keep Later Turns** retains accepted event assertions even when they lack their former fictional origin. **Narrative mismatch, absent fictional prerequisites, and mechanical impossibility are not structural invalidity.**
+- Unsupported or unconvertible required **core** event formats remain subject to B2-D08 fail-closed handling; supported format upgrades follow B4-D04's coordinated current-event migration. An absent/removed optional plugin continues to receive the accepted exception without forcing migration of unavailable custom state.
+- This applies to **deliberate current-event modifications**, historical Delete All After Point, committed Undo and similar mutation operations. It does **not** silently disallow a logically valid authorial action merely because world prose is surprising; nor does it approve a new event-editor feature or an arbitrary current-only rewrite command.
+
+## Alternatives and trade-offs
+
+1. **Option A — accepted:** Deterministic validation before acceptance, with reject-and-report for real structural conflicts. Some edits require a further deliberate correction, but active canon stays reconstructable.
+2. **Option B — rejected:** Automatically cascade changes into dependent accepted events to make the edit pass. Violates explicit player intent and hides changes to surviving state.
+3. **Option C — rejected:** Commit even if structural replay will fail; report errors later. Risks leaving the adventure unplayable and contradicts deterministic authoritative replay safety.
+
+## Deferred engineering details
+
+Precise sparse-identity/event-assertion folding, proposed history replay, cross-plugin representability constraints, unsupported-event error type, timeout/performance budget, and UI for resolving preflight conflicts remain future contract/test work. This ADR does **not** imply a new AI model reviewer, app-wide gameplay halt, automatic prose rewriting, schema test results or production promotion.
+
+## Traceability
+
+[B4 review](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/architecture/Pass%20B4%20-%20Current%20Canon%20Data%20and%20Replay%20Contract%20Review.md), [B3-D04](ADR-0017-single-current-history-without-revisions.md), [B3-D06](ADR-0019-pending-manual-state-corrections-and-explicit-commit.md), [B3-D10](ADR-0023-pending-commit-failure-recovery.md), [B2-D08](ADR-0013-fail-closed-unsupported-core-event-replay.md). Owners S05, S06, S10, S11, S12.
+
+## Decision history
+
+- **2026-10-27 — Proposed, not yet accepted:** B4-D06 A deterministic preflight/rejection; B auto cascade; C commit despite invalid replay.
+- **2026-10-27 — Explicit approval:** User selected **B4-D06: A**, alongside D04 B and D05 A. Only this option is approved, not a new event-edit UI, implementation or later B4 choices.

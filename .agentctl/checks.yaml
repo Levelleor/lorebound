@@ -1,0 +1,33 @@
+checks:
+  {
+    gate-01-repository: { command: python3 scripts/check_repository.py, timeoutSeconds: 120 },
+    gate-02-shell-syntax:
+      {
+        command: bash -c 'for script in scripts/*.sh; do bash -n "$script" || exit;
+          done',
+        timeoutSeconds: 120
+      },
+    gate-03-build:
+      {
+        command: env CGO_ENABLED=0 GOTOOLCHAIN=local bash scripts/build.sh,
+        timeoutSeconds: 1200
+      },
+    gate-04-typescript-unit: { command: npm --prefix frontend run test:unit, timeoutSeconds: 120 },
+    gate-05-go-vet:
+      {
+        command: env CGO_ENABLED=0 GOTOOLCHAIN=local go vet -tags server ./...,
+        timeoutSeconds: 300
+      },
+    gate-06-go-sqlite:
+      {
+        command: env CGO_ENABLED=0 GOTOOLCHAIN=local go test -count=1 -tags server -v
+          ./...,
+        timeoutSeconds: 300
+      },
+    gate-07-browser-host: { command: bash scripts/verify-host.sh, timeoutSeconds: 300 }
+  }
+profiles:
+  feature: []
+  release: []
+policy:
+  unconfiguredProfile: block

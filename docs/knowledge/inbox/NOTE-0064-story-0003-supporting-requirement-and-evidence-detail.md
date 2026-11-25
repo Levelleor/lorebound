@@ -1,0 +1,139 @@
+---
+id: NOTE-0064
+type: note
+status: inbox
+source: STORY-0003
+related: []
+---
+
+# STORY-0003 supporting requirement and evidence detail
+
+## Discovery
+
+Supporting detail for [STORY-0003](../../work/items/STORY-0003-retry-drafts-undo-fork-and-current-history-prose-editing.md). Explicitly scoped or draft rows below are not whole-feature verification.
+
+## Outcome
+
+Retry, drafts, Undo/Fork and current-history prose editing.
+
+[Legacy task: DEV-003](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/development/TASKS.md#dev-003)
+
+Original disposition: **PARTIAL**; DEV-003A/B/C/D merged; DEV-003E merged; DEV-003F merged; DEV-003G merged; DEV-003H verified/merged in PR #18; DEV-003I verified/merged in PR #19; DEV-003J verified/merged in PR #20; remaining work needs passage decisions or later subsystems.
+
+## Scope and boundaries
+
+Source dependency/constraints: DEV-002.
+
+Primary coverage: IDEA-0003, IDEA-0004, IDEA-0005, IDEA-0041, IDEA-0042, IDEA-0011.
+
+## Acceptance criteria
+
+Use the owning accepted requirements and their objective criteria when a bounded scope is selected. This broad queue entry has no separate full acceptance contract.
+
+## Verification plan and evidence
+
+[Pinned source requirements or delivery evidence](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/development/requirements/DEV-003.md)
+
+User launch authority: “Proceed to next task”, 2026-11-05. DEV-002A/B/C and reconciliation PR #9 are merged; local base `34f25a0fa841827b0b4486106e411c9d28bad2ab`. DEV-003A is now VERIFIED & MERGED for provisional Retry in the current Story-only, simulated, zero-effects loop. This is a development inventory, not an implemented application spec. Full DEV-003 parent coverage remains unfinished.
+
+## Completed Fork child — 2026-11-06
+
+The user's explicit new launch selected **DEV-003B: independent committed Story-prefix Fork**, VERIFIED & MERGED within bounded scope in [PR #12](https://github.com/Levelleor/lorebound/pull/12). [Child scope and IDEA-0011 inventory](../../work/items/STORY-0015-independent-committed-story-prefix-fork.md) records remaining dependencies and gates. DEV-003A's evidence below remains its historical completed boundary; that launch authorised only this further child. Drafts, editor undo, committed Undo and historical editing remain later. B9-D12 stays deferred.
+
+## Historical temporary-input child — 2026-11-06
+
+The user launched another DEV-003 audit and one bounded child. **DEV-003D: temporary Story input Undo/Redo** is selected; [scope and remaining dependency audit](../../work/items/STORY-0017-temporary-story-input-undo-redo.md). DEV-003C is confirmed merged in PR #13. This increment covers only unfinished composer input under R06/R12; independent review and readiness CI pass, and the user authorised finalisation in [PR #14](https://github.com/Levelleor/lorebound/pull/14). Its closure is effective only after final review/checks and confirmed merge. Committed Undo and prose editing remain later.
+
+## Current corrective child — 2026-11-06
+
+The user rejected DEV-003D's composer-only interpretation after PR #14 merged and authorised [DEV-003E](../../work/items/STORY-0018-committed-story-turn-undo-and-composer-correction.md): remove that custom input history and implement committed-turn Undo under R07–R10/R12 within supported Story-only zero-effects state. R06 passage-editor history remains later. The required context, checked review address and walkthrough were handed off; the user accepted the functionality and authorised proceeding with PR #15 finalisation. [Child closure](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/development/requirements/DEV-003E.md#conditional-single-pr-closure) remains conditional on final checks/review and confirmed merge.
+
+## Current child — generated-passage editing
+
+PR #15 is confirmed merged at `987310abf8ad39d43144c53ae77c78da937bff3b`, satisfying the historical conditional closure above. The user separately launched DEV-003 on 2026-11-06 and authorised one bounded child with independent review and one primary PR. [DEV-003F](../../work/items/STORY-0019-accepted-generated-passage-editing.md) selects accepted generated-passage editing, latest per-target drafts and the complete four-choice historical confirmation flow for existing turn-ending generated passages. Prior child descriptions above preserve historical selection/closure context. Current scope/dependency dispositions live in DEV-003F. The user approved merge/closure of PR #16 after its checked preview/demo handoff on 2026-11-07; generated-passage editing is verified only on confirmed merge after closure review/checks. Authored targets, cross-passage changes and nonempty reconstruction remain later. B9-D12 stays deferred.
+
+## Current child — authored-passage editing
+
+Confirmed PR #16 merge `020e36fd68b2360982ff288622539dcc42058552` satisfies DEV-003F's prepared closure. The user's separate 2026-11-07 launch selects [DEV-003G](../../work/items/STORY-0020-accepted-authored-passage-editing.md): accepted authored Story-passage editing, latest per-target drafts and the four-choice confirmation flow. B3-D04's passage boundary removes the same-turn generated continuation on Delete; support the surviving authored-only turn through reconstruction, Fork, Undo and a new continuation. That child owns current dependency/coverage dispositions. After the checked review handoff, the user approved finalising/merging PR #17 on 2026-11-07; [prepared closure](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/development/requirements/DEV-003G.md#conditional-single-pr-closure) becomes effective only after independent closure review, applicable final-head checks and confirmed merge of that same PR. Cross-passage operations, custom passage-editor history, nonempty effects and other modes remain later; B9-D12 stays deferred.
+
+## Current child — temporary passage-editor history
+
+Confirmed PR #17 merge `632ed6fb78b88a51e5135a516ff7ec7a1e35fdb1` satisfies DEV-003G's prepared closure. The user's separate 2026-11-07 launch selects [DEV-003H](../../work/items/STORY-0021-temporary-passage-editor-undo-redo.md): bounded temporary Undo/Redo in the existing inline authored/generated passage editor under IDEA-0004/R06/R12. The child owns the current remaining-scope/dependency audit and maintained coverage. Readiness CI/independent review PASS; after the checked handoff, the user approved finalising/merging PR #18. Its prepared closure takes effect only after independent closure review, applicable final-head checks and confirmed merge. Whole-passage identity rules remain open; broader reconstruction depends on unbuilt typed world effects. No original IDEA is complete, no custom composer history returns, and B9-D12 stays deferred.
+
+## Current child — same-tab reload save recovery
+
+Confirmed PR #18 merge `39d770c59392f514fb2e2b59499f21da10a59833` satisfies DEV-003H's prepared closure. The user's separate 2026-11-08 launch selects [DEV-003I](../../work/items/STORY-0022-same-tab-reload-recovery-for-confirmed-story-saves.md): retain one immutable confirmed Story Commit request through same-tab reload, require deliberate receipt recovery, and preserve stale/epoch/current-canon safeguards. This child owns the current dependency audit and affected existing-row acceptance. It introduces no canonical/draft browser store, old-body archive or schema/wire migration. Application/readiness CI and independent source/coverage/capture/readiness review PASS. After the checked handoff, the user approved finalising/merging PR #19 on 2026-11-08; its prepared closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of that same PR. Review/test hosts are stopped and persistent review data is preserved. Other remaining work and B9-D12 stay unselected/deferred; no next slice starts.
+
+## Current child — same-tab reload Fork recovery
+
+Confirmed PR #19 merge `667bd51e508159c36fa501d7c3f5885b8edd9ae9` satisfies DEV-003I's approved closure. The user's separate 2026-11-08 launch selects [DEV-003J](../../work/items/STORY-0023-same-tab-reload-recovery-for-uncertain-fork.md), extending immutable Fork receipt recovery through source-tab reload. That child owns the remaining-scope/dependency audit, acceptance and maintained coverage. Complete readiness-head CI and independent source/coverage/capture/readiness review PASS. After the checked handoff, the user approved finalising/merging PR #20 on 2026-11-08; its prepared closure takes effect only after independent closure review, applicable final-head checks and confirmed merge of this same PR. Review/test hosts are stopped and persistent review data is preserved. Parent/counts stay unchanged; broader identity/world/library work remains later and B9-D12 stays deferred. No next child starts.
+
+## Remaining-scope audit — 2026-11-08
+
+The user's separate launch authorises auditing DEV-003 and implementing one bounded child. Confirmed [PR #20](https://github.com/Levelleor/lorebound/pull/20) merge `6f74134b6dd72228040939f9cfba22f12699ecd9` satisfies DEV-003J's approved closure. A through J are merged; D's custom composer history was deliberately removed by E.
+
+Accepted-source and actual-code inspection, including an independent reviewer, identified no further product child in the supported Story-only zero-effects boundary without selecting open behavior or entering later subsystem scope. This is a dependency/selection conclusion, not new whole-row certification or proof of exhaustive defect freedom. Existing merged PRs retain their verification evidence; no application tests were rerun for this audit.
+
+| Remaining accepted obligation | Current source / prerequisite | Disposition |
+| --- | --- | --- |
+| Retry, committed Undo, direct authored/generated paragraph edits and temporary passage history | `StoryCoordinator`, `TextHistory`, `StoryWorkspace.svelte`; [IDEA-0004 inventory](#idea-0004-requirement-inventory), [DEV-003E](../../work/items/STORY-0018-committed-story-turn-undo-and-composer-correction.md), [F](../../work/items/STORY-0019-accepted-generated-passage-editing.md), [G](../../work/items/STORY-0020-accepted-authored-passage-editing.md), [H](../../work/items/STORY-0021-temporary-passage-editor-undo-redo.md) | Existing bounded implementations and merged evidence; no additional product child identified. Ordinary composer editing keeps the user-directed E correction. |
+| Latest shared composer/passage drafts; same-tab confirmed save and uncertain Fork recovery | `TextDraft`, `SessionSaveRecovery`, `SessionForkRecovery`, `ForkController`, Go draft/Commit/Fork transactions; [DEV-003C](../../work/items/STORY-0016-shared-latest-story-composer-draft.md), [I](../../work/items/STORY-0022-same-tab-reload-recovery-for-confirmed-story-saves.md), [J](../../work/items/STORY-0023-same-tab-reload-recovery-for-uncertain-fork.md) | Existing bounded implementations and merged evidence. Tab-close/crash recovery and broader library operations remain unclaimed; no speculative multi-tab orchestration under B4-D09. |
+| Whole-passage split/merge/move/delete and cross-passage identity | [IDEA-0003 open questions](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/production/Direct%20Editable%20Prose%20Document.md#open-questions); stable identity rules remain open | Needs an explicit behavior decision before implementation. Paragraph edits within a surviving passage are already supported. |
+| Nonempty effects, standalone corrections, full Fork state and authoritative/derived/module reconstruction | IDEA-0004/R07/R10; [IDEA-0042/R01](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/development/requirements/DEV-003E.md#affected-idea-0042-reconstruction-requirement); relevant typed world/Lorebook/module owners | Depends on later supported event and subsystem implementations. Empty-event replay cannot certify this scope. |
+| Other modes/draft targets, Quick Start and complete library lifecycle | Character/input context, generated opening workflows, DEV-008 operations | Later scope; not selected by this audit. |
+| Spatial event/schema migration | B9-D12 | **DEFERRED — NO WORK.** |
+
+**Authorised next execution: DEV-004A.** The user explicitly answered “Proceed with a bounded DEV-004 child”, extending this launch to the [local narration child](../../work/items/STORY-0024-direct-browser-local-story-narration.md). DEV-003 remains PARTIAL and its dependencies remain open. No archive move or whole-IDEA completion follows. Implementation authority does not authorise merging its PR.
+
+## Accepted-source audit and dependencies
+
+**DEV-003C closure, 2026-11-06:** the user approved finalising/merging [PR #13](https://github.com/Levelleor/lorebound/pull/13) after the review handoff. [Story composer draft scope](../../work/items/STORY-0016-shared-latest-story-composer-draft.md) is VERIFIED following confirmed merge at `3632386d407efc0e40bfe9a8c9e7916a9fef9199`. Other draft targets, committed Undo and history editing remain later; DEV-003D selects only temporary Story input history and the parent stays PARTIAL.
+
+Independent `/root/requirements_review` read the accepted contracts and confirms this boundary. [IDEA-0004](../../product/PRD-0005-retry-undo-and-alternative-continuations.md), especially Accepted direction, Dependencies and constraints, and the 2026-10-23 reaffirmation, requires immediate replacement without retained variants. [B3-D02](../../decisions/ADR-0015-idempotent-canonical-commit-attempts.md) separates generation Retry from unchanged-request uncertain-write recovery. [B3-D05](../../decisions/ADR-0018-reject-stale-canonical-submissions-and-refetch.md) prohibits silent rebase/resubmission. [B3-D07](../../decisions/ADR-0020-shared-pending-commit-composer-overlay.md) and [visual mapping](../../decisions/ADR-0122-command-citadel-visual-and-interaction-direction.md) retain the shared accessible composer controls. Existing C-D01/C-D04/C-D06 limit this increment to explicit simulated Story generation with empty effects.
+
+| Parent work | Accepted authority | Dependency/disposition |
+| --- | --- | --- |
+| Provisional Retry | IDEA-0004; B3-D02/D05 | Existing coordinator owns generation sequence, cancellation, input and atomic acceptance. DEV-003A selected; no new storage format needed. |
+| Shared noncanonical drafts | IDEA-0005/0051; B4-D09 | [DEV-003C](../../work/items/STORY-0016-shared-latest-story-composer-draft.md) verified/merged in PR #13 for Story composer input only; separate latest-value SQLite drafts and epoch checks. Draft writes do not reject merely because canon advanced; canonical submissions retain expected-version guards. [DEV-003F](../../work/items/STORY-0019-accepted-generated-passage-editing.md) adds generated-passage drafts, verified only on confirmed PR #16 merge after closure review/checks. Authored/manual-correction targets remain later. |
+| Temporary editor undo | IDEA-0004; IDEA-0003 | DEV-003E removed DEV-003D’s custom composer history at the user’s request. [DEV-003H](../../work/items/STORY-0021-temporary-passage-editor-undo-redo.md) adds bounded authored/generated passage-editor history; readiness CI/independent review PASS, user approved finalisation. Verified only on confirmed PR #18 merge after closure review/checks. |
+| Committed Undo | IDEA-0004/0039/0042; B3-D03/D04, B4-D02, B6-D01 | DEV-003E implements current-head removal, atomic Commit/receipt recovery and deterministic reconstruction for the supported Story-only zero-effects state, with monotonic versions independent of turn count. CI/independent review pass; user accepted; verified only on confirmed PR #15 merge after final checks/review; nonempty/correction/module replay remains later. |
+| Fork | IDEA-0011; B4-D05 | Independently owned complete current prefix at any committed turn, baseline included; no drafts/credentials or shared mutable state; DEV-003B selected for existing Story-only zero-effects state, broader state remains later. |
+| Direct and historical prose editing | IDEA-0003/0040/0041; B3-D04, B4-D03/D06, B6-D01 | Structured current documents and stable logical passage IDs; Keep Later/Delete All After/Continue Editing/Discard; structural validation and no AI downstream rewriting. [DEV-003F](../../work/items/STORY-0019-accepted-generated-passage-editing.md) covers generated passages on confirmed PR #16 merge after closure review/checks; authored/cross-passage editing remains later. |
+| Snapshots/reconstruction | IDEA-0042; B2-D03, B4-D01 | DEV-003E reconstructs the complete supported empty baseline/current Story prefix after Undo, without persisted checkpoints or AI. Broader world/module/derived reconstruction remains later; nonempty effects remain unimplemented. |
+
+The full parent atomic inventory is not certified here. Later children need their own accepted-source audit and bounded gates. No B9-D12 spatial migration work.
+
+## IDEA-0004 requirement inventory
+
+These stable IDs cover the current accepted directions and their exclusions, applying the later current-only history/declarative-event supersessions. Later rows preserve outstanding obligations, not additional authorisation for this child. Status for the bounded Story/zero-effects portions of R01–R05: **VERIFIED in the bounded DEV-003A slice ([PR #10](https://github.com/Levelleor/lorebound/pull/10) merged)**; [delivery evidence](../../work/items/STORY-0014-replace-the-provisional-story-candidate-on-retry.md). R06–R12 remain later/partial; **R06’s historical DEV-003D composer implementation is being removed in the user-authorised correction**, **R07–R10/R12 have bounded DEV-003E committed Story Undo implementation with CI/independent review passing, user acceptance and finalisation authority; verification becomes effective only on confirmed PR #15 merge after final checks/review**, and **R09 has bounded DEV-003B Fork coverage, verified/merged in PR #12** and the existing limited surface distinction noted in R12. Full IDEA remains incomplete.
+
+| ID | Accepted behavior and source clause | DEV-003A disposition / evidence target |
+| --- | --- | --- |
+| IDEA-0004/R01 | Accepted direction, replace-on-retry: immediately discard old candidate and provisional proposals when Retry starts, including replacement failure; repeated Retry offers no selectable variants or recovery. | In scope for existing zero-effects Story; synchronous invalidation, repeated replacement, no writes/variant retention. |
+| IDEA-0004/R02 | Accepted direction, committing selected continuation: only the latest validated candidate and coherent effects may become the next accepted turn. | Explicit Accept of latest structured authored/generated pair, zero effects; real SQLite/reopen proof. Nonempty effects remain later. |
+| IDEA-0004/R03 | Accepted direction and constraints: failure, malformed/partial/stale replacement never changes canon; preserve available authored input. | Unit failures/invalid output and real browser Stop/Discard/reload; no claim of durable drafts. |
+| IDEA-0004/R04 | Constraints and 2026-10-23 reaffirmation: abandon uncommitted output on Stop/closure; abort requests where supported; late output cannot revive or commit invalidated attempts. | Abort-ignoring resolve/reject races, dispose, browser navigation/reload; newest result remains authoritative. |
+| IDEA-0004/R05 | Constraints plus B3-D02/D05: technical commit integrity, expected-version/epoch rejection, no automatic rebase; uncertain durable save must resolve same operation before replacement. | Retry unavailable saving/uncertain/blocked/refreshing; identical receipt recovery and stale cross-tab acceptance after Retry. |
+| IDEA-0004/R06 | Temporary undo is bounded: supported uncommitted editing has finite temporary lifetime/depth; exhaustion/redo cannot recover discarded candidates or mutate canon. | [DEV-003D](../../work/items/STORY-0017-temporary-story-input-undo-redo.md) is historical composer-only evidence, removed by [DEV-003E](../../work/items/STORY-0018-committed-story-turn-undo-and-composer-correction.md) at the user’s request. [DEV-003H](../../work/items/STORY-0021-temporary-passage-editor-undo-redo.md) adds bounded temporary history to authored/generated passage drafts, with latest-only autosave and session resets. Readiness CI/independent review PASS; user approved finalisation. Verified only on confirmed PR #18 merge after closure review/checks; no whole-row certification. |
+| IDEA-0004/R07 | Committed Undo: repeatedly remove latest committed head to baseline without arbitrary temporary-editor depth limit; reconstruct all supported authoritative/derived/module state. | [DEV-003E](../../work/items/STORY-0018-committed-story-turn-undo-and-composer-correction.md) implements repeated Undo to the unchanged baseline for supported Story-only zero-effects state; CI/independent review pass; user accepted; verified only on confirmed PR #15 merge after final checks/review. Nonempty world/module coverage remains later. |
+| IDEA-0004/R08 | Same adventure may continue differently: new turn after rollback replaces future; old turn/effects are neither active nor selectable nor silently restored. | DEV-003E implements a new same-adventure next turn with surviving-prefix context, new IDs and no restored/selected old future; CI/independent review pass; user accepted; verified only on confirmed PR #15 merge after final checks/review. No canonical Redo. |
+| IDEA-0004/R09 | Fork optional: preserving both futures creates separate independent adventure at any committed turn; ordinary Undo does not require or automatically create Fork. | [DEV-003B](../../work/items/STORY-0015-independent-committed-story-prefix-fork.md) verified/merged in PR #12 for the supported Story-only zero-effects prefix; broader Fork obligations remain later. |
+| IDEA-0004/R10 | Committed rollback integrity: atomic expected-version/epoch-fenced Go/SQLite operation, coherent text/events/derived state and cache invalidation; stale/failed rollback leaves canon unchanged. | DEV-003E implements atomic deletion/version/receipt, stale/epoch fencing, rollback and uncertain-operation recovery for the supported zero-effects model; CI/independent review pass; user accepted; verified only on confirmed PR #15 merge after final checks/review. Nonempty B6-D01 replay remains later. |
+| IDEA-0004/R11 | Historical edits are separate: edits with later turns require Keep Later/Delete All After/Continue Editing/Discard; no automatic downstream prose rewriting or branch. | [DEV-003F](../../work/items/STORY-0019-accepted-generated-passage-editing.md) covers generated-passage Keep/Delete/Continue/Discard in supported zero-effects Story state, verified only on confirmed PR #16 merge after closure review/checks; authored/cross-passage and nonempty-event scope remain later. |
+| IDEA-0004/R12 | Exceptions/exclusions: preserve Quick Start first-success auto-commit; distinguish temporary edits, generation Retry and committed rollback; no parallel passage/event revision archive or selectable old future. | DEV-003A distinguishes Retry/Recover save; DEV-003E removes custom input controls and explicitly confirms accepted-turn Undo. [DEV-003H](../../work/items/STORY-0021-temporary-passage-editor-undo-redo.md) separately implements temporary passage-editor Undo/Redo, verified only on confirmed PR #18 merge after approved closure review/checks. Quick Start remains later; no selectable canonical Redo or candidate archive. |
+
+## Verification boundary
+
+Use deterministic generator and storage fixtures for sequence/error races, clearly labelled simulated. CI runs actual Firefox → Wails → Go → disposable SQLite, real SQLite regressions, exact process reopen and relevant Dark/Bright viewport checks; review its temporary captures rather than duplicating local runs. Existing supported host origin restrictions remain regression gates. Windows/macOS packaging and live model calls are not claimed. Independent review and final-head CI pass; the identical reviewed tree is merged. DEV-003A is VERIFIED within its bounded scope. Full IDEA-0004 remains PARTIAL, with no extra full-row atomic certification inferred from mixed/later or zero-effect coverage. No original IDEA moves to specs/archive.
+
+**Publication evidence:** [PR #10](https://github.com/Levelleor/lorebound/pull/10), implementation commit `e422d8093cde4c1a4f8432a1caf0739885884c5d`, [CI PASS](https://github.com/Levelleor/lorebound/actions/runs/42140685316). Final head `75384544377b4de982514549976619ad368b5f56` passed [CI run 42141159906](https://github.com/Levelleor/lorebound/actions/runs/42141159906) and merged as `9b30042dd0c3cedd8b4d22a02cdc7eb0d53b7145` with an identical full tree. [Delivery record](../../work/items/STORY-0014-replace-the-provisional-story-candidate-on-retry.md). R02 nonempty effects and R06–R12 remain later/partial as recorded; no new formal whole-row atomic certification is claimed. No later child starts in this finalisation.
+
+Atomic requirement evidence is scoped to the source rows; excluded rows and missing verification remain open.
+
+## Risks and blockers
+
+Partially delivered; no further bounded zero-effects child identified. Remaining passage identity/cross-passage decisions or nonempty world/module integration must be resolved before authorizing a new child.
+
+## Classification
+
+Source requirement detail and evidence; not a separate task or implementation approval.

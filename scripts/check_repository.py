@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check local Markdown links and keep generated verification output out of planning."""
+"""Check local Markdown links and keep generated output out of project records."""
 
 from pathlib import Path
 import re
@@ -21,8 +21,10 @@ def main():
         if not name or not file.is_file():
             continue
 
-        if name.startswith('planning/'):
-            generated = file.suffix in output_extensions
+        legacy_record = name.startswith('planning/')
+        project_record = name.startswith(('docs/product/', 'docs/decisions/', 'docs/work/', 'docs/knowledge/'))
+        if legacy_record or project_record or name.startswith('.agentctl/runtime/'):
+            generated = file.suffix in output_extensions or name.startswith('.agentctl/runtime/')
             generated |= any(part in {'test-results', 'playwright-report'} for part in file.parts)
             if not name.startswith('planning/design/'):
                 generated |= file.suffix in capture_extensions
@@ -54,7 +56,7 @@ def main():
         print('\n'.join(errors), file=sys.stderr)
         return 1
 
-    print('PASS: local Markdown file links and planning output policy')
+    print('PASS: local Markdown file links and project record output policy')
     return 0
 
 
