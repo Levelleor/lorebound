@@ -1,0 +1,78 @@
+---
+id: PRD-0032
+type: prd
+status: accepted
+related:
+- NOTE-0040
+- PRD-0001
+- PRD-0027
+- PRD-0031
+- PRD-0033
+- NOTE-0007
+- NOTE-0008
+---
+
+# Configurable Anatomy and Transformations
+
+## Problem
+
+Approved product scope; this does not imply implementation.
+
+## Source and delivery status
+
+[Pinned source IDEA-0031](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/production/Configurable%20Anatomy%20and%20Transformations.md) · origin: user; created: 2026-10-16; updated: 2026-11-03; accepted at: 2026-10-16; accepted by: requesting user (chat confirmation); approved at: 2026-11-03; approved by: requesting user (explicit blanket promotion of all remaining 50 accepted staging ideas)
+
+Primary subsystem: **S10**. First milestone: **M5**. Delivery: **NOT STARTED**.
+
+- Requirement coverage: Not yet inventoried
+- Evidence: None
+
+## Later accepted B6-D05 feature-conditional equipment policy — 2026-10-31
+
+[B6-D05](../decisions/ADR-0046-conditional-anatomy-linked-equipment-detachment.md) accepts automatic clearing of an incompatible equipment assignment **only when structured anatomy (real tracked arms/hands/body-part identities) and an explicit equipment-slot-to-part dependency have actually been implemented and are active for the affected character**. Free-form textual anatomy alone does **not** activate automatic detachment. If the feature/binding is absent, an accepted statement that an arm was lost **does not auto-unequip a bracelet** in the structured tracker unless narration itself establishes its removal or the player deliberately commits a correction. If such linked structured anatomy is implemented and establishes the incompatibility, the same item can be unequipped automatically, with **unknown placement** unless grounded prose gives a destination. Do not invent floor/pocket locations. This later explicit condition governs the earlier unqualified automatic-equipment wording below, whose approval history remains intact.
+
+
+
+## Latest approved narrative-first event semantics — 2026-10-28
+
+The current engine ([B6-D01](../decisions/ADR-0042-narrative-first-declarative-outcome-events.md)) treats anatomy changes and equipment as **accepted declarative facts**, not simulation proofs. A `SetAnatomyFeature` assertion records a changed limb/status even without earlier fictional change history; if the change invalidates an equipment assignment, the existing user-approved **automatic, grounded equipment disposition** may emit further assertions in that same coherent batch for the **same item ID**. If no placement is grounded, leave the holder unknown or otherwise explicitly unresolved; never fabricate a destination, duplicate gear or reject accepted story solely for a missing cause.
+
+
+## Accepted direction
+- **Free-form, text-first anatomy for any character:** Characters may have editable anatomy records composed of arbitrary named body features and human-readable textual descriptions/conditions, without a mandatory predefined anatomical hierarchy or fixed species/body-type schema. This applies equally to PCs and NPCs.
+- **Any body feature can be represented:** Players may add, rename, describe, update, reorganise or remove entries for broad body regions and specific features such as limbs, wings, horns, lips, hair, breasts, genitals, prosthetics or wholly fictional anatomy. Anatomical entries are not restricted to conventional equipment slots or to a human body plan. They need not be defined in advance.
+- **Editable starter template, never mandatory:** Offer an optional basic set of body features as a convenience when starting a story/character. At story setup players can remove, replace or customise every suggested entry, choose a sparse or empty record, and continue editing anatomy later. The starter template must not silently assert anatomy not established for that character.
+- **Text-based baseline:** Each custom feature can at least hold a player-editable name and plain-language description/status. Do not require generated artwork, a complex hierarchical body graph, mandatory numerical values or a rigid reproductive/sex-specific schema merely to record anatomy. Optional structured metadata or links may later help enforce physical/equipment constraints but must preserve full text flexibility.
+- **Persistent physical state:** Track known body-part conditions, injuries, absent/missing limbs, prosthetics, additions/removals, transformations and relevant temporary or lasting changes across committed narrative history. Distinguish unknown/unrecorded anatomy from explicitly known absent or present features.
+- **Grounded declarative outcomes:** Record accepted narrative/player anatomy facts as typed `Set/Clear` assertions for stable character/anatomy IDs. Validate representable current fields and coherent equipment projections, not whether a preceding fictional transformation was mechanically possible. Player edits retain the explicit pending-commit gate.
+- **Shared stable identity across forms:** A character's ID persists through species differences, body changes and transformations; don't replace the character with a new identity merely due to anatomy edits.
+- **Conditional automatic equipment consequences (later B6-D05 clarification, 2026-10-31):** Only **after an implemented and active structured anatomical body-part-to-equipment-slot relationship** establishes a real incompatibility may a confirmed anatomy change automatically clear that item's incompatible equipped assignment. Plain-language/free-text anatomical descriptions alone do **not** cause automatic unequipping. When a grounded new holder/location is stated, it may be recorded for the same item; otherwise leave disposition **unknown**, without inventing a drop or pocket. Earlier 2026-10-23 general permission for automatic consequences is retained as historical approval, subject to this later feature prerequisite.
+- **No assumption of universal body parts:** Gender identity, character identity and physical anatomy must not be inferred from one another. Entry presence, absence and details are player/story-defined.
+- **Separate mature-feature controls:** Optional Mature Reproductive Anatomy Fields (IDEA-0032) is a **separate unaccepted Inbox idea** proposing per-story mature-content controls and optional reproductive/sex-related fields. The accepted **general free-form data representation** must remain capable of describing requested body features; this decision does not yet approve IDEA-0032's content setting, default visibility, opt-in mechanics or disclosure/context rules.
+- **Optional in context:** Current relevant anatomy and transformations may be included in narration context subject to the accepted context builder's source and token controls. Do not automatically expose every private/descriptive anatomy entry in every prompt; exact selection/default behaviour remains open.
+
+## Dependencies and constraints
+- Character identities are provided by accepted Shared PC and NPC Character Entities (IDEA-0026). Anatomy references should remain stable as descriptive entries or conditions change.
+- Must interoperate with accepted Slot-Based Equipment and Body Diagram (IDEA-0030), Customisable Character Status Sheets (IDEA-0027), and Automatic Character Sheet Tracking (IDEA-0064), without treating anatomy and equipment descriptions as independent conflicting sources of canonical physical state.
+- Anatomical structures are **extensible and text-first**. Even if some anatomy metadata is later structured for validation, that must not prohibit custom features or force a predetermined list of body parts on every character.
+- A starter template is optional and fully editable/removable at story start; no anatomy is inferred as factual solely from the template or the character's gender identity.
+- Missing or not-yet-recorded features remain unknown; explicitly removed or absent parts are known absent. Deleted configuration/template entries should not be misinterpreted as in-world amputation, and in-world loss should be represented as a validated story-state change.
+- Generated physical-state changes **and validated automatic equipment consequences** pass the shared event/transaction boundary together, preserving stable item identity, unique custody and historical edit/Undo semantics. A player-authoritative anatomy change must not be rejected merely to avoid having to adjust equipment.
+- Body-feature details can be sensitive. Exposure and selection in AI context should be controllable and inspectable under accepted Token-Budgeted Context Builder and Inspector (IDEA-0024). Mature-specific rules, age gating, visibility and privacy details from IDEA-0032 remain separately unaccepted.
+- Do not claim that keeping free-form descriptions is automatically sufficient for all complex injury, prosthetic and equip-compatibility validation. How to make it robust is refinement work.
+- No artwork or image generation is required to describe anatomy.
+
+## Open questions
+- How should arbitrary free-form feature entries connect to equipment slots or physical constraints without constraining custom text?
+- Does deleting an anatomy entry mean removing a field from the sheet, or explicitly asserting that a body feature was lost/removed? What UX makes that distinction clear?
+- What basic starter-template entries, if any, should be offered for particular character/body types, and should template selection be optional at creation?
+- How should the user distinguish known-present, known-absent, unknown and temporarily transformed feature states?
+- How should prose descriptions and optional structured conditions represent partial limbs, injury severity, prosthetics and temporary or reversible transformations?
+- **Resolved policy 2026-10-23:** Validated anatomy changes may automatically reassign or relocate incompatible equipment. Which known destination to prefer, and how to represent genuinely unresolved dispositions without fabricating state, remains a technical decision.
+- How will anatomy edits and generated event updates reconcile on historical revision/undo?
+- When should anatomy entries, particularly intimate details, be requested, selected or transmitted in the narrator's context? Mature-specific rules are a separate IDEA-0032 decision.
+- Which optional machine-readable relationships improve complex anatomy handling without becoming a required hierarchy?
+
+## Supporting detail
+
+See [NOTE-0040](../knowledge/inbox/NOTE-0040-prd-0032-supporting-requirement-and-evidence-detail.md) for the complete migrated source detail, historic alternatives and requirement rows.

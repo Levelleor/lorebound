@@ -1,0 +1,14 @@
+schemaVersion: 1
+roles:
+  architect:
+    model: openai-codex/gpt-6.2-sol
+    thinking: high
+  worker:
+    model: openrouter/deepseek/deepseek-v4.1-flash-1017
+    thinking: max
+  reviewer:
+    model: openrouter/deepseek/deepseek-v4.1-flash-1017
+    thinking: max
+repairRetries: 2
+escalationThreshold: 2
+reviewRetries: 2

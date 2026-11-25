@@ -1,0 +1,13 @@
+schemaVersion: 1
+context:
+  include:
+    - AGENTS.md
+    - docs/project.md
+    - docs/conventions.md
+  reference:
+    - docs/product/README.md
+    - docs/decisions/README.md
+    - docs/work/items/README.md
+    - docs/knowledge/inbox/README.md
+    - docs/development.md
+    - docs/design/palette-and-presets.css

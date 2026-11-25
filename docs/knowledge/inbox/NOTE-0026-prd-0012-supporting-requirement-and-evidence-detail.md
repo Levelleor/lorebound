@@ -1,0 +1,123 @@
+---
+id: NOTE-0026
+type: note
+status: inbox
+source: PRD-0012
+related: []
+---
+
+# PRD-0012 supporting requirement and evidence detail
+
+## Discovery
+
+Supporting detail for [PRD-0012](../../product/PRD-0012-manual-generation-branches.md). Explicitly scoped or draft rows below are not whole-feature verification.
+
+## Problem
+
+Approved product scope; this does not imply implementation.
+
+## Source and delivery status
+
+[Pinned source IDEA-0011](https://github.com/Levelleor/lorebound/blob/84f151c8cdee3178cf6fc123eb7ca7614be4a28e/planning/production/Manual%20Generation%20Branches.md) · origin: agent; created: 2026-10-16; updated: 2026-11-06; accepted at: 2026-10-16; accepted by: requesting user (chat confirmation); approved at: 2026-11-03; approved by: requesting user (explicit blanket promotion of all remaining 50 accepted staging ideas)
+
+Primary subsystem: **S02**. First milestone: **M2**. Delivery: **PARTIAL**.
+
+- Requirement coverage: [DEV-003B scoped inventory](../../work/items/STORY-0015-independent-committed-story-prefix-fork.md); [DEV-003J reload recovery](../../work/items/STORY-0023-same-tab-reload-recovery-for-uncertain-fork.md) verified/merged in PR #20
+- Evidence: [PR #12](https://github.com/Levelleor/lorebound/pull/12), [delivery/review](../../work/items/STORY-0015-independent-committed-story-prefix-fork.md)
+
+## Goals and acceptance details
+
+## Latest accepted event and narrative authority — 2026-10-28
+
+**Current Fork/replay semantics ([B6-D01](../../decisions/ADR-0042-narrative-first-declarative-outcome-events.md), B3-D04, B4-D05):** A fork copies the chosen **current** ordered assertion-event prefix into a separate adventure, not older passage/event revisions. Replaying a later accepted fact does not require its former fictional acquisition, route or introduction. Sparse ID fields can remain unknown. No required stored snapshots, alternate in-adventure active branches or mechanical “valid history” gate for fictional continuity.
+
+
+## Idea
+Allow a player to fork an adventure into a **new, independent story/adventure object**, rather than maintaining a branch tree or multiple active timelines inside one story's chat/editor. The fork preserves appropriate history and authoritative world state through the selected starting point, then continues independently.
+
+## Why this idea matters
+Players can explore different outcomes without losing the original version.
+
+## Accepted direction
+- **Fork means new story:** When a player decides to branch away from an existing adventure, create an independently addressable story/adventure object in persistent storage. The original story remains separate and unchanged.
+- **Separate UI entry:** The new story appears as its own item in the adventure/story library and is opened, edited, saved, renamed, and resumed like any other adventure.
+- **No in-chat branch mechanic:** Do **not** add nested timelines, a branch graph, or branch-switching widgets inside an individual story's narrative UI.
+- **State at the fork point:** Seed the new story with appropriate narrative history and coherent corresponding world state up to the chosen fork point. Subsequent prose, events, memories, and state changes belong solely to the new story.
+- **No automatic downstream rewrites:** The original story's later prose and world state stay intact; creating the new story must not regenerate later turns or rewrite another story.
+- **Separate from retry and committed Undo (updated IDEA-0004):** No retained selectable AI response alternatives exist within a story. Retry **replaces** an uncommitted generation; committed Undo can roll back the active head and allow a **different continuation in the same adventure**. Fork instead creates an **independent saved adventure when the player wants the original and different future both to survive**.
+
+This is explicitly **not** acceptance of the originally proposed in-story timeline/branch-tree interface.
+
+## Accepted Fork interaction — 2026-11-06
+
+The requesting user explicitly corrected DEV-003B's unmerged UI: use a **small fork icon beneath the accepted turn to fork from**, opening the new independent adventure in a **separate browser tab/window with that prefix already copied**. The clicked turn determines the boundary directly; do not present a turn-selection/title form. The default adventure title is **`fork: [source adventure name]`**; renaming is separate. Keep the original adventure/tab and available composer input intact. This is an explicit Fork action, not an in-story branch tree or stored response-variant selector.
+
+The current 160-codepoint title limit is retained through Unicode-safe truncation of the automatic default. Blocked pop-ups must not create an unseen adventure; lost-response recovery must preserve the same logical operation. Closing a waiting target does not undo a durable copy and must not cause another copy when opening the completed destination. [DEV-003B scope/evidence](../../work/items/STORY-0015-independent-committed-story-prefix-fork.md) records bounded Story-only zero-effects verification, confirmed merged in [primary PR #12](https://github.com/Levelleor/lorebound/pull/12). The user separately approved finalising and merging that named PR on 2026-11-06: “yes finish the task”. Full IDEA-0011 remains incomplete/production-stage; broader state/lifecycle copying and renaming remain later, with no whole-IDEA certification or archival.
+
+## Proposed behaviour
+From the explicit icon beneath an accepted turn, the player forks that current committed prefix into a separate browser tab/window. Lorebound creates a distinct adventure record and initialises that record with the necessary prose/revisions and validated state through the fork point. The fork is independently listed in the adventure library; its future events and editing history do not affect the original. The original's existing future remains undisturbed. The storage implementation may copy source data or reuse immutable internal data safely, but the visible unit is always a separate adventure, not a sub-branch inside a story.
+
+## Alternatives and trade-offs
+**Rejected from the original assistant proposal:** A branch/tree picker inside one story, multiple story heads attached to one UI entry, and branch-specific switching mechanics within the chat. The accepted alternative is to fork into a new full adventure object. Simple whole-save duplication (IDEA-0005) is related but may not supply a chosen historical fork point. Implementation may use independent copies or safe immutable sharing internally; that is not a player-visible branching feature.
+
+## Fork from any committed story turn
+- **Explicit user choice (2026-10-18):** A player may fork an adventure at **any committed story-turn boundary**, not only named saves, manually created checkpoints, or turns with materialised snapshots. Choose an actual accepted turn in the source adventure's authoritative active history; **drafts, provisional AI output, uncommitted historical edits and rejected or invalid turns are never valid fork points**.
+- **Exact committed prefix and state:** The new fork is a **separate saved adventure** with its own identity, containing the **complete accepted narrative and reconstructible canonical history from the source's beginning through and including the selected turn**. This includes applicable initial baseline/Lorebook, accepted text-revision lineage, ordered events and world state, valid relationships/entity records, context/memory and supported durable plugin data **as they stood at that boundary**. All following source turns/revisions/events/state changes belong only to the original and must **not** be copied to the fork or influence the fork's starting current state. No unsent composer text, unconfirmed prose-edit drafts, pending generations, credentials or incomplete operations cross over.
+- **Independent future:** Subsequent turns, renames, edits, world/lore updates and deletions in either adventure cannot mutate the other. Internal references/provenance must be coherent in the new adventure; copying committed source data or safely sharing strictly immutable infrastructure are implementation options, but **no mutable canonical records are shared**. The source's later history remains intact, even though the fork omits it.
+- **Reconstruction over mandatory snapshots:** Obtain the chosen boundary's authoritative world state by replay of committed incremental history, using in-memory derived views when safe, **not persisted snapshots/checkpoints**. **Every committed turn must remain forkable even with no snapshot at that exact point**; this selects no checkpoint cadence, special named-save feature or algorithm.
+- **Safe fork creation:** Validate the chosen committed turn and source version; create the complete independent fork coherently within Go/SQLite or fail without leaving a partially copied adventure. Concurrent source changes must not produce a mixed-version copied prefix; exact transaction, version-pinning and ID remapping schemes remain implementation details.
+- **Separate feature boundaries:** This is an **in-library fork**, not file export/import, an in-story branch tree, a retry-candidate selector, the historical-edit Keep/Delete workflow, or a mandatory prerequisite for committed Undo. **Undo may replace the active future within one adventure**; Fork is needed to **preserve two independent playable futures**. How to choose source turns and show attribution remains open.
+
+## Fork preserves an alternate future; ordinary Undo does not
+- **Accepted IDEA-0004 refinement (2026-10-18):** There is exactly **one active canonical story timeline per adventure**. Uncommitted response Retry discards the preceding candidate. **Committed Undo** may roll the active adventure back from Turn N to N-1 with deterministic state reconstruction and let the player **continue differently in the same adventure**, **without preserving the undone future as another selectable version**.
+- **Fork is the preservation choice, not a requirement to change course:** To retain **both** an established original future and a new direction, fork from the desired **committed turn** into a **second independent adventure**, leaving the original unchanged. Forks have independently persisted Lorebook/world data. The explicit Fork action is what saves both futures; Undo alone changes the active head of the one adventure.
+- No in-story response variant stack, branch graph or auto-fork on Retry/Undo. Any inactive audit records needed for historical integrity are **not playable alternate completions**; exact representation remains implementation detail.
+
+## Dependencies and constraints
+- Depends on independent adventure persistence, duplication, save/export (IDEA-0005), stable narrative revision IDs (IDEA-0003/IDEA-0040), and event/state reconstruction concepts (IDEA-0039/IDEA-0042).
+- A new story must never share mutable world-state objects, active turn lists, or in-progress generation state with its source story.
+- If forking from an earlier turn, state and derived context must match the chosen point, not the original story's latest head.
+- Preserve source-story provenance if useful, but do not require a branch-tree UI or navigation inside the story.
+- Forking may require a snapshot or replay at the selected point. Do not claim any specific architecture has been implemented.
+- The rule against silently rewriting later prose still applies.
+
+## Open questions
+- **Resolved:** Fork from **any committed story turn**, not only named save points or materialised checkpoints. Turn selection/navigation is now resolved by the 2026-11-06 per-turn icon and separate-tab decision above.
+- **Resolved 2026-11-06:** The small Fork icon beneath an accepted turn selects that boundary directly, with no branch tree or selector form.
+- **Resolved user-visible requirement:** The fork independently owns all accepted history, text, provenance and state **through the selected turn** with no later source turns and no shared mutable data. Whether immutable internal infrastructure may be safely shared remains a technical implementation detail.
+- How are provenance and source-story attribution represented without forcing branch-specific UI?
+- How should a fork handle the chosen current story-turn boundary, noncanonical pending drafts, and any **technically unprocessable** event payloads? Fictional contradictions are not fork errors.
+- **Resolved 2026-11-06:** Fork uses the small icon beneath the selected accepted turn; a separate library/title form is not the selected interaction. Duplicate remains separate.
+
+## Draft acceptance criteria
+- [ ] Fork is optional for preserving multiple **separately playable adventures**, whereas committed Undo can deterministically roll back and continue in the **same** adventure, with no selectable old future left behind.
+- [ ] Retrying uncommitted AI output never creates a hidden in-story branch or saved candidate gallery; no automatic fork occurs on Undo.
+- [ ] A player can select **any committed source turn** (including one without a stored snapshot or named checkpoint) as the fork boundary; an uncommitted draft or provisional output cannot be selected.
+- [ ] A fork at Turn N contains the source's **complete accepted prefix through N**, including validated baseline, prose/revision lineage, events/world state, Lorebook, relationships, memory and relevant persistent plugin history necessary to reconstruct the selected state; it excludes all source turns and effects after N.
+- [ ] An independently addressable adventure appears in the library and its later edits, gameplay and deletion do not mutate the original or any other fork; the original's later turns remain unchanged.
+- [ ] Replay from valid incremental history can reconstruct the state at a chosen fork point when no materialised checkpoint exists, and Go/SQLite never exposes a partial or mixed-version fork on a failed/concurrent copy.
+- [ ] Noncanonical drafts, incomplete generations and provider credentials are excluded; forking never creates an in-story branching/timeline UI or an individual-adventure file export.
+- [ ] A player can explicitly fork an existing story into a newly created, independently stored adventure.
+- [ ] The fork appears as its **own entry** in the adventure library and opens like any other story.
+- [ ] The original story and its later turns/state remain unchanged after forking.
+- [ ] The fork begins with coherent prose and authoritative world state corresponding to its selected fork point.
+- [ ] Subsequent turns, events, NPC/inventory state and edits are isolated between the source adventure and the new one.
+- [ ] Players do not need an in-story branch-tree/timeline-switching UI to access or manage the fork.
+- [ ] Forking does not automatically regenerate, rewrite, or remove downstream prose in the original.
+
+## Evaluation notes
+- Origin: **agent**. Original assistant proposal was revised and explicitly accepted by the user only in its **new-independent-story** form.
+- The original proposed in-chat branch mechanic is **not accepted**.
+- Accepted for staging/refinement only; not approved for production or implemented.
+
+## Decisions and review history
+- 2026-10-18 — **IDEA-0004 committed Undo Option B supersedes prior variant assumptions:** A normal committed Undo moves the active head back and permits another continuation **within the same adventure**; it does **not** preserve the displaced future as a selectable branch. Explicit Fork remains available from any committed turn **to keep both futures as distinct adventures**. No in-story AI variant stack or branch picker. Staging only.
+- 2026-10-18 — **User explicitly selected fork-point Option A:** A **new independent adventure can fork from any committed story turn**, with the full authoritative text/history and reconstructible state through and including that turn, but none of the original's subsequent turns/effects. No mandatory named checkpoint or snapshot, drafts or provisional output; source remains intact. Correct transaction/version/ID safety and UI turn selection still need implementation refinement. This remains staging only, not code or production approval.
+- 2026-10-16 — Captured from discussion as an **unaccepted Inbox candidate** proposing manual generation branches sharing earlier history.
+- 2026-10-16 — **User accepted with a major modification:** "I don't like this actually being a mechanic like that in-chat. Lets just create a new story when we branch out, which is a separate object on the storage and UI." The accepted scope is **fork to a separate story/adventure object**, not the originally suggested in-chat timeline tree. Moved to staging for refinement; no production approval.
+
+- 2026-10-28 — Explicit user-approved narrative-first declaration in B6-D01 governs any older contradictory mechanical/simulation prose in this staged note. Original decision provenance preserved; no implementation or stage promotion.
+
+## Classification
+
+Source requirement detail and evidence; not a separate task or implementation approval.
