@@ -171,7 +171,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
             const control = field.querySelector('input,select').getBoundingClientRect();
             return label.bottom + 5 <= control.top;
           });
-          const noInnerScroll = ['#narration-style-panel form', '#narration-style-panel fieldset', '.composer', '#narration-instructions', '#story-input'].every(selector =>
+          const noInnerScroll = ['#narration-style-panel form', '#narration-style-panel fieldset', '.composer', '#narration-instructions', '#narration-author-notes', '#story-input'].every(selector =>
           {
             const element = document.querySelector(selector);
             return element.scrollHeight <= element.clientHeight + 1 && getComputedStyle(element).overflowY !== 'scroll';
@@ -469,14 +469,16 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     assert.match(prompt, /Perspective: third person\.\nTense: past\.\nGenre: Harbour mystery\nTone: Quietly ominous\nPacing: slow\.\nDesired response length: brief/);
     assert.ok(prompt.endsWith(saved.style.instructions), 'Full custom guidance sent');
     await page.locator('.generation-inspector summary').click();
-    assert.equal(await page.locator('.generation-inspector pre').innerText(), prompt.split('\n\n')[1]);
+    assert.equal(await page.locator('.generation-inspector .style-guidance').innerText(), prompt.split('\n\n')[1]);
+    assert.equal(await page.locator('.generation-inspector .author-notes-guidance').count(), 0);
+    assert.match(await page.locator('.generation-inspector').innerText(), /No author notes were sent with this attempt\./);
     for (const theme of ['dark', 'bright'])
     {
       await page.evaluate(theme => document.documentElement.dataset.loreboundUi = theme, theme);
       for (const width of [390, 768, 1024, 1440])
       {
         await page.setViewportSize({ width, height: 900 });
-        await page.locator('.generation-inspector pre').scrollIntoViewIfNeeded();
+        await page.locator('.generation-inspector .style-guidance').scrollIntoViewIfNeeded();
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
         if (artifacts) await page.screenshot({ path: path.join(artifacts, `${capturePrefix}-details-${theme}-${width}.png`) });
       }
@@ -582,7 +584,7 @@ export async function exerciseNarration(browser, base, artifacts, { capturePrefi
     current = await settings();
     await call('SaveNarration', { ...request, expectedRevision: current.revision, style: { ...current.style, tone: 'Changed during stream' } });
     await page.locator('.generation-inspector summary').click();
-    assert.match(await page.locator('.generation-inspector pre').innerText(), /Tone: New direction for Retry/);
+    assert.match(await page.locator('.generation-inspector .style-guidance').innerText(), /Tone: New direction for Retry/);
     await page.getByRole('button', { name: 'Stop generation', exact: true }).click();
     release();
     assert.deepEqual(await read(), accepted, 'Settings changes and stopped streams preserve canon');

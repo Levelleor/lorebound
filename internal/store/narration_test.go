@@ -138,7 +138,7 @@ func TestNarrationUpgradeAndRollback(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if _, err := s.db.Exec(`DROP TABLE narration_settings; PRAGMA user_version=6;`); err != nil {
+			if _, err := s.db.Exec(`DROP TABLE author_notes; DROP TABLE narration_settings; PRAGMA user_version=6;`); err != nil {
 				t.Fatal(err)
 			}
 			if conflict {

@@ -256,7 +256,7 @@ func TestUndoWireShapeAndV3UpgradePreserveExistingData(t *testing.T) {
 	if _, err := s.SaveDraft(ctx, SaveDraftRequest{DraftRequest: DraftRequest{SchemaVersion, library.Epoch, "story", "composer_story"}, Text: "Retain this draft"}); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := s.db.Exec(`DROP TABLE narration_settings; DROP TABLE model_settings; DROP TABLE model_profiles; PRAGMA user_version=3`); err != nil {
+	if _, err := s.db.Exec(`DROP TABLE author_notes; DROP TABLE narration_settings; DROP TABLE model_settings; DROP TABLE model_profiles; PRAGMA user_version=3`); err != nil {
 		t.Fatal(err)
 	}
 	s.Close()
@@ -283,9 +283,9 @@ func TestUndoWireShapeAndV3UpgradePreserveExistingData(t *testing.T) {
 	if _, err := reopened.Commit(ctx, old); !errors.Is(err, ErrInvalidRequest) {
 		t.Fatalf("old tab accepted: %v", err)
 	}
-	// Later upgrades add only noncanonical model/narration settings, no archive or spatial table.
+	// Later upgrades add only noncanonical model/narration/author-note settings, no archive or spatial table.
 	var tables int
-	if err := reopened.db.QueryRow(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'`).Scan(&tables); err != nil || tables != 9 {
+	if err := reopened.db.QueryRow(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'`).Scan(&tables); err != nil || tables != 10 {
 		t.Fatalf("unexpected tables: %d %v", tables, err)
 	}
 }

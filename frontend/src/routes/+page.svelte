@@ -91,7 +91,18 @@
       throw new ModelError('Narration settings could not be read. Open Narration style and reload settings before trying again. Your input is retained; no model request was sent.');
     }
     signal.throwIfAborted();
-    return generateLocal(profile, request, signal, fetch, onProgress, onDiagnostics, narration.style);
+    let notes;
+    try
+    {
+      notes = await host.readAuthorNotes({ schemaVersion, epoch: snapshot.epoch, adventureId: snapshot.adventure.id });
+    }
+    catch
+    {
+      signal.throwIfAborted();
+      throw new ModelError('Author notes could not be read. Open Narration style and reload settings before trying again. Your input is retained; no model request was sent.');
+    }
+    signal.throwIfAborted();
+    return generateLocal(profile, request, signal, fetch, onProgress, onDiagnostics, narration.style, notes.notes);
   }
 
   function modelsSaved(value: Connections)

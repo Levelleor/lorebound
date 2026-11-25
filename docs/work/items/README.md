@@ -39,3 +39,4 @@ Records are indexed here.
 - [STORY-0036: Narration guidance: remaining context and mode integration](STORY-0036-narration-guidance-remaining-context-and-mode-integration.md)
 - [STORY-0037: Command Citadel design alignment: remaining surfaces](STORY-0037-command-citadel-design-alignment-remaining-surfaces.md)
 - [STORY-0038: Evaluate automatic acceptance of new turns](STORY-0038-evaluate-automatic-acceptance-of-new-turns.md)
+- [STORY-0039: Per-adventure author notes in Story narration guidance](STORY-0039-per-adventure-author-notes-in-story-narration-guidance.md)

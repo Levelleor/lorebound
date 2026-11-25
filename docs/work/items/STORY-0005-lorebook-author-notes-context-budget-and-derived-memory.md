@@ -10,7 +10,8 @@ related:
 - PRD-0021
 - PRD-0026
 - STORY-0004
-blocked: true
+- STORY-0039
+blocked: false
 ---
 
 # Lorebook, author notes, context budget and derived memory
@@ -39,4 +40,11 @@ No implementation or verification was recorded for this queued roadmap item.
 
 ## Risks and blockers
 
-Needs the relevant DEV-004 provider-context interfaces, not completion of the full provider workstream. Verify the specific interface and then re-evaluate readiness.
+Re-evaluated 2026-11-11 and no longer blocked: the named DEV-004 provider-context interface this entry waited on is delivered. Local Story narration now assembles and transmits layered instruction context in one place ([`frontend/src/lib/models.ts`](../../../frontend/src/lib/models.ts) `generateLocal` system message, [`narration.ts`](../../../frontend/src/lib/narration.ts) `narrationInstructions`), the in-flight attempt is captured and inspectable ([`generationDiagnostics.ts`](../../../frontend/src/lib/generationDiagnostics.ts), [`GenerationInspector.svelte`](../../../frontend/src/lib/GenerationInspector.svelte)), and per-adventure guidance metadata already persists through Go/SQLite with epoch and revision fencing ([`internal/store/narration.go`](../../../internal/store/narration.go)). Those interfaces, delivered through [STORY-0024](STORY-0024-direct-browser-local-story-narration.md)–[STORY-0031](STORY-0031-fresh-saved-model-selection-for-generate-retry.md), are the prerequisite this entry recorded.
+
+Remaining risk is scope size, not a missing dependency. This tracker stays broad; delivery proceeds through bounded children. First authorized child: [STORY-0039](STORY-0039-per-adventure-author-notes-in-story-narration-guidance.md) (per-adventure author notes and transmitted-text inspection). Lorebook entries and manual context selection ([PRD-0021](../../product/PRD-0021-entity-based-lorebook.md)), conditional activation, summaries and episodic memory, and token-budget measurement ([PRD-0025](../../product/PRD-0025-token-budgeted-context-builder-and-inspector.md)) remain undelivered and unselected.
+
+## Notes
+
+### N001
+Blocker re-evaluated 2026-11-11: the named DEV-004 provider-context interface is delivered (models.ts generateLocal layered system message with narrationInstructions ordering, generationDiagnostics + GenerationInspector transmitted-attempt capture, Go narration_settings epoch/revision fencing from STORY-0024..STORY-0031). blocked set false. Delivery continues through bounded child STORY-0039 (per-adventure author notes + transmitted-text inspection); Lorebook, conditional activation, summaries, episodic memory and token-budget measurement remain unselected.

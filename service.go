@@ -47,3 +47,11 @@ func (s *LibraryService) ReadNarration(req store.ReadRequest) (store.NarrationSe
 func (s *LibraryService) SaveNarration(req store.SaveNarrationRequest) (store.NarrationSettings, error) {
 	return s.store.SaveNarration(context.Background(), req)
 }
+
+func (s *LibraryService) ReadAuthorNotes(req store.ReadRequest) (store.AuthorNotes, error) {
+	return s.store.ReadAuthorNotes(context.Background(), req)
+}
+
+func (s *LibraryService) SaveAuthorNotes(req store.SaveAuthorNotesRequest) (store.AuthorNotes, error) {
+	return s.store.SaveAuthorNotes(context.Background(), req)
+}
