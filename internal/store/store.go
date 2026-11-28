@@ -19,7 +19,7 @@ import (
 
 // Transport and storage versions are separate from the unchanged Turn-0 schema.
 const SchemaVersion = 4
-const databaseVersion = 10
+const databaseVersion = 11
 const baselineVersion = 1
 const applicationID = 0x4c4f5245
 
@@ -172,6 +172,12 @@ func (s *Store) initialize() error {
 		if err = addLorebook(tx); err != nil {
 			return err
 		}
+		version = 10
+	}
+	if version == 10 && app == applicationID {
+		if err = addContextLimits(tx); err != nil {
+			return err
+		}
 		return tx.Commit()
 	}
 	if err = tx.QueryRow(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'`).Scan(&tables); err != nil {
@@ -211,6 +217,9 @@ func (s *Store) initialize() error {
 		return err
 	}
 	if err = addLorebook(tx); err != nil {
+		return err
+	}
+	if err = addContextLimits(tx); err != nil {
 		return err
 	}
 	return tx.Commit()

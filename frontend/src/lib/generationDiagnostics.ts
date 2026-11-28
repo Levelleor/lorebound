@@ -1,5 +1,6 @@
 import type { ModelServer } from './modelServers.ts';
 import type { LoreContext } from './lorebook.ts';
+import type { StoryContextReport } from './storyPrompt.ts';
 
 export interface TokenUsage
 {
@@ -19,6 +20,7 @@ export interface GenerationDetails
   narration?: string;
   authorNotes?: string;
   lorebook?: LoreContext;
+  context?: StoryContextReport;
 }
 
 export interface GenerationDiagnostics extends GenerationDetails

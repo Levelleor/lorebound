@@ -4,6 +4,8 @@
   import { schemaVersion } from './library';
   import { modelServers } from './modelServers';
   import { discoverModels, endpointUrl, modelError, readProfile, testConnection, type Connections, type ModelProfile } from './models';
+  import { contextPresets, contextPresetLabels, contextSectionLabels, contextSections, maxContextCharacters,
+    validContextLimit, type ContextLimits, type ContextSection } from './contextLimits';
 
   export let epoch: string;
   export let onSaved: (value: Connections) => void;
@@ -16,6 +18,9 @@
   let baseUrl: string = modelServers.llamacpp.baseUrl;
   let model = '';
   let timeoutSeconds = 120;
+  let contextLimits: ContextLimits | undefined;
+  let contextSaving = false;
+  let contextWrite: { limits: ContextLimits | undefined } | null = null;
   let busy = false;
   let probing = false;
   let testing = false;
@@ -52,6 +57,8 @@
     baseUrl = profile?.baseUrl ?? modelServers.llamacpp.baseUrl;
     model = profile?.model ?? '';
     timeoutSeconds = (profile?.timeoutMs ?? 120000) / 1000;
+    contextLimits = profile?.contextLimits;
+    contextWrite = null;
   }
 
   async function load()
@@ -99,13 +106,53 @@
     try
     {
       const profile = readProfile({ id: editingId || crypto.randomUUID(), name: name.trim(), kind,
-        baseUrl: endpointUrl(baseUrl.trim()), model: model.trim(), timeoutMs: timeoutSeconds * 1000 });
+        baseUrl: endpointUrl(baseUrl.trim()), model: model.trim(), timeoutMs: timeoutSeconds * 1000,
+        ...(contextLimits ? { contextLimits } : {}) });
       // Keep a new identity across an uncertain save reply.
       editingId = profile.id;
       const profiles = settings.profiles.filter(value => value.id !== profile.id);
       if (await save([...profiles, profile], 'local', profile.id)) dialog.close();
     }
     catch (cause) { error = modelError(cause); }
+  }
+
+  async function saveContext()
+  {
+    if (!settings?.profiles.some(profile => profile.id === editingId) || busy || probing || contextSaving) return;
+    contextSaving = true;
+    try
+    {
+      do
+      {
+        // Retry an uncertain write unchanged before applying any later edit.
+        contextWrite ??= { limits: contextLimits };
+        const { limits } = contextWrite;
+        const profiles = settings.profiles.map(profile =>
+        {
+          if (profile.id !== editingId) return profile;
+          const { contextLimits: previous, ...connection } = profile;
+          return limits ? { ...connection, contextLimits: limits } : connection;
+        });
+        if (!await save(profiles, settings.mode, settings.activeProfileId)) return;
+        contextWrite = null;
+        if (contextLimits === limits) return;
+      } while (!disposed);
+    }
+    finally { contextSaving = false; }
+  }
+
+  function selectContextPreset(preset: keyof typeof contextPresets | 'off')
+  {
+    contextLimits = preset === 'off' ? undefined : { preset, ...contextPresets[preset] };
+    void saveContext();
+  }
+
+  function editContextLimit(section: ContextSection, input: HTMLInputElement)
+  {
+    const value = input.valueAsNumber;
+    if (!contextLimits || !validContextLimit(section, value) || value === contextLimits[section]) return;
+    contextLimits = { ...contextLimits, preset: 'custom', [section]: value };
+    void saveContext();
   }
 
   async function useSimulation()
@@ -257,6 +304,37 @@
       </div>
       <p class="supporting">Optional · Sends “Reply with OK.” with a 32-token limit using the entered URL/model and timeout. No story text is sent and no settings are saved. This checks the connection; full Story generation and streaming are separate.</p>
       {#if testMessage}<p class:story-error={testFailed} class="supporting test-result" role={testFailed ? 'alert' : 'status'} aria-label="Connection test result">{testMessage}</p>{/if}
+      <fieldset class="context-settings">
+        <legend>Story context</legend>
+        <label for="context-preset">Context preset</label>
+        <select id="context-preset" value={contextLimits?.preset ?? 'off'} disabled={(busy && !contextSaving) || probing}
+          onchange={(event) => selectContextPreset(event.currentTarget.value as keyof typeof contextPresets | 'off')}>
+          <option value="off">Limits off</option>
+          {#each Object.keys(contextPresets) as preset}
+            <option value={preset}>{contextPresetLabels[preset as keyof typeof contextPresets]}</option>
+          {/each}
+          {#if contextLimits?.preset === 'custom'}<option value="custom">Custom</option>{/if}
+        </select>
+        {#if contextLimits}
+          <div class="context-limits">
+            {#each contextSections as section}
+              <div>
+                <label for={`context-${section}`}>{contextSectionLabels[section]} (characters)</label>
+                <input id={`context-${section}`} type="number" min={section === 'playerInput' ? 1 : 0} max={maxContextCharacters}
+                  step="1" value={contextLimits[section]} disabled={(busy && !contextSaving) || probing}
+                  oninput={(event) => editContextLimit(section, event.currentTarget)}
+                  onblur={(event) => { if (contextLimits) event.currentTarget.valueAsNumber = contextLimits[section]; }} />
+              </div>
+            {/each}
+          </div>
+          <p class="supporting">Limits are in characters. Editing a value switches to Custom.</p>
+        {/if}
+        {#if contextSaving}
+          <p class="supporting" role="status">Saving context settings…</p>
+        {:else if contextWrite}
+          <button class="quiet" type="button" disabled={busy || probing} onclick={saveContext}>Retry context save</button>
+        {/if}
+      </fieldset>
       <div class="dialog-actions"><button type="button" disabled={busy} onclick={() => dialog.close()}>Cancel</button><button class="primary" disabled={busy || probing} type="submit">Save and use profile</button></div>
       {#if settings.profiles.some(profile => profile.id === editingId)}<button class="quiet delete-profile" type="button" disabled={busy || probing} onclick={deleteProfile}>Delete profile</button>{/if}
     </form>
@@ -278,6 +356,10 @@
   .profile-picker select { flex: 1; }
   .probe-row { flex-wrap: wrap; margin-top: 12px; }
   .test-result { overflow-wrap: anywhere; }
+  .context-settings { margin: 20px 0 0; padding: 12px; border: 1px solid var(--border); border-radius: 4px; min-width: 0; }
+  .context-settings > label { margin-top: 0; }
+  .context-limits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 12px; }
+  .context-limits input { width: 100%; }
   .stop-test { color: var(--destructive); border-color: var(--destructive); }
   .dialog-actions { justify-content: flex-end; margin-top: 24px; flex-wrap: wrap; }
   .delete-profile { color: var(--destructive); margin-top: 12px; }

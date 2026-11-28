@@ -8,7 +8,9 @@ import type { GenerationInput } from './coordinator.ts';
 import type { DiagnosticsObserver, TokenUsage } from './generationDiagnostics.ts';
 import { narrationInstructions, type NarrationStyle } from './narration.ts';
 import { authorNotesGuidance, readAuthorNotesText } from './authorNotes.ts';
-import { loreContext, type LoreEntry } from './lorebook.ts';
+import type { LoreEntry } from './lorebook.ts';
+import { contextSectionLabels, isContextLimits, type ContextLimits } from './contextLimits.ts';
+import { prepareStoryPrompt } from './storyPrompt.ts';
 
 export interface ModelProfile
 {
@@ -18,6 +20,7 @@ export interface ModelProfile
   baseUrl: string;
   model: string;
   timeoutMs: number;
+  contextLimits?: ContextLimits;
 }
 
 export interface Connections
@@ -40,12 +43,14 @@ export function modelError(cause: unknown): string
 
 export function readProfile(value: unknown): ModelProfile
 {
-  if (!isObject(value) || Object.keys(value).length !== 6 || !isID(value.id)
+  if (!isObject(value) || Object.keys(value).length !== (Object.hasOwn(value, 'contextLimits') ? 7 : 6) || !isID(value.id)
     || !isModelServer(value.kind)
     || typeof value.name !== 'string' || !value.name.trim() || !value.name.isWellFormed() || [...value.name].length > 80
     || typeof value.model !== 'string' || !value.model.trim() || !value.model.isWellFormed() || [...value.model].length > 200
     || typeof value.baseUrl !== 'string' || !Number.isInteger(value.timeoutMs) || Number(value.timeoutMs) < 1000 || Number(value.timeoutMs) > 300000)
     throw new ModelError('Use a name up to 80 characters, model ID up to 200 characters and timeout from 1 to 300 seconds.');
+  if (Object.hasOwn(value, 'contextLimits') && !isContextLimits(value.contextLimits))
+    throw new ModelError('The Story context limits are invalid. Check the profile’s character limits.');
   endpointUrl(value.baseUrl);
   return value as unknown as ModelProfile;
 }
@@ -229,8 +234,7 @@ export async function generateLocal(profile: ModelProfile, input: GenerationInpu
   const selected = structuredClone(readProfile(profile));
   const narration = style ? narrationInstructions(style) : '';
   const notes = authorNotes === undefined ? '' : authorNotesGuidance(authorNotes);
-  const lorebook = loreEntries === undefined ? undefined : loreContext(loreEntries);
-  const guidance = [narration, notes, lorebook?.text].filter(Boolean).join('\n\n');
+  const { messages, lorebook, context } = prepareStoryPrompt(input, narration, notes, loreEntries, selected.contextLimits);
   const details = {
     profileName: selected.name,
     server: selected.kind,
@@ -240,8 +244,16 @@ export async function generateLocal(profile: ModelProfile, input: GenerationInpu
     usage: null,
     ...(style ? { narration } : {}),
     ...(authorNotes === undefined ? {} : { authorNotes: readAuthorNotesText(authorNotes) }),
-    ...(lorebook ? { lorebook } : {})
+    ...(lorebook ? { lorebook } : {}),
+    ...(context ? { context } : {})
   };
+  if (context?.blocked)
+  {
+    signal.throwIfAborted();
+    onDiagnostics?.(details);
+    const section = context.blocked;
+    throw new ModelError(`The ${contextSectionLabels[section].toLowerCase()} section has ${context.counts[section]} characters and its limit is ${context.limits[section]}. Shorten the text or raise the limit in Models. Your input is retained.`);
+  }
   const dispatch: typeof fetch = (url, options) =>
   {
     const response = fetcher(url, options);
@@ -251,11 +263,7 @@ export async function generateLocal(profile: ModelProfile, input: GenerationInpu
   const body = {
     model: selected.model,
     stream: Boolean(onProgress),
-    messages: [
-      { role: 'system', content: 'Continue the player’s fiction as narrative prose. Return only the next continuation. Do not call tools or change application state.' + (guidance ? `\n\n${guidance}` : '') },
-      ...(input.history.length ? [{ role: 'user', content: `Accepted story so far:\n\n${input.history.join('\n\n')}` }] : []),
-      { role: 'user', content: input.input }
-    ]
+    messages
   };
   if (selected.kind === 'ollama')
   {
