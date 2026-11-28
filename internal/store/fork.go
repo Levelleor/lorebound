@@ -155,6 +155,10 @@ func (s *Store) fork(ctx context.Context, req ForkRequest, failBeforeReceipt boo
  SELECT ?,notes FROM author_notes WHERE adventure_id=?`, req.AdventureID, req.SourceAdventureID); err != nil {
 		return ForkResult{}, err
 	}
+	if _, err = tx.ExecContext(ctx, `INSERT INTO lore_entries (adventure_id,id,revision,kind,title,description,included)
+ SELECT ?,id,1,kind,title,description,included FROM lore_entries WHERE adventure_id=? ORDER BY rowid`, req.AdventureID, req.SourceAdventureID); err != nil {
+		return ForkResult{}, err
+	}
 	if failBeforeReceipt {
 		return ForkResult{}, errors.New("injected_transaction_failure")
 	}

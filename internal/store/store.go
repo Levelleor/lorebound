@@ -19,7 +19,7 @@ import (
 
 // Transport and storage versions are separate from the unchanged Turn-0 schema.
 const SchemaVersion = 4
-const databaseVersion = 9
+const databaseVersion = 10
 const baselineVersion = 1
 const applicationID = 0x4c4f5245
 
@@ -160,10 +160,16 @@ func (s *Store) initialize() error {
 		if err = addAuthorNotes(tx); err != nil {
 			return err
 		}
-		return tx.Commit()
+		version = 9
 	}
 	if version == 8 && app == applicationID {
 		if _, err = tx.Exec(`ALTER TABLE author_notes DROP COLUMN revision; PRAGMA user_version=9;`); err != nil {
+			return err
+		}
+		version = 9
+	}
+	if version == 9 && app == applicationID {
+		if err = addLorebook(tx); err != nil {
 			return err
 		}
 		return tx.Commit()
@@ -204,7 +210,17 @@ func (s *Store) initialize() error {
 	if err = addAuthorNotes(tx); err != nil {
 		return err
 	}
+	if err = addLorebook(tx); err != nil {
+		return err
+	}
 	return tx.Commit()
+}
+
+func validateAdventureTarget(tx *sql.Tx, req ReadRequest) error {
+	if !identifier.MatchString(req.AdventureID) {
+		return ErrInvalidRequest
+	}
+	return connectionsEpoch(tx, ConnectionsRequest{req.SchemaVersion, req.Epoch})
 }
 
 func (s *Store) Close() error { return s.db.Close() }

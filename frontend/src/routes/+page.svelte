@@ -80,10 +80,11 @@
     if (settings.mode === 'simulation') return simulatedGeneration(request, signal);
     const profile = settings.profiles.find(profile => profile.id === settings.activeProfileId);
     if (!profile) throw new ModelError('Choose and save a local profile in Models before generating. Your input is retained.');
+    const target = { schemaVersion, epoch: snapshot.epoch, adventureId: snapshot.adventure.id };
     let narration;
     try
     {
-      narration = await host.readNarration({ schemaVersion, epoch: snapshot.epoch, adventureId: snapshot.adventure.id });
+      narration = await host.readNarration(target);
     }
     catch
     {
@@ -94,7 +95,7 @@
     let notes;
     try
     {
-      notes = await host.readAuthorNotes({ schemaVersion, epoch: snapshot.epoch, adventureId: snapshot.adventure.id });
+      notes = await host.readAuthorNotes(target);
     }
     catch
     {
@@ -102,7 +103,18 @@
       throw new ModelError('Author notes could not be read. Open Narration style to check the saved notes before trying again. Your input is retained and no model request was sent.');
     }
     signal.throwIfAborted();
-    return generateLocal(profile, request, signal, fetch, onProgress, onDiagnostics, narration.style, notes.notes);
+    let lorebook;
+    try
+    {
+      lorebook = await host.readLorebook(target);
+    }
+    catch
+    {
+      signal.throwIfAborted();
+      throw new ModelError('Lorebook entries could not be read. Open Lorebook and reload entries before trying again. Your input is retained.');
+    }
+    signal.throwIfAborted();
+    return generateLocal(profile, request, signal, fetch, onProgress, onDiagnostics, narration.style, notes.notes, lorebook.entries);
   }
 
   function modelsSaved(value: Connections)

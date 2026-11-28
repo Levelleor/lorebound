@@ -40,3 +40,4 @@ Records are indexed here.
 - [STORY-0037: Command Citadel design alignment: remaining surfaces](STORY-0037-command-citadel-design-alignment-remaining-surfaces.md)
 - [STORY-0038: Evaluate automatic acceptance of new turns](STORY-0038-evaluate-automatic-acceptance-of-new-turns.md)
 - [STORY-0039: Per-adventure author notes in Story narration guidance](STORY-0039-per-adventure-author-notes-in-story-narration-guidance.md)
+- [STORY-0040: Manual Lorebook entries and Story context selection](STORY-0040-manual-lorebook-entries-and-story-context-selection.md)

@@ -4,6 +4,7 @@ import { readCreateResult, readCommitResult, readLibrary, readSnapshot, schemaVe
 import { readConnections, type SaveConnections } from './models';
 import { readNarration, type NarrationRequest, type SaveNarration } from './narration';
 import { readAuthorNotes, type AuthorNotes, type AuthorNotesRequest } from './authorNotes';
+import { readLorebook, readLoreEntry, type LorebookRequest, type LoreEntry } from './lorebook';
 
 interface WailsRuntime
 {
@@ -25,6 +26,15 @@ export const host = {
   saveNarration: async (request: SaveNarration) => readNarration(await call('SaveNarration', request), request),
   readAuthorNotes: async (request: AuthorNotesRequest) => readAuthorNotes(await call('ReadAuthorNotes', request), request),
   saveAuthorNotes: async (request: AuthorNotes) => readAuthorNotes(await call('SaveAuthorNotes', request), request),
+  readLorebook: async (request: LorebookRequest) => readLorebook(await call('ReadLorebook', request), request),
+  saveLoreEntry: async (request: LorebookRequest, entry: LoreEntry) =>
+  {
+    const saved = readLoreEntry(await call('SaveLoreEntry', { ...request, entry }));
+    if (saved.id !== entry.id || (saved.revision !== entry.revision && saved.revision !== entry.revision + 1)
+      || saved.kind !== entry.kind || saved.title !== entry.title || saved.description !== entry.description || saved.included !== entry.included)
+      throw new Error('unsupported_lorebook');
+    return saved;
+  },
   readConnections: async (epoch: string) => readConnections(await call('ReadConnections', { schemaVersion, epoch }), epoch),
   saveConnections: async (request: SaveConnections) => readConnections(await call('SaveConnections', request), request.epoch),
   list: async () => readLibrary(await call('List')),

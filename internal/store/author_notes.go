@@ -52,20 +52,13 @@ func addAuthorNotes(tx *sql.Tx) error {
 	return err
 }
 
-func validateAuthorNotesTarget(tx *sql.Tx, req ReadRequest) error {
-	if !identifier.MatchString(req.AdventureID) {
-		return ErrInvalidRequest
-	}
-	return connectionsEpoch(tx, ConnectionsRequest{req.SchemaVersion, req.Epoch})
-}
-
 func (s *Store) ReadAuthorNotes(ctx context.Context, req ReadRequest) (AuthorNotes, error) {
 	tx, err := s.db.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if err != nil {
 		return AuthorNotes{}, err
 	}
 	defer tx.Rollback()
-	if err := validateAuthorNotesTarget(tx, req); err != nil {
+	if err := validateAdventureTarget(tx, req); err != nil {
 		return AuthorNotes{}, err
 	}
 	result := AuthorNotes{ReadRequest: req}
@@ -92,7 +85,7 @@ func (s *Store) SaveAuthorNotes(ctx context.Context, req SaveAuthorNotesRequest)
 		return AuthorNotes{}, err
 	}
 	defer tx.Rollback()
-	if err := validateAuthorNotesTarget(tx, req.ReadRequest); err != nil {
+	if err := validateAdventureTarget(tx, req.ReadRequest); err != nil {
 		return AuthorNotes{}, err
 	}
 	write, err := tx.ExecContext(ctx, `INSERT INTO author_notes (adventure_id, notes)

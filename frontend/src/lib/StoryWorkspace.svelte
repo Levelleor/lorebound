@@ -10,6 +10,7 @@
   import { modelError } from './models';
   import GenerationInspector from './GenerationInspector.svelte';
   import NarrationSettings from './NarrationSettings.svelte';
+  import LorebookDrawer from './LorebookDrawer.svelte';
   import { autoSize } from './autoSize';
 
   export let snapshot: Snapshot;
@@ -41,6 +42,8 @@
   let narrationOpen = false;
   let narrationBusy = false;
   let narrationButton: HTMLButtonElement;
+  let lorebookDrawer: LorebookDrawer;
+  let lorebookOpen = false;
   let mainWidth = 0;
   let storyWidth = 0;
   let mainHeight = 0;
@@ -559,6 +562,12 @@
           <label class="stream-option"><input type="checkbox" bind:checked={streamOutput} disabled={forkBusy || state?.phase !== 'idle' || state.refreshing} /><span>Stream output</span><span class="supporting">This session · Server support required</span></label>
         {/if}
         <div class="composer-input" class:undo-pending={Boolean(state?.undoTurn || state?.edit)} class:edit-pending={Boolean(state?.edit)}>
+          <button type="button" class="lorebook-toggle" aria-label="Lorebook" title="Lorebook" aria-haspopup="dialog"
+            aria-expanded={lorebookOpen} aria-controls="lorebook-drawer"
+            disabled={forkBusy || narrationOpen || !state || state.refreshing || (state.phase !== 'idle' && state.phase !== 'ready')}
+            onclick={() => lorebookDrawer.show()}>
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C9 4.5 6 4 3 5v14c3-1 6-.5 9 1.5 3-2 6-2.5 9-1.5V5c-3-1-6-.5-9 1.5Zm0 0v14" /></svg>
+          </button>
           <label class="sr-only" for="story-input">Story input</label>
           <textarea id="story-input" class:compact={state?.phase !== 'idle'} use:autoSize={state?.input} bind:this={input} rows="3" placeholder="Write what happens next…" value={state?.input ?? ''}
             disabled={forkBusy || !state || state.phase !== 'idle'}
@@ -637,6 +646,11 @@
   </div>
 </main>
 
+{#key snapshot.epoch}
+  <LorebookDrawer bind:this={lorebookDrawer} request={{ schemaVersion, epoch: snapshot.epoch, adventureId: snapshot.adventure.id }}
+    onOpenChange={(open) => lorebookOpen = open} />
+{/key}
+
 <style>
   .story-pane { position: relative; display: grid; grid-template-rows: minmax(0, 1fr); min-height: 0; }
   .story-scroll { grid-area: 1 / 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: var(--border) var(--background); overflow-anchor: none; padding-bottom: var(--composer-height); scroll-padding: 16px 0 calc(var(--composer-height) + 16px); }
@@ -650,6 +664,9 @@
   .composer-heading { display: grid; grid-template-columns: auto minmax(0, 1fr) 30px; align-items: center; gap: 12px; }
   .composer-heading .model-source { max-width: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
   .mode-selected { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; border-radius: 6px; box-shadow: 0 0 0 1px oklch(.76 .12 70 / .35), 0 8px 30px -10px oklch(.76 .12 70 / .35); }
+  .composer-input { padding-left: 44px; }
+  .composer-input .pending-overlay { left: 44px; }
+  .lorebook-toggle { position: absolute; top: 0; left: 0; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; color: var(--primary); }
   #story-input { min-height: min(140px, var(--input-limit)); max-height: var(--input-limit); padding-right: 64px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; scrollbar-gutter: stable; resize: none; border-radius: 6px; }
   #story-input.compact { max-height: min(147px, var(--input-limit)); }
   .send { display: grid; place-items: center; }

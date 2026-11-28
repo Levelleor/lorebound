@@ -1,4 +1,4 @@
-import { ModelError, readJson, requestValue, type ModelEndpoint } from './modelTransport.ts';
+import { ModelError, contextOverflow, readJson, requestValue, type ModelEndpoint } from './modelTransport.ts';
 import { isObject, plainTextToDocument } from './story.ts';
 import type { TokenUsage } from './generationDiagnostics.ts';
 
@@ -15,6 +15,8 @@ function invalidResponse(): ModelError
 
 function readMessage(value: unknown): { content: string; done: boolean; reason: unknown }
 {
+  const overflow = contextOverflow(value);
+  if (overflow) throw overflow;
   if (!isObject(value) || value.error || typeof value.done !== 'boolean' || !isObject(value.message)) throw invalidResponse();
   const message = value.message;
   if (message.role !== 'assistant' || typeof message.content !== 'string' || !message.content.isWellFormed()
@@ -101,9 +103,10 @@ async function readStream(response: Response, signal: AbortSignal, onProgress: (
       }
     }
   }
-  catch
+  catch (cause)
   {
     signal.throwIfAborted();
+    if (cause instanceof ModelError) throw cause;
     throw invalidResponse();
   }
   finally

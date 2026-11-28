@@ -55,3 +55,11 @@ func (s *LibraryService) ReadAuthorNotes(req store.ReadRequest) (store.AuthorNot
 func (s *LibraryService) SaveAuthorNotes(req store.SaveAuthorNotesRequest) (store.AuthorNotes, error) {
 	return s.store.SaveAuthorNotes(context.Background(), req)
 }
+
+func (s *LibraryService) ReadLorebook(req store.ReadRequest) (store.Lorebook, error) {
+	return s.store.ReadLorebook(context.Background(), req)
+}
+
+func (s *LibraryService) SaveLoreEntry(req store.SaveLoreEntryRequest) (store.LoreEntry, error) {
+	return s.store.SaveLoreEntry(context.Background(), req)
+}
