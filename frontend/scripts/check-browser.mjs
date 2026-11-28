@@ -16,6 +16,7 @@ import { exerciseConnectionTest } from './check-connection-test.mjs';
 import { exerciseOllama } from './check-ollama.mjs';
 import { exerciseNamedServers } from './check-named-servers.mjs';
 import { exerciseNarration } from './check-narration.mjs';
+import { exerciseAuthorNotes } from './check-author-notes.mjs';
 import { exerciseFreshModelSelection } from './check-fresh-model-selection.mjs';
 
 const base = process.env.LOREBOUND_URL ?? 'http://127.0.0.1:18080';
@@ -57,6 +58,8 @@ try {
       assert.deepEqual(snapshot, expected.snapshots[adventure.id], 'Exact structured history survives process restart');
       const narration = await page.evaluate(request => window.wails.Call.ByName('main.LibraryService.ReadNarration', request), { schemaVersion: 4, epoch: initial.epoch, adventureId: adventure.id });
       assert.deepEqual(narration, expected.narration[adventure.id], 'Exact per-adventure narration settings survive process restart');
+      const authorNotes = await page.evaluate(request => window.wails.Call.ByName('main.LibraryService.ReadAuthorNotes', request), { schemaVersion: 4, epoch: initial.epoch, adventureId: adventure.id });
+      assert.deepEqual(authorNotes, expected.authorNotes[adventure.id], 'Exact per-adventure author notes survive process restart');
       for (const passage of snapshot.turns.flatMap(turn => turn.passages))
       {
         const target = `passage:${passage.id}`;
@@ -193,6 +196,7 @@ try {
     await exerciseNamedServers(browser, base, artifacts);
     await exerciseFreshModelSelection(browser, base, artifacts);
     await exerciseNarration(browser, base, artifacts);
+    await exerciseAuthorNotes(browser, base, artifacts);
     const chromiumBrowser = await chromium.launch({ headless: true });
     try { await exerciseNarration(chromiumBrowser, base, artifacts, { capturePrefix: 'narration-chromium', layoutOnly: true }); }
     finally { await chromiumBrowser.close(); }
@@ -234,7 +238,14 @@ try {
         settings[adventure.id] = await window.wails.Call.ByName('main.LibraryService.ReadNarration', { schemaVersion: 4, epoch: library.epoch, adventureId: adventure.id });
       return settings;
     }, finalLibrary);
-    await writeFile(statePath, JSON.stringify({ library: finalLibrary, snapshots, drafts, passageDrafts, connections, narration }));
+    const authorNotes = await page.evaluate(async library =>
+    {
+      const settings = {};
+      for (const adventure of library.adventures)
+        settings[adventure.id] = await window.wails.Call.ByName('main.LibraryService.ReadAuthorNotes', { schemaVersion: 4, epoch: library.epoch, adventureId: adventure.id });
+      return settings;
+    }, finalLibrary);
+    await writeFile(statePath, JSON.stringify({ library: finalLibrary, snapshots, drafts, passageDrafts, connections, narration, authorNotes }));
   }
   assert.equal(await page.getByRole('alert').count(), 0);
   assert.deepEqual(errors, [], 'No uncaught browser exceptions');

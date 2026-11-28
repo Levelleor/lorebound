@@ -16,6 +16,7 @@ export interface GenerationDetails
   timeoutMs: number;
   usage: TokenUsage | null;
   narration?: string;
+  authorNotes?: string;
 }
 
 export interface GenerationDiagnostics extends GenerationDetails

@@ -147,8 +147,12 @@ func (s *Store) fork(ctx context.Context, req ForkRequest, failBeforeReceipt boo
 	if _, err = tx.ExecContext(ctx, `INSERT INTO passages SELECT ?,p.id,p.turn_id,p.ordinal,p.source,p.body FROM passages p JOIN turns t ON t.adventure_id=p.adventure_id AND t.id=p.turn_id WHERE p.adventure_id=? AND t.sequence<=?`, req.AdventureID, req.SourceAdventureID, boundary); err != nil {
 		return ForkResult{}, err
 	}
-	// Current creative settings are copied independently, not reconstructed at the turn boundary.
+	// Current creative settings and author notes are copied independently, not reconstructed at the turn boundary.
 	if _, err = tx.ExecContext(ctx, `INSERT INTO narration_settings SELECT ?,1,style FROM narration_settings WHERE adventure_id=?`, req.AdventureID, req.SourceAdventureID); err != nil {
+		return ForkResult{}, err
+	}
+	if _, err = tx.ExecContext(ctx, `INSERT INTO author_notes (adventure_id, notes)
+ SELECT ?,notes FROM author_notes WHERE adventure_id=?`, req.AdventureID, req.SourceAdventureID); err != nil {
 		return ForkResult{}, err
 	}
 	if failBeforeReceipt {
