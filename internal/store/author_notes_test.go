@@ -14,7 +14,7 @@ func authorNotesRequest(epoch, id, notes string) SaveAuthorNotesRequest {
 	return SaveAuthorNotesRequest{ReadRequest: ReadRequest{SchemaVersion, epoch, id}, Notes: notes}
 }
 
-func TestAuthorNotesIsolationConflictsAndReopen(t *testing.T) {
+func TestAuthorNotesLatestSaveIsolationAndReopen(t *testing.T) {
 	s, path, library := createStory(t)
 	ctx := context.Background()
 	commit := storyRequest(library.Epoch, "story", 0, "first")
@@ -28,7 +28,7 @@ func TestAuthorNotesIsolationConflictsAndReopen(t *testing.T) {
 	}
 	req := authorNotesRequest(library.Epoch, "story", "Keep the sea unsettled.\nDo not name the watcher yet. 🦉")
 	empty, err := s.ReadAuthorNotes(ctx, req.ReadRequest)
-	if err != nil || empty.Revision != 0 || empty.Notes != "" {
+	if err != nil || empty.Notes != "" {
 		t.Fatal(empty, err)
 	}
 	var rows int
@@ -36,16 +36,12 @@ func TestAuthorNotesIsolationConflictsAndReopen(t *testing.T) {
 		t.Fatal("reading empty notes wrote a row", rows, err)
 	}
 	saved, err := s.SaveAuthorNotes(ctx, req)
-	if err != nil || saved.Revision != 1 || saved.Notes != req.Notes {
+	if err != nil || saved.Notes != req.Notes {
 		t.Fatal(saved, err)
 	}
 	replayed, err := s.SaveAuthorNotes(ctx, req)
 	if err != nil || replayed != saved {
 		t.Fatal("uncertain save retry", replayed, err)
-	}
-	req.Notes = "An obsolete tab"
-	if _, err := s.SaveAuthorNotes(ctx, req); !errors.Is(err, ErrAuthorNotesChanged) {
-		t.Fatal("stale save accepted", err)
 	}
 	req.Epoch = "wrong"
 	if _, err := s.SaveAuthorNotes(ctx, req); !errors.Is(err, ErrWrongEpoch) {
@@ -60,7 +56,7 @@ func TestAuthorNotesIsolationConflictsAndReopen(t *testing.T) {
 		t.Fatal("missing adventure read accepted", err)
 	}
 	other, err := s.ReadAuthorNotes(ctx, ReadRequest{SchemaVersion, library.Epoch, "other"})
-	if err != nil || other.Notes != "" || other.Revision != 0 {
+	if err != nil || other.Notes != "" {
 		t.Fatal("adventure notes leaked", other, err)
 	}
 	if got := readStory(t, s, library.Epoch, "story"); !reflect.DeepEqual(got, before) {
@@ -70,10 +66,12 @@ func TestAuthorNotesIsolationConflictsAndReopen(t *testing.T) {
 		t.Fatal("notes changed composer draft", err)
 	}
 	update := authorNotesRequest(library.Epoch, "story", "A fresh direction for the next attempt.")
-	update.ExpectedRevision = 1
 	second, err := s.SaveAuthorNotes(ctx, update)
-	if err != nil || second.Revision != 2 || second.Notes != update.Notes {
-		t.Fatal("revision did not advance monotonically", second, err)
+	if err != nil || second.Notes != update.Notes {
+		t.Fatal("latest save did not replace notes", second, err)
+	}
+	if err := s.db.QueryRow(`SELECT count(*) FROM author_notes`).Scan(&rows); err != nil || rows != 1 {
+		t.Fatal("expected one stored value", rows, err)
 	}
 	s.Close()
 	reopened, err := Open(path)
@@ -101,8 +99,6 @@ func TestAuthorNotesStrictValidationAndRollback(t *testing.T) {
 	ctx := context.Background()
 	for _, change := range []func(*SaveAuthorNotesRequest){
 		func(r *SaveAuthorNotesRequest) { r.SchemaVersion = 0 },
-		func(r *SaveAuthorNotesRequest) { r.ExpectedRevision = -1 },
-		func(r *SaveAuthorNotesRequest) { r.ExpectedRevision = 9007199254740991 },
 		func(r *SaveAuthorNotesRequest) { r.Notes = string([]byte{0xff}) },
 		func(r *SaveAuthorNotesRequest) { r.Notes = "Valid" + string([]byte{0xc3}) },
 		func(r *SaveAuthorNotesRequest) { r.Notes = strings.Repeat("x", 4001) },
@@ -116,44 +112,62 @@ func TestAuthorNotesStrictValidationAndRollback(t *testing.T) {
 	}
 	limit := authorNotesRequest(library.Epoch, "story", strings.Repeat("🦉", 4000))
 	accepted, err := s.SaveAuthorNotes(ctx, limit)
-	if err != nil || accepted.Revision != 1 || accepted.Notes != limit.Notes {
+	if err != nil || accepted.Notes != limit.Notes {
 		t.Fatal("4000 code points rejected", err)
 	}
 	valid, err := json.Marshal(authorNotesRequest(library.Epoch, "story", "A direction."))
 	if err != nil {
 		t.Fatal(err)
 	}
+	replaceNotes := func(value string) string {
+		return strings.Replace(string(valid), `"A direction."`, value, 1)
+	}
 	for _, data := range []string{
-		strings.Replace(string(valid), `"expectedRevision":0,`, "", 1),
-		strings.Replace(string(valid), `"expectedRevision":0`, `"expectedRevision":null`, 1),
-		strings.Replace(string(valid), `"notes":"A direction."`, `"notes":null`, 1),
-		strings.Replace(string(valid), `"notes":"A direction."`, `"notes":5`, 1),
-		strings.Replace(string(valid), `"notes":"A direction."`, `"notes":["A direction."]`, 1),
-		strings.Replace(string(valid), `"notes":"A direction."`, `"notes":{"text":"A direction."}`, 1),
-		strings.Replace(string(valid), `"schemaVersion":4,`, `"schemaVersion":4,"apiKey":"unexpected",`, 1),
+		strings.Replace(string(valid), `,"notes":"A direction."`, "", 1),
+		strings.Replace(string(valid), `"schemaVersion":4,`, `"schemaVersion":4,"expectedRevision":0,`, 1),
+		replaceNotes("null"),
+		replaceNotes("5"),
+		replaceNotes(`["A direction."]`),
+		replaceNotes(`{"text":"A direction."}`),
+		replaceNotes(`"\uD800"`),
+		replaceNotes(`"\udfff"`),
+		replaceNotes(`"\ud800\u0041"`),
+		replaceNotes(`"` + string([]byte{0xff}) + `"`),
 	} {
 		var decoded SaveAuthorNotesRequest
 		if err := json.Unmarshal([]byte(data), &decoded); !errors.Is(err, ErrInvalidRequest) {
 			t.Fatal("invalid wire notes accepted", data, err)
 		}
 	}
+	var decoded SaveAuthorNotesRequest
+	if err := json.Unmarshal([]byte(replaceNotes(`"\ud83e\udd89 \ufffd \\ud800"`)), &decoded); err != nil || decoded.Notes != `🦉 � \ud800` {
+		t.Fatal("valid Unicode and literal escapes must survive decoding", decoded, err)
+	}
 	if _, err := s.db.Exec(`CREATE TRIGGER fail_author_notes BEFORE INSERT ON author_notes BEGIN SELECT RAISE(ABORT,'injected_failure'); END;`); err != nil {
 		t.Fatal(err)
 	}
 	failed := authorNotesRequest(library.Epoch, "story", "A failed direction.")
-	failed.ExpectedRevision = 1
 	if _, err := s.SaveAuthorNotes(ctx, failed); err == nil {
 		t.Fatal("injected failure accepted")
 	}
 	got, err := s.ReadAuthorNotes(ctx, failed.ReadRequest)
-	if err != nil || got.Revision != 1 || got.Notes != limit.Notes {
+	if err != nil || got.Notes != limit.Notes {
 		t.Fatal("failed save changed notes", got, err)
 	}
 }
 
 func TestAuthorNotesUpgradeAndRollback(t *testing.T) {
-	for _, conflict := range []bool{false, true} {
-		t.Run(map[bool]string{false: "upgrade", true: "rollback"}[conflict], func(t *testing.T) {
+	for _, test := range []struct {
+		name    string
+		version int
+		fail    bool
+	}{
+		{"v7-upgrade", 7, false},
+		{"v7-rollback", 7, true},
+		{"v8-upgrade", 8, false},
+		{"v8-rollback", 8, true},
+	} {
+		t.Run(test.name, func(t *testing.T) {
 			s, path, library := createStory(t)
 			ctx := context.Background()
 			if _, err := s.Commit(ctx, storyRequest(library.Epoch, "story", 0, "old")); err != nil {
@@ -175,17 +189,36 @@ func TestAuthorNotesUpgradeAndRollback(t *testing.T) {
 			if _, err := s.db.Exec(`DROP TABLE author_notes`); err != nil {
 				t.Fatal(err)
 			}
-			if _, err := s.db.Exec(`PRAGMA user_version=7`); err != nil {
-				t.Fatal(err)
-			}
-			if conflict {
-				if _, err := s.db.Exec(`CREATE TABLE author_notes(conflicting TEXT);`); err != nil {
+			wantNotes := ""
+			if test.version == 8 {
+				wantNotes = "Keep the saved direction. 🦉"
+				if _, err := s.db.Exec(`CREATE TABLE author_notes (
+ adventure_id TEXT PRIMARY KEY REFERENCES adventures(id) ON DELETE CASCADE,
+ revision INTEGER NOT NULL, notes TEXT NOT NULL);
+ PRAGMA user_version=8;`); err != nil {
 					t.Fatal(err)
+				}
+				if _, err := s.db.Exec(`INSERT INTO author_notes VALUES('story', 12, ?)`, wantNotes); err != nil {
+					t.Fatal(err)
+				}
+				if test.fail {
+					if _, err := s.db.Exec(`CREATE INDEX incompatible_revision ON author_notes(revision)`); err != nil {
+						t.Fatal(err)
+					}
+				}
+			} else {
+				if _, err := s.db.Exec(`PRAGMA user_version=7`); err != nil {
+					t.Fatal(err)
+				}
+				if test.fail {
+					if _, err := s.db.Exec(`CREATE TABLE author_notes(conflicting TEXT)`); err != nil {
+						t.Fatal(err)
+					}
 				}
 			}
 			s.Close()
 			reopened, err := Open(path)
-			if conflict {
+			if test.fail {
 				if err == nil {
 					reopened.Close()
 					t.Fatal("conflicting schema accepted")
@@ -196,8 +229,15 @@ func TestAuthorNotesUpgradeAndRollback(t *testing.T) {
 				}
 				defer db.Close()
 				var version int
-				if err := db.QueryRow(`PRAGMA user_version`).Scan(&version); err != nil || version != 7 {
+				if err := db.QueryRow(`PRAGMA user_version`).Scan(&version); err != nil || version != test.version {
 					t.Fatal("failed upgrade changed version", version, err)
+				}
+				if test.version == 8 {
+					var revision int
+					var notes string
+					if err := db.QueryRow(`SELECT revision,notes FROM author_notes WHERE adventure_id='story'`).Scan(&revision, &notes); err != nil || revision != 12 || notes != wantNotes {
+						t.Fatal("failed upgrade changed notes", revision, notes, err)
+					}
 				}
 				return
 			}
@@ -217,8 +257,12 @@ func TestAuthorNotesUpgradeAndRollback(t *testing.T) {
 			if got, err := reopened.ReadDraft(ctx, draft.DraftRequest); err != nil || !reflect.DeepEqual(got, draft) {
 				t.Fatal("upgrade changed drafts", err)
 			}
-			if got, err := reopened.ReadAuthorNotes(ctx, ReadRequest{SchemaVersion, library.Epoch, "story"}); err != nil || got.Revision != 0 || got.Notes != "" {
-				t.Fatal("default author notes missing", got, err)
+			if got, err := reopened.ReadAuthorNotes(ctx, ReadRequest{SchemaVersion, library.Epoch, "story"}); err != nil || got.Notes != wantNotes {
+				t.Fatal("upgrade changed author notes", got, err)
+			}
+			var revisionColumns int
+			if err := reopened.db.QueryRow(`SELECT count(*) FROM pragma_table_info('author_notes') WHERE name='revision'`).Scan(&revisionColumns); err != nil || revisionColumns != 0 {
+				t.Fatal("upgrade left a revision column", revisionColumns, err)
 			}
 		})
 	}
@@ -242,11 +286,10 @@ func TestForkCopiesIndependentCurrentAuthorNotesAtomically(t *testing.T) {
 		t.Fatal(err)
 	}
 	copied, err := s.ReadAuthorNotes(ctx, ReadRequest{SchemaVersion, fork.Epoch, "fork"})
-	if err != nil || copied.Notes != req.Notes || copied.Revision != 1 {
+	if err != nil || copied.Notes != req.Notes {
 		t.Fatal("current notes not copied", copied, err)
 	}
 	sourceUpdate := authorNotesRequest(fork.Epoch, "story", "New source direction.")
-	sourceUpdate.ExpectedRevision = 1
 	if _, err := s.SaveAuthorNotes(ctx, sourceUpdate); err != nil {
 		t.Fatal(err)
 	}
@@ -257,16 +300,15 @@ func TestForkCopiesIndependentCurrentAuthorNotesAtomically(t *testing.T) {
 		t.Fatal("source/replayed fork changed destination notes", got, err)
 	}
 	forkUpdate := authorNotesRequest(fork.Epoch, "fork", "Independent fork direction.")
-	forkUpdate.ExpectedRevision = 1
 	if _, err := s.SaveAuthorNotes(ctx, forkUpdate); err != nil {
 		t.Fatal(err)
 	}
 	source, err := s.ReadAuthorNotes(ctx, sourceUpdate.ReadRequest)
-	if err != nil || source.Notes != sourceUpdate.Notes || source.Revision != 2 {
+	if err != nil || source.Notes != sourceUpdate.Notes {
 		t.Fatal("fork changed source notes", source, err)
 	}
 	destination, err := s.ReadAuthorNotes(ctx, forkUpdate.ReadRequest)
-	if err != nil || destination.Notes != forkUpdate.Notes || destination.Revision != 2 {
+	if err != nil || destination.Notes != forkUpdate.Notes {
 		t.Fatal("fork notes not independently owned", destination, err)
 	}
 }

@@ -12,11 +12,8 @@ export interface AuthorNotesRequest
 
 export interface AuthorNotes extends AuthorNotesRequest
 {
-  revision: number;
   notes: string;
 }
-
-export type SaveAuthorNotes = AuthorNotesRequest & { expectedRevision: number; notes: string };
 
 export function readAuthorNotesText(value: unknown): string
 {
@@ -27,9 +24,8 @@ export function readAuthorNotesText(value: unknown): string
 
 export function readAuthorNotes(value: unknown, request: AuthorNotesRequest): AuthorNotes
 {
-  if (!isObject(value) || Object.keys(value).length !== 5 || value.schemaVersion !== schemaVersion
-    || value.epoch !== request.epoch || value.adventureId !== request.adventureId || !isID(value.adventureId)
-    || !Number.isSafeInteger(value.revision) || Number(value.revision) < 0)
+  if (!isObject(value) || Object.keys(value).length !== 4 || value.schemaVersion !== schemaVersion
+    || value.epoch !== request.epoch || value.adventureId !== request.adventureId || !isID(value.adventureId))
     throw new Error('unsupported_author_notes');
   readAuthorNotesText(value.notes);
   return value as unknown as AuthorNotes;

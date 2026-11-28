@@ -1,15 +1,12 @@
 package store
 
 import (
-	"bytes"
 	"context"
 	"database/sql"
-	"encoding/json"
+	json "encoding/json/v2"
 	"errors"
 	"unicode/utf8"
 )
-
-var ErrAuthorNotesChanged = errors.New("author_notes_changed")
 
 // Author notes are noncanonical creative guidance for one adventure.
 // They are not passages, turns, drafts or world-state operations.
@@ -17,34 +14,29 @@ const authorNotesLimit = 4000
 
 type AuthorNotes struct {
 	ReadRequest
-	Revision int64  `json:"revision"`
-	Notes    string `json:"notes"`
+	Notes string `json:"notes"`
 }
 
-type SaveAuthorNotesRequest struct {
-	ReadRequest
-	ExpectedRevision int64  `json:"expectedRevision"`
-	Notes            string `json:"notes"`
-}
+type SaveAuthorNotesRequest AuthorNotes
 
 func (r *SaveAuthorNotesRequest) UnmarshalJSON(data []byte) error {
-	type plain SaveAuthorNotesRequest
-	var value plain
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(&value); err != nil {
+	var value struct {
+		SchemaVersion *int    `json:"schemaVersion"`
+		Epoch         *string `json:"epoch"`
+		AdventureID   *string `json:"adventureId"`
+		Notes         *string `json:"notes"`
+	}
+	// The strict decoder rejects malformed UTF-8 and unpaired JSON surrogates.
+	if err := json.Unmarshal(data, &value, json.RejectUnknownMembers(true)); err != nil {
 		return ErrInvalidRequest
 	}
-	var fields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &fields); err != nil || len(fields) != 5 {
+	if value.SchemaVersion == nil || value.Epoch == nil || value.AdventureID == nil || value.Notes == nil {
 		return ErrInvalidRequest
 	}
-	for _, name := range []string{"schemaVersion", "epoch", "adventureId", "expectedRevision", "notes"} {
-		if raw, ok := fields[name]; !ok || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-			return ErrInvalidRequest
-		}
+	*r = SaveAuthorNotesRequest{
+		ReadRequest: ReadRequest{*value.SchemaVersion, *value.Epoch, *value.AdventureID},
+		Notes:       *value.Notes,
 	}
-	*r = SaveAuthorNotesRequest(value)
 	return nil
 }
 
@@ -55,39 +47,16 @@ func validAuthorNotes(notes string) bool {
 func addAuthorNotes(tx *sql.Tx) error {
 	_, err := tx.Exec(`CREATE TABLE author_notes (
  adventure_id TEXT PRIMARY KEY REFERENCES adventures(id) ON DELETE CASCADE,
- revision INTEGER NOT NULL, notes TEXT NOT NULL);
- PRAGMA user_version=8;`)
+ notes TEXT NOT NULL);
+ PRAGMA user_version=9;`)
 	return err
 }
 
-func readAuthorNotes(ctx context.Context, tx *sql.Tx, req ReadRequest) (AuthorNotes, error) {
-	result := AuthorNotes{ReadRequest: req}
+func validateAuthorNotesTarget(tx *sql.Tx, req ReadRequest) error {
 	if !identifier.MatchString(req.AdventureID) {
-		return result, ErrInvalidRequest
+		return ErrInvalidRequest
 	}
-	if err := connectionsEpoch(tx, ConnectionsRequest{req.SchemaVersion, req.Epoch}); err != nil {
-		return result, err
-	}
-	var id string
-	if err := tx.QueryRowContext(ctx, `SELECT id FROM adventures WHERE id=?`, req.AdventureID).Scan(&id); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return result, ErrNotFound
-		}
-		return result, err
-	}
-	var notes string
-	err := tx.QueryRowContext(ctx, `SELECT revision,notes FROM author_notes WHERE adventure_id=?`, req.AdventureID).Scan(&result.Revision, &notes)
-	if errors.Is(err, sql.ErrNoRows) {
-		return result, nil
-	}
-	if err != nil {
-		return result, err
-	}
-	if !validAuthorNotes(notes) || result.Revision < 1 || result.Revision > 9007199254740991 {
-		return result, ErrUnsupportedLibrary
-	}
-	result.Notes = notes
-	return result, nil
+	return connectionsEpoch(tx, ConnectionsRequest{req.SchemaVersion, req.Epoch})
 }
 
 func (s *Store) ReadAuthorNotes(ctx context.Context, req ReadRequest) (AuthorNotes, error) {
@@ -96,15 +65,26 @@ func (s *Store) ReadAuthorNotes(ctx context.Context, req ReadRequest) (AuthorNot
 		return AuthorNotes{}, err
 	}
 	defer tx.Rollback()
-	result, err := readAuthorNotes(ctx, tx, req)
+	if err := validateAuthorNotesTarget(tx, req); err != nil {
+		return AuthorNotes{}, err
+	}
+	result := AuthorNotes{ReadRequest: req}
+	err = tx.QueryRowContext(ctx, `SELECT COALESCE(n.notes, '') FROM adventures a
+ LEFT JOIN author_notes n ON n.adventure_id=a.id WHERE a.id=?`, req.AdventureID).Scan(&result.Notes)
+	if errors.Is(err, sql.ErrNoRows) {
+		return AuthorNotes{}, ErrNotFound
+	}
 	if err != nil {
-		return result, err
+		return AuthorNotes{}, err
+	}
+	if !validAuthorNotes(result.Notes) {
+		return AuthorNotes{}, ErrUnsupportedLibrary
 	}
 	return result, tx.Commit()
 }
 
 func (s *Store) SaveAuthorNotes(ctx context.Context, req SaveAuthorNotesRequest) (AuthorNotes, error) {
-	if req.ExpectedRevision < 0 || req.ExpectedRevision >= 9007199254740991 || !validAuthorNotes(req.Notes) {
+	if !validAuthorNotes(req.Notes) {
 		return AuthorNotes{}, ErrInvalidRequest
 	}
 	tx, err := s.db.BeginTx(ctx, nil)
@@ -112,22 +92,21 @@ func (s *Store) SaveAuthorNotes(ctx context.Context, req SaveAuthorNotesRequest)
 		return AuthorNotes{}, err
 	}
 	defer tx.Rollback()
-	current, err := readAuthorNotes(ctx, tx, req.ReadRequest)
+	if err := validateAuthorNotesTarget(tx, req.ReadRequest); err != nil {
+		return AuthorNotes{}, err
+	}
+	write, err := tx.ExecContext(ctx, `INSERT INTO author_notes (adventure_id, notes)
+ SELECT id, ? FROM adventures WHERE id=?
+ ON CONFLICT(adventure_id) DO UPDATE SET notes=excluded.notes`, req.Notes, req.AdventureID)
 	if err != nil {
-		return current, err
+		return AuthorNotes{}, err
 	}
-	// Resolve an uncertain save without creating a revision or overwriting a newer value.
-	if current.Notes == req.Notes {
-		return current, tx.Commit()
+	rows, err := write.RowsAffected()
+	if err != nil {
+		return AuthorNotes{}, err
 	}
-	if current.Revision != req.ExpectedRevision {
-		return current, ErrAuthorNotesChanged
+	if rows == 0 {
+		return AuthorNotes{}, ErrNotFound
 	}
-	if _, err := tx.ExecContext(ctx, `INSERT INTO author_notes VALUES(?,?,?)
- ON CONFLICT(adventure_id) DO UPDATE SET revision=excluded.revision,notes=excluded.notes`, req.AdventureID, current.Revision+1, req.Notes); err != nil {
-		return current, err
-	}
-	current.Revision++
-	current.Notes = req.Notes
-	return current, tx.Commit()
+	return AuthorNotes(req), tx.Commit()
 }

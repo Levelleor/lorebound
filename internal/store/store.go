@@ -19,7 +19,7 @@ import (
 
 // Transport and storage versions are separate from the unchanged Turn-0 schema.
 const SchemaVersion = 4
-const databaseVersion = 8
+const databaseVersion = 9
 const baselineVersion = 1
 const applicationID = 0x4c4f5245
 
@@ -158,6 +158,12 @@ func (s *Store) initialize() error {
 	}
 	if version == 7 && app == applicationID {
 		if err = addAuthorNotes(tx); err != nil {
+			return err
+		}
+		return tx.Commit()
+	}
+	if version == 8 && app == applicationID {
+		if _, err = tx.Exec(`ALTER TABLE author_notes DROP COLUMN revision; PRAGMA user_version=9;`); err != nil {
 			return err
 		}
 		return tx.Commit()

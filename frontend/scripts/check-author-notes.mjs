@@ -50,7 +50,7 @@ export async function exerciseAuthorNotes(browser, base, artifacts)
     await page.reload({ waitUntil: 'networkidle' });
     await page.locator('.composer-heading').getByText('Simulated notes protocol · fixture', { exact: true }).waitFor();
     const empty = await notes();
-    assert.deepEqual(empty, { ...request, revision: 0, notes: '' }, 'A new adventure defaults to empty author notes');
+    assert.deepEqual(empty, { ...request, notes: '' }, 'A new adventure defaults to empty author notes');
     const draft = { ...request, target: 'composer_story' };
     await page.getByLabel('Story input', { exact: true }).fill('Retain this composer draft.');
     await page.getByRole('status', { name: 'Draft status' }).getByText('Draft saved · Not accepted story.', { exact: true }).waitFor();
@@ -72,7 +72,7 @@ export async function exerciseAuthorNotes(browser, base, artifacts)
     }
     const save = async (target = page) =>
     {
-      await target.getByRole('button', { name: 'Save narration settings', exact: true }).click();
+      await target.getByRole('button', { name: 'Save author notes', exact: true }).click();
       await target.getByRole('region', { name: 'Narration style', exact: true }).waitFor({ state: 'detached' });
     };
     const generate = () => page.getByRole('button', { name: 'Generate continuation', exact: true }).click();
@@ -94,8 +94,7 @@ export async function exerciseAuthorNotes(browser, base, artifacts)
     const firstNotes = 'Keep the harbour fog thick.\nNever name the watcher.';
     await page.getByLabel('Author notes', { exact: true }).fill(firstNotes);
     await save();
-    let saved = await notes();
-    assert.equal(saved.revision, 1);
+    const saved = await notes();
     assert.equal(saved.notes, firstNotes);
     assert.deepEqual(await read(), accepted, 'Saving notes creates no turn, passage or story revision');
     assert.deepEqual(await call('ReadDraft', draft), savedDraft, 'Saving notes creates no draft and leaves the composer draft unchanged');
@@ -122,7 +121,7 @@ export async function exerciseAuthorNotes(browser, base, artifacts)
 
     // Editing notes after an attempt keeps that captured attempt's snapshot.
     const editedNotes = 'A later direction that must not rewrite the captured attempt.';
-    await call('SaveAuthorNotes', { ...request, expectedRevision: 1, notes: editedNotes });
+    await call('SaveAuthorNotes', { ...request, notes: editedNotes });
     assert.equal((await notes()).notes, editedNotes);
     assert.equal(await details.locator('.author-notes-guidance').innerText(), firstNotes, 'A captured attempt keeps its own notes snapshot');
     assert.equal(requests.at(-1).messages[0].content, body.messages[0].content);
@@ -130,9 +129,8 @@ export async function exerciseAuthorNotes(browser, base, artifacts)
     await dismiss();
 
     // Empty notes add no prompt text and the inspector says so explicitly.
-    await call('SaveAuthorNotes', { ...request, expectedRevision: 2, notes: '' });
-    const cleared = await notes();
-    assert.equal(cleared.revision, 3);
+    await call('SaveAuthorNotes', { ...request, notes: '' });
+    assert.deepEqual(await notes(), empty);
     await generate();
     await proposal.waitFor();
     body = requests.at(-1);
@@ -142,28 +140,46 @@ export async function exerciseAuthorNotes(browser, base, artifacts)
     assert.match(await details.innerText(), /No author notes were sent with this attempt\./, 'A fresh empty attempt has an explicit empty state');
     await dismiss();
 
-    // A stale notes form cannot silently overwrite a newer tab and retains the player's text.
-    await call('SaveAuthorNotes', { ...request, expectedRevision: 3, notes: firstNotes });
+    // The latest notes save wins across tabs even when the note or style shown in a tab is older.
+    await call('SaveAuthorNotes', { ...request, notes: firstNotes });
     await openShelf();
     const other = await context.newPage();
     other.on('pageerror', error => errors.push(error.message));
     await other.goto(page.url(), { waitUntil: 'networkidle' });
     await openShelf(other);
+    await other.getByLabel('Tone', { exact: true }).fill('A newer style from another tab.');
+    await other.getByRole('button', { name: 'Save narration settings', exact: true }).click();
+    await other.getByRole('region', { name: 'Narration style', exact: true }).waitFor({ state: 'detached' });
+    await openShelf(other);
     await other.getByLabel('Author notes', { exact: true }).fill('A newer direction from another tab.');
     await save(other);
     assert.equal((await notes()).notes, 'A newer direction from another tab.');
-    await page.getByLabel('Author notes', { exact: true }).fill('Stale retained notes.');
+    await page.getByLabel('Author notes', { exact: true }).fill('Latest notes saved from the first tab.');
+    await save();
+    assert.equal((await notes()).notes, 'Latest notes saved from the first tab.');
+    const savedStyle = await call('ReadNarration');
+    assert.equal(savedStyle.style.tone, 'A newer style from another tab.', 'A notes-only save leaves the newer style intact');
+
+    // A style conflict and style reload both preserve unsaved author notes.
+    await openShelf();
+    const freshStyle = { ...savedStyle.style, tone: 'A second style change from another tab.' };
+    await other.evaluate(value => window.wails.Call.ByName('main.LibraryService.SaveNarration', value), {
+      ...request, expectedRevision: savedStyle.revision, style: freshStyle
+    });
+    const retainedNotes = 'Retained through a style conflict and uncertain notes save.';
+    await page.getByLabel('Author notes', { exact: true }).fill(retainedNotes);
+    await page.getByLabel('Tone', { exact: true }).fill('A conflicting local style.');
     await page.getByRole('button', { name: 'Save narration settings', exact: true }).click();
-    await page.getByRole('alert').filter({ hasText: 'changed elsewhere' }).waitFor();
-    assert.equal(await page.getByLabel('Author notes', { exact: true }).inputValue(), 'Stale retained notes.', 'The stale form retains the player text');
-    assert.equal((await notes()).notes, 'A newer direction from another tab.', 'A stale save cannot overwrite newer notes');
+    await page.getByRole('alert').filter({ hasText: 'Narration settings changed elsewhere' }).waitFor();
+    assert.equal((await notes()).notes, 'Latest notes saved from the first tab.', 'A style save never submits notes');
     await page.getByRole('button', { name: 'Reload settings', exact: true }).click();
-    await page.waitForFunction(() => document.querySelector('#narration-author-notes')?.value === 'A newer direction from another tab.');
-    await openNotes();
+    await page.waitForFunction(tone => document.querySelector('#narration-tone')?.value === tone, freshStyle.tone);
+    assert.equal(await page.getByLabel('Author notes', { exact: true }).inputValue(), retainedNotes);
     await other.close();
 
-    // Drop the SaveAuthorNotes reply after the real write; an identical retry resolves it without another revision.
-    await page.getByLabel('Author notes', { exact: true }).fill('Retained through an uncertain notes save.');
+    // A failed notes response retains the edited text. A confirmed retry leaves unsaved style edits in the form.
+    const localTone = 'An unsaved style edit alongside notes.';
+    await page.getByLabel('Tone', { exact: true }).fill(localTone);
     let dropped = false;
     await page.route('**/wails/runtime', async route =>
     {
@@ -176,15 +192,26 @@ export async function exerciseAuthorNotes(browser, base, artifacts)
       }
       await route.continue();
     });
-    await page.getByRole('button', { name: 'Save narration settings', exact: true }).click();
+    await page.getByRole('button', { name: 'Save author notes', exact: true }).click();
     await page.getByRole('alert').filter({ hasText: 'notes save could not be confirmed' }).waitFor();
     assert.equal(dropped, true);
     const uncertain = await notes();
-    assert.equal(uncertain.notes, 'Retained through an uncertain notes save.');
-    await save();
+    assert.equal(uncertain.notes, retainedNotes);
+    await page.getByRole('button', { name: 'Save author notes', exact: true }).click();
+    await page.getByRole('button', { name: 'Save author notes', exact: true }).filter({ visible: true }).waitFor();
+    await page.waitForFunction(() => document.querySelector('#narration-style-panel fieldset')?.disabled === false &&
+      document.querySelector('.author-notes-actions button')?.disabled === true);
     await page.unroute('**/wails/runtime');
-    assert.deepEqual(await notes(), uncertain, 'An identical uncertain-save retry adds no revision');
+    assert.deepEqual(await notes(), uncertain, 'An identical retry keeps the same latest value');
+    assert.equal(await page.getByLabel('Tone', { exact: true }).inputValue(), localTone);
+    assert.equal((await call('ReadNarration')).style.tone, freshStyle.tone, 'Saving notes leaves unsaved style edits intact');
+    await page.getByRole('button', { name: 'Save narration settings', exact: true }).click();
+    await page.getByRole('region', { name: 'Narration style', exact: true }).waitFor({ state: 'detached' });
+    assert.equal((await call('ReadNarration')).style.tone, localTone);
     assert.deepEqual(await read(), accepted);
+
+    await assert.rejects(call('SaveAuthorNotes', { ...request, notes: '\ud800' }), /invalid_request/);
+    assert.deepEqual(await notes(), uncertain, 'Malformed Unicode cannot overwrite the stored note');
 
     // Read failure blocks provider submission and retains the composer.
     await page.getByLabel('Story input', { exact: true }).fill('Keep after notes failure.');
@@ -208,7 +235,7 @@ export async function exerciseAuthorNotes(browser, base, artifacts)
       await page.route('**/wails/runtime', async route =>
       {
         if (route.request().postDataJSON()?.args?.methodName !== 'main.LibraryService.ReadAuthorNotes') return route.continue();
-        await route.fulfill({ json: { ...request, revision: 6, notes: invalidNotes } });
+        await route.fulfill({ json: { ...request, notes: invalidNotes } });
       });
       const before = requests.length;
       await generate();
@@ -247,8 +274,8 @@ export async function exerciseAuthorNotes(browser, base, artifacts)
     // Each attempt reads current saved notes, including Retry without a reload.
     await generate();
     await proposal.waitFor();
-    assert.ok(requests.at(-1).messages[0].content.endsWith(notesSection('Retained through an uncertain notes save.')));
-    await call('SaveAuthorNotes', { ...request, expectedRevision: (await notes()).revision, notes: 'A direction for Retry.' });
+    assert.ok(requests.at(-1).messages[0].content.endsWith(notesSection(retainedNotes)));
+    await call('SaveAuthorNotes', { ...request, notes: 'A direction for Retry.' });
     await page.getByRole('button', { name: 'Retry', exact: true }).click();
     await proposal.waitFor();
     assert.ok(requests.at(-1).messages[0].content.endsWith(notesSection('A direction for Retry.')), 'Retry reads then-current notes');
@@ -278,7 +305,7 @@ export async function exerciseAuthorNotes(browser, base, artifacts)
     assert.equal((await notes()).notes, 'A direction for Retry.', 'Cancel left only the saved notes');
     await page.reload({ waitUntil: 'networkidle' });
     assert.deepEqual(errors, []);
-    console.log('PASS: per-adventure author notes shelf persistence, unchanged canon/draft, real request order, exact/empty inspector states, stale/uncertain save retention, read failure/Stop fencing and Retry freshness');
+    console.log('PASS: per-adventure author notes shelf persistence, latest save across tabs, independent style changes, strict Unicode, unchanged canon/draft, real request order, exact/empty inspector states, uncertain save retention, read failure/Stop fencing and Retry freshness');
   }
   finally
   {

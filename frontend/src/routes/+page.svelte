@@ -99,7 +99,7 @@
     catch
     {
       signal.throwIfAborted();
-      throw new ModelError('Author notes could not be read. Open Narration style and reload settings before trying again. Your input is retained; no model request was sent.');
+      throw new ModelError('Author notes could not be read. Open Narration style to check the saved notes before trying again. Your input is retained and no model request was sent.');
     }
     signal.throwIfAborted();
     return generateLocal(profile, request, signal, fetch, onProgress, onDiagnostics, narration.style, notes.notes);

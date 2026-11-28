@@ -17,9 +17,9 @@ const input = { input: 'The lantern crossed the quay.', history: ['A ship reache
 
 test('author notes accept one optional bounded freeform value and reject unknown or malformed wire shapes', () =>
 {
-  const saved: AuthorNotes = { ...request, revision: 2, notes };
+  const saved: AuthorNotes = { ...request, notes };
   assert.deepEqual(readAuthorNotes(saved, request), saved);
-  assert.deepEqual(readAuthorNotes({ ...request, revision: 0, notes: '' }, request), { ...request, revision: 0, notes: '' });
+  assert.deepEqual(readAuthorNotes({ ...request, notes: '' }, request), { ...request, notes: '' });
   assert.equal(readAuthorNotesText('a'.repeat(4000)), 'a'.repeat(4000));
   assert.equal(readAuthorNotesText('🦉'.repeat(4000)), '🦉'.repeat(4000));
   assert.equal(readAuthorNotesText('line one\r\nline two'), 'line one\r\nline two');
@@ -28,13 +28,10 @@ test('author notes accept one optional bounded freeform value and reject unknown
   for (const invalid of [
     { ...saved, notes: null },
     { ...saved, notes: 5 },
-    { ...saved, revision: -1 },
-    { ...saved, revision: 1.5 },
-    { ...saved, revision: '2' },
     { ...saved, epoch: 'wrong' },
     { ...saved, adventureId: 'wrong id' },
     { ...saved, extra: true },
-    { ...request, notes: 'missing revision' }
+    request
   ])
     assert.throws(() => readAuthorNotes(invalid, request));
 });
