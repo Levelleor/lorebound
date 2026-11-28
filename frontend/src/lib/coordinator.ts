@@ -1,5 +1,5 @@
 import { readCommitResult, readSnapshot, schemaVersion, type CommitRequest, type CommitResult, type EditRequest, type Library, type Snapshot } from './library.ts';
-import { documentToText, plainTextToDocument, reconstruct, type Projection, type Turn } from './story.ts';
+import { acceptedPromptHistory, documentToText, plainTextToDocument, reconstruct, type Projection, type Turn } from './story.ts';
 import { TextDraft, type DraftStatus, type DraftStorage } from './draft.ts';
 import { TextHistory, type TextSelection } from './textHistory.ts';
 import type { SaveRecovery } from './saveRecovery.ts';
@@ -482,7 +482,7 @@ export class StoryCoordinator
       this.generationStartedAt = performance.now();
       const text = await this.generator({
         input: documentToText(authored),
-        history: this.state.projection.passages.map(passage => documentToText(passage.body))
+        history: acceptedPromptHistory(this.state.projection)
       }, this.abort.signal, preview =>
       {
         if (this.live(sequence) && this.state.phase === 'generating') this.update({ preview });

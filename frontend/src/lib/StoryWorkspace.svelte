@@ -12,6 +12,7 @@
   import NarrationSettings from './NarrationSettings.svelte';
   import LorebookDrawer from './LorebookDrawer.svelte';
   import { autoSize } from './autoSize';
+  import type { Projection } from './story';
 
   export let snapshot: Snapshot;
   export let mobileHidden = false;
@@ -19,7 +20,9 @@
   export let sourceLabel = 'Simulated generation · No AI connected';
   export let canStream = false;
   let streamOutput = false;
-  export let onUpdate: (value: { snapshot: Snapshot; status: string; locked: boolean; modelLocked: boolean }) => void;
+  export let onUpdate: (value: {
+    snapshot: Snapshot; status: string; locked: boolean; modelLocked: boolean; draft: string | null; projection: Projection
+  }) => void;
   let coordinator: StoryCoordinator;
   let state: CoordinatorState | null = null;
   let input: HTMLTextAreaElement;
@@ -373,7 +376,8 @@
         : next.draftStatus === 'unsaved' ? 'Unsaved input'
         : next.input ? 'Draft saved' : '✓ Saved';
       onUpdate({ snapshot: next.snapshot, status, locked: narrationOpen || forkBusy || next.phase === 'saving' || next.phase === 'uncertain',
-        modelLocked: narrationOpen || forkBusy || next.phase !== 'idle' });
+        modelLocked: narrationOpen || forkBusy || next.phase !== 'idle',
+        draft: next.draftStatus === 'loading' ? null : next.input, projection: next.projection });
     };
     coordinator = new StoryCoordinator(snapshot, {
       storage: host,

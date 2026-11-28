@@ -68,6 +68,11 @@ export function documentToText(document: PassageDocument): string {
   return document.content.map(paragraph => paragraph.content.map(node => node.type === 'text' ? node.text : '\n').join('')).join('\n\n');
 }
 
+export function acceptedPromptHistory(projection: Projection): string[]
+{
+  return projection.passages.map(passage => documentToText(passage.body));
+}
+
 export function readTurns(value: unknown, version: number): Turn[]
 {
   if (!Array.isArray(value) || !Number.isSafeInteger(version) || value.length > version) throw new Error('unsupported_story_history');

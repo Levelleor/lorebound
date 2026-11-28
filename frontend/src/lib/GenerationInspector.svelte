@@ -58,7 +58,6 @@
         {/if}
       {:else}<p>No Lorebook entries were selected.</p>{/if}
     {/if}
-    <p>Model context capacity is unknown. {diagnostics.context ? 'Character limits do not measure model capacity.' : 'The browser sends the selected lore and writing guidance as provided.'}</p>
     <p class="usage-heading">Provider-reported tokens</p>
     {#if diagnostics.usage}
       <dl>
@@ -67,7 +66,7 @@
         <dt>Total tokens</dt><dd>{diagnostics.usage.total ?? 'Not reported'}</dd>
       </dl>
     {:else}
-      <p>No valid usage reported for this attempt. Token counts and costs are not estimated.</p>
+      <p>No valid usage reported for this attempt.</p>
     {/if}
     <p>Latest attempt in this workspace session.</p>
   </div>

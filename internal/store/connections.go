@@ -18,13 +18,15 @@ import (
 var ErrSettingsChanged = errors.New("model_settings_changed")
 
 type ModelProfile struct {
-	ID            string         `json:"id"`
-	Name          string         `json:"name"`
-	Kind          string         `json:"kind"`
-	BaseURL       string         `json:"baseUrl"`
-	Model         string         `json:"model"`
-	TimeoutMS     int            `json:"timeoutMs"`
-	ContextLimits *ContextLimits `json:"contextLimits,omitempty"`
+	ID                  string         `json:"id"`
+	Name                string         `json:"name"`
+	Kind                string         `json:"kind"`
+	BaseURL             string         `json:"baseUrl"`
+	Model               string         `json:"model"`
+	TimeoutMS           int            `json:"timeoutMs"`
+	ContextLimits       *ContextLimits `json:"contextLimits,omitempty"`
+	ContextWindowTokens *int           `json:"contextWindowTokens,omitempty"`
+	ReplyReserveTokens  *int           `json:"replyReserveTokens,omitempty"`
 }
 
 type ContextLimits struct {
@@ -125,6 +127,13 @@ func addContextLimits(tx *sql.Tx) error {
 	return err
 }
 
+func addContextBudget(tx *sql.Tx) error {
+	_, err := tx.Exec(`ALTER TABLE model_profiles ADD COLUMN context_window_tokens INTEGER;
+ ALTER TABLE model_profiles ADD COLUMN reply_reserve_tokens INTEGER;
+ PRAGMA user_version=12;`)
+	return err
+}
+
 func connectionsEpoch(tx *sql.Tx, req ConnectionsRequest) error {
 	if req.SchemaVersion != SchemaVersion || req.Epoch == "" {
 		return ErrInvalidRequest
@@ -147,7 +156,8 @@ func readConnections(ctx context.Context, tx *sql.Tx, req ConnectionsRequest) (C
 	if err := tx.QueryRowContext(ctx, `SELECT revision,mode,COALESCE(active_profile_id,'') FROM model_settings WHERE id=1`).Scan(&result.Revision, &result.Mode, &result.ActiveProfileID); err != nil {
 		return result, err
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT id,name,kind,base_url,model,timeout_ms,context_limits FROM model_profiles ORDER BY id`)
+	rows, err := tx.QueryContext(ctx, `SELECT id,name,kind,base_url,model,timeout_ms,context_limits,
+ context_window_tokens,reply_reserve_tokens FROM model_profiles ORDER BY id`)
 	if err != nil {
 		return result, err
 	}
@@ -155,7 +165,8 @@ func readConnections(ctx context.Context, tx *sql.Tx, req ConnectionsRequest) (C
 	for rows.Next() {
 		var profile ModelProfile
 		var limits sql.NullString
-		if err := rows.Scan(&profile.ID, &profile.Name, &profile.Kind, &profile.BaseURL, &profile.Model, &profile.TimeoutMS, &limits); err != nil {
+		if err := rows.Scan(&profile.ID, &profile.Name, &profile.Kind, &profile.BaseURL, &profile.Model, &profile.TimeoutMS, &limits,
+			&profile.ContextWindowTokens, &profile.ReplyReserveTokens); err != nil {
 			return result, err
 		}
 		if limits.Valid {
@@ -184,6 +195,17 @@ func (s *Store) ReadConnections(ctx context.Context, req ConnectionsRequest) (Co
 }
 
 func validProfile(profile ModelProfile) bool {
+	const maxModelContextTokens = 1000000000
+	capacity := maxModelContextTokens
+	if profile.ContextWindowTokens != nil {
+		capacity = *profile.ContextWindowTokens
+		if capacity < 1 || capacity > maxModelContextTokens {
+			return false
+		}
+	}
+	if profile.ReplyReserveTokens != nil && (*profile.ReplyReserveTokens < 0 || *profile.ReplyReserveTokens > capacity) {
+		return false
+	}
 	if !identifier.MatchString(profile.ID) || (profile.Kind != "llamacpp" && profile.Kind != "custom" && profile.Kind != "ollama" && profile.Kind != "lmstudio" && profile.Kind != "vllm") ||
 		(profile.ContextLimits != nil && !profile.ContextLimits.valid()) ||
 		!utf8.ValidString(profile.Name) || strings.TrimSpace(profile.Name) == "" || utf8.RuneCountInString(profile.Name) > 80 ||
@@ -250,8 +272,10 @@ func (s *Store) SaveConnections(ctx context.Context, req SaveConnectionsRequest)
 			}
 			limits = string(data)
 		}
-		if _, err = tx.ExecContext(ctx, `INSERT INTO model_profiles (id,name,kind,base_url,model,timeout_ms,context_limits) VALUES(?,?,?,?,?,?,?)`,
-			profile.ID, profile.Name, profile.Kind, profile.BaseURL, profile.Model, profile.TimeoutMS, limits); err != nil {
+		if _, err = tx.ExecContext(ctx, `INSERT INTO model_profiles
+ (id,name,kind,base_url,model,timeout_ms,context_limits,context_window_tokens,reply_reserve_tokens) VALUES(?,?,?,?,?,?,?,?,?)`,
+			profile.ID, profile.Name, profile.Kind, profile.BaseURL, profile.Model, profile.TimeoutMS, limits,
+			profile.ContextWindowTokens, profile.ReplyReserveTokens); err != nil {
 			return current, err
 		}
 	}

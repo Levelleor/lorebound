@@ -3,7 +3,7 @@
   import { host } from './host';
   import { schemaVersion } from './library';
   import { modelServers } from './modelServers';
-  import { discoverModels, endpointUrl, modelError, readProfile, testConnection, type Connections, type ModelProfile } from './models';
+  import { discoverModels, endpointUrl, maxModelContextTokens, modelError, readProfile, testConnection, type Connections, type ModelProfile } from './models';
   import { contextPresets, contextPresetLabels, contextSectionLabels, contextSections, maxContextCharacters,
     validContextLimit, type ContextLimits, type ContextSection } from './contextLimits';
 
@@ -19,6 +19,8 @@
   let model = '';
   let timeoutSeconds = 120;
   let contextLimits: ContextLimits | undefined;
+  let contextWindowTokens: number | undefined;
+  let replyReserveTokens: number | undefined;
   let contextSaving = false;
   let contextWrite: { limits: ContextLimits | undefined } | null = null;
   let busy = false;
@@ -36,6 +38,7 @@
   {
     if (baseUrl === modelServers[kind].baseUrl) baseUrl = modelServers[value].baseUrl;
     kind = value;
+    clearContextBudget();
     models = [];
     notice = '';
     error = '';
@@ -58,7 +61,15 @@
     model = profile?.model ?? '';
     timeoutSeconds = (profile?.timeoutMs ?? 120000) / 1000;
     contextLimits = profile?.contextLimits;
+    contextWindowTokens = profile?.contextWindowTokens;
+    replyReserveTokens = profile?.replyReserveTokens;
     contextWrite = null;
+  }
+
+  function clearContextBudget()
+  {
+    contextWindowTokens = undefined;
+    replyReserveTokens = undefined;
   }
 
   async function load()
@@ -107,7 +118,9 @@
     {
       const profile = readProfile({ id: editingId || crypto.randomUUID(), name: name.trim(), kind,
         baseUrl: endpointUrl(baseUrl.trim()), model: model.trim(), timeoutMs: timeoutSeconds * 1000,
-        ...(contextLimits ? { contextLimits } : {}) });
+        ...(contextLimits ? { contextLimits } : {}),
+        ...(contextWindowTokens === undefined ? {} : { contextWindowTokens }),
+        ...(replyReserveTokens === undefined ? {} : { replyReserveTokens }) });
       // Keep a new identity across an uncertain save reply.
       editingId = profile.id;
       const profiles = settings.profiles.filter(value => value.id !== profile.id);
@@ -290,10 +303,10 @@
         {#each Object.entries(modelServers) as [value, server]}<option value={value}>{server.label}</option>{/each}
       </select>
       <label for="model-base-url">API base URL</label>
-      <input id="model-base-url" bind:value={baseUrl} maxlength="2048" required disabled={busy || probing} spellcheck="false" autocomplete="off" />
+      <input id="model-base-url" bind:value={baseUrl} oninput={clearContextBudget} maxlength="2048" required disabled={busy || probing} spellcheck="false" autocomplete="off" />
       <p class="supporting">{modelServers[kind].guidance} Do not put keys, passwords or secret parameters in these fields.</p>
       <label for="model-id">Model ID</label>
-      <input id="model-id" bind:value={model} list="discovered-models" maxlength="200" required disabled={busy || probing} autocomplete="off" spellcheck="false" />
+      <input id="model-id" bind:value={model} oninput={clearContextBudget} list="discovered-models" maxlength="200" required disabled={busy || probing} autocomplete="off" spellcheck="false" />
       <datalist id="discovered-models">{#each models as id}<option value={id}></option>{/each}</datalist>
       <div class="probe-row"><button type="button" disabled={busy || probing} onclick={discover}>{probing && !testing ? 'Reading models…' : 'Discover models'}</button><span class="supporting">Optional · Does not generate or send story text.</span></div>
       <label for="model-timeout">Request timeout (seconds)</label>
@@ -334,6 +347,19 @@
         {:else if contextWrite}
           <button class="quiet" type="button" disabled={busy || probing} onclick={saveContext}>Retry context save</button>
         {/if}
+        <div class="context-limits">
+          <div>
+            <label for="context-window">Model context limit (tokens)</label>
+            <input id="context-window" type="number" min="1" max={maxModelContextTokens} step="1"
+              bind:value={contextWindowTokens} disabled={busy || probing} placeholder="Unknown" />
+          </div>
+          <div>
+            <label for="reply-reserve">Reply allowance (tokens)</label>
+            <input id="reply-reserve" type="number" min="0" max={contextWindowTokens ?? maxModelContextTokens} step="1"
+              bind:value={replyReserveTokens} disabled={busy || probing} placeholder="Unknown" />
+          </div>
+        </div>
+        <p class="supporting">Enter the limit configured on your server and any reply space to reserve in the sidebar preview. Save and use the profile to apply these values.</p>
       </fieldset>
       <div class="dialog-actions"><button type="button" disabled={busy} onclick={() => dialog.close()}>Cancel</button><button class="primary" disabled={busy || probing} type="submit">Save and use profile</button></div>
       {#if settings.profiles.some(profile => profile.id === editingId)}<button class="quiet delete-profile" type="button" disabled={busy || probing} onclick={deleteProfile}>Delete profile</button>{/if}

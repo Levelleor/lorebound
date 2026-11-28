@@ -48,3 +48,6 @@ Remaining risk is scope size, not a missing dependency. This tracker stays broad
 
 ### N001
 Blocker re-evaluated 2026-11-11: the named DEV-004 provider-context interface is delivered (models.ts generateLocal layered system message with narrationInstructions ordering, generationDiagnostics + GenerationInspector transmitted-attempt capture, Go narration_settings epoch/revision fencing from STORY-0024..STORY-0031). blocked set false. Delivery continues through bounded child STORY-0039 (per-adventure author notes + transmitted-text inspection); Lorebook, conditional activation, summaries, episodic memory and token-budget measurement remain unselected.
+
+### N002
+The owner selected the Context sidebar as the primary surface for the next-prompt token preview, following the supplied Command Citadel screenshot. [STORY-0042](STORY-0042-preview-the-next-story-prompt-in-the-context-sidebar.md) records this bounded follow-up to completed [STORY-0040](STORY-0040-manual-lorebook-entries-and-story-context-selection.md) and [STORY-0041](STORY-0041-character-limits-and-presets-for-story-context.md).

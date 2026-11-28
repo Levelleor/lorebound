@@ -6,11 +6,11 @@ import { schemaVersion } from './library.ts';
 import { isID, isObject, plainTextToDocument } from './story.ts';
 import type { GenerationInput } from './coordinator.ts';
 import type { DiagnosticsObserver, TokenUsage } from './generationDiagnostics.ts';
-import { narrationInstructions, type NarrationStyle } from './narration.ts';
-import { authorNotesGuidance, readAuthorNotesText } from './authorNotes.ts';
+import type { NarrationStyle } from './narration.ts';
+import { readAuthorNotesText } from './authorNotes.ts';
 import type { LoreEntry } from './lorebook.ts';
 import { contextSectionLabels, isContextLimits, type ContextLimits } from './contextLimits.ts';
-import { prepareStoryPrompt } from './storyPrompt.ts';
+import { prepareLocalStoryPrompt } from './storyPrompt.ts';
 
 export interface ModelProfile
 {
@@ -21,7 +21,11 @@ export interface ModelProfile
   model: string;
   timeoutMs: number;
   contextLimits?: ContextLimits;
+  contextWindowTokens?: number;
+  replyReserveTokens?: number;
 }
+
+export const maxModelContextTokens = 1000000000;
 
 export interface Connections
 {
@@ -43,7 +47,8 @@ export function modelError(cause: unknown): string
 
 export function readProfile(value: unknown): ModelProfile
 {
-  if (!isObject(value) || Object.keys(value).length !== (Object.hasOwn(value, 'contextLimits') ? 7 : 6) || !isID(value.id)
+  if (!isObject(value) || Object.keys(value).some(key => !['id', 'name', 'kind', 'baseUrl', 'model', 'timeoutMs',
+    'contextLimits', 'contextWindowTokens', 'replyReserveTokens'].includes(key)) || !isID(value.id)
     || !isModelServer(value.kind)
     || typeof value.name !== 'string' || !value.name.trim() || !value.name.isWellFormed() || [...value.name].length > 80
     || typeof value.model !== 'string' || !value.model.trim() || !value.model.isWellFormed() || [...value.model].length > 200
@@ -51,6 +56,11 @@ export function readProfile(value: unknown): ModelProfile
     throw new ModelError('Use a name up to 80 characters, model ID up to 200 characters and timeout from 1 to 300 seconds.');
   if (Object.hasOwn(value, 'contextLimits') && !isContextLimits(value.contextLimits))
     throw new ModelError('The Story context limits are invalid. Check the profile’s character limits.');
+  if ((Object.hasOwn(value, 'contextWindowTokens') && (!Number.isInteger(value.contextWindowTokens)
+    || Number(value.contextWindowTokens) < 1 || Number(value.contextWindowTokens) > maxModelContextTokens))
+    || (Object.hasOwn(value, 'replyReserveTokens') && (!Number.isInteger(value.replyReserveTokens)
+      || Number(value.replyReserveTokens) < 0 || Number(value.replyReserveTokens) > (Number(value.contextWindowTokens) || maxModelContextTokens))))
+    throw new ModelError('Enter a positive model context limit and a reply allowance within that limit, in whole tokens.');
   endpointUrl(value.baseUrl);
   return value as unknown as ModelProfile;
 }
@@ -232,9 +242,7 @@ export async function testConnection(profile: ModelEndpoint & Pick<ModelProfile,
 export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch, onProgress?: (text: string) => void, onDiagnostics?: DiagnosticsObserver, style?: NarrationStyle, authorNotes?: string, loreEntries?: readonly LoreEntry[]): Promise<string>
 {
   const selected = structuredClone(readProfile(profile));
-  const narration = style ? narrationInstructions(style) : '';
-  const notes = authorNotes === undefined ? '' : authorNotesGuidance(authorNotes);
-  const { messages, lorebook, context } = prepareStoryPrompt(input, narration, notes, loreEntries, selected.contextLimits);
+  const { messages, lorebook, context, narration } = prepareLocalStoryPrompt(input, style, authorNotes, loreEntries, selected.contextLimits);
   const details = {
     profileName: selected.name,
     server: selected.kind,

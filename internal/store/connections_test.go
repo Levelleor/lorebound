@@ -139,6 +139,9 @@ func TestConnectionsValidationAndAtomicRollback(t *testing.T) {
 	}
 }
 
+const dropContextBudgetColumns = `ALTER TABLE model_profiles DROP COLUMN context_window_tokens;
+ ALTER TABLE model_profiles DROP COLUMN reply_reserve_tokens; `
+
 func TestContextLimitsUpgradeAndPersistence(t *testing.T) {
 	s, path, library := createStory(t)
 	ctx := context.Background()
@@ -150,7 +153,7 @@ func TestContextLimitsUpgradeAndPersistence(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := s.db.Exec(`ALTER TABLE model_profiles DROP COLUMN context_limits; PRAGMA user_version=10`); err != nil {
+	if _, err := s.db.Exec(dropContextBudgetColumns + `ALTER TABLE model_profiles DROP COLUMN context_limits; PRAGMA user_version=10`); err != nil {
 		t.Fatal(err)
 	}
 	s.Close()
@@ -184,6 +187,50 @@ func TestContextLimitsUpgradeAndPersistence(t *testing.T) {
 	req.Profiles[0].ContextLimits = nil
 	if updated, err := s.SaveConnections(ctx, req); err != nil || !reflect.DeepEqual(updated.Profiles, req.Profiles) {
 		t.Fatal("turning limits off did not clear the current settings", updated, err)
+	}
+}
+
+func TestContextBudgetUpgradeAndPersistence(t *testing.T) {
+	s, path, library := createStory(t)
+	ctx := context.Background()
+	req := modelSettings(library.Epoch)
+	req.Profiles[0].ContextLimits = &ContextLimits{Preset: "custom", PlayerInput: 2000}
+	before, err := s.SaveConnections(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := s.db.Exec(dropContextBudgetColumns + `PRAGMA user_version=11`); err != nil {
+		t.Fatal(err)
+	}
+	s.Close()
+	s, err = Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if after, err := s.ReadConnections(ctx, req.ConnectionsRequest); err != nil || !reflect.DeepEqual(after, before) {
+		t.Fatal("upgrading for token budgets changed saved profiles", after, err)
+	}
+
+	capacity, above, none := 12000, 12001, 0
+	req.ExpectedRevision = before.Revision
+	req.Profiles[0].ContextWindowTokens = &capacity
+	req.Profiles[0].ReplyReserveTokens = &above
+	if _, err := s.SaveConnections(ctx, req); !errors.Is(err, ErrInvalidRequest) {
+		t.Fatal("allowance above capacity was accepted", err)
+	}
+	req.Profiles[0].ReplyReserveTokens = &none
+	saved, err := s.SaveConnections(ctx, req)
+	if err != nil || !reflect.DeepEqual(saved.Profiles, req.Profiles) {
+		t.Fatal("capacity or explicit zero allowance was lost", saved, err)
+	}
+	s.Close()
+	s, err = Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer s.Close()
+	if reopened, err := s.ReadConnections(ctx, req.ConnectionsRequest); err != nil || !reflect.DeepEqual(reopened, saved) {
+		t.Fatal("token budget values did not survive reopening", reopened, err)
 	}
 }
 

@@ -5,10 +5,12 @@
   import '../lib/appearance.css';
   import StoryWorkspace from '../lib/StoryWorkspace.svelte';
   import ConnectionSettings from '../lib/ConnectionSettings.svelte';
+  import ContextSidebar from '../lib/ContextSidebar.svelte';
   import { ModelError, generateLocal, type Connections } from '../lib/models';
   import { simulatedGeneration, type GenerationInput } from '../lib/coordinator';
   import type { DiagnosticsObserver } from '../lib/generationDiagnostics';
   import { schemaVersion } from '../lib/library';
+  import type { Projection } from '../lib/story';
 
   let library: Library | null = null;
   let current: Snapshot | null = null;
@@ -26,6 +28,8 @@
   let connections: Connections | null = null;
   let modelSequence = 0;
   let pendingModelRead: AbortSignal | null = null;
+  let promptDraft: string | null = null;
+  let promptProjection: Projection | null = null;
   $: activeProfile = connections?.profiles.find(profile => profile.id === connections?.activeProfileId);
   $: narrationLabel = pendingModelRead ? 'Reading model settings…'
     : !connections ? 'Models · Settings unavailable'
@@ -42,6 +46,20 @@
       if (sequence === modelSequence && library?.epoch === epoch) connections = value;
     }
     catch { /* Model settings failures do not block manual library work. */ }
+  }
+
+  async function refreshPreviewModels(): Promise<void>
+  {
+    const epoch = library?.epoch;
+    if (!epoch) return;
+    const sequence = modelSequence;
+    try
+    {
+      const value = await host.readConnections(epoch);
+      if (sequence === modelSequence && library?.epoch === epoch && value.revision > (connections?.revision ?? -1))
+        connections = value;
+    }
+    catch { /* Keep the last confirmed model settings until a read succeeds. */ }
   }
 
   async function narrate(request: GenerationInput, signal: AbortSignal, onProgress?: (text: string) => void, onDiagnostics?: DiagnosticsObserver): Promise<string>
@@ -76,7 +94,7 @@
     signal.throwIfAborted();
     if (sequence !== modelSequence || current?.adventure.id !== snapshot.adventure.id || library?.epoch !== snapshot.epoch)
       throw new DOMException('Generation abandoned.', 'AbortError');
-    connections = settings;
+    if (settings.revision >= (connections?.revision ?? -1)) connections = settings;
     if (settings.mode === 'simulation') return simulatedGeneration(request, signal);
     const profile = settings.profiles.find(profile => profile.id === settings.activeProfileId);
     if (!profile) throw new ModelError('Choose and save a local profile in Models before generating. Your input is retained.');
@@ -227,12 +245,20 @@
   <div class="workspace">
     {#key current.adventure.id}
       <StoryWorkspace snapshot={current} mobileHidden={mobileView !== 'story'} generateNarration={narrate} sourceLabel={narrationLabel} canStream={connections?.mode === 'local' && Boolean(activeProfile)}
-        onUpdate={(update) => { current = update.snapshot; storyStatus = update.status; storyLocked = update.locked; modelLocked = update.modelLocked; }} />
+        onUpdate={(update) =>
+        {
+          current = update.snapshot;
+          storyStatus = update.status;
+          storyLocked = update.locked;
+          modelLocked = update.modelLocked;
+          promptDraft = update.draft;
+          if (promptProjection !== update.projection) promptProjection = update.projection;
+        }} />
     {/key}
-    <aside class:mobile-hidden={mobileView !== 'world'} class="context-rail" aria-label="World context">
-      <div class="context-tabs"><span class="selected">Scene</span><span>Items</span><span>Lore</span><span>Context</span></div>
-      <div class="context-body"><p class="eyebrow">Current scene</p><h2>An unwritten world</h2><p>No characters or places recorded.</p></div>
-    </aside>
+    {#key current.epoch + ':' + current.adventure.id}
+      <ContextSidebar mobileHidden={mobileView !== 'world'} epoch={current.epoch} adventureId={current.adventure.id}
+        profile={activeProfile} draft={promptDraft} projection={promptProjection} onRefreshModels={refreshPreviewModels} />
+    {/key}
   </div>
 {:else}
   <main class="library-pane">
