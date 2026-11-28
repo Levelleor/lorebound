@@ -49,15 +49,10 @@ input::placeholder { color: var(--muted-foreground); }
 .story-footer { padding: 18px; border-top: 1px solid var(--border); text-align: center; background: var(--card); font-size: 12px; }
 .confirmed { color: var(--success); }
 .context-rail { width: 320px; flex-shrink: 0; border-left: 1px solid var(--sidebar-border); background: var(--sidebar); overflow: auto; }
-.context-tabs { display: flex; justify-content: space-around; border-bottom: 1px solid var(--sidebar-border); color: var(--muted-foreground); font-size: 12px; }
-.context-tabs span { padding: 18px 8px; }
-.context-tabs .selected { color: var(--primary); border-bottom: 2px solid var(--primary); }
-.context-body { padding: 24px; }
-.context-body p:last-child { color: var(--muted-foreground); line-height: 1.6; }
 .mobile-switch { display: none; }
 .error-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; background: var(--card); border-bottom: 1px solid oklch(.62 .17 28); padding: 12px 20px; }
 body:has(.error-banner) .workspace, body:has(.error-banner) .library-pane { height: auto; min-height: calc(100dvh - 120px); }
-@media (max-width: 1023px) { .mobile-switch { display: flex; justify-content: center; height: 44px; border-bottom: 1px solid var(--border); } .mobile-switch button { border: 0; border-radius: 0; min-width: 90px; } .mobile-switch button[aria-pressed='true'] { color: var(--primary); border-bottom: 2px solid var(--primary); } .workspace { height: calc(100dvh - 92px); } .workspace .mobile-hidden { display: none; } .context-rail { width: 100%; border-left: 0; } }
+@media (max-width: 1023px) { .mobile-switch { display: flex; justify-content: center; height: 44px; border-bottom: 1px solid var(--border); } .mobile-switch button { border: 0; border-radius: 0; min-width: 90px; } .mobile-switch button[aria-pressed='true'] { color: var(--primary); border-bottom: 2px solid var(--primary); } .workspace { height: calc(100dvh - 92px); } .workspace > .story-pane.mobile-hidden, .workspace > .context-rail.mobile-hidden { display: none; } .context-rail { width: 100%; border-left: 0; } }
 @media (max-width: 639px) { .reader { padding: 32px 24px; } h1 { font-size: 32px; } .topbar { padding: 0 14px; } .header-actions { gap: 6px; } .empty-story { padding: 40px 0; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } }
 

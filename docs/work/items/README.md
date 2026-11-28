@@ -43,3 +43,5 @@ Records are indexed here.
 - [STORY-0040: Manual Lorebook entries and Story context selection](STORY-0040-manual-lorebook-entries-and-story-context-selection.md)
 
 - [STORY-0041: Character limits and presets for Story context](STORY-0041-character-limits-and-presets-for-story-context.md)
+
+- [STORY-0042: Preview the next Story prompt in the Context sidebar](STORY-0042-preview-the-next-story-prompt-in-the-context-sidebar.md)
