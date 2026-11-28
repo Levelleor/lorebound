@@ -1,4 +1,21 @@
+import { isObject } from './story.ts';
+
 export class ModelError extends Error {}
+
+export function contextOverflow(value: unknown): ModelError | null
+{
+  const error = isObject(value) ? value.error : null;
+  const codes = isObject(error) ? [error.code, error.type] : [];
+  const message = isObject(error) ? error.message : error;
+  const exceeded = typeof message === 'string' && (
+    /(?:context (?:length|window|size|limit)|max(?:imum)? model len(?:gth)?).{0,120}(?:exceed|too (?:large|long)|only supports)/is.test(message)
+    || /(?:exceed|too (?:large|long)|greater than|larger than).{0,120}(?:context (?:length|window|size|limit)|max(?:imum)? model len(?:gth)?)/is.test(message)
+    || /maximum context length.{0,120}however,? you requested.{0,120}tokens/is.test(message)
+  );
+  return codes.includes('context_length_exceeded') || codes.includes('exceed_context_size') || exceeded
+    ? new ModelError('The server reported that the request exceeds the model’s context capacity. Include fewer Lorebook entries or use a model with a larger context window. Your input is retained.')
+    : null;
+}
 
 export function endpointUrl(value: string): string
 {
@@ -81,7 +98,13 @@ export async function requestValue<T>(profile: ModelEndpoint, path: string, sign
     combined.throwIfAborted();
     if (!response.ok)
     {
-      await response.body?.cancel();
+      if ([400, 413, 422].includes(response.status))
+      {
+        const error = contextOverflow(await readJson(response, combined).catch(() => null));
+        combined.throwIfAborted();
+        if (error) throw error;
+      }
+      else await response.body?.cancel();
       if (response.status === 401 || response.status === 403)
         throw new ModelError('The server requires access this connection cannot provide. Authenticated connections are not supported yet.');
       if (response.status === 404)

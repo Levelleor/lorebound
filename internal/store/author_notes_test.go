@@ -186,7 +186,7 @@ func TestAuthorNotesUpgradeAndRollback(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if _, err := s.db.Exec(`DROP TABLE author_notes`); err != nil {
+			if _, err := s.db.Exec(`DROP TABLE lore_entries; DROP TABLE author_notes`); err != nil {
 				t.Fatal(err)
 			}
 			wantNotes := ""

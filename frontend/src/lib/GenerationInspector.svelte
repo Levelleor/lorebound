@@ -25,7 +25,17 @@
     <p class="usage-heading">Author notes</p>
     {#if diagnostics.authorNotes?.trim()}<pre class="author-notes-guidance">{diagnostics.authorNotes}</pre>
     {:else}<p>No author notes were sent with this attempt.</p>{/if}
-    <p>Writing guidance is best-effort. Model context capacity is unknown; no automatic trimming or token-budget measurement is performed, and author notes are not a token-budgeted context selection.</p>
+    {#if diagnostics.lorebook}
+      <p class="usage-heading">Lorebook entries requested</p>
+      {#if diagnostics.lorebook.requested.length}
+        <ul class="lore-requested">
+          {#each diagnostics.lorebook.requested as entry}<li>{entry.title} · {entry.kind}</li>{/each}
+        </ul>
+        <p class="usage-heading">Lorebook text sent</p>
+        <pre class="lorebook-guidance">{diagnostics.lorebook.text}</pre>
+      {:else}<p>No Lorebook entries were selected or sent with this attempt.</p>{/if}
+    {/if}
+    <p>Model context capacity is unknown. The browser sends the selected lore and writing guidance as provided.</p>
     <p class="usage-heading">Provider-reported tokens</p>
     {#if diagnostics.usage}
       <dl>
@@ -75,6 +85,13 @@
   dd
   {
     margin: 0;
+    color: var(--foreground);
+  }
+
+  .lore-requested
+  {
+    margin: 0;
+    padding-left: 20px;
     color: var(--foreground);
   }
 

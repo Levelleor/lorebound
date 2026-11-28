@@ -1,4 +1,5 @@
 import type { ModelServer } from './modelServers.ts';
+import type { LoreContext } from './lorebook.ts';
 
 export interface TokenUsage
 {
@@ -17,6 +18,7 @@ export interface GenerationDetails
   usage: TokenUsage | null;
   narration?: string;
   authorNotes?: string;
+  lorebook?: LoreContext;
 }
 
 export interface GenerationDiagnostics extends GenerationDetails

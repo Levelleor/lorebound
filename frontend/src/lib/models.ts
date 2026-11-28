@@ -1,4 +1,4 @@
-import { ModelError, endpointUrl, readJson, requestValue, type ModelEndpoint } from './modelTransport.ts';
+import { ModelError, contextOverflow, endpointUrl, readJson, requestValue, type ModelEndpoint } from './modelTransport.ts';
 import { discoverOllamaModels, generateOllama, testOllamaConnection } from './ollama.ts';
 import { isModelServer, type ModelServer } from './modelServers.ts';
 export { ModelError, endpointUrl } from './modelTransport.ts';
@@ -8,6 +8,7 @@ import type { GenerationInput } from './coordinator.ts';
 import type { DiagnosticsObserver, TokenUsage } from './generationDiagnostics.ts';
 import { narrationInstructions, type NarrationStyle } from './narration.ts';
 import { authorNotesGuidance, readAuthorNotesText } from './authorNotes.ts';
+import { loreContext, type LoreEntry } from './lorebook.ts';
 
 export interface ModelProfile
 {
@@ -92,19 +93,21 @@ async function readContinuationStream(response: Response, signal: AbortSignal, o
   function dispatch(): void
   {
     if (!data.length) { event = ''; return; }
-    if (event && event !== 'message') throw invalid();
+    const frameEvent = event;
     const payload = data.join('\n');
     data = [];
     event = '';
     if (payload === '[DONE]')
     {
-      if (!stopped) throw invalid();
+      if (!stopped || (frameEvent && frameEvent !== 'message')) throw invalid();
       plainTextToDocument(text);
       completed = true;
       return;
     }
     const value: unknown = JSON.parse(payload);
-    if (!isObject(value) || value.error || !Array.isArray(value.choices)) throw invalid();
+    const overflow = contextOverflow(value);
+    if (overflow) throw overflow;
+    if ((frameEvent && frameEvent !== 'message') || !isObject(value) || value.error || !Array.isArray(value.choices)) throw invalid();
     if (value.usage !== undefined) usage = readUsage(value.usage);
     // Compatible servers may send a final usage-only chunk. It is not prose.
     if (value.choices.length === 0 && stopped && value.usage !== undefined) return;
@@ -221,13 +224,13 @@ export async function testConnection(profile: ModelEndpoint & Pick<ModelProfile,
   return 'complete';
 }
 
-export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch, onProgress?: (text: string) => void, onDiagnostics?: DiagnosticsObserver, style?: NarrationStyle, authorNotes?: string): Promise<string>
+export async function generateLocal(profile: ModelProfile, input: GenerationInput, signal: AbortSignal, fetcher: typeof fetch = fetch, onProgress?: (text: string) => void, onDiagnostics?: DiagnosticsObserver, style?: NarrationStyle, authorNotes?: string, loreEntries?: readonly LoreEntry[]): Promise<string>
 {
   const selected = structuredClone(readProfile(profile));
   const narration = style ? narrationInstructions(style) : '';
-  // Fixed order: current narration settings, then author notes, then accepted history and player input.
   const notes = authorNotes === undefined ? '' : authorNotesGuidance(authorNotes);
-  const guidance = [narration, notes].filter(Boolean).join('\n\n');
+  const lorebook = loreEntries === undefined ? undefined : loreContext(loreEntries);
+  const guidance = [narration, notes, lorebook?.text].filter(Boolean).join('\n\n');
   const details = {
     profileName: selected.name,
     server: selected.kind,
@@ -236,9 +239,15 @@ export async function generateLocal(profile: ModelProfile, input: GenerationInpu
     timeoutMs: selected.timeoutMs,
     usage: null,
     ...(style ? { narration } : {}),
-    ...(authorNotes === undefined ? {} : { authorNotes: readAuthorNotesText(authorNotes) })
+    ...(authorNotes === undefined ? {} : { authorNotes: readAuthorNotesText(authorNotes) }),
+    ...(lorebook ? { lorebook } : {})
   };
-  onDiagnostics?.(details);
+  const dispatch: typeof fetch = (url, options) =>
+  {
+    const response = fetcher(url, options);
+    onDiagnostics?.(details);
+    return response;
+  };
   const body = {
     model: selected.model,
     stream: Boolean(onProgress),
@@ -250,17 +259,19 @@ export async function generateLocal(profile: ModelProfile, input: GenerationInpu
   };
   if (selected.kind === 'ollama')
   {
-    const result = await generateOllama(selected, body, signal, fetcher, onProgress);
+    const result = await generateOllama(selected, body, signal, dispatch, onProgress);
     onDiagnostics?.({ ...details, usage: result.usage });
     return result.text;
   }
   if (onProgress)
   {
-    const result = await requestValue(selected, 'chat/completions', signal, (response, activeSignal) => readContinuationStream(response, activeSignal, onProgress), body, fetcher);
+    const result = await requestValue(selected, 'chat/completions', signal, (response, activeSignal) => readContinuationStream(response, activeSignal, onProgress), body, dispatch);
     onDiagnostics?.({ ...details, usage: result.usage });
     return result.text;
   }
-  const value = await requestValue(selected, 'chat/completions', signal, readJson, body, fetcher);
+  const value = await requestValue(selected, 'chat/completions', signal, readJson, body, dispatch);
+  const overflow = contextOverflow(value);
+  if (overflow) throw overflow;
   const choice = isObject(value) && Array.isArray(value.choices) && value.choices.length === 1 ? value.choices[0] : null;
   const message = isObject(choice) && isObject(choice.message) ? choice.message : null;
   if (!isObject(choice) || choice.finish_reason !== 'stop' || !message || message.role !== 'assistant'
