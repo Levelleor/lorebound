@@ -139,6 +139,70 @@ func TestConnectionsValidationAndAtomicRollback(t *testing.T) {
 	}
 }
 
+func TestContextLimitsUpgradeAndPersistence(t *testing.T) {
+	s, path, library := createStory(t)
+	ctx := context.Background()
+	req := modelSettings(library.Epoch)
+	other := req.Profiles[0]
+	other.ID = "other"
+	req.Profiles = append(req.Profiles, other)
+	before, err := s.SaveConnections(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := s.db.Exec(`ALTER TABLE model_profiles DROP COLUMN context_limits; PRAGMA user_version=10`); err != nil {
+		t.Fatal(err)
+	}
+	s.Close()
+	s, err = Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if upgraded, err := s.ReadConnections(ctx, req.ConnectionsRequest); err != nil || !reflect.DeepEqual(upgraded, before) {
+		t.Fatal("previous profiles changed during upgrade", upgraded, err)
+	}
+
+	req.ExpectedRevision = before.Revision
+	req.Profiles[0].ContextLimits = &ContextLimits{Preset: "custom", AuthorNotes: 0, History: 24000, Lorebook: 180, PlayerInput: 2000}
+	saved, err := s.SaveConnections(ctx, req)
+	if err != nil || !reflect.DeepEqual(saved.Profiles, req.Profiles) {
+		t.Fatal("limits were not saved on the selected profile", saved, err)
+	}
+	if retried, err := s.SaveConnections(ctx, req); err != nil || !reflect.DeepEqual(retried, saved) {
+		t.Fatal("identical save retry changed current settings", retried, err)
+	}
+	s.Close()
+	s, err = Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer s.Close()
+	if reopened, err := s.ReadConnections(ctx, req.ConnectionsRequest); err != nil || !reflect.DeepEqual(reopened, saved) {
+		t.Fatal("limits did not survive restart", reopened, err)
+	}
+	req.ExpectedRevision = saved.Revision
+	req.Profiles[0].ContextLimits = nil
+	if updated, err := s.SaveConnections(ctx, req); err != nil || !reflect.DeepEqual(updated.Profiles, req.Profiles) {
+		t.Fatal("turning limits off did not clear the current settings", updated, err)
+	}
+}
+
+func TestContextLimitsRejectInvalidJSON(t *testing.T) {
+	for _, raw := range []string{
+		`{"preset":"global","authorNotes":0,"history":0,"lorebook":0,"playerInput":1}`,
+		`{"preset":"custom","authorNotes":null,"history":0,"lorebook":0,"playerInput":1}`,
+		`{"preset":"custom","history":0,"lorebook":0,"playerInput":1,"previous":{}}`,
+		`{"preset":"custom","authorNotes":0,"history":-1,"lorebook":0,"playerInput":1}`,
+		`{"preset":"custom","authorNotes":0,"history":0,"lorebook":1000001,"playerInput":1}`,
+		`{"preset":"custom","authorNotes":0,"history":0,"lorebook":0,"playerInput":0}`,
+	} {
+		var limits ContextLimits
+		if err := json.Unmarshal([]byte(raw), &limits); !errors.Is(err, ErrInvalidRequest) {
+			t.Fatalf("invalid context limits accepted: %s, %v", raw, err)
+		}
+	}
+}
+
 func TestConnectionsUpgradePreservesCanonAndRollsBackConflicts(t *testing.T) {
 	for _, conflict := range []bool{false, true} {
 		t.Run(map[bool]string{false: "v5", true: "rollback"}[conflict], func(t *testing.T) {

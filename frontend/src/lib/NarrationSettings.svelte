@@ -225,7 +225,7 @@
           <p>Saved for future AI continuations. Existing prose stays unchanged; Simulation ignores style and author notes.</p>
           <p>Genre and tone: up to 200 characters each. Custom instructions: up to 2,000. Author notes: up to 4,000. Sent in the order shown; conflicting creative directions are left for the model to interpret. No character selection is required.</p>
           <p>Author notes are optional current-adventure guidance for generated prose only. They cannot create or change accepted story, world state, drafts or the adventure version. Only current-adventure notes exist here: global, scene and template-derived notes are not implemented, and no note-conflict arbitration is performed. Adherence and context capacity are not guaranteed.</p>
-          <p>Adherence and length are best-effort, not decoding parameters or a token cap. Model context capacity is unknown; guidance is sent in full without automatic trimming. Inspect Generation details after a request.</p>
+          <p>Adherence and length are best-effort. If saved notes exceed the model profile’s character limit, generation waits for you to shorten the notes or raise the limit in Models. Inspect Generation details after an attempt.</p>
           <button class="quiet" type="button" onclick={() => void whileBusy(loadStyle)}>Reload settings</button>
         </details>
       {/if}

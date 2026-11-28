@@ -57,7 +57,7 @@ export async function exerciseLorebook(browser, base)
     const connectionTarget = { schemaVersion: 4, epoch: library.epoch };
     const connections = await call('ReadConnections', connectionTarget);
     const profile = { id: 'lorebook-fixture', name: 'Simulated Lorebook protocol', kind: 'custom', baseUrl: `http://127.0.0.1:${server.address().port}/v1`, model: 'fixture', timeoutMs: 10000 };
-    const configured = await call('SaveConnections', { ...connectionTarget, expectedRevision: connections.revision, mode: 'local', activeProfileId: profile.id, profiles: [...connections.profiles, profile] });
+    await call('SaveConnections', { ...connectionTarget, expectedRevision: connections.revision, mode: 'local', activeProfileId: profile.id, profiles: [...connections.profiles, profile] });
     await page.reload();
 
     const input = page.getByRole('textbox', { name: 'Story input', exact: true });
@@ -178,9 +178,127 @@ export async function exerciseLorebook(browser, base)
     await page.waitForLoadState('networkidle');
     assert.equal(requests.length, 3, 'Stop fences the late lore read');
     assert.equal(await input.inputValue(), draft.text);
+
+    const key = await call('SaveLoreEntry', { ...request, entry: {
+      id: 'key', revision: 0, kind: 'object', title: '🗝 Key', description: '', included: false
+    } });
+    await call('SaveLoreEntry', { ...request, entry: { ...key, included: true } });
+    const savedSettings = () => call('ReadConnections', connectionTarget);
+    const savedLimits = async () => (await savedSettings()).profiles.find(value => value.id === profile.id).contextLimits;
+    const preset = (target = page) => target.getByLabel('Context preset', { exact: true });
+    const limit = (name, target = page) => target.getByLabel(`${name} (characters)`, { exact: true });
+    const openModels = async (target = page) =>
+    {
+      await button('Model settings', target).click();
+      await preset(target).waitFor();
+    };
+    const closeModels = async (target = page) =>
+    {
+      await button('Close model settings', target).click();
+      await preset(target).waitFor({ state: 'detached' });
+    };
+    await openModels();
+    const models = page.getByRole('dialog', { name: 'Model connections' });
+    assert.equal(await preset().inputValue(), 'off');
+    for (const [width, theme] of [[390, 'bright'], [768, 'dark'], [1024, 'bright'], [1440, 'dark']])
+    {
+      await page.setViewportSize({ width, height: 800 });
+      await page.evaluate(value => document.documentElement.dataset.loreboundUi = value, theme);
+      assert.equal(await models.evaluate(element => element.scrollWidth <= element.clientWidth), true);
+    }
+    await preset().selectOption('medium');
+    await page.waitForFunction(() => !document.querySelector('[aria-label="Close model settings"]').disabled);
+    const medium = await savedLimits();
+    assert.equal(medium.preset, 'medium');
+    assert.equal(Number(await limit('Author notes').inputValue()), medium.authorNotes);
+
+    const { promise: firstEdit, resolve: onFirstEdit } = Promise.withResolvers();
+    const { promise: releaseEdit, resolve: finishEdit } = Promise.withResolvers();
+    const delaySave = async route =>
+    {
+      if (route.request().postDataJSON()?.args?.methodName === 'main.LibraryService.SaveConnections')
+      {
+        onFirstEdit();
+        await releaseEdit;
+      }
+      await route.continue();
+    };
+    await page.route('**/wails/runtime', delaySave);
+    try
+    {
+      await limit('Lorebook').fill('120');
+      await firstEdit;
+      assert.equal(await preset().inputValue(), 'custom');
+      assert.equal(Number(await limit('Author notes').inputValue()), medium.authorNotes);
+      await limit('Accepted history').fill('34');
+      await limit('Player input').fill('4');
+    }
+    finally
+    {
+      finishEdit();
+      await page.unrouteAll({ behavior: 'wait' });
+    }
+    await closeModels();
+    const custom = { ...medium, preset: 'custom', history: 34, lorebook: 120, playerInput: 4 };
+    assert.deepEqual(await savedLimits(), custom, 'Rapid live edits persist together without a form save');
+
+    await page.reload();
+    await openModels();
+    assert.equal(await preset().inputValue(), 'custom');
+    assert.equal(await limit('Player input').inputValue(), '4');
+    await closeModels();
+    await button('Generate continuation').click();
+    await page.getByRole('alert').getByText(/player input section has .* its limit is 4/).waitFor();
+    assert.equal(requests.length, 3, 'Over-limit input never reaches the provider');
+    assert.equal(await input.inputValue(), draft.text);
+    await inspector.locator('summary').click();
+    await inspector.getByText(/No request was sent/).waitFor();
+    assert.equal(await inspector.locator('.lorebook-guidance').count(), 0);
+
+    await input.fill('🗝 Go');
+    await button('Generate continuation').click();
+    await proposal.waitFor();
+    const budgeted = await inspect();
+    assert.match(budgeted, /\[Object\] 🗝 Key/);
+    assert.doesNotMatch(budgeted, /Observatory|Secret Shoal/);
+    assert.ok(requests[3].messages[0].content.endsWith(budgeted));
+    assert.equal(await inspector.getByText('4 / 4 characters', { exact: true }).count(), 1);
+    await inspector.getByText('Lorebook entries skipped for space', { exact: true }).waitFor();
+    assert.equal((await call('ReadLorebook')).entries.filter(entry => entry.included).length, 2);
+
+    const settingsTab = await context.newPage();
+    settingsTab.on('pageerror', error => errors.push(error.message));
+    await settingsTab.goto(page.url());
+    await openModels(settingsTab);
+    await preset(settingsTab).selectOption('low');
+    await closeModels(settingsTab);
+    assert.equal((await savedLimits()).preset, 'low');
+    assert.notEqual((await savedLimits()).lorebook, custom.lorebook);
+    assert.equal(await inspect(), budgeted, 'Changing presets keeps the attempted snapshot intact');
+    await button('Retry').click();
+    await proposal.waitFor();
+    assert.match(await inspect(), /Observatory/);
+    assert.match(requests[4].messages[0].content, /Observatory/);
+    await button('Accept turn').click();
+    await page.locator('.accepted-turn').waitFor();
+
+    await openModels(settingsTab);
+    await limit('Accepted history', settingsTab).fill('34');
+    await closeModels(settingsTab);
+    await settingsTab.close();
+    await input.fill('Next.');
+    await button('Generate continuation').click();
+    await proposal.waitFor();
+    await inspect();
+    assert.equal(requests[5].messages[1].content, 'Accepted story so far:\n\nwing open.');
+    await inspector.getByText(/Older accepted history was trimmed/).waitFor();
+    overflow = true;
+    await button('Retry').click();
+    await page.getByRole('alert').getByText(/exceeds the model’s context capacity/).waitFor();
+    assert.equal(await input.inputValue(), 'Next.');
     assert.deepEqual(errors, []);
-    await call('SaveConnections', { ...connectionTarget, expectedRevision: configured.revision, mode: connections.mode, activeProfileId: connections.activeProfileId, profiles: connections.profiles });
-    console.log('PASS: real Lorebook drawer, SQLite saves, mock-provider request and inspector, cross-tab Retry, overflow, read failure and Stop');
+    await call('SaveConnections', { ...connectionTarget, expectedRevision: (await savedSettings()).revision, mode: connections.mode, activeProfileId: connections.activeProfileId, profiles: connections.profiles });
+    console.log('PASS: real Lorebook and context presets, SQLite saves, prompt limits and inspector with simulated provider replies, cross-tab Retry, overflow, read failure and Stop');
   }
   finally { await context.close(); await new Promise(resolve => server.close(resolve)); }
 }

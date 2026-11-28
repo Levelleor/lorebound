@@ -68,3 +68,5 @@ Records are indexed here.
 - [NOTE-0065: STORY-0012 supporting requirement and evidence detail](NOTE-0065-story-0012-supporting-requirement-and-evidence-detail.md)
 - [NOTE-0066: STORY-0013 supporting requirement and evidence detail](NOTE-0066-story-0013-supporting-requirement-and-evidence-detail.md)
 - [NOTE-0067: STORY-0030 supporting requirement and evidence detail](NOTE-0067-story-0030-supporting-requirement-and-evidence-detail.md)
+
+- [NOTE-0068: Estimated token usage in the Story context inspector](NOTE-0068-estimated-token-usage-in-the-story-context-inspector.md)

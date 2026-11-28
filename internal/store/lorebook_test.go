@@ -20,7 +20,7 @@ func TestLorebookUpgradePersistenceAndConflicts(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := s.db.Exec(`DROP TABLE lore_entries; PRAGMA user_version=9`); err != nil {
+	if _, err := s.db.Exec(`ALTER TABLE model_profiles DROP COLUMN context_limits; DROP TABLE lore_entries; PRAGMA user_version=9`); err != nil {
 		t.Fatal(err)
 	}
 	s.Close()

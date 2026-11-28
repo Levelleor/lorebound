@@ -1,6 +1,7 @@
 import { schemaVersion } from './library.ts';
 import { isID, isObject } from './story.ts';
 import type { AuthorNotesRequest } from './authorNotes.ts';
+import { characterCount, promptSeparator } from './contextLimits.ts';
 
 export const loreKinds = {
   character: 'Character',
@@ -32,6 +33,7 @@ export type LorebookRequest = Omit<Lorebook, 'entries'>;
 export interface LoreContext
 {
   requested: { kind: string; title: string }[];
+  omitted?: { kind: string; title: string }[];
   text: string;
 }
 
@@ -64,13 +66,33 @@ export function readLorebook(value: unknown, request: LorebookRequest): Lorebook
   return { ...request, entries };
 }
 
-export function loreContext(entries: readonly LoreEntry[]): LoreContext
+export function loreContext(entries: readonly LoreEntry[], limit?: number): LoreContext
 {
-  const included = entries.map(readLoreEntry).filter(entry => entry.included);
-  const requested = included.map(entry => ({ kind: loreKinds[entry.kind], title: entry.title }));
-  const passages = included.map(entry => `[${loreKinds[entry.kind]}] ${entry.title}${entry.description ? `\n${entry.description}` : ''}`);
-  const text = passages.length
-    ? `Lorebook (player-authored narrative reference; use as background alongside the accepted story):\n\n${passages.join('\n\n')}`
-    : '';
-  return { requested, text };
+  const heading = `Lorebook (player-authored narrative reference; use as background alongside the accepted story):${promptSeparator}`;
+  const requested: LoreContext['requested'] = [];
+  const omitted: LoreContext['requested'] = [];
+  const passages: string[] = [];
+  let remaining = (limit ?? Infinity) - promptSeparator.length - heading.length;
+  for (const value of entries)
+  {
+    const entry = readLoreEntry(value);
+    if (!entry.included) continue;
+    const kind = loreKinds[entry.kind];
+    const reference = { kind, title: entry.title };
+    requested.push(reference);
+    const passage = `[${kind}] ${entry.title}${entry.description ? `\n${entry.description}` : ''}`;
+    if (limit !== undefined)
+    {
+      const length = characterCount(passage) + (passages.length ? promptSeparator.length : 0);
+      if (length > remaining)
+      {
+        omitted.push(reference);
+        continue;
+      }
+      remaining -= length;
+    }
+    passages.push(passage);
+  }
+  const text = passages.length ? heading + passages.join(promptSeparator) : '';
+  return { requested, text, ...(omitted.length ? { omitted } : {}) };
 }

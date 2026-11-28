@@ -18,12 +18,51 @@ import (
 var ErrSettingsChanged = errors.New("model_settings_changed")
 
 type ModelProfile struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	Kind      string `json:"kind"`
-	BaseURL   string `json:"baseUrl"`
-	Model     string `json:"model"`
-	TimeoutMS int    `json:"timeoutMs"`
+	ID            string         `json:"id"`
+	Name          string         `json:"name"`
+	Kind          string         `json:"kind"`
+	BaseURL       string         `json:"baseUrl"`
+	Model         string         `json:"model"`
+	TimeoutMS     int            `json:"timeoutMs"`
+	ContextLimits *ContextLimits `json:"contextLimits,omitempty"`
+}
+
+type ContextLimits struct {
+	Preset      string `json:"preset"`
+	AuthorNotes int    `json:"authorNotes"`
+	History     int    `json:"history"`
+	Lorebook    int    `json:"lorebook"`
+	PlayerInput int    `json:"playerInput"`
+}
+
+func (limits ContextLimits) valid() bool {
+	const max = 1000000
+	return (limits.Preset == "low" || limits.Preset == "medium" || limits.Preset == "high" || limits.Preset == "custom") &&
+		limits.AuthorNotes >= 0 && limits.AuthorNotes <= max &&
+		limits.History >= 0 && limits.History <= max &&
+		limits.Lorebook >= 0 && limits.Lorebook <= max &&
+		limits.PlayerInput >= 1 && limits.PlayerInput <= max
+}
+
+func (limits *ContextLimits) UnmarshalJSON(data []byte) error {
+	type plain ContextLimits
+	var value plain
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&value); err != nil {
+		return ErrInvalidRequest
+	}
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil || len(fields) != 5 || !ContextLimits(value).valid() {
+		return ErrInvalidRequest
+	}
+	for _, name := range []string{"preset", "authorNotes", "history", "lorebook", "playerInput"} {
+		if raw, ok := fields[name]; !ok || bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+			return ErrInvalidRequest
+		}
+	}
+	*limits = ContextLimits(value)
+	return nil
 }
 
 type ConnectionsRequest struct {
@@ -81,6 +120,11 @@ func addConnections(tx *sql.Tx) error {
 	return err
 }
 
+func addContextLimits(tx *sql.Tx) error {
+	_, err := tx.Exec(`ALTER TABLE model_profiles ADD COLUMN context_limits TEXT; PRAGMA user_version=11;`)
+	return err
+}
+
 func connectionsEpoch(tx *sql.Tx, req ConnectionsRequest) error {
 	if req.SchemaVersion != SchemaVersion || req.Epoch == "" {
 		return ErrInvalidRequest
@@ -103,15 +147,23 @@ func readConnections(ctx context.Context, tx *sql.Tx, req ConnectionsRequest) (C
 	if err := tx.QueryRowContext(ctx, `SELECT revision,mode,COALESCE(active_profile_id,'') FROM model_settings WHERE id=1`).Scan(&result.Revision, &result.Mode, &result.ActiveProfileID); err != nil {
 		return result, err
 	}
-	rows, err := tx.QueryContext(ctx, `SELECT id,name,kind,base_url,model,timeout_ms FROM model_profiles ORDER BY id`)
+	rows, err := tx.QueryContext(ctx, `SELECT id,name,kind,base_url,model,timeout_ms,context_limits FROM model_profiles ORDER BY id`)
 	if err != nil {
 		return result, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var profile ModelProfile
-		if err := rows.Scan(&profile.ID, &profile.Name, &profile.Kind, &profile.BaseURL, &profile.Model, &profile.TimeoutMS); err != nil {
+		var limits sql.NullString
+		if err := rows.Scan(&profile.ID, &profile.Name, &profile.Kind, &profile.BaseURL, &profile.Model, &profile.TimeoutMS, &limits); err != nil {
 			return result, err
+		}
+		if limits.Valid {
+			var value ContextLimits
+			if err := json.Unmarshal([]byte(limits.String), &value); err != nil {
+				return result, err
+			}
+			profile.ContextLimits = &value
 		}
 		result.Profiles = append(result.Profiles, profile)
 	}
@@ -133,6 +185,7 @@ func (s *Store) ReadConnections(ctx context.Context, req ConnectionsRequest) (Co
 
 func validProfile(profile ModelProfile) bool {
 	if !identifier.MatchString(profile.ID) || (profile.Kind != "llamacpp" && profile.Kind != "custom" && profile.Kind != "ollama" && profile.Kind != "lmstudio" && profile.Kind != "vllm") ||
+		(profile.ContextLimits != nil && !profile.ContextLimits.valid()) ||
 		!utf8.ValidString(profile.Name) || strings.TrimSpace(profile.Name) == "" || utf8.RuneCountInString(profile.Name) > 80 ||
 		!utf8.ValidString(profile.Model) || strings.TrimSpace(profile.Model) == "" || utf8.RuneCountInString(profile.Model) > 200 ||
 		profile.TimeoutMS < 1000 || profile.TimeoutMS > 300000 || len(profile.BaseURL) > 2048 ||
@@ -189,7 +242,16 @@ func (s *Store) SaveConnections(ctx context.Context, req SaveConnectionsRequest)
 		return current, err
 	}
 	for _, profile := range profiles {
-		if _, err = tx.ExecContext(ctx, `INSERT INTO model_profiles VALUES(?,?,?,?,?,?)`, profile.ID, profile.Name, profile.Kind, profile.BaseURL, profile.Model, profile.TimeoutMS); err != nil {
+		var limits any
+		if profile.ContextLimits != nil {
+			data, err := json.Marshal(profile.ContextLimits)
+			if err != nil {
+				return current, err
+			}
+			limits = string(data)
+		}
+		if _, err = tx.ExecContext(ctx, `INSERT INTO model_profiles (id,name,kind,base_url,model,timeout_ms,context_limits) VALUES(?,?,?,?,?,?,?)`,
+			profile.ID, profile.Name, profile.Kind, profile.BaseURL, profile.Model, profile.TimeoutMS, limits); err != nil {
 			return current, err
 		}
 	}
